@@ -1,0 +1,1 @@
+#include "SimpleTools/HNLNtuple/interface/HNLKinematicVertexFitter.h"

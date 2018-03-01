@@ -1,6 +1,5 @@
 '''
 Analyses a HNL -> 3L signal event, identifying the prompt and displaced leptons.
-Matching bewteen gen and reco quantities.
 '''
 
 import ROOT
@@ -9,12 +8,7 @@ import math
 
 from PhysicsTools.Heppy.analyzers.core.Analyzer      import Analyzer
 from PhysicsTools.Heppy.analyzers.core.AutoHandle    import AutoHandle
-from PhysicsTools.Heppy.physicsobjects.Muon          import Muon
-from PhysicsTools.Heppy.physicsobjects.Electron      import Electron
-from PhysicsTools.Heppy.physicsobjects.Tau           import Tau
 from PhysicsTools.Heppy.physicsobjects.GenParticle   import GenParticle
-from PhysicsTools.Heppy.physicsobjects.Photon        import Photon
-from PhysicsTools.Heppy.physicsobjects.Tau           import Tau
 from PhysicsTools.Heppy.physicsobjects.PhysicsObject import PhysicsObject
 from PhysicsTools.HeppyCore.utils.deltar             import deltaR, deltaR2
 
@@ -30,16 +24,6 @@ class HNLGenTreeAnalyzer(Analyzer):
     def declareHandles(self):
         super(HNLGenTreeAnalyzer, self).declareHandles()
 
-        self.handles  ['muons'      ] = AutoHandle(('slimmedMuons'                 , '', 'PAT' ), 'std::vector<pat::Muon>'                        )
-        self.handles  ['electrons'  ] = AutoHandle(('slimmedElectrons'             , '', 'PAT' ), 'std::vector<pat::Electron>'                    )
-        self.handles  ['photons'    ] = AutoHandle(('slimmedPhotons'               , '', 'PAT' ), 'std::vector<pat::Photon>'                      )
-        self.handles  ['taus'       ] = AutoHandle(('slimmedTaus'                  , '', 'PAT' ), 'std::vector<pat::Tau>'                         )
-        self.handles  ['jets'       ] = AutoHandle(('slimmedJets'                  , '', 'PAT' ), 'std::vector<pat::Jet>'                         )
-        self.handles  ['pvs'        ] = AutoHandle(('offlineSlimmedPrimaryVertices', '', 'PAT' ), 'std::vector<reco::Vertex>'                     )
-        self.handles  ['svs'        ] = AutoHandle(('slimmedSecondaryVertices'     , '', 'PAT' ), 'std::vector<reco::VertexCompositePtrCandidate>')
-        self.handles  ['dsmuons'    ] = AutoHandle(('displacedStandAloneMuons'     , '', 'RECO'), 'std::vector<reco::Track>'                      )
-        self.handles  ['dgmuons'    ] = AutoHandle(('displacedGlobalMuons'         , '', 'RECO'), 'std::vector<reco::Track>'                      )
-        self.handles  ['beamspot'   ] = AutoHandle(('offlineBeamSpot'              , '', 'RECO'), 'reco::BeamSpot'                                )
         self.mchandles['genp_pruned'] = AutoHandle(('prunedGenParticles'           , '', 'PAT' ), 'std::vector<reco::GenParticle>'                )
         self.mchandles['genp_packed'] = AutoHandle(('packedGenParticles'           , '', 'PAT' ), 'std::vector<pat::PackedGenParticle>'           )
 
@@ -55,16 +39,6 @@ class HNLGenTreeAnalyzer(Analyzer):
         self.counters.counter('HNLGenTree').inc('all events')
 
         # produce collections
-        event.muons       = self.handles  ['muons'      ].product()
-        event.electrons   = self.handles  ['electrons'  ].product()
-        event.photons     = self.handles  ['photons'    ].product()
-        event.taus        = self.handles  ['taus'       ].product()
-        event.jets        = self.handles  ['jets'       ].product()
-        event.pvs         = self.handles  ['pvs'        ].product()
-        event.svs         = self.handles  ['svs'        ].product()
-        event.dsmuons     = self.handles  ['dsmuons'    ].product()
-        event.dgmuons     = self.handles  ['dgmuons'    ].product()
-        event.beamspot    = self.handles  ['beamspot'   ].product()
         event.genp_pruned = self.mchandles['genp_pruned'].product()
         event.genp_packed = self.mchandles['genp_packed'].product()
 
@@ -109,9 +83,7 @@ class HNLGenTreeAnalyzer(Analyzer):
         event.the_hn.vishn = event.the_hn.lep1.finallep.p4() + event.the_hn.lep2.finallep.p4()
 
         # make it into a handy class
-        # import pdb ; pdb.set_trace()
         event.the_hnl = HN3L(event.the_pl.finallep, event.the_hn.lep1.finallep, event.the_hn.lep2.finallep, event.the_hn.neu)
-        # import pdb ; pdb.set_trace()
 
         return True
     

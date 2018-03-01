@@ -12,34 +12,34 @@ class HN3L(object):
     ''' 
     '''
 
-    def __init__(self, pl, dl1, dl2, met=None):
-        self.pl_  = pl
-        self.dl1_ = dl1
-        self.dl2_ = dl2
+    def __init__(self, l0, l1, l2, met=None):
+        self.l0_ = l0 # prompt lepton
+        self.l1_ = l1 # leading pt lepton
+        self.l2_ = l2 # trailing pt displaced lepton
         self.met_ = met
 
     # objects
-    def pl(self):
-        return self.pl_
+    def l0(self):
+        return self.l0_
 
-    def dl1(self):
-        return self.dl1_
+    def l1(self):
+        return self.l1_
 
-    def dl2(self):
-        return self.dl2_
+    def l2(self):
+        return self.l2_
 
     def met(self):
         return self.met_
 
     def charge(self):
-        return self.pl().charge() + self.dl1().charge() + self.dl2().charge()
+        return self.l0().charge() + self.l1().charge() + self.l2().charge()
 
     def hnCharge(self):
-        return self.dl1().charge() + self.dl2().charge()
+        return self.l1().charge() + self.l2().charge()
         
     # W kinematics w/ met
     def p4(self):
-        return self.pl().p4() + self.dl1().p4() + self.dl2().p4() + self.met().p4() if self.met() else None
+        return self.l0().p4() + self.l1().p4() + self.l2().p4() + self.met().p4() if self.met() else None
 
     def pt(self):
         return self.p4().pt() if self.met() else None
@@ -54,11 +54,11 @@ class HN3L(object):
         return self.p4().mass() if self.met() else None
 
     def sumPt(self):
-        return self.pl().pt() + self.dl1().pt() + self.dl2().pt() + self.met().pt() if self.met() else None
+        return self.l0().pt() + self.l1().pt() + self.l2().pt() + self.met().pt() if self.met() else None
 
     # W kinematics w/o met
     def visP4(self):
-        return self.pl().p4() + self.dl1().p4() + self.dl2().p4()
+        return self.l0().p4() + self.l1().p4() + self.l2().p4()
 
     def visPt(self):
         return self.visP4().pt()
@@ -73,11 +73,11 @@ class HN3L(object):
         return self.visP4().mass()
 
     def visSumPt(self):
-        return self.pl().pt() + self.dl1().pt() + self.dl2().pt()
+        return self.l0().pt() + self.l1().pt() + self.l2().pt()
 
     # heavy neutrino kinematics w/ met
     def hnP4(self):
-        return self.dl1().p4() + self.dl2().p4() + self.met().p4() if self.met() else None
+        return self.l1().p4() + self.l2().p4() + self.met().p4() if self.met() else None
 
     def hnPt(self):
         return self.hnP4().pt() if self.met() else None
@@ -92,11 +92,11 @@ class HN3L(object):
         return self.hnP4().mass() if self.met() else None
 
     def hnSumPt(self):
-        return self.dl1().pt() + self.dl2().pt() + self.met().pt() if self.met() else None
+        return self.l1().pt() + self.l2().pt() + self.met().pt() if self.met() else None
 
     # heavy neutrino kinematics w/o met
     def hnVisP4(self):
-        return self.dl1().p4() + self.dl2().p4()
+        return self.l1().p4() + self.l2().p4()
 
     def hnVisPt(self):
         return self.hnVisP4().pt()
@@ -111,119 +111,119 @@ class HN3L(object):
         return self.hnVisP4().mass()
 
     def hnVisSumPt(self):
-        return self.dl1().pt() + self.dl2().pt()
+        return self.l1().pt() + self.l2().pt()
         
     # pair masses
     def mass01(self):
-        return (self.pl().p4() + self.dl1().p4()).mass() 
+        return (self.l0().p4() + self.l1().p4()).mass() 
 
     def mass02(self):
-        return (self.pl().p4() + self.dl2().p4()).mass() 
+        return (self.l0().p4() + self.l2().p4()).mass() 
 
     def mass12(self):
-        return (self.dl1().p4() + self.dl2().p4()).mass() 
+        return (self.l1().p4() + self.l2().p4()).mass() 
 
     # lepton charges
     def charge01(self):
-        return self.pl().charge() + self.dl1().charge()
+        return self.l0().charge() + self.l1().charge()
 
     def charge02(self):
-        return self.pl().charge() + self.dl2().charge()
+        return self.l0().charge() + self.l2().charge()
 
     def charge12(self):
-        return self.dl1().charge() + self.dl2().charge()
+        return self.l1().charge() + self.l2().charge()
 
     # delta R & delta phi
     def dR01(self):
-        return deltaR(self.pl().p4(), self.dl1().p4())
+        return deltaR(self.l0().p4(), self.l1().p4())
 
     def dR02(self):
-        return deltaR(self.pl().p4(), self.dl2().p4())
+        return deltaR(self.l0().p4(), self.l2().p4())
 
     def dR12(self):
-        return deltaR(self.dl1().p4(), self.dl2().p4())
+        return deltaR(self.l1().p4(), self.l2().p4())
 
     def dR0MET(self):
-        return deltaR(self.pl().p4(), self.met().p4()) if self.met() else None
+        return deltaR(self.l0().p4(), self.met().p4()) if self.met() else None
 
     def dR1MET(self):
-        return deltaR(self.dl1().p4(), self.met().p4()) if self.met() else None
+        return deltaR(self.l1().p4(), self.met().p4()) if self.met() else None
 
     def dR2MET(self):
-        return deltaR(self.dl2().p4(), self.met().p4()) if self.met() else None
+        return deltaR(self.l2().p4(), self.met().p4()) if self.met() else None
 
     def dPhi01(self):
-        return deltaPhi(self.pl().phi(), self.dl1().phi())
+        return deltaPhi(self.l0().phi(), self.l1().phi())
 
     def dPhi02(self):
-        return deltaPhi(self.pl().phi(), self.dl2().phi())
+        return deltaPhi(self.l0().phi(), self.l2().phi())
 
     def dPhi12(self):
-        return deltaPhi(self.dl1().phi(), self.dl2().phi())
+        return deltaPhi(self.l1().phi(), self.l2().phi())
 
     def dPhi0MET(self):
-        return deltaPhi(self.pl().phi(), self.met().phi()) if self.met() else None
+        return deltaPhi(self.l0().phi(), self.met().phi()) if self.met() else None
 
     def dPhi1MET(self):
-        return deltaPhi(self.dl1().phi(), self.met().phi()) if self.met() else None
+        return deltaPhi(self.l1().phi(), self.met().phi()) if self.met() else None
 
     def dPhi2MET(self):
-        return deltaPhi(self.dl2().phi(), self.met().phi()) if self.met() else None
+        return deltaPhi(self.l2().phi(), self.met().phi()) if self.met() else None
 
     def dRvisHnMET(self):
         return deltaR(self.hnVisP4(), self.met()) if self.met() else None
 
-    def dRvisHnPl(self):
-        return deltaR(self.hnVisP4(), self.pl())
+    def dRvisHnl0(self):
+        return deltaR(self.hnVisP4(), self.l0())
 
     def dRHnMET(self):
         return deltaR(self.hnP4(), self.met()) if self.met() else None
 
-    def dRHnPl(self):
-        return deltaR(self.hnP4(), self.pl()) if self.met() else None
+    def dRHnl0(self):
+        return deltaR(self.hnP4(), self.l0()) if self.met() else None
 
     def dPhiVisHnMET(self):
         return deltaPhi(self.hnVisP4().phi(), self.met().phi()) if self.met() else None
 
-    def dPhiVisHnPl(self):
-        return deltaPhi(self.hnVisP4().phi(), self.pl().phi())
+    def dPhiVisHnl0(self):
+        return deltaPhi(self.hnVisP4().phi(), self.l0().phi())
 
     def dPhiHnMET(self):
         return deltaPhi(self.hnP4().phi(), self.met().phi()) if self.met() else None
 
-    def dPhiHnPl(self):
-        return deltaPhi(self.hnP4().phi(), self.pl().phi()) if self.met() else None
+    def dPhiHnl0(self):
+        return deltaPhi(self.hnP4().phi(), self.l0().phi()) if self.met() else None
 
     # pt of two-body pairs
     def pt01(self):
-        return (self.pl().p4() + self.dl1().p4()).pt()
+        return (self.l0().p4() + self.l1().p4()).pt()
 
     def pt02(self):
-        return (self.pl().p4() + self.dl2().p4()).pt()
+        return (self.l0().p4() + self.l2().p4()).pt()
 
     def pt12(self):
-        return (self.dl1().p4() + self.dl2().p4()).pt()
+        return (self.l1().p4() + self.l2().p4()).pt()
 
     def pt0MET(self):
-        return (self.pl().p4() + self.met().p4()).pt() if self.met() else None
+        return (self.l0().p4() + self.met().p4()).pt() if self.met() else None
 
     def pt1MET(self):
-        return (self.dl1().p4() + self.met().p4()).pt() if self.met() else None
+        return (self.l1().p4() + self.met().p4()).pt() if self.met() else None
 
     def pt2MET(self):
-        return (self.dl2().p4() + self.met().p4()).pt() if self.met() else None
+        return (self.l2().p4() + self.met().p4()).pt() if self.met() else None
 
     # transverse masses
     def mt0(self):
-        mt0 = self.calcMT(self.pl().p4(), self.met()) if self.met() else None
+        mt0 = self.calcMT(self.l0().p4(), self.met()) if self.met() else None
         return mt0
 
     def mt1(self):
-        mt1 = self.calcMT(self.dl1().p4(), self.met()) if self.met() else None
+        mt1 = self.calcMT(self.l1().p4(), self.met()) if self.met() else None
         return mt1
 
     def mt2(self):
-        mt2 = self.calcMT(self.dl2().p4(), self.met()) if self.met() else None
+        mt2 = self.calcMT(self.l2().p4(), self.met()) if self.met() else None
         return mt2
 
     def mtVisHnMET(self):
@@ -232,12 +232,12 @@ class HN3L(object):
     
     # more stuff
     def calcPZeta(self):
-        plPT  = TVector3(self.pl() .p4().x(), self.pl() .p4().y(), 0.)
-        dl1PT = TVector3(self.dl1().p4().x(), self.dl1().p4().y(), 0.)
-        dl2PT = TVector3(self.dl2().p4().x(), self.dl2().p4().y(), 0.)
+        l0PT  = TVector3(self.l0() .p4().x(), self.l0() .p4().y(), 0.)
+        l1PT = TVector3(self.l1().p4().x(), self.l1().p4().y(), 0.)
+        l2PT = TVector3(self.l2().p4().x(), self.l2().p4().y(), 0.)
         metPT = TVector3(self.met().p4().x(), self.met().p4().y(), 0.)
-        zetaAxis = (plPT.Unit() + dl1PT.Unit() + dl2PT.Unit()).Unit()
-        self.pZetaVis_ = plPT*zetaAxis + dl1PT*zetaAxis + dl2PT*zetaAxis
+        zetaAxis = (l0PT.Unit() + l1PT.Unit() + l2PT.Unit()).Unit()
+        self.pZetaVis_ = l0PT*zetaAxis + l1PT*zetaAxis + l2PT*zetaAxis
         self.pZetaMET_ = metPT*zetaAxis
 
     # Calculate the transverse mass with the same algorithm

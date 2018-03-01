@@ -92,7 +92,8 @@ class RecoGenAnalyzer(Analyzer):
     
         # all matchable objects
         matchable = event.electrons + event.photons + event.muons + event.taus + event.dsmuons + event.dgmuons 
-            
+
+        #zhud: Homework
         # match gen to reco
         for ip in [event.the_hnl.l0(), 
                    event.the_hnl.l1(), 

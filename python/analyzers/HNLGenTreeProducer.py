@@ -57,14 +57,14 @@ class HNLGenTreeProducer(TreeProducerBase):
         self.fillHNL(self.tree, 'hnl', event.the_hnl)
 
         # the prompt lepton
-        self.fillGenParticle(self.tree, 'l0' , event.the_hn.l0())
+        self.fillGenParticle(self.tree, 'l0' , event.the_hnl.l0())
 
         # displaced leptons (from the HN)
-        self.fillGenParticle(self.tree, 'l1', event.the_hn.l1())
-        self.fillGenParticle(self.tree, 'l2', event.the_hn.l2())
+        self.fillGenParticle(self.tree, 'l1', event.the_hnl.l1())
+        self.fillGenParticle(self.tree, 'l2', event.the_hnl.l2())
 
         # final neutrino
-        self.fillGenParticle(self.tree, 'n'  , event.the_hn.met())
+        self.fillGenParticle(self.tree, 'n'  , event.the_hnl.met())
 
         # true primary vertex
         self.fill(self.tree, 'pv_x', event.the_hn.vx())
@@ -81,9 +81,9 @@ class HNLGenTreeProducer(TreeProducerBase):
         self.fill(self.tree, 'hnl_3d_disp', displacement3D(event.the_hn.lep1, event.the_hn))
 
         # flag if the event is in CMS acceptance |eta|<2.5
-        is_in_acc =  abs(event.the_hn.l0().finallep.eta())<2.5 and \
-                     abs(event.the_hn.l1().finallep.eta())<2.5 and \
-                     abs(event.the_hn.l2().finallep.eta())<2.5
+        is_in_acc =  abs(event.the_hnl.l0().eta())<2.5 and \
+                     abs(event.the_hnl.l1().eta())<2.5 and \
+                     abs(event.the_hnl.l2().eta())<2.5
  
         self.fill(self.tree, 'is_in_acc', is_in_acc)
 

@@ -24,8 +24,8 @@ class HNLGenTreeAnalyzer(Analyzer):
     def declareHandles(self):
         super(HNLGenTreeAnalyzer, self).declareHandles()
 
-        self.mchandles['genp_pruned'] = AutoHandle(('prunedGenParticles'           , '', 'PAT' ), 'std::vector<reco::GenParticle>'                )
-        self.mchandles['genp_packed'] = AutoHandle(('packedGenParticles'           , '', 'PAT' ), 'std::vector<pat::PackedGenParticle>'           )
+        self.mchandles['genp_pruned'] = AutoHandle(('prunedGenParticles', '', 'PAT' ), 'std::vector<reco::GenParticle>'                )
+        self.mchandles['genp_packed'] = AutoHandle(('packedGenParticles', '', 'PAT' ), 'std::vector<pat::PackedGenParticle>'           )
 
     def beginLoop(self, setup):
         super(HNLGenTreeAnalyzer, self).beginLoop(setup)

@@ -50,7 +50,12 @@ class RecoGenAnalyzer(Analyzer):
         self.counters.addCounter('RecoGenTreeAnalyzer')
         count = self.counters.counter('RecoGenTreeAnalyzer')
         count.register('all events')
-        
+ 
+        # stuff I need to instantiate only once
+        self.vtxfit = VertexFitter()
+        # create a std::vector<RecoChargedCandidate> to be passed to the fitter 
+        self.tofit = ROOT.std.vector('reco::RecoChargedCandidate')()
+       
     def process(self, event):
         self.readCollections(event.input)
 
@@ -80,10 +85,10 @@ class RecoGenAnalyzer(Analyzer):
 
         # also append a TrackRef, this will be needed for the refitting 
         for jj, mm in enumerate(event.dsmuons):
-            mm.track = lambda : ROOT.reco.TrackRef(handles['dsmuons'][1].product(), jj)
+            mm.track = lambda : ROOT.reco.TrackRef(self.handles['dsmuons'].product(), jj)
 
         for jj, mm in enumerate(event.dgmuons):
-            mm.track = lambda : ROOT.reco.TrackRef(handles['dgmuons'][1].product(), jj)
+            mm.track = lambda : ROOT.reco.TrackRef(self.handles['dgmuons'].product(), jj)
     
         # all matchable objects
         matchable = event.electrons + event.photons + event.muons + event.taus + event.dsmuons + event.dgmuons 
@@ -118,7 +123,7 @@ class RecoGenAnalyzer(Analyzer):
         if not(event.the_hnl.l1().bestmatch is None or \
                event.the_hnl.l2().bestmatch is None):
             # clear the vector
-            tofit.clear()
+            self.tofit.clear()
             # create a RecoChargedCandidate for each reconstructed lepton and flush it into the vector
             for il in [event.the_hnl.l1().bestmatch, 
                        event.the_hnl.l2().bestmatch]:
@@ -129,12 +134,12 @@ class RecoGenAnalyzer(Analyzer):
                 ic.setP4(myp4)                        # assign the correct p4
                 ic.setTrack(il.track())               # set the correct TrackRef
                 if ic.track().isNonnull():            # check that the track is valid, there are photons around too!
-                    tofit.push_back(ic)
+                    self.tofit.push_back(ic)
 
             # further sanity check: two *distinct* tracks
-            if tofit.size()==2 and tofit[0].track() != tofit[1].track():
+            if self.tofit.size()==2 and self.tofit[0].track() != self.tofit[1].track():
                 # fit it!
-                svtree = vtxfit.Fit(tofit) # actual vertex fitting
+                svtree = self.vtxfit.Fit(self.tofit) # actual vertex fitting
                 # check that the vertex is good
                 if not svtree.get().isEmpty() and svtree.get().isValid():
                     svtree.movePointerToTheTop()

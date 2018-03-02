@@ -48,7 +48,7 @@ class TreeProducerBase(TreeAnalyzerNumpy):
                 raise
 
     def declareVariables(self, setup):
-        ''' Declare all variables here in derived calss
+        ''' Declare all variables here in derived class
         '''
         pass
 

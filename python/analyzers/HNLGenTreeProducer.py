@@ -19,10 +19,13 @@ class HNLGenTreeProducer(TreeProducerBase):
 
         # the prompt lepton
         self.bookGenParticle(self.tree, 'l0')
+        self.bookParticle(self.tree, 'l0_matched_muon')
 
         # displaced leptons (from the HN)
         self.bookGenParticle(self.tree, 'l1')
+        self.bookParticle(self.tree, 'l1_matched_muon')
         self.bookGenParticle(self.tree, 'l2')
+        self.bookParticle(self.tree, 'l2_matched_muon')
 
         # final neutrino
         self.bookGenParticle(self.tree, 'n')
@@ -58,10 +61,16 @@ class HNLGenTreeProducer(TreeProducerBase):
 
         # the prompt lepton
         self.fillGenParticle(self.tree, 'l0' , event.the_hnl.l0())
+        if hasattr(event.the_hnl.l0(), 'bestmuon'):
+            self.fillParticle(self.tree, 'l0_matched_muon', event.the_hnl.l0().bestmuon)
 
         # displaced leptons (from the HN)
         self.fillGenParticle(self.tree, 'l1', event.the_hnl.l1())
+        if hasattr(event.the_hnl.l1(), 'bestmuon'):
+            self.fillParticle(self.tree, 'l1_matched_muon', event.the_hnl.l1().bestmuon)
         self.fillGenParticle(self.tree, 'l2', event.the_hnl.l2())
+        if hasattr(event.the_hnl.l2(), 'bestmuon'):
+            self.fillParticle(self.tree, 'l2_matched_muon', event.the_hnl.l2().bestmuon)
 
         # final neutrino
         self.fillGenParticle(self.tree, 'n'  , event.the_hnl.met())

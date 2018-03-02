@@ -93,7 +93,6 @@ class RecoGenAnalyzer(Analyzer):
         # all matchable objects
         matchable = event.electrons + event.photons + event.muons + event.taus + event.dsmuons + event.dgmuons 
 
-        #zhud: Homework todo: select all reco particles matched with this Genparticle
         # match gen to reco
         for ip in [event.the_hnl.l0(), 
                    event.the_hnl.l1(), 
@@ -101,8 +100,15 @@ class RecoGenAnalyzer(Analyzer):
             ip.bestmatch     = None
             ip.bestmatchtype = None
             ip.matches = inConeCollection(ip, matchable, getattr(self.cfg_ana, 'drmax', 0.2), 0.)
+           
+            # matches the corresponding "slimmed muon" to the gen particle
+            if len(event.muons):
+                match, dr = bestMatch(ip,event.muons)
+                if dr < 0.2: 
+                    ip.bestmuon = match
+                    
             # to find the best match, give precedence to any matched 
-            # particle in the matching cone with the correct PDG ID
+            # piarticle in the matching cone with the correct PDG ID
             # then to the one which is closest
             ip.matches.sort(key = lambda x : (x.pdgId()==ip.pdgId(), -deltaR(x, ip)), reverse = True )
             if len(ip.matches):

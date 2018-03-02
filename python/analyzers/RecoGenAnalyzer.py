@@ -100,13 +100,46 @@ class RecoGenAnalyzer(Analyzer):
             ip.bestmatch     = None
             ip.bestmatchtype = None
             ip.matches = inConeCollection(ip, matchable, getattr(self.cfg_ana, 'drmax', 0.2), 0.)
-           
+
+            # matches the corresponding "slimmed electron" to the gen particle
+            if len(event.electrons):
+                match, dr = bestMatch(ip,event.electrons)
+                if dr < 0.2: 
+                    ip.bestelectron = match
+
+            # matches the corresponding "slimmed photon" to the gen particle
+            if len(event.photons):
+                match, dr = bestMatch(ip,event.photons)
+                if dr < 0.2: 
+                    ip.bestphoton = match
+
             # matches the corresponding "slimmed muon" to the gen particle
             if len(event.muons):
                 match, dr = bestMatch(ip,event.muons)
                 if dr < 0.2: 
                     ip.bestmuon = match
+            
+            # matches the corresponding "slimmed tau" to the gen particle
+            if len(event.taus):
+                match, dr = bestMatch(ip,event.taus)
+                if dr < 0.2: 
+                    ip.besttau = match
+            
+            # matches the corresponding "displaced stand alone muon" to the gen particle
+            if len(event.dsmuons):
+                match, dr = bestMatch(ip,event.dsmuons)
+                if dr < 0.2: 
+                    ip.bestdsmuon = match
                     
+            # matches the corresponding "displaced global muon" to the gen particle
+            if len(event.dgmuons):
+                match, dr = bestMatch(ip,event.dgmuons)
+                if dr < 0.2: 
+                    ip.bestdgmuon = match
+            
+            
+            
+            
             # to find the best match, give precedence to any matched 
             # piarticle in the matching cone with the correct PDG ID
             # then to the one which is closest

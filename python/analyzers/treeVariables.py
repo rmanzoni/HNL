@@ -1,4 +1,5 @@
 import ROOT
+import numpy as np
 
 from PhysicsTools.HeppyCore.utils.deltar import deltaR, deltaPhi
 
@@ -10,11 +11,11 @@ class Variable():
         self.function = function
         if function is None:
             # Note: works for attributes, not member functions
-            self.function = lambda x : getattr(x, self.name, -999.) 
+            self.function = lambda x : getattr(x, self.name, np.nan) 
         self.type = type
 
 def default():
-    return -999.
+    return np.nan
 
 # event variables
 event_vars = [
@@ -24,7 +25,8 @@ event_vars = [
     Variable('bx', lambda ev : (ev.input.eventAuxiliary().bunchCrossing() * ev.input.eventAuxiliary().isRealData()), type=int),
     Variable('orbit_number', lambda ev : (ev.input.eventAuxiliary().orbitNumber() * ev.input.eventAuxiliary().isRealData()), type=int),
     Variable('is_data', lambda ev: ev.input.eventAuxiliary().isRealData(), type=int),
-    Variable('nPU', lambda ev : -99 if getattr(ev, 'nPU', -1) is None else getattr(ev, 'nPU', -1)),
+#     Variable('nPU', lambda ev : -99 if getattr(ev, 'nPU', -1) is None else getattr(ev, 'nPU', -1)),
+    Variable('nPU', lambda ev : np.nan if getattr(ev, 'nPU', -1) is None else getattr(ev, 'nPU', -1)),
     Variable('rho', lambda ev : ev.rho),
 #     Variable('Flag_HBHENoiseFilter', type=int),
 #     Variable('Flag_HBHENoiseIsoFilter', type=int),
@@ -105,12 +107,12 @@ hnl_vars = [
     Variable('pt_1met'        , lambda hn : getattr(hn, 'pt1MET'      , default)()),
     Variable('pt_2met'        , lambda hn : getattr(hn, 'pt2MET'      , default)()),
 
-    Variable('dr_hn0'         , lambda hn : getattr(hn, 'dRHnPl'      , default)()),
-    Variable('dr_hnvis0'      , lambda hn : getattr(hn, 'dRvisHnPl'   , default)()),
+    Variable('dr_hn0'         , lambda hn : getattr(hn, 'dRHn0'       , default)()),
+    Variable('dr_hnvis0'      , lambda hn : getattr(hn, 'dRvisHn0'    , default)()),
     Variable('dr_hnvismet'    , lambda hn : getattr(hn, 'dRvisHnMET'  , default)()),
 
-    Variable('dphi_hn0'       , lambda hn : getattr(hn, 'dPhiHnPl'    , default)()),
-    Variable('dphi_hnvis0'    , lambda hn : getattr(hn, 'dPhiVisHnPl' , default)()),
+    Variable('dphi_hn0'       , lambda hn : getattr(hn, 'dPhiHn0'     , default)()),
+    Variable('dphi_hnvis0'    , lambda hn : getattr(hn, 'dPhiVisHn0'  , default)()),
     Variable('dphi_hnvismet'  , lambda hn : getattr(hn, 'dPhiVisHnMET', default)()),
 
     Variable('mt_0'           , lambda hn : getattr(hn, 'mt0'         , default)()),
@@ -180,6 +182,21 @@ electron_vars = [
     Variable('weight_tracking', lambda lep : getattr(lep, 'weight_tracking', 1.)),
 ]
 
+# photon
+photon_vars = [
+    Variable('ch_iso'   , lambda ph : ph.chargedHadronIso     ()                           ),
+    Variable('n_iso'    , lambda ph : ph.neutralHadronIso     ()                           ),
+    Variable('r9_5x5'   , lambda ph : ph.full5x5_r9           ()                           ),
+    Variable('sieie_5x5', lambda ph : ph.full5x5_sigmaIetaIeta()                           ),
+    Variable('hoe'      , lambda ph : ph.hOVERe               ()                           ),
+    Variable('id_l'     , lambda ph : ph.passPhotonID         ('POG_SPRING15_25ns_Loose' ) ),
+    Variable('id_m'     , lambda ph : ph.passPhotonID         ('POG_SPRING15_25ns_Medium') ),
+    Variable('id_t'     , lambda ph : ph.passPhotonID         ('POG_SPRING15_25ns_Tight' ) ),
+    Variable('iso'      , lambda ph : ph.photonIso            ()                           ),
+    Variable('r9'       , lambda ph : ph.r9                   ()                           ),
+    Variable('sieie'    , lambda ph : ph.sigmaIetaIeta        ()                           ),
+]
+
 # vertex
 vertex_vars = [
     Variable('covxx'           , lambda vtx : vtx.covariance(0,0)                         ),
@@ -207,15 +224,14 @@ vertex_vars = [
 
 # muon
 muon_vars = [
-    Variable('reliso05'         , lambda muon : muon.relIsoR(R=0.4, dBetaFactor=0.5, allCharged=0)),
-    Variable('reliso05_03'      , lambda muon : muon.relIsoR(R=0.3, dBetaFactor=0.5, allCharged=0)),
-    Variable('muonid_soft'      , lambda muon : muon.isSoftMuon(muon.associatedVertex)            ),
-    Variable('muonid_loose'     , lambda muon : muon.muonID('POG_ID_Loose')                       ),
-    Variable('muonid_medium'    , lambda muon : muon.muonID('POG_ID_Medium')                      ),
-    Variable('muonid_tight'     , lambda muon : muon.muonID('POG_ID_Tight')                       ),
-    Variable('muonid_tightnovtx', lambda muon : muon.muonID('POG_ID_TightNoVtx')                  ),
-    Variable('muonid_highpt'    , lambda muon : muon.muonID('POG_ID_HighPt')                      ),
-    Variable('muonid_BDT'       , lambda muon : muon.BDTvalue                                     ),
+    Variable('reliso05'   , lambda muon : muon.relIsoR(R=0.4, dBetaFactor=0.5, allCharged=0)),
+    Variable('reliso05_03', lambda muon : muon.relIsoR(R=0.3, dBetaFactor=0.5, allCharged=0)),
+    Variable('id_s'       , lambda muon : muon.isSoftMuon(muon.associatedVertex)            ),
+    Variable('id_l'       , lambda muon : muon.muonID('POG_ID_Loose')                       ),
+    Variable('id_m'       , lambda muon : muon.muonID('POG_ID_Medium')                      ),
+    Variable('id_t'       , lambda muon : muon.muonID('POG_ID_Tight')                       ),
+    Variable('id_tnv'     , lambda muon : muon.muonID('POG_ID_TightNoVtx')                  ),
+    Variable('id_hpt'     , lambda muon : muon.muonID('POG_ID_HighPt')                      ),
 ]
 
 muon_extra_vars = [
@@ -223,24 +239,24 @@ muon_extra_vars = [
     Variable('dxy_innertrack'   , lambda muon : muon.innerTrack().dxy(muon.associatedVertex.position())              ),
     Variable('dz_innertrack'    , lambda muon : muon.innerTrack().dz(muon.associatedVertex.position())               ),
     Variable('weight_tracking'  , lambda muon : getattr(muon, 'weight_tracking', 1.)                                 ),
-    Variable('pdgIDoverweight'  , lambda muon : muon.pdgIDoverweight    if hasattr(muon, "pdgIDoverweight")  else -99),
+    Variable('pdgIDoverweight'  , lambda muon : muon.pdgIDoverweight    if hasattr(muon, "pdgIDoverweight")  else default()),
     #BDT VARS 
-    Variable('segComp'          , lambda muon : muon.segComp            if hasattr(muon, 'segComp')          else -99),
-    Variable('chi2LocMom'       , lambda muon : muon.chi2LocMom         if hasattr(muon, 'chi2LocMom')       else -99),
-    Variable('chi2LocPos'       , lambda muon : muon.chi2LocPos         if hasattr(muon, 'chi2LocPos')       else -99),
-    Variable('glbTrackTailProb' , lambda muon : muon.glbTrackTailProb   if hasattr(muon, 'glbTrackTailProb') else -99),
-    Variable('iValFrac'         , lambda muon : muon.iValFrac           if hasattr(muon, 'iValFrac')         else -99),
-    Variable('LHW'              , lambda muon : muon.LHW                if hasattr(muon, 'LHW')              else -99),
-    Variable('kinkFinder'       , lambda muon : muon.kinkFinder         if hasattr(muon, 'kinkFinder')       else -99),
-    Variable('timeAtIpInOutErr' , lambda muon : muon.timeAtIpInOutErr   if hasattr(muon, 'timeAtIpInOutErr') else -99),
-    Variable('outerChi2'        , lambda muon : muon.outerChi2          if hasattr(muon, 'outerChi2')        else -99),
-    Variable('innerChi2'        , lambda muon : muon.innerChi2          if hasattr(muon, 'innerChi2')        else -99),
-    Variable('trkRelChi2'       , lambda muon : muon.trkRelChi2         if hasattr(muon, 'trkRelChi2')       else -99),
-    Variable('vMuonHitComb'     , lambda muon : muon.vMuonHitComb       if hasattr(muon, 'vMuonHitComb')     else -99),
-    Variable('Qprod'            , lambda muon : muon.Qprod              if hasattr(muon, 'Qprod')            else -99),
-    Variable('LogGlbKinkFinder' , lambda muon : muon.LogGlbKinkFinder   if hasattr(muon, 'LogGlbKinkFinder') else -99),
+    Variable('segComp'          , lambda muon : muon.segComp            if hasattr(muon, 'segComp')          else default()),
+    Variable('chi2LocMom'       , lambda muon : muon.chi2LocMom         if hasattr(muon, 'chi2LocMom')       else default()),
+    Variable('chi2LocPos'       , lambda muon : muon.chi2LocPos         if hasattr(muon, 'chi2LocPos')       else default()),
+    Variable('glbTrackTailProb' , lambda muon : muon.glbTrackTailProb   if hasattr(muon, 'glbTrackTailProb') else default()),
+    Variable('iValFrac'         , lambda muon : muon.iValFrac           if hasattr(muon, 'iValFrac')         else default()),
+    Variable('LHW'              , lambda muon : muon.LHW                if hasattr(muon, 'LHW')              else default()),
+    Variable('kinkFinder'       , lambda muon : muon.kinkFinder         if hasattr(muon, 'kinkFinder')       else default()),
+    Variable('timeAtIpInOutErr' , lambda muon : muon.timeAtIpInOutErr   if hasattr(muon, 'timeAtIpInOutErr') else default()),
+    Variable('outerChi2'        , lambda muon : muon.outerChi2          if hasattr(muon, 'outerChi2')        else default()),
+    Variable('innerChi2'        , lambda muon : muon.innerChi2          if hasattr(muon, 'innerChi2')        else default()),
+    Variable('trkRelChi2'       , lambda muon : muon.trkRelChi2         if hasattr(muon, 'trkRelChi2')       else default()),
+    Variable('vMuonHitComb'     , lambda muon : muon.vMuonHitComb       if hasattr(muon, 'vMuonHitComb')     else default()),
+    Variable('Qprod'            , lambda muon : muon.Qprod              if hasattr(muon, 'Qprod')            else default()),
+    Variable('LogGlbKinkFinder' , lambda muon : muon.LogGlbKinkFinder   if hasattr(muon, 'LogGlbKinkFinder') else default()),
     #fake muons variables
-    Variable('isFake'           , lambda muon : muon.isFake             if hasattr(muon, 'isFake')           else -99),
+    Variable('isFake'           , lambda muon : muon.isFake             if hasattr(muon, 'isFake')           else default()),
 ]
 
 # tau
@@ -283,7 +299,7 @@ jet_vars = [
     # Variable('area', lambda jet : jet.jetArea()),
     Variable('flavour_parton', lambda jet : jet.partonFlavour()),
     Variable('csv', lambda jet : jet.btagMVA),
-    Variable('genjet_pt', lambda jet : jet.matchedGenJet.pt() if hasattr(jet, 'matchedGenJet') and jet.matchedGenJet else -999.),
+    Variable('genjet_pt', lambda jet : jet.matchedGenJet.pt() if hasattr(jet, 'matchedGenJet') and jet.matchedGenJet else default()),
 ]
 
 # extended jet vars

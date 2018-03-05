@@ -25,6 +25,7 @@ from CMGTools.HNL.analyzers.HNLGenTreeProducer import HNLGenTreeProducer
 from CMGTools.HNL.analyzers.RecoGenAnalyzer    import RecoGenAnalyzer
 
 # import samples, signal
+# from CMGTools.HNL.samples.signal import all_signals as samples
 from CMGTools.HNL.samples.signal import signals_mass_3 as samples
 
 puFileMC   = '$CMSSW_BASE/src/CMGTools/H2TauTau/data/MC_Moriond17_PU25ns_V1.root'
@@ -145,7 +146,7 @@ if not production:
     selectedComponents   = [comp]
     comp.splitFactor     = 1
     comp.fineSplitFactor = 1
-    comp.files           = comp.files[:1]
+    comp.files           = comp.files[:5]
 
 # the following is declared in case this cfg is used in input to the
 # heppy.py script

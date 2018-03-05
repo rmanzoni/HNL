@@ -5,6 +5,7 @@ Matching bewteen gen and reco quantities.
 import ROOT
 from itertools import product, combinations
 import math
+import numpy as np
 
 from PhysicsTools.Heppy.analyzers.core.Analyzer      import Analyzer
 from PhysicsTools.Heppy.analyzers.core.AutoHandle    import AutoHandle
@@ -45,6 +46,10 @@ class RecoGenAnalyzer(Analyzer):
         self.handles  ['beamspot'   ] = AutoHandle(('offlineBeamSpot'              , '', 'RECO'), 'reco::BeamSpot'                                )
         self.handles  ['met'        ] = AutoHandle(('slimmedMETs'                  , '', 'PAT' ), 'std::vector<pat::MET>'                         )
 
+    def assignVtx(self, particles, vtx):
+        for ip in particles:
+            ip.associatedVertex = vtx
+
     def beginLoop(self, setup):
         super(RecoGenAnalyzer, self).beginLoop(setup)
         self.counters.addCounter('RecoGenTreeAnalyzer')
@@ -77,7 +82,20 @@ class RecoGenAnalyzer(Analyzer):
 
         # met
         event.met         = self.handles['met'].product().at(0)
+
+        # assign to the leptons the primary vertex, will be needed to compute a few quantities
+        # FIXME! understand exactly to which extent it is reasonable to assign the PV to *all* leptons
+        #        regardless whether they're displaced or not
+        if len(event.pvs):
+            myvtx = event.pvs[0]
+        else:
+            myvtx = event.beamspot
         
+        self.assignVtx(event.muons    , myvtx)
+        self.assignVtx(event.electrons, myvtx)
+        self.assignVtx(event.photons  , myvtx)
+        self.assignVtx(event.taus     , myvtx)
+                
         # impose the muon PDG ID to the displaced objects, that otherwise carry none
         for mm in event.dsmuons + event.dgmuons:
             mm.mass   = lambda : 0.10565837
@@ -103,45 +121,48 @@ class RecoGenAnalyzer(Analyzer):
 
             # matches the corresponding "slimmed electron" to the gen particle
             if len(event.electrons):
+                dr = np.inf
                 match, dr = bestMatch(ip,event.electrons)
                 if dr < 0.2: 
                     ip.bestelectron = match
 
             # matches the corresponding "slimmed photon" to the gen particle
             if len(event.photons):
+                dr = np.inf
                 match, dr = bestMatch(ip,event.photons)
                 if dr < 0.2: 
                     ip.bestphoton = match
 
             # matches the corresponding "slimmed muon" to the gen particle
             if len(event.muons):
+                dr = np.inf
                 match, dr = bestMatch(ip,event.muons)
                 if dr < 0.2: 
                     ip.bestmuon = match
             
             # matches the corresponding "slimmed tau" to the gen particle
             if len(event.taus):
+                dr = np.inf
                 match, dr = bestMatch(ip,event.taus)
                 if dr < 0.2: 
                     ip.besttau = match
             
             # matches the corresponding "displaced stand alone muon" to the gen particle
             if len(event.dsmuons):
+                dr = np.inf
                 match, dr = bestMatch(ip,event.dsmuons)
                 if dr < 0.2: 
                     ip.bestdsmuon = match
                     
             # matches the corresponding "displaced global muon" to the gen particle
             if len(event.dgmuons):
+                dr = np.inf
                 match, dr = bestMatch(ip,event.dgmuons)
                 if dr < 0.2: 
                     ip.bestdgmuon = match
             
-            
-            
-            
             # to find the best match, give precedence to any matched 
-            # piarticle in the matching cone with the correct PDG ID
+            # particle in the matching cone with the correct PDG ID
             # then to the one which is closest
             ip.matches.sort(key = lambda x : (x.pdgId()==ip.pdgId(), -deltaR(x, ip)), reverse = True )
             if len(ip.matches):

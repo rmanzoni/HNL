@@ -173,25 +173,25 @@ class HN3L(object):
     def dRvisHnMET(self):
         return deltaR(self.hnVisP4(), self.met()) if self.met() else None
 
-    def dRvisHnl0(self):
+    def dRvisHn0(self):
         return deltaR(self.hnVisP4(), self.l0())
 
     def dRHnMET(self):
         return deltaR(self.hnP4(), self.met()) if self.met() else None
 
-    def dRHnl0(self):
+    def dRHn0(self):
         return deltaR(self.hnP4(), self.l0()) if self.met() else None
 
     def dPhiVisHnMET(self):
         return deltaPhi(self.hnVisP4().phi(), self.met().phi()) if self.met() else None
 
-    def dPhiVisHnl0(self):
+    def dPhiVisHn0(self):
         return deltaPhi(self.hnVisP4().phi(), self.l0().phi())
 
     def dPhiHnMET(self):
         return deltaPhi(self.hnP4().phi(), self.met().phi()) if self.met() else None
 
-    def dPhiHnl0(self):
+    def dPhiHn0(self):
         return deltaPhi(self.hnP4().phi(), self.l0().phi()) if self.met() else None
 
     # pt of two-body pairs

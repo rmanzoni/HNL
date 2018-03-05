@@ -1,5 +1,6 @@
+import numpy as np
 from PhysicsTools.Heppy.analyzers.core.TreeAnalyzerNumpy import TreeAnalyzerNumpy
-from CMGTools.HNL.analyzers.treeVariables import event_vars, vertex_vars, hnl_vars, particle_vertex_vars, particle_vars, lepton_vars, electron_vars, muon_vars, tau_vars, tau_vars_extra, jet_vars, jet_vars_extra, geninfo_vars, l1obj_vars
+from CMGTools.HNL.analyzers.treeVariables import event_vars, vertex_vars, hnl_vars, particle_vertex_vars, particle_vars, lepton_vars, photon_vars, electron_vars, muon_vars, tau_vars, tau_vars_extra, jet_vars, jet_vars_extra, geninfo_vars, l1obj_vars
 
 class TreeProducerBase(TreeAnalyzerNumpy):
 
@@ -26,7 +27,7 @@ class TreeProducerBase(TreeAnalyzerNumpy):
         '''Fills vars that are attributes of the passed object.
         Fills -999. if object doesn't have attribute'''
         for varName in varNames:
-            tree.fill(varName, getattr(obj, varName, -999.))
+            tree.fill(varName, getattr(obj, varName, np.nan))
 
     def fillTree(self, event):
         if eval(self.skimFunction):
@@ -123,13 +124,13 @@ class TreeProducerBase(TreeAnalyzerNumpy):
     # lepton
     def bookLepton(self, tree, p_name):
         self.bookParticle(tree, p_name)
-        self.bookParticle(tree, p_name + '_jet')
+#         self.bookParticle(tree, p_name + '_jet')
         self.bookGeneric(tree, lepton_vars, p_name)
 
     def fillLepton(self, tree, p_name, lepton):
         self.fillParticle(tree, p_name, lepton)
-        if hasattr(lepton, 'jet'):
-            self.fillParticle(tree, p_name + '_jet', lepton.jet)
+#         if hasattr(lepton, 'jet'):
+#             self.fillParticle(tree, p_name + '_jet', lepton.jet)
         self.fillGeneric(tree, lepton_vars, lepton, p_name)
 
     # muon
@@ -140,6 +141,15 @@ class TreeProducerBase(TreeAnalyzerNumpy):
     def fillMuon(self, tree, p_name, muon):
         self.fillLepton(tree, p_name, muon)
         self.fillGeneric(tree, muon_vars, muon, p_name)
+
+    # photon
+    def bookPhoton(self, tree, p_name):
+        self.bookParticle(tree, p_name)
+        self.bookGeneric(tree, photon_vars, p_name)
+
+    def fillPhoton(self, tree, p_name, pho):
+        self.fillParticle(tree, p_name, pho)
+        self.fillGeneric(tree, photon_vars, pho, p_name)
 
     # ele
     def bookEle(self, tree, p_name):

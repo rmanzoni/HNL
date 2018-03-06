@@ -66,6 +66,7 @@ class HNLGenTreeAnalyzer(Analyzer):
         for ip in [event.the_hn.lep1, event.the_hn.lep2, event.the_pl]:
             finaldaus  = []
             for ipp in event.genp_packed:
+#             for ipp in event.genp: # try with all particles, see if it makes sense
                 mother = ipp.mother(0)
                 if mother and isAncestor(ip, mother):
                     finaldaus.append(ipp)
@@ -75,7 +76,11 @@ class HNLGenTreeAnalyzer(Analyzer):
                 try:
                     ip.finallep = max([ii for ii in ip.finaldaughters if ii.pdgId()==ip.pdgId()], key = lambda x : x.pt())
                 except:
-                    ip.finallep = max([ii for ii in ip.finaldaughters if abs(ii.pdgId()) in [11, 13]], key = lambda x : x.pt())                
+                    try:
+                        ip.finallep = max([ii for ii in ip.finaldaughters if abs(ii.pdgId()) in [11, 13]], key = lambda x : x.pt())                
+                    except:
+                        return False
+#                         import pdb ; pdb.set_trace()
             else:
                 ip.finallep = ip
 

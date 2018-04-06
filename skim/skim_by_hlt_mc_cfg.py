@@ -10,6 +10,14 @@ process.source = cms.Source (
     'PoolSource',
     fileNames=cms.untracked.vstring(
         '/store/mc/RunIISummer16MiniAODv2/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/MINIAODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext2-v1/110000/005ED0EB-79F1-E611-B6DA-02163E011C2B.root',
+#         '/store/mc/RunIISummer16MiniAODv2/WZTo3LNu_mllmin01_13TeV-powheg-pythia8_ext1/MINIAODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext1-v1/110000/7849DACC-39DE-E611-B5EF-0CC47A7C35D2.root',
+#         '/store/mc/RunIISummer16MiniAODv2/TTJets_SingleLeptFromT_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/MINIAODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext1-v1/50000/AE4923DC-8FBD-E611-BE69-0CC47AD98F70.root',
+#         '/store/mc/RunIISummer16MiniAODv2/TTJets_SingleLeptFromTbar_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/MINIAODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext1-v1/120000/CC4F79C7-ACBD-E611-94B2-0025905B859E.root',
+#         '/store/mc/RunIISummer16MiniAODv2/TTJets_DiLept_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/MINIAODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext1-v1/80000/D4D9231F-27BE-E611-9EEB-001E67504F55.root',
+#         '/store/mc/RunIISummer16MiniAODv2/WJetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/MINIAODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/70000/B249E9C0-23BC-E611-A811-001E67A4061D.root',
+#         '/store/mc/RunIISummer16MiniAODv2/ST_t-channel_top_4f_inclusiveDecays_13TeV-powhegV2-madspin-pythia8_TuneCUETP8M1/MINIAODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/60000/DA7BCA69-5BB9-E611-AC7F-A0000420FE80.root',
+#         '/store/mc/RunIISummer16MiniAODv2/DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/MINIAODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext1-v1/60000/B2E53696-84D8-E611-A2BD-A4BADB1E6F7A.root',
+#         '/store/mc/RunIISummer16MiniAODv2/tZq_ll_4f_13TeV-amcatnlo-pythia8/MINIAODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext1-v1/120000/AC1D0602-5DC0-E611-B234-848F69FD29D0.root',
     ),
     secondaryFileNames = cms.untracked.vstring(
         '/store/mc/RunIISummer16DR80Premix/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/AODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext2-v1/110002/062AB3F9-48F1-E611-B7BC-02163E0137A0.root',
@@ -26,20 +34,15 @@ process.source = cms.Source (
 
 # limit the number of events to be processed
 process.maxEvents = cms.untracked.PSet(
-    input = cms.untracked.int32( 100 )
+    input = cms.untracked.int32( 1000 )
 )
-
-# load the GT, corresponding to your samples
-from Configuration.AlCa.GlobalTag import GlobalTag
-process.load('Configuration/StandardSequences/FrontierConditions_GlobalTag_cff')
-process.GlobalTag.globaltag = '80X_mcRun2_asymptotic_2016_TrancheIV_v6'
 
 # skim by HLT trigger
 process.triggerSelection = cms.EDFilter( 
     'TriggerResultsFilter',
-    triggerConditions     = cms.vstring(mu_hlts + mu_hlts),
-    hltResults            = cms.InputTag( 'TriggerResults', '', 'HLT' ),
-    l1tResults            = cms.InputTag( 'gtStage2Digis' ),
+    triggerConditions = cms.vstring(mu_hlts + ele_hlts),
+    hltResults        = cms.InputTag( 'TriggerResults', '', 'HLT' ),
+    l1tResults        = cms.InputTag( '' ),
 )
 
 # path & schedule

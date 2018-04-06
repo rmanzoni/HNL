@@ -7,4 +7,5 @@ mu_hlts  = [
 
 ele_hlts = [
     'HLT_Ele25_WPTight_Gsf_v*',
+    'HLT_Ele27_WPTight_Gsf_v*',
 ]

@@ -45,6 +45,13 @@ event_vars = [
     Variable('puweight', lambda ev : ev.puWeight, type=float),
 ]
 
+# generic HNL reconstruction event variables
+hnlreco_vars = [
+    Variable('n_sMu', lambda ev : ev.n_sMu, type=int),
+    Variable('n_dSAMu', lambda ev : ev.n_sMu, type=int),
+    Variable('n_dimuon', lambda ev : ev.n_dimuon, type=int),
+]
+
 # generic HNL variables
 hnl_vars = [
     Variable('w_pt'           , lambda hn : getattr(hn, 'pt'          , default)()),

@@ -44,8 +44,8 @@ class HNLAnalyzer(Analyzer):
         count = self.counters.counter('HNL')
         count.register('all events')
         count.register('>= 3 muons')
-        count.register('>= 3 muons && > 0 os_pairs')
-        count.register('>= 3 muons && > 0 os_pairs with mutual vertices')
+        count.register('os_pairs')
+        count.register('dimuons')
 
         # initiate the VertexFitter
         self.vtxfit = VertexFitter()
@@ -89,17 +89,11 @@ class HNLAnalyzer(Analyzer):
             
         
         # store the number of sMu and dSAMu per event
-        if len(event.sMu):
-            event.n_sMu = len(event.sMu)
-            # event.maxptsMu=sorted(event.sMu,key=lambda x: x.pt(),reverse = True)[0] 
-        else:
-            event.n_sMu = 0    
+        event.n_sMu = len(event.sMu)
+        # event.maxptsMu=sorted(event.sMu,key=lambda x: x.pt(),reverse = True)[0] 
 
-        if len(event.dSAMu):
-            event.n_dSAMu = len(event.dSAMu)
-            # event.maxptdSAMu=sorted(event.dSAMu,key=lambda x: x.pt(),reverse=True)[0]
-        else:
-            event.n_dSAMu = 0
+        event.n_dSAMu = len(event.dSAMu)
+        # event.maxptdSAMu=sorted(event.dSAMu,key=lambda x: x.pt(),reverse=True)[0]
         
         ##############
         # for now ONLY work with sMu
@@ -117,7 +111,7 @@ class HNLAnalyzer(Analyzer):
         if not len(event.os_pairs):
             return False
 
-        self.counters.counter('HNL').inc('>= 3 muons && > 0 os_pairs')
+        self.counters.counter('HNL').inc('os_pairs')
 
         # only selecting dimuon pairs with mutual vertices (surviving the kinematic vertex fitter) 
         dimuon = []
@@ -144,7 +138,7 @@ class HNLAnalyzer(Analyzer):
         if not len(dimuon):
             return False
         
-        self.counters.counter('HNL').inc('>= 3 muons && > 0 os_pairs with mutual vertices')
+        self.counters.counter('HNL').inc('dimuons')
         
         # # only selecting those pairs with a vertex fit chi2 < 1. 
         # for dm in dimuon:
@@ -152,22 +146,18 @@ class HNLAnalyzer(Analyzer):
                 # dimuon.remove(dm)
         
         event.n_dimuon = len(dimuon)
-
-
-        event.dimuon_dxy = []
-
-        for i in xrange(len(dimuon)): 
-            event.dimuon_dxy.append(sqrt(pow(dimuon[i].vtx.x(),2)+pow(dimuon[i].vtx.y(),2)))
-
-
-        
-
+         
         # select the dimuon with lowest vertex fit chi2 as the HNL dimuon candidate
-        # event.dimuon_minchi2 = sorted(dimuon, key = lambda x: x.chi2(), reverse = False)[0] 
+        hnldimuon = sorted(dimuon, key = lambda x: x.chi2(), reverse = False)[0] 
 
-            # event.maxptsMu=sorted(event.sMu,key=lambda x: x.pt(),reverse = True)[0] 
+
+        # TODO: Gather all relevant observables of the hnldimuon
+        event.hnldimuon_displacement2D = hnldimuon.displacement2D()
+
+
         return True
 
+        # event.maxptsMu=sorted(event.sMu,key=lambda x: x.pt(),reverse = True)[0] 
         # event.muons = self.handles ['muons'].product()
         # event.positivemuons = [mu for mu in event.muons if mu.charge()==1]
         # event.run = event.input.eventAuxiliary().run() 

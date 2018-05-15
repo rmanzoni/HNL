@@ -234,6 +234,41 @@ muon_vars = [
     Variable('id_hpt'     , lambda muon : muon.muonID('POG_ID_HighPt')                      ),
 ]
 
+# muon_extra_vars = [
+#   std::cout << "[From " << trackType << "] : pT :" << track->pt()
+# 	    << " , sigma(pT)/pT :" << track->ptError()/track->pt()
+# 	    << " , eta :" << track->eta()
+# 	    << " , phi :" << track->phi()
+# 	    << " , charge :" << track->charge()
+# 	    << " , n.d.o.f. :" << track->ndof()
+# 	    << " , chi2/n.d.o.f. :" << track->normalizedChi2()
+# 	    << " , # pixel hits :" << track->hitPattern().numberOfValidPixelHits()
+# 	    << " , # trk layers :" << track->hitPattern().trackerLayersWithMeasurement()
+# 	    << " , # muon hits :" << track->hitPattern().numberOfValidMuonHits()
+# 	    << " , # muon valid hits :" << track->hitPattern().numberOfMuonHits()
+# 	    << " , # DT valid hits :" << track->hitPattern().numberOfValidMuonDTHits()
+# 	    << " , # CSC valid hits :" << track->hitPattern().numberOfValidMuonCSCHits()
+# 	    << " , # RPC valid hits :" << track->hitPattern().numberOfValidMuonRPCHits()
+# 	    << " , # DT bad hits :" << track->hitPattern().numberOfBadMuonDTHits()
+# 	    << " , # CSC bad hits :" << track->hitPattern().numberOfBadMuonCSCHits()
+# 	    << " , # RPC bad hits :" << track->hitPattern().numberOfBadMuonRPCHits()
+# 	    << " , # DT lost hits :" << track->hitPattern().numberOfLostMuonDTHits()
+# 	    << " , # CSC lost hits :" << track->hitPattern().numberOfLostMuonCSCHits()
+# 	    << " , # RPC lost hits :" << track->hitPattern().numberOfLostMuonRPCHits()
+# 	    << " , # muon stations with valid hits :" << track->hitPattern().muonStationsWithValidHits()
+# 	    << " , # DT stations with valid hits :" << track->hitPattern().dtStationsWithValidHits()
+# 	    << " , # CSC stations with valid hits :" << track->hitPattern().cscStationsWithValidHits()
+# 	    << " , # RPC stations with valid hits :" << track->hitPattern().rpcStationsWithValidHits()
+# 	    << " , # muon stations with valid hits :" << track->hitPattern().muonStationsWithValidHits()
+# 	    << " , # DT stations with any hits :" << track->hitPattern().dtStationsWithAnyHits()
+# 	    << " , # CSC stations with any hits :" << track->hitPattern().cscStationsWithAnyHits()
+# 	    << " , # RPC stations with any hits :" << track->hitPattern().rpcStationsWithAnyHits()
+# 	    << std::endl;  
+# 
+# 
+# ]
+
+
 muon_extra_vars = [
     # ask quality first...
     Variable('dxy_innertrack'   , lambda muon : muon.innerTrack().dxy(muon.associatedVertex.position())              ),

@@ -1,6 +1,6 @@
 import numpy as np
 from PhysicsTools.Heppy.analyzers.core.TreeAnalyzerNumpy import TreeAnalyzerNumpy
-from CMGTools.HNL.analyzers.treeVariables import event_vars, vertex_vars, hnl_vars, particle_vertex_vars, particle_vars, lepton_vars, photon_vars, electron_vars, muon_vars, tau_vars, tau_vars_extra, jet_vars, jet_vars_extra, geninfo_vars, l1obj_vars
+from CMGTools.HNL.analyzers.treeVariables import event_vars, vertex_vars, hnl_vars, particle_vertex_vars, particle_vars, lepton_vars, photon_vars, electron_vars, muon_vars, tau_vars, tau_vars_extra, jet_vars, jet_vars_extra, geninfo_vars, l1obj_vars, hnlreco_vars
 
 class TreeProducerBase(TreeAnalyzerNumpy):
 
@@ -74,7 +74,14 @@ class TreeProducerBase(TreeAnalyzerNumpy):
     def fillEvent(self, tree, event):
         self.fillGeneric(tree, event_vars, event)
 
-    # hnl
+    # hnl reconstruction
+    def bookHNLReco(self, tree):
+        self.bookGeneric(tree, hnlreco_vars)
+
+    def fillHNLReco(self, tree, event):
+        self.fillGeneric(tree, hnlreco_vars, event)
+
+    # gen level hnl
     def bookHNL(self, tree, p_name):
         self.bookGeneric(tree, hnl_vars, p_name)
 

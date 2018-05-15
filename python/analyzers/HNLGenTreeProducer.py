@@ -68,6 +68,7 @@ class HNLGenTreeProducer(TreeProducerBase):
         '''
         self.readCollections(event.input)
         self.tree.reset()
+        # import pdb;pdb.set_trace() #zhud: debug
 
         if not eval(self.skimFunction):
             return False

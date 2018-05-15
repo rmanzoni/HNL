@@ -240,41 +240,44 @@ muon_vars = [
     Variable('id_t'       , lambda muon : muon.muonID('POG_ID_Tight')                       ),
     Variable('id_tnv'     , lambda muon : muon.muonID('POG_ID_TightNoVtx')                  ),
     Variable('id_hpt'     , lambda muon : muon.muonID('POG_ID_HighPt')                      ),
+    Variable('is_sa'      , lambda muon : muon.isStandAloneMuon()                           ),
+    Variable('is_gl'      , lambda muon : muon.isGlobalMuon()                               ),
+    Variable('is_tk'      , lambda muon : muon.isTrackerMuon()                              ),
+    Variable('is_pf'      , lambda muon : muon.isPFMuon()                                   ),
 ]
 
-# muon_extra_vars = [
-#   std::cout << "[From " << trackType << "] : pT :" << track->pt()
-# 	    << " , sigma(pT)/pT :" << track->ptError()/track->pt()
-# 	    << " , eta :" << track->eta()
-# 	    << " , phi :" << track->phi()
-# 	    << " , charge :" << track->charge()
-# 	    << " , n.d.o.f. :" << track->ndof()
-# 	    << " , chi2/n.d.o.f. :" << track->normalizedChi2()
-# 	    << " , # pixel hits :" << track->hitPattern().numberOfValidPixelHits()
-# 	    << " , # trk layers :" << track->hitPattern().trackerLayersWithMeasurement()
-# 	    << " , # muon hits :" << track->hitPattern().numberOfValidMuonHits()
-# 	    << " , # muon valid hits :" << track->hitPattern().numberOfMuonHits()
-# 	    << " , # DT valid hits :" << track->hitPattern().numberOfValidMuonDTHits()
-# 	    << " , # CSC valid hits :" << track->hitPattern().numberOfValidMuonCSCHits()
-# 	    << " , # RPC valid hits :" << track->hitPattern().numberOfValidMuonRPCHits()
-# 	    << " , # DT bad hits :" << track->hitPattern().numberOfBadMuonDTHits()
-# 	    << " , # CSC bad hits :" << track->hitPattern().numberOfBadMuonCSCHits()
-# 	    << " , # RPC bad hits :" << track->hitPattern().numberOfBadMuonRPCHits()
-# 	    << " , # DT lost hits :" << track->hitPattern().numberOfLostMuonDTHits()
-# 	    << " , # CSC lost hits :" << track->hitPattern().numberOfLostMuonCSCHits()
-# 	    << " , # RPC lost hits :" << track->hitPattern().numberOfLostMuonRPCHits()
-# 	    << " , # muon stations with valid hits :" << track->hitPattern().muonStationsWithValidHits()
-# 	    << " , # DT stations with valid hits :" << track->hitPattern().dtStationsWithValidHits()
-# 	    << " , # CSC stations with valid hits :" << track->hitPattern().cscStationsWithValidHits()
-# 	    << " , # RPC stations with valid hits :" << track->hitPattern().rpcStationsWithValidHits()
-# 	    << " , # muon stations with valid hits :" << track->hitPattern().muonStationsWithValidHits()
-# 	    << " , # DT stations with any hits :" << track->hitPattern().dtStationsWithAnyHits()
-# 	    << " , # CSC stations with any hits :" << track->hitPattern().cscStationsWithAnyHits()
-# 	    << " , # RPC stations with any hits :" << track->hitPattern().rpcStationsWithAnyHits()
-# 	    << std::endl;  
-# 
-# 
-# ]
+# for an extensive summary of possibly interesting muon variables, have a look at
+# https://github.com/trocino/MuonPOG/blob/master/Tools/plugins/MuonEventDumper.cc#L350-L377
+
+muon_track_extra_vars = [
+    Variable('sigma_pt_over_pt'               , lambda track : track.ptError()/track.pt()                       ),
+    Variable('eta'                            , lambda track : track.eta()                                      ),
+    Variable('phi'                            , lambda track : track.phi()                                      ),
+    Variable('charge'                         , lambda track : track.charge()                                   ),
+    Variable('ndof'                           , lambda track : track.ndof()                                     ),
+    Variable('chi2_over_ndof'                 , lambda track : track.normalizedChi2()                           ),
+    Variable('n_pix_hits'                     , lambda track : track.hitPattern().numberOfValidPixelHits()      ),
+    Variable('n_trk_layers'                   , lambda track : track.hitPattern().trackerLayersWithMeasurement()),
+    Variable('n_mu_hits'                      , lambda track : track.hitPattern().numberOfValidMuonHits()       ),
+    Variable('n_mu_valid_hits'                , lambda track : track.hitPattern().numberOfMuonHits()            ),
+    Variable('n_dt_valid_hits'                , lambda track : track.hitPattern().numberOfValidMuonDTHits()     ),
+    Variable('n_csc_valid_hits'               , lambda track : track.hitPattern().numberOfValidMuonCSCHits()    ),
+    Variable('n_rpc_valid_hits'               , lambda track : track.hitPattern().numberOfValidMuonRPCHits()    ),
+    Variable('n_dt_bad_hits'                  , lambda track : track.hitPattern().numberOfBadMuonDTHits()       ),
+    Variable('n_csc_bad_hits'                 , lambda track : track.hitPattern().numberOfBadMuonCSCHits()      ),
+    Variable('n_rpc_bad_hits'                 , lambda track : track.hitPattern().numberOfBadMuonRPCHits()      ),
+    Variable('n_dt_lost_hits'                 , lambda track : track.hitPattern().numberOfLostMuonDTHits()      ),
+    Variable('n_csc_lost_hits'                , lambda track : track.hitPattern().numberOfLostMuonCSCHits()     ),
+    Variable('n_rpc_lost_hits'                , lambda track : track.hitPattern().numberOfLostMuonRPCHits()     ),
+    Variable('n_mu_st_w_valid_hits'           , lambda track : track.hitPattern().muonStationsWithValidHits()   ),
+    Variable('n_dt_st_w_valid_hits'           , lambda track : track.hitPattern().dtStationsWithValidHits()     ),
+    Variable('n_csc_st_w_valid_hits'          , lambda track : track.hitPattern().cscStationsWithValidHits()    ),
+    Variable('n_rpc_st_w_valid_hits'          , lambda track : track.hitPattern().rpcStationsWithValidHits()    ),
+    Variable('n_mu_st_w_valid_hits'           , lambda track : track.hitPattern().muonStationsWithAnyHits()     ),
+    Variable('n_dt_st_w_valid_hits'           , lambda track : track.hitPattern().dtStationsWithAnyHits()       ),
+    Variable('n_csc_st_w_valid_hits'          , lambda track : track.hitPattern().cscStationsWithAnyHits()      ),
+    Variable('n_rpc_st_w_valid_hits'          , lambda track : track.hitPattern().rpcStationsWithAnyHits()      ),
+]
 
 
 muon_extra_vars = [

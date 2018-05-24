@@ -148,11 +148,16 @@ class HNLAnalyzer(Analyzer):
         event.n_dimuon = len(dimuon)
          
         # select the dimuon with lowest vertex fit chi2 as the HNL dimuon candidate
-        hnldimuon = sorted(dimuon, key = lambda x: x.chi2(), reverse = False)[0] 
+        dimuon = sorted(dimuon, key = lambda x: x.chi2(), reverse = False)[0] 
+        event.dimuon = dimuon
+        event.sMu1 = sorted(dimuon.pair, key = lambda x: x.pt(), reverse = False)[0]
+        event.sMu2 = sorted(dimuon.pair, key = lambda x: x.pt(), reverse = True)[0] 
+
+        
 
 
         # TODO: Gather all relevant observables of the hnldimuon
-        event.hnldimuon_displacement2D = hnldimuon.displacement2D()
+        # event.hnldimuon_displacement2D = hnldimuon.displacement2D()
 
 
         return True

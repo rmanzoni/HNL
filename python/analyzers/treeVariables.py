@@ -50,7 +50,11 @@ hnlreco_vars = [
     Variable('n_sMu', lambda ev : ev.n_sMu, type=int),
     Variable('n_dSAMu', lambda ev : ev.n_sMu, type=int),
     Variable('n_dimuon', lambda ev : ev.n_dimuon, type=int),
-    Variable('hnldimuon_displacement2D', lambda ev: ev.hnldimuon_displacement2D, type=float),
+]
+
+# generic DiMuon variables
+dimuon_vars = [
+    Variable('displacement2D', lambda hn : hn.displacement2D(), type = float), 
 ]
 
 # generic HNL variables

@@ -6,6 +6,7 @@ import ROOT
 from itertools import product, combinations
 import math
 import numpy as np
+from copy import deepcopy as dc
 
 from PhysicsTools.Heppy.analyzers.core.Analyzer      import Analyzer
 from PhysicsTools.Heppy.analyzers.core.AutoHandle    import AutoHandle
@@ -18,8 +19,9 @@ from PhysicsTools.Heppy.physicsobjects.Jet           import Jet
 from PhysicsTools.Heppy.physicsobjects.PhysicsObject import PhysicsObject
 from PhysicsTools.HeppyCore.utils.deltar             import deltaR, deltaPhi, inConeCollection, bestMatch
 
-from CMGTools.HNL.utils.utils         import isAncestor, displacement2D, displacement3D, makeRecoVertex # utility functions
-from CMGTools.HNL.physicsobjects.HN3L import HN3L
+from CMGTools.HNL.utils.utils                  import isAncestor, displacement2D, displacement3D, makeRecoVertex # utility functions
+from CMGTools.HNL.physicsobjects.HN3L          import HN3L
+from CMGTools.HNL.physicsobjects.DisplacedMuon import DisplacedMuon
 
 from pdb import set_trace
 
@@ -61,6 +63,10 @@ class RecoGenAnalyzer(Analyzer):
         # create a std::vector<RecoChargedCandidate> to be passed to the fitter 
         self.tofit = ROOT.std.vector('reco::RecoChargedCandidate')()
        
+    def buildDisplacedMuons(self, collection):
+        muons = [DisplacedMuon(mm, collection) for mm in collection]
+        return muons
+
     def process(self, event):
         self.readCollections(event.input)
 
@@ -72,9 +78,9 @@ class RecoGenAnalyzer(Analyzer):
         event.photons     = map(Photon       , self.handles  ['photons'    ].product())
         event.taus        = map(Tau          , self.handles  ['taus'       ].product())
         event.jets        = map(Jet          , self.handles  ['jets'       ].product())
-        event.dsmuons     = map(PhysicsObject, self.handles  ['dsmuons'    ].product())
-        event.dgmuons     = map(PhysicsObject, self.handles  ['dgmuons'    ].product())
-
+        event.dsmuons     = self.buildDisplacedMuons(self.handles['dsmuons'].product())
+        event.dgmuons     = self.buildDisplacedMuons(self.handles['dgmuons'].product())
+        
         # vertex stuff
         event.pvs         = self.handles['pvs'     ].product()
         event.svs         = self.handles['svs'     ].product()
@@ -95,19 +101,7 @@ class RecoGenAnalyzer(Analyzer):
         self.assignVtx(event.electrons, myvtx)
         self.assignVtx(event.photons  , myvtx)
         self.assignVtx(event.taus     , myvtx)
-                
-        # impose the muon PDG ID to the displaced objects, that otherwise carry none
-        for mm in event.dsmuons + event.dgmuons:
-            mm.mass   = lambda : 0.10565837
-            mm.pdgId  = lambda : -(mm.charge()*13)
 
-        # also append a TrackRef, this will be needed for the refitting 
-        for jj, mm in enumerate(event.dsmuons):
-            mm.track = lambda : ROOT.reco.TrackRef(self.handles['dsmuons'].product(), jj)
-
-        for jj, mm in enumerate(event.dgmuons):
-            mm.track = lambda : ROOT.reco.TrackRef(self.handles['dgmuons'].product(), jj)
-    
         # all matchable objects
         matchable = event.electrons + event.photons + event.muons + event.taus + event.dsmuons + event.dgmuons 
 
@@ -180,6 +174,34 @@ class RecoGenAnalyzer(Analyzer):
         # clear it before doing it again
         event.recoSv = None
 
+
+######### DEBUG VTX MADE OUT OF DSA MUONS
+#         if len(event.dsmuons) > 2:
+#             # clear the vector
+#             self.tofit.clear()
+#             # create a RecoChargedCandidate for each reconstructed lepton and flush it into the vector
+#             for il in [event.dsmuons[0], event.dsmuons[1]]:
+#                 # if the reco particle is a displaced thing, it does not have the p4() method, so let's build it 
+#                 myp4 = ROOT.Math.LorentzVector('<ROOT::Math::PxPyPzE4D<double> >')(il.px(), il.py(), il.pz(), math.sqrt(il.mass()**2 + il.px()**2 + il.py()**2 + il.pz()**2))
+#                 ic = ROOT.reco.RecoChargedCandidate() # instantiate a dummy RecoChargedCandidate
+#                 ic.setCharge(il.charge())             # assign the correct charge
+#                 ic.setP4(myp4)                        # assign the correct p4
+#                 ic.setTrack(il.track())               # set the correct TrackRef
+#                 if ic.track().isNonnull():            # check that the track is valid, there are photons around too!
+#                     self.tofit.push_back(ic)
+#             # further sanity check: two *distinct* tracks
+#             if self.tofit.size()==2 and self.tofit[0].track() != self.tofit[1].track():
+#                 # fit it!
+#                 svtree = self.vtxfit.Fit(self.tofit) # actual vertex fitting
+#                 # check that the vertex is good
+#                 if not svtree.get().isEmpty() and svtree.get().isValid():
+#                     svtree.movePointerToTheTop()
+#                     sv = svtree.currentDecayVertex().get()
+#                     event.recoSv = makeRecoVertex(sv, kinVtxTrkSize=2) # need to do some gymastics
+#                     print 'good double dsa vertex! vx=%.2f, vy=%.2f, vz=%.2f' %(event.recoSv.x(), event.recoSv.y(), event.recoSv.z()) 
+#                     import pdb ; pdb.set_trace()
+
+
         # let's refit the secondary vertex, IF both leptons match to some reco particle
         if not(event.the_hnl.l1().bestmatch is None or \
                event.the_hnl.l2().bestmatch is None):
@@ -206,6 +228,6 @@ class RecoGenAnalyzer(Analyzer):
                     svtree.movePointerToTheTop()
                     sv = svtree.currentDecayVertex().get()
                     event.recoSv = makeRecoVertex(sv, kinVtxTrkSize=2) # need to do some gymastics
-        
+    
         return True
     

@@ -55,6 +55,7 @@ hnlreco_vars = [
 # generic DiMuon variables
 dimuon_vars = [
     Variable('displacement2D', lambda hn : hn.displacement2D(), type = float), 
+    Variable('vtxFitChi2', lambda hn : hn.vtx.chi2(), type = float),
 ]
 
 # generic HNL variables

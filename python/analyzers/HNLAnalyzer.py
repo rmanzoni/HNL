@@ -111,7 +111,7 @@ class HNLAnalyzer(Analyzer):
         if not len(event.os_pairs):
             return False
 
-        self.countrs.counter('HNL').inc('os_pairs')
+        self.counters.counter('HNL').inc('os_pairs')
 
         # select only dimuon pairs with mutual vertices (surviving the kinematic vertex fitter)
         # TODO: can the kinematic vertex fitter further summarized into one function?  

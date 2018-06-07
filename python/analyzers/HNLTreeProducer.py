@@ -14,8 +14,8 @@ class HNLTreeProducer(TreeProducerBase):
         self.bookEvent(self.tree)
         self.bookHNLReco(self.tree)
         self.bookDiMuon(self.tree, 'dimuon')
-        self.bookMuon(self.tree, 'sMu1')
-        self.bookMuon(self.tree, 'sMu2')
+        self.bookParticle (self.tree,'dMu1')
+        self.bookParticle (self.tree,'dMu2')
 
      
         # # the slimmedMuons
@@ -32,8 +32,8 @@ class HNLTreeProducer(TreeProducerBase):
         self.fillEvent(self.tree, event)
         self.fillHNLReco(self.tree, event)
         self.fillDiMuon(self.tree, 'dimuon', event.dimuon)
-        self.fillMuon(self.tree,'sMu1', event.sMu1)
-        self.fillMuon(self.tree,'sMu2', event.sMu2)
+        self.fillParticle(self.tree,'dMu1', event.dMu1)
+        self.fillParticle(self.tree,'dMu2', event.dMu2)
         # if hasattr(event,'maxptsMu'):self.fillMuon(self.tree,'sMu', event.maxptsMu)
         # if hasattr(event,'maxptdSAMu'):self.fillParticle(self.tree,'dSAMu', event.maxptdSAMu)
 

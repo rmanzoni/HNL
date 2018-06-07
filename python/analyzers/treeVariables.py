@@ -49,6 +49,8 @@ event_vars = [
 hnlreco_vars = [
     Variable('n_sMu', lambda ev : ev.n_sMu, type=int),
     Variable('n_dSAMu', lambda ev : ev.n_sMu, type=int),
+    Variable('n_dMu', lambda ev : ev.n_dMu, type=int),
+    Variable('n_os_pairs', lambda ev : ev.n_os_pairs, type=int),
     Variable('n_dimuon', lambda ev : ev.n_dimuon, type=int),
 ]
 

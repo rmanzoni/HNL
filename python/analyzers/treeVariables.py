@@ -49,8 +49,19 @@ event_vars = [
 hnlreco_vars = [
     Variable('n_sMu', lambda ev : ev.n_sMu, type=int),
     Variable('n_dSAMu', lambda ev : ev.n_sMu, type=int),
+    Variable('n_dMu', lambda ev : ev.n_dMu, type=int),
+    Variable('n_os_pairs', lambda ev : ev.n_os_pairs, type=int),
+    Variable('n_sMuOnly',      lambda ev : ev.n_sMuOnly, type=int),
+    Variable('n_sMuRedundant', lambda ev : ev.n_sMuRedundant, type=int),
+    Variable('n_dSAMuOnly',      lambda ev : ev.n_dSAMuOnly, type=int),
+    Variable('n_dSAMuRedundant', lambda ev : ev.n_dSAMuRedundant, type=int),
     Variable('n_dimuon', lambda ev : ev.n_dimuon, type=int),
-    Variable('hnldimuon_displacement2D', lambda ev: ev.hnldimuon_displacement2D, type=float),
+]
+
+# generic DiMuon variables
+dimuon_vars = [
+    Variable('displacement2D', lambda hn : hn.displacement2D(), type = float), 
+    Variable('vtxFitChi2', lambda hn : hn.vtx.chi2(), type = float),
 ]
 
 # generic HNL variables

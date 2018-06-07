@@ -38,7 +38,6 @@ puFileData = '/afs/cern.ch/user/a/anehrkor/public/Data_Pileup_2016_271036-284044
 # production = True run on batch, production = False (or unset) run locally
 production  = getHeppyOption('production' , False)
 pick_events = getHeppyOption('pick_events', False)
-
 ###################################################
 ###               HANDLE SAMPLES                ###
 ###################################################

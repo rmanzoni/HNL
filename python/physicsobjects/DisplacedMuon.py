@@ -35,5 +35,7 @@ class DisplacedMuon(PhysicsObject):
         ''' return reco::TrackRef '''   
         return ROOT.reco.TrackRef(self.collection_, self.position_in_collection)
 
+    def GetPhysObj(self):
+        return self.physObj
         
     

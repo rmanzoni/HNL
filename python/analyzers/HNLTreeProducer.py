@@ -13,6 +13,7 @@ class HNLTreeProducer(TreeProducerBase):
         # output for reco analysis
         self.bookEvent(self.tree)
         self.bookHNLReco(self.tree)
+        self.bookCheckHNLReco(self.tree)
         self.bookDiMuon(self.tree, 'dimuonChi2')
         self.bookParticle (self.tree,'dMu1Chi2')
         self.bookParticle (self.tree,'dMu2Chi2')
@@ -88,6 +89,7 @@ class HNLTreeProducer(TreeProducerBase):
 
         # output of reco analysis
         self.fillEvent(self.tree, event)
+        self.fillCheckHNLReco(self.tree, event)
         self.fillHNLReco(self.tree, event)
         self.fillDiMuon(self.tree,'dimuonChi2', event.dimuonChi2)
         self.fillParticle(self.tree,'dMu1Chi2', event.dMu1Chi2)

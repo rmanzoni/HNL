@@ -61,9 +61,8 @@ class CheckHNLAnalyzer(Analyzer):
 
         event.matchedHNLChi2 = False
         event.matchedHNLDxy  = False
-        set_trace()
-        event.matchedHNLChi2 = event.matchedL1Chi2 and matchedL2Chi2
-        event.matchedHNLDxy  = event.matchedL1Dxy  and matchedL2Dxy    
+        event.matchedHNLChi2 = event.matchedL1Chi2 and event.matchedL2Chi2
+        event.matchedHNLDxy  = event.matchedL1Dxy  and event.matchedL2Dxy    
 
 
         return True

@@ -60,12 +60,12 @@ hnlreco_vars = [
 
 # Variables indication efficiency of HNL reconstruction
 check_hnlreco_vars = [
-    Variable('flag_matchedL1Chi2', lambda ev : ev.matchedL1Chi2,   type=bool),
-    Variable('flag_matchedL2Chi2', lambda ev : ev.matchedL2Chi2,   type=bool),
-    Variable('flag_matchedL1Dxy',  lambda ev : ev.matchedL1Dxy ,   type=bool),
-    Variable('flag_matchedL2Dxy',  lambda ev : ev.matchedL2Dxy ,   type=bool),
-    Variable('flag_matchedHNLChi2', lambda ev : ev.matchedHNLChi2 ,type=bool),
-    Variable('flag_matchedHNLDxy', lambda ev : ev.matchedHNLDxy ,  type=bool),
+    Variable('flag_matchedL1Chi2', lambda ev : ev.matchedL1Chi2,   ),
+    Variable('flag_matchedL2Chi2', lambda ev : ev.matchedL2Chi2,   ),
+    Variable('flag_matchedL1Dxy',  lambda ev : ev.matchedL1Dxy ,   ),
+    Variable('flag_matchedL2Dxy',  lambda ev : ev.matchedL2Dxy ,   ),
+    Variable('flag_matchedHNLChi2', lambda ev : ev.matchedHNLChi2 ,),
+    Variable('flag_matchedHNLDxy', lambda ev : ev.matchedHNLDxy ,  ),
 
 ]
 

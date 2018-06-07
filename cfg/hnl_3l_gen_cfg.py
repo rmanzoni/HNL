@@ -18,15 +18,15 @@ from PhysicsTools.Heppy.analyzers.core.PileUpAnalyzer    import PileUpAnalyzer
 from PhysicsTools.Heppy.analyzers.gen.GeneratorAnalyzer  import GeneratorAnalyzer
 from PhysicsTools.Heppy.analyzers.gen.LHEWeightAnalyzer  import LHEWeightAnalyzer
         
-
 #WTau3Mu analysers
 from CMGTools.HNL.analyzers.HNLGenTreeAnalyzer import HNLGenTreeAnalyzer
 from CMGTools.HNL.analyzers.HNLGenTreeProducer import HNLGenTreeProducer
 from CMGTools.HNL.analyzers.RecoGenAnalyzer    import RecoGenAnalyzer
 
 # import samples, signal
-# from CMGTools.HNL.samples.signal import all_signals as samples
-from CMGTools.HNL.samples.signal import signals_mass_3 as samples
+from CMGTools.HNL.samples.signal import all_signals as samples
+from CMGTools.HNL.samples.signal import HN3L_M_7_V_0p00547722557505_mu_onshell
+# from CMGTools.HNL.samples.signal import signals_mass_3 as samples
 
 puFileMC   = '$CMSSW_BASE/src/CMGTools/H2TauTau/data/MC_Moriond17_PU25ns_V1.root'
 puFileData = '/afs/cern.ch/user/a/anehrkor/public/Data_Pileup_2016_271036-284044_80bins.root'
@@ -36,16 +36,17 @@ puFileData = '/afs/cern.ch/user/a/anehrkor/public/Data_Pileup_2016_271036-284044
 ###################################################
 # Get all heppy options; set via "-o production" or "-o production=True"
 # production = True run on batch, production = False (or unset) run locally
-production         = getHeppyOption('production'        , False)
-pick_events        = getHeppyOption('pick_events'       , False)
+production  = getHeppyOption('production' , False)
+pick_events = getHeppyOption('pick_events', False)
+
 ###################################################
 ###               HANDLE SAMPLES                ###
 ###################################################
+samples = [HN3L_M_7_V_0p00547722557505_mu_onshell]
 
 for sample in samples:
     sample.triggers = ['HLT_IsoMu24_v%d' %i for i in range(4, 5)]
-
-    sample.splitFactor = splitFactor(sample, 1e5)
+    sample.splitFactor = splitFactor(sample, nEventsPerJob=1e5)
     sample.puFileData = puFileData
     sample.puFileMC   = puFileMC
 
@@ -146,7 +147,8 @@ if not production:
     selectedComponents   = [comp]
     comp.splitFactor     = 1
     comp.fineSplitFactor = 1
-    comp.files           = comp.files[:5]
+#     comp.files           = comp.files[:5]
+    comp.files           = ['file:miniAOD_skim.root']
 
 # the following is declared in case this cfg is used in input to the
 # heppy.py script

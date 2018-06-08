@@ -66,13 +66,25 @@ check_hnlreco_vars = [
     Variable('flag_matchedL2Dxy',  lambda ev : ev.matchedL2Dxy ,   ),
     Variable('flag_matchedHNLChi2', lambda ev : ev.matchedHNLChi2 ,),
     Variable('flag_matchedHNLDxy', lambda ev : ev.matchedHNLDxy ,  ),
+    Variable('flag_hnl_reconstructable', lambda ev : ev.hnl_reconstructable ,  ),
 
 ]
 
 # generic DiMuon variables
 dimuon_vars = [
-    Variable('displacement2D', lambda hn : hn.displacement2D(), type = float), 
+    Variable('dxy', lambda hn : hn.dxy(), type = float), 
     Variable('vtxFitChi2', lambda hn : hn.vtx.chi2(), type = float),
+]
+
+# generic DiMuon variables
+displacedmuon_vars = [
+    Variable('pt'    , lambda p: p.pt() ),
+    Variable('eta'   , lambda p: p.eta()),
+    Variable('phi'   , lambda p: p.phi()),
+    Variable('charge', lambda p: p.charge() if hasattr(p, 'charge') else 0), # charge may be non-integer for gen particles
+    Variable('mass'  , lambda p: p.mass()),
+    Variable('reco'  , lambda p: p.reco),
+    Variable('redundancy'  , lambda p: p.redundancy),
 ]
 
 # generic HNL variables

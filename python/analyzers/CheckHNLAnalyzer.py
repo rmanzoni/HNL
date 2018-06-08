@@ -39,31 +39,74 @@ class CheckHNLAnalyzer(Analyzer):
 
     def beginLoop(self, setup):
         super(CheckHNLAnalyzer, self).beginLoop(setup)
+        self.counters.addCounter('HNL')
+        count = self.counters.counter('HNL')
+        count.register('all events')
+        count.register('correctly reconstructed HNL through min_Chi2 method')
+        count.register('correctly reconstructed HNL through max_Dxy method')
 
     def process(self, event):
-        event.matchedL1Chi2 = False
-        event.matchedL2Chi2 = False
-        event.matchedL1Dxy  = False
-        event.matchedL2Dxy  = False
-
-        # confirm HNL reconstruction success if both gen leptons l1 and l2 are matched.
-        if (deltaR(event.dMu1Chi2,event.the_hnl.l1()) < 0.2) or (deltaR(event.dMu2Chi2,event.the_hnl.l1()) < 0.2): 
-            event.matchedL1Chi2 = True
-
-        if (deltaR(event.dMu1Chi2,event.the_hnl.l2()) < 0.2) or (deltaR(event.dMu2Chi2,event.the_hnl.l2()) < 0.2):    
-            event.matchedL2Chi2 = True
-
-        if (deltaR(event.dMu1Dxy,event.the_hnl.l1()) < 0.2) or (deltaR(event.dMu2Dxy,event.the_hnl.l1()) < 0.2): 
-            event.matchedL1Dxy = True
-
-        if (deltaR(event.dMu1Dxy,event.the_hnl.l2()) < 0.2) or (deltaR(event.dMu2Dxy,event.the_hnl.l2()) < 0.2): 
-            event.matchedL2Dxy = True
-
+        self.counters.counter('HNL').inc('all events')
+        event.matchedL1Chi2  = False
+        event.matchedL2Chi2  = False
+        event.matchedL1Dxy   = False
+        event.matchedL2Dxy   = False
         event.matchedHNLChi2 = False
         event.matchedHNLDxy  = False
-        event.matchedHNLChi2 = event.matchedL1Chi2 and event.matchedL2Chi2
-        event.matchedHNLDxy  = event.matchedL1Dxy  and event.matchedL2Dxy    
+
+        if event.n_dimuon > 0:
+            # confirm HNL reconstruction success if both gen leptons l1 and l2 are matched.
+            if (deltaR(event.dMu1Chi2,event.the_hnl.l1()) < 0.2) or (deltaR(event.dMu2Chi2,event.the_hnl.l1()) < 0.2): 
+                event.matchedL1Chi2 = True
+
+            if (deltaR(event.dMu1Chi2,event.the_hnl.l2()) < 0.2) or (deltaR(event.dMu2Chi2,event.the_hnl.l2()) < 0.2):    
+                event.matchedL2Chi2 = True
+
+            if (deltaR(event.dMu1Dxy,event.the_hnl.l1()) < 0.2) or (deltaR(event.dMu2Dxy,event.the_hnl.l1()) < 0.2): 
+                event.matchedL1Dxy = True
+
+            if (deltaR(event.dMu1Dxy,event.the_hnl.l2()) < 0.2) or (deltaR(event.dMu2Dxy,event.the_hnl.l2()) < 0.2): 
+                event.matchedL2Dxy = True
+
+            event.matchedHNLChi2 = event.matchedL1Chi2 and event.matchedL2Chi2
+            event.matchedHNLDxy  = event.matchedL1Dxy  and event.matchedL2Dxy    
+
+        if event.matchedHNLChi2 == True: self.counters.counter('HNL').inc('correctly reconstructed HNL through min_Chi2 method')
+        if event.matchedHNLDxy == True: self.counters.counter('HNL').inc('correctly reconstructed HNL through max_Dxy method')
 
 
         return True
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     

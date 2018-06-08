@@ -15,11 +15,11 @@ class HNLTreeProducer(TreeProducerBase):
         self.bookHNLReco(self.tree)
         self.bookCheckHNLReco(self.tree)
         self.bookDiMuon(self.tree, 'dimuonChi2')
-        self.bookParticle (self.tree,'dMu1Chi2')
-        self.bookParticle (self.tree,'dMu2Chi2')
+        self.bookDisplacedMuon (self.tree,'dMu1Chi2')
+        self.bookDisplacedMuon (self.tree,'dMu2Chi2')
         self.bookDiMuon(self.tree, 'dimuonDxy')
-        self.bookParticle (self.tree,'dMu1Dxy')
-        self.bookParticle (self.tree,'dMu2Dxy')
+        self.bookDisplacedMuon (self.tree,'dMu1Dxy')
+        self.bookDisplacedMuon (self.tree,'dMu2Dxy')
         
 
         # output for mc analysis
@@ -91,12 +91,13 @@ class HNLTreeProducer(TreeProducerBase):
         self.fillEvent(self.tree, event)
         self.fillCheckHNLReco(self.tree, event)
         self.fillHNLReco(self.tree, event)
-        self.fillDiMuon(self.tree,'dimuonChi2', event.dimuonChi2)
-        self.fillParticle(self.tree,'dMu1Chi2', event.dMu1Chi2)
-        self.fillParticle(self.tree,'dMu2Chi2', event.dMu2Chi2)
-        self.fillDiMuon(self.tree,'dimuonDxy', event.dimuonDxy)
-        self.fillParticle(self.tree,'dMu1Dxy',   event.dMu1Dxy)
-        self.fillParticle(self.tree,'dMu2Dxy',   event.dMu2Dxy)
+        if hasattr(event, 'dimuonChi2'):
+            self.fillDiMuon(self.tree,'dimuonChi2', event.dimuonChi2)
+            self.fillDisplacedMuon(self.tree,'dMu1Chi2', event.dMu1Chi2)
+            self.fillDisplacedMuon(self.tree,'dMu2Chi2', event.dMu2Chi2)
+            self.fillDiMuon(self.tree,'dimuonDxy', event.dimuonDxy)
+            self.fillDisplacedMuon(self.tree,'dMu1Dxy',   event.dMu1Dxy)
+            self.fillDisplacedMuon(self.tree,'dMu2Dxy',   event.dMu2Dxy)
 
         # output of MC analysis
         self.fillHNL(self.tree, 'hnl', event.the_hnl)

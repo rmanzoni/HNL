@@ -45,7 +45,8 @@ class HNLAnalyzer(Analyzer):
         self.counters.addCounter('HNL')
         count = self.counters.counter('HNL')
         count.register('all events')
-        count.register('>= 3 muons')
+        count.register('>= 2 muons')
+        count.register('reconstructable events')
         count.register('os_pairs')
         count.register('dimuons')
 
@@ -106,19 +107,22 @@ class HNLAnalyzer(Analyzer):
             matches = [dsa for dsa in event.dSAMu if deltaR(smu,dsa)<0.2] 
             if not len(matches):
                 dmu = DisplacedMuon(smu,event.sMu)
-                dmu.reco = 'sMu'
+                dmu.reco = 1 # sMu = 1, dSAMu = 2
+                dmu.redundancy = len(matches)
                 dMus.append(dmu)
                 event.n_sMuOnly += 1
             if len(matches) > 0:
                 bestmatch = sorted(matches, key = lambda dsa: deltaR(smu,dsa), reverse = True)[0] 
                 if smu.dxy() < dxy_cut:
                     dmu = DisplacedMuon(smu,event.sMu)
-                    dmu.reco = 'sMu'
+                    dmu.reco = 1 # sMu = 1, dSAMu = 2 
+                    dmu.redundancy = len(matches)
                     dMus.append(dmu)
                     event.n_sMuRedundant += 1
                 if smu.dxy() > dxy_cut:
                     dmu = DisplacedMuon(dsa,event.dSAMu)
-                    dmu.reco = 'dSAMu'
+                    dmu.reco = 2 # sMu = 1, dSAMu = 2
+                    dmu.redundancy = len(matches)
                     dMus.append(dmu)
                     event.n_dSAMuRedundant += 1
                     
@@ -126,72 +130,87 @@ class HNLAnalyzer(Analyzer):
             matches = [smu for smu in event.sMu if deltaR(dsa,smu)<0.2]
             if not len(matches):
                 dmu = DisplacedMuon(dsa,event.dSAMu)
-                dmu.reco = 'dSAMu'
+                dmu.reco = 2 # sMu = 1, dSAMu = 2
+                dmu.redundancy = len(matches)
                 dMus.append(dmu)
                 event.n_dSAMuOnly += 1
        
         event.n_dMu = len(dMus) # important to understand how well the "Merge Reco Muons" process went. 
 
         # select only events with >= 3 muons
-        if event.n_dMu < 3:
+        if event.n_dMu < 2:
             return False
 
-        self.counters.counter('HNL').inc('>= 3 muons')
+        self.counters.counter('HNL').inc('>= 2 muons')
        
+        # identify if the HNL is reconstructable or not, if both l1 and l2 are reconstructed.
+        l1_reconstructed  = False
+        l2_reconstructed  = False
+        event.hnl_reconstructable = False
+        
+        if (hasattr(event.the_hnl.l1(), 'bestmuon') or hasattr(event.the_hnl.l1(), 'bestdsmuon')):
+            l1_reconstructed = True 
+
+        if (hasattr(event.the_hnl.l2(), 'bestmuon') or hasattr(event.the_hnl.l2(), 'bestdsmuon')):
+            l2_reconstructed = True 
+
+        event.hnl_reconstructable = l1_reconstructed and l2_reconstructed
+
+        if event.hnl_reconstructable == True:
+            self.counters.counter('HNL').inc('reconstructable events')
+
+
         # select only events with OS muon pairs and collect the pairs
         event.os_pairs = [pair for pair in combinations(dMus,2) if pair[0].charge() != pair[1].charge()] 
         event.n_os_pairs = len(event.os_pairs)
 
-        if not len(event.os_pairs):
-            return False
+        event.n_dimuon = 0
+        if len(event.os_pairs) > 0:
+            self.counters.counter('HNL').inc('os_pairs')
 
-        self.counters.counter('HNL').inc('os_pairs')
+            # select only dimuon pairs with mutual vertices (surviving the kinematic vertex fitter)
+            # TODO: can the kinematic vertex fitter further summarized into one function?  
+            dimuons = []
+            for pair in event.os_pairs:
+                self.tofit.clear()
+                for il in pair:
+                    # if the reco particle is a displaced thing, it does not have the p4() method, so let's build it 
+                    myp4 = ROOT.Math.LorentzVector('<ROOT::Math::PxPyPzE4D<double> >')(il.px(), il.py(), il.pz(), sqrt(il.mass()**2 + il.px()**2 + il.py()**2 + il.pz()**2))
+                    ic = ROOT.reco.RecoChargedCandidate() # instantiate a dummy RecoChargedCandidate
+                    ic.setCharge(il.charge())           # assign the correct charge
+                    ic.setP4(myp4)                      # assign the correct p4
+                    if il.reco == 1: # sMu = 1, dSAMu = 2
+                        ic.setTrack(il.outerTrack())             # set the correct TrackRef
+                    if il.reco == 2: # sMu = 1, dSAMu = 2
+                        ic.setTrack(il.GetPhysObj().track())             # set the correct TrackRef
+                    if ic.track().isNonnull():          # check that the track is valid, there are photons around too!
+                        self.tofit.push_back(ic)
+                # further sanity check: two *distinct* tracks
+                if self.tofit.size() == 2 and self.tofit[0].track() != self.tofit[1].track():
+                    svtree = self.vtxfit.Fit(self.tofit) # the actual vertex fitting!
+                    if not svtree.get().isEmpty() and svtree.get().isValid(): # check that the vertex is good
+                        svtree.movePointerToTheTop()
+                        sv = svtree.currentDecayVertex().get()
+                        dimuons.append(DiMuon(pair, makeRecoVertex(sv, kinVtxTrkSize=2)))
 
-        # select only dimuon pairs with mutual vertices (surviving the kinematic vertex fitter)
-        # TODO: can the kinematic vertex fitter further summarized into one function?  
-        dimuons = []
-        for pair in event.os_pairs:
-            self.tofit.clear()
-            for il in pair:
-                # if the reco particle is a displaced thing, it does not have the p4() method, so let's build it 
-                myp4 = ROOT.Math.LorentzVector('<ROOT::Math::PxPyPzE4D<double> >')(il.px(), il.py(), il.pz(), sqrt(il.mass()**2 + il.px()**2 + il.py()**2 + il.pz()**2))
-                ic = ROOT.reco.RecoChargedCandidate() # instantiate a dummy RecoChargedCandidate
-                ic.setCharge(il.charge())           # assign the correct charge
-                ic.setP4(myp4)                      # assign the correct p4
-                if il.reco == 'sMu':
-                    ic.setTrack(il.outerTrack())             # set the correct TrackRef
-                if il.reco == 'dSAMu':
-                    ic.setTrack(il.GetPhysObj().track())             # set the correct TrackRef
-                if ic.track().isNonnull():          # check that the track is valid, there are photons around too!
-                    self.tofit.push_back(ic)
-            # further sanity check: two *distinct* tracks
-            if self.tofit.size() == 2 and self.tofit[0].track() != self.tofit[1].track():
-                svtree = self.vtxfit.Fit(self.tofit) # the actual vertex fitting!
-                if not svtree.get().isEmpty() and svtree.get().isValid(): # check that the vertex is good
-                    svtree.movePointerToTheTop()
-                    sv = svtree.currentDecayVertex().get()
-                    dimuons.append(DiMuon(pair, makeRecoVertex(sv, kinVtxTrkSize=2)))
+            if len(dimuons) > 0:
+                self.counters.counter('HNL').inc('dimuons')
+                
+                event.n_dimuon = len(dimuons)
+                 
+                # select the dimuon with lowest vertex fit chi2 as the HNL dimuon candidate
+                dimuonChi2 = sorted(dimuons, key = lambda x: x.chi2(), reverse = False)[0] 
+                event.dimuonChi2 = dimuonChi2
+                event.dMu1Chi2 = sorted(dimuonChi2.pair, key = lambda x: x.pt(), reverse = False)[0]
+                event.dMu2Chi2 = sorted(dimuonChi2.pair, key = lambda x: x.pt(), reverse = True)[0] 
+                
+                # select the dimuon with largest displacement
+                dimuonDxy = sorted(dimuons, key = lambda x: x.dxy(), reverse = True)[0] 
+                event.dimuonDxy = dimuonDxy
+                event.dMu1Dxy = sorted(dimuonDxy.pair, key = lambda x: x.pt(), reverse = False)[0]
+                event.dMu2Dxy = sorted(dimuonDxy.pair, key = lambda x: x.pt(), reverse = True)[0] 
 
-        if not len(dimuons):
-            return False
-        
-        self.counters.counter('HNL').inc('dimuons')
-        
-        event.n_dimuon = len(dimuons)
-         
-        # select the dimuon with lowest vertex fit chi2 as the HNL dimuon candidate
-        dimuonChi2 = sorted(dimuons, key = lambda x: x.chi2(), reverse = False)[0] 
-        event.dimuonChi2 = dimuonChi2
-        event.dMu1Chi2 = sorted(dimuonChi2.pair, key = lambda x: x.pt(), reverse = False)[0]
-        event.dMu2Chi2 = sorted(dimuonChi2.pair, key = lambda x: x.pt(), reverse = True)[0] 
-        
-        # select the dimuon with largest displacement
-        dimuonDxy = sorted(dimuons, key = lambda x: x.displacement2D(), reverse = False)[0] 
-        event.dimuonDxy = dimuonDxy
-        event.dMu1Dxy = sorted(dimuonDxy.pair, key = lambda x: x.pt(), reverse = False)[0]
-        event.dMu2Dxy = sorted(dimuonDxy.pair, key = lambda x: x.pt(), reverse = True)[0] 
-
-        
+            
 
 
 

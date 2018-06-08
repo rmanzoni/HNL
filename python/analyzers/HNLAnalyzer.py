@@ -182,7 +182,7 @@ class HNLAnalyzer(Analyzer):
                     if il.reco == 1: # sMu = 1, dSAMu = 2
                         ic.setTrack(il.outerTrack())             # set the correct TrackRef
                     if il.reco == 2: # sMu = 1, dSAMu = 2
-                        ic.setTrack(il.GetPhysObj().track())             # set the correct TrackRef
+                        ic.setTrack(il.physObj.track())             # set the correct TrackRef
                     if ic.track().isNonnull():          # check that the track is valid, there are photons around too!
                         self.tofit.push_back(ic)
                 # further sanity check: two *distinct* tracks

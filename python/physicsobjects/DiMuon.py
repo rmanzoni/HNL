@@ -20,9 +20,11 @@ class DiMuon(object):
     def vtx(self):
         return self.vtx
 
+    def chi2(self):
+        return self.vtx.chi2()
+
     # how should displacement 2D really defined as distance A=>B? B could be the HNL decay vertex, A could be (0,0,0), beam spot or primary vertex...
+    # I'm not event sure what the current vertex is.... TODO: Divide and conquer!
     def dxy(self):
         return sqrt(pow(self.vtx.x(),2)+pow(self.vtx.y(),2))
 
-    def chi2(self):
-        return self.vtx.chi2()

@@ -60,7 +60,10 @@ class HNLAnalyzer(Analyzer):
         self.readCollections(event.input)
         self.counters.counter('HNL').inc('all events')
 
+        #####################################################################################
         # produce collections and map our objects to convenient Heppy objects
+        #####################################################################################
+
         event.sMu         = map(Muon         , self.handles  ['sMu'        ].product())
         event.dSAMu       = map(PhysicsObject, self.handles  ['dSAMu'      ].product())
 
@@ -95,6 +98,12 @@ class HNLAnalyzer(Analyzer):
         event.n_sMu = len(event.sMu)
         event.n_dSAMu = len(event.dSAMu)
        
+        #####################################################################################
+        # Concatenate all Muon Reconstructions:
+        # Create an array of DisplacedMuon objects, 
+        # summarizing all sMu and dSAMus into a single array, 
+        # avoid redundancies with dR<0.2
+        #####################################################################################
         # Merge Reco Muons
         # Create an array of DisplacedMuon objects, summarizing all sMu and dSAMus into a single array, while avoiding redundancies through dR<0.2
         dMus = []
@@ -137,13 +146,20 @@ class HNLAnalyzer(Analyzer):
        
         event.n_dMu = len(dMus) # important to understand how well the "Merge Reco Muons" process went. 
 
+        #####################################################################################
         # select only events with >= 3 muons
+        #####################################################################################
         if event.n_dMu < 2:
             return False
 
         self.counters.counter('HNL').inc('>= 2 muons')
        
+        #####################################################################################
         # identify if the HNL is reconstructable or not, if both l1 and l2 are reconstructed.
+        # FIXME: This is the only part of code requiring Gen Information.
+        # It should be moved to CheckHNLAnalyzer.py, but is currently here to give us the
+        # possibility to preselect events only with "reconstructable HNL"
+        #####################################################################################
         l1_reconstructed  = False
         l2_reconstructed  = False
         event.hnl_reconstructable = False
@@ -160,7 +176,9 @@ class HNLAnalyzer(Analyzer):
             self.counters.counter('HNL').inc('reconstructable events')
 
 
+        #####################################################################################
         # select only events with OS muon pairs and collect the pairs
+        #####################################################################################
         event.os_pairs = [pair for pair in combinations(dMus,2) if pair[0].charge() != pair[1].charge()] 
         event.n_os_pairs = len(event.os_pairs)
 
@@ -168,8 +186,9 @@ class HNLAnalyzer(Analyzer):
         if len(event.os_pairs) > 0:
             self.counters.counter('HNL').inc('os_pairs')
 
+            #####################################################################################
             # select only dimuon pairs with mutual vertices (surviving the kinematic vertex fitter)
-            # TODO: can the kinematic vertex fitter further summarized into one function?  
+            #####################################################################################
             dimuons = []
             for pair in event.os_pairs:
                 self.tofit.clear()
@@ -193,6 +212,9 @@ class HNLAnalyzer(Analyzer):
                         sv = svtree.currentDecayVertex().get()
                         dimuons.append(DiMuon(pair, makeRecoVertex(sv, kinVtxTrkSize=2)))
 
+            #####################################################################################
+            # select the best dimuon pairs to be candidates for HNL
+            #####################################################################################
             if len(dimuons) > 0:
                 self.counters.counter('HNL').inc('dimuons')
                 

@@ -58,7 +58,7 @@ hnlreco_vars = [
     Variable('n_dimuon', lambda ev : ev.n_dimuon, type=int),
 ]
 
-# Variables indication efficiency of HNL reconstruction
+# Variables indicating the quality of HNL reconstruction
 check_hnlreco_vars = [
     Variable('flag_matchedL1Chi2', lambda ev : ev.matchedL1Chi2,   ),
     Variable('flag_matchedL2Chi2', lambda ev : ev.matchedL2Chi2,   ),

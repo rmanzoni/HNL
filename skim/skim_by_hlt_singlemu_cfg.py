@@ -21,7 +21,7 @@ process.source = cms.Source (
         '/store/data/Run2017D/SingleMuon/AOD/17Nov2017-v1/50000/A21241D2-78E4-E711-BA6A-0023AEEEB79C.root',
         '/store/data/Run2017D/SingleMuon/AOD/17Nov2017-v1/60000/F8B0CF58-ABDA-E711-827D-008CFAFBE5CE.root',
         '/store/data/Run2017D/SingleMuon/AOD/17Nov2017-v1/60000/A29DFB76-C0DA-E711-82FE-3417EBE6457C.root',
-  )
+    )
 )
 
 # limit the number of events to be processed
@@ -35,6 +35,7 @@ process.triggerSelection = cms.EDFilter(
     triggerConditions = cms.vstring(mu_hlts),
     hltResults        = cms.InputTag( 'TriggerResults', '', 'HLT' ),
     l1tResults        = cms.InputTag( '' ),
+    throw             = cms.bool(False),
 )
 
 # path & schedule

@@ -43,6 +43,7 @@ process.triggerSelection = cms.EDFilter(
     triggerConditions = cms.vstring(mu_hlts + ele_hlts),
     hltResults        = cms.InputTag( 'TriggerResults', '', 'HLT' ),
     l1tResults        = cms.InputTag( '' ),
+    throw             = cms.bool(False),
 )
 
 # path & schedule

@@ -202,6 +202,7 @@ class RecoGenAnalyzer(Analyzer):
 #                     import pdb ; pdb.set_trace()
 
 
+
         # let's refit the secondary vertex, IF both leptons match to some reco particle
         if not(event.the_hnl.l1().bestmatch is None or \
                event.the_hnl.l2().bestmatch is None):
@@ -228,6 +229,54 @@ class RecoGenAnalyzer(Analyzer):
                     svtree.movePointerToTheTop()
                     sv = svtree.currentDecayVertex().get()
                     event.recoSv = makeRecoVertex(sv, kinVtxTrkSize=2) # need to do some gymastics
+
+            if event.recoSv:
+                
+                # primary vertex
+                pv = event.goodVertices[0]
+
+                event.recoSv.disp3DFromBS      = ROOT.VertexDistance3D().distance(event.recoSv, pv)
+                event.recoSv.disp3DFromBS_sig  = event.recoSv.disp3DFromBS.significance()
+                
+                # create an 'ideal' vertex out of the BS
+                point = ROOT.reco.Vertex.Point(
+                    event.beamspot.position().x(),
+                    event.beamspot.position().y(),
+                    event.beamspot.position().z(),
+                )
+                error = event.beamspot.covariance3D()
+                chi2 = 0.
+                ndof = 0.
+                bsvtx = ROOT.reco.Vertex(point, error, chi2, ndof, 2) # size? say 3? does it matter?
+                                                
+                event.recoSv.disp2DFromBS      = ROOT.VertexDistanceXY().distance(event.recoSv, bsvtx)
+                event.recoSv.disp2DFromBS_sig  = event.recoSv.disp2DFromBS.significance()
+                event.recoSv.prob              = ROOT.TMath.Prob(event.recoSv.chi2(), int(event.recoSv.ndof()))
+                
+                dilep_p4 = event.the_hnl.l1().bestmatch.p4() + event.the_hnl.l2().bestmatch.p4()
+
+                perp = ROOT.math.XYZVector(dilep_p4.px(),
+                                           dilep_p4.py(),
+                                           0.)
+        
+                dxybs = ROOT.GlobalPoint(-1*((event.beamspot.x0() - event.recoSv.x()) + (event.recoSv.z() - event.beamspot.z0()) * event.beamspot.dxdz()), 
+                                         -1*((event.beamspot.y0() - event.recoSv.y()) + (event.recoSv.z() - event.beamspot.z0()) * event.beamspot.dydz()),
+                                          0)
+        
+                vperp = ROOT.math.XYZVector(dxybs.x(), dxybs.y(), 0.)
+        
+                cos = vperp.Dot(perp)/(vperp.R()*perp.R())
+                
+                event.recoSv.disp2DFromBS_cos = cos
+        
+#             if (abs(event.the_hnl.l1().pdgId()) == 11 or abs(event.the_hnl.l2().pdgId()) == 11):
+#                 if (abs(event.the_hnl.l1().bestmatch.pdgId()) == 11 or abs(event.the_hnl.l2().bestmatch.pdgId()) == 11):
+#                     if event.recoSv:
+#                         print 'lept1      \t', event.the_hnl.l1()
+#                         print 'lept2      \t', event.the_hnl.l2()
+#                         print 'lept1 match\t', event.the_hnl.l1().bestmatch
+#                         print 'lept2 match\t', event.the_hnl.l2().bestmatch                
+#                         import pdb ; pdb.set_trace()
     
         return True
     

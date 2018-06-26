@@ -24,8 +24,10 @@ from CMGTools.HNL.analyzers.HNLGenTreeProducer import HNLGenTreeProducer
 from CMGTools.HNL.analyzers.RecoGenAnalyzer    import RecoGenAnalyzer
 
 # import samples, signal
-from CMGTools.HNL.samples.signal import all_signals as samples
-from CMGTools.HNL.samples.signal import HN3L_M_7_V_0p00547722557505_mu_onshell
+#from CMGTools.HNL.samples.signal import all_signals as samples
+from CMGTools.HNL.samples.signal_new_6_22 import all_signals as samples
+#from CMGTools.HNL.samples.signal import HN3L_M_7_V_0p00547722557505_mu_onshell
+#from CMGTools.HNL.samples.signal import HN3L_M_3_V_0p00707106781187_e_onshell
 # from CMGTools.HNL.samples.signal import signals_mass_3 as samples
 
 puFileMC   = '$CMSSW_BASE/src/CMGTools/H2TauTau/data/MC_Moriond17_PU25ns_V1.root'
@@ -41,7 +43,8 @@ pick_events = getHeppyOption('pick_events', False)
 ###################################################
 ###               HANDLE SAMPLES                ###
 ###################################################
-samples = [HN3L_M_7_V_0p00547722557505_mu_onshell]
+#samples = [HN3L_M_3_V_0p00707106781187_e_onshell]
+#samples = [martina_check]
 
 for sample in samples:
     sample.triggers = ['HLT_IsoMu24_v%d' %i for i in range(4, 5)]
@@ -146,8 +149,8 @@ if not production:
     selectedComponents   = [comp]
     comp.splitFactor     = 1
     comp.fineSplitFactor = 1
-#     comp.files           = comp.files[:5]
-    comp.files           = ['file:miniAOD_skim.root']
+    comp.files           = comp.files[:5]
+#    comp.files           = ['file:miniAOD_skim.root']
 
 # the following is declared in case this cfg is used in input to the
 # heppy.py script

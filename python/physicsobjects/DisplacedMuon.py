@@ -22,10 +22,19 @@ class DisplacedMuon(PhysicsObject):
             if mm == self.physObj:
                 self.position_in_collection = jj
                 break
+        
+        energy = math.sqrt(self.mass()**2 + self.physObj.px()**2 + self.physObj.py()**2 + self.physObj.pz()**2)
+        self.p4_ = ROOT.Math.LorentzVector('ROOT::Math::PxPyPzE4D<double>')(self.physObj.px(),
+                                                                            self.physObj.py(),
+                                                                            self.physObj.pz(),
+                                                                            energy)
     
     def mass(self):
         '''impose the muon mass to the displaced objects, that otherwise carry none'''
         return 0.10565837
+
+    def p4(self):
+        return self.p4_
         
     def pdgId(self):
         '''impose the muon PDG ID to the displaced objects, that otherwise carry none'''

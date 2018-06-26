@@ -58,7 +58,7 @@ class HNLGenTreeAnalyzer(Analyzer):
         event.the_hn.lep1 = max([ii for ii in event.the_hn.initialdaus if abs(ii.pdgId()) in [11, 13]], key = lambda x : x.pt())
         event.the_hn.lep2 = min([ii for ii in event.the_hn.initialdaus if abs(ii.pdgId()) in [11, 13]], key = lambda x : x.pt())
         event.the_hn.neu  =     [ii for ii in event.the_hn.initialdaus if abs(ii.pdgId()) in [12, 14]][0] # there can be only one
-
+        set_trache()
         # identify the secondary vertex
         event.the_hn.the_sv = event.the_hn.lep1.vertex()
     

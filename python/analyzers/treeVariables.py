@@ -72,12 +72,19 @@ check_hnlreco_vars = [
 
 # generic DiMuon variables
 dimuon_vars = [
+    Variable('x', lambda hn : hn.vtx.x(), type = float), 
+    Variable('y', lambda hn : hn.vtx.y(), type = float), 
+    Variable('z', lambda hn : hn.vtx.z(), type = float), 
     Variable('dxy', lambda hn : hn.dxy(), type = float), 
     Variable('vtxFitChi2', lambda hn : hn.vtx.chi2(), type = float),
 ]
 
 # generic DiMuon variables
 displacedmuon_vars = [
+    Variable('x'    , lambda p: p.vx() ),
+    Variable('y'    , lambda p: p.vy() ),
+    Variable('z'    , lambda p: p.vz() ),
+    Variable('dxy'    , lambda p: p.dxy() ),
     Variable('pt'    , lambda p: p.pt() ),
     Variable('eta'   , lambda p: p.eta()),
     Variable('phi'   , lambda p: p.phi()),

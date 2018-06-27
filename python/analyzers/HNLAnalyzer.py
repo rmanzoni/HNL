@@ -113,6 +113,7 @@ class HNLAnalyzer(Analyzer):
         event.n_sMuRedundant = 0
         event.n_dSAMuRedundant = 0
         for smu in event.sMu:
+            matches = []
             matches = [dsa for dsa in event.dSAMu if deltaR(smu,dsa)<0.2] 
             if not len(matches):
                 dmu = DisplacedMuon(smu,event.sMu)
@@ -136,6 +137,7 @@ class HNLAnalyzer(Analyzer):
                     event.n_dSAMuRedundant += 1
                     
         for dsa in event.dSAMu:
+            matches = []
             matches = [smu for smu in event.sMu if deltaR(dsa,smu)<0.2]
             if not len(matches):
                 dmu = DisplacedMuon(dsa,event.dSAMu)
@@ -231,6 +233,7 @@ class HNLAnalyzer(Analyzer):
                 event.dimuonDxy = dimuonDxy
                 event.dMu1Dxy = sorted(dimuonDxy.pair, key = lambda x: x.pt(), reverse = False)[0]
                 event.dMu2Dxy = sorted(dimuonDxy.pair, key = lambda x: x.pt(), reverse = True)[0] 
+
 
             
 

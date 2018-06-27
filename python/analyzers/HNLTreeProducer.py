@@ -73,10 +73,26 @@ class HNLTreeProducer(TreeProducerBase):
         self.var(self.tree, 'sv_x')
         self.var(self.tree, 'sv_y')
         self.var(self.tree, 'sv_z')
+        
+        # reco HN decay vertex (when present)
+        self.var(self.tree, 'sv_reco_x' )
+        self.var(self.tree, 'sv_reco_y' )
+        self.var(self.tree, 'sv_reco_z' )
+        self.var(self.tree, 'sv_reco_xe')
+        self.var(self.tree, 'sv_reco_ye')
+        self.var(self.tree, 'sv_reco_ze')
+        self.var(self.tree, 'sv_reco_prob')
+        self.var(self.tree, 'sv_reco_cos')
 
         # displacements
         self.var(self.tree, 'hnl_2d_disp')
         self.var(self.tree, 'hnl_3d_disp')
+
+        self.var(self.tree, 'hnl_2d_reco_disp')
+        self.var(self.tree, 'hnl_3d_reco_disp')
+
+        self.var(self.tree, 'hnl_2d_reco_disp_sig')
+        self.var(self.tree, 'hnl_3d_reco_disp_sig')
 
         # flag if the event is in CMS acceptance |eta|<2.5
         self.var(self.tree, 'is_in_acc')
@@ -144,6 +160,23 @@ class HNLTreeProducer(TreeProducerBase):
         # displacements
         self.fill(self.tree, 'hnl_2d_disp', displacement2D(event.the_hn.lep1, event.the_hn))
         self.fill(self.tree, 'hnl_3d_disp', displacement3D(event.the_hn.lep1, event.the_hn))
+        
+        # reco secondary vertex and displacement
+        if event.recoSv:
+            self.fill(self.tree, 'sv_reco_x'   , event.recoSv.x()             )
+            self.fill(self.tree, 'sv_reco_y'   , event.recoSv.y()             )
+            self.fill(self.tree, 'sv_reco_z'   , event.recoSv.z()             )
+            self.fill(self.tree, 'sv_reco_xe'  , event.recoSv.xError()        )
+            self.fill(self.tree, 'sv_reco_ye'  , event.recoSv.yError()        )
+            self.fill(self.tree, 'sv_reco_ze'  , event.recoSv.zError()        )
+            self.fill(self.tree, 'sv_reco_prob', event.recoSv.prob            )
+            self.fill(self.tree, 'sv_reco_cos' , event.recoSv.disp2DFromBS_cos)
+    
+            self.fill(self.tree, 'hnl_2d_reco_disp', event.recoSv.disp2DFromBS.value()) # from beamspot
+            self.fill(self.tree, 'hnl_3d_reco_disp', event.recoSv.disp3DFromBS.value()) # from PV
+    
+            self.fill(self.tree, 'hnl_2d_reco_disp_sig', event.recoSv.disp2DFromBS_sig) # from beamspot
+            self.fill(self.tree, 'hnl_3d_reco_disp_sig', event.recoSv.disp3DFromBS_sig) # from PV
 
         # flag if the event is in CMS acceptance |eta|<2.5
         is_in_acc =  abs(event.the_hnl.l0().eta())<2.5 and \

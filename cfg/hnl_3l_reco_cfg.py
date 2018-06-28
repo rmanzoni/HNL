@@ -27,7 +27,8 @@ from CMGTools.HNL.analyzers.CheckHNLAnalyzer     import CheckHNLAnalyzer
 
 # import samples, signal
 # from CMGTools.HNL.samples.signal import all_signals as samples
-from CMGTools.HNL.samples.signal import signals_mass_3 as samples
+# from CMGTools.HNL.samples.signal import signals_mass_3 as samples
+from CMGTools.HNL.samples.signal import signals_test as samples
 # from CMGTools.HNL.samples.signal import signals_mass_1
 # from CMGTools.HNL.samples.signal import signals_mass_2p1
 

@@ -56,6 +56,10 @@ class HNLAnalyzer(Analyzer):
         # create a std::vector<RecoChargedCandidate> to be passed to the fitter
         self.tofit = ROOT.std.vector('reco::RecoChargedCandidate')()
 
+    def buildDisplacedMuons(self, collection):
+        muons = [DisplacedMuon(mm, collection) for mm in collection]
+        return muons
+
     def process(self, event):
         self.readCollections(event.input)
         self.counters.counter('HNL').inc('all events')
@@ -65,7 +69,8 @@ class HNLAnalyzer(Analyzer):
         #####################################################################################
 
         event.sMu         = map(Muon         , self.handles  ['sMu'        ].product())
-        event.dSAMu       = map(PhysicsObject, self.handles  ['dSAMu'      ].product())
+        # event.dSAMu       = map(PhysicsObject, self.handles  ['dSAMu'      ].product())
+        event.dSAMu       = self.buildDisplacedMuons(self.handles['dSAMu'].product())
 
         # make vertex objects 
         event.pvs         = self.handles['pvs'     ].product()
@@ -188,9 +193,9 @@ class HNLAnalyzer(Analyzer):
         if len(event.os_pairs) > 0:
             self.counters.counter('HNL').inc('os_pairs')
 
-            #####################################################################################
+            ########################################################################################
             # select only dimuon pairs with mutual vertices (surviving the kinematic vertex fitter)
-            #####################################################################################
+            ########################################################################################
             dimuons = []
             for pair in event.os_pairs:
                 self.tofit.clear()
@@ -200,10 +205,14 @@ class HNLAnalyzer(Analyzer):
                     ic = ROOT.reco.RecoChargedCandidate() # instantiate a dummy RecoChargedCandidate
                     ic.setCharge(il.charge())           # assign the correct charge
                     ic.setP4(myp4)                      # assign the correct p4
-                    if il.reco == 1: # sMu = 1, dSAMu = 2
-                        ic.setTrack(il.outerTrack())             # set the correct TrackRef
-                    if il.reco == 2: # sMu = 1, dSAMu = 2
-                        ic.setTrack(il.physObj.track())             # set the correct TrackRef
+                    try:
+                        ic.setTrack(il.track())
+                    except:
+                        set_trace()
+                    # if il.reco == 1: # sMu = 1, dSAMu = 2
+                        # ic.setTrack(il.outerTrack())             # set the correct TrackRef
+                    # if il.reco == 2: # sMu = 1, dSAMu = 2
+                        # ic.setTrack(il.physObj.track())             # set the correct TrackRef
                     if ic.track().isNonnull():          # check that the track is valid, there are photons around too!
                         self.tofit.push_back(ic)
                 # further sanity check: two *distinct* tracks

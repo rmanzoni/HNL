@@ -65,6 +65,7 @@ eventSelector = cfg.Analyzer(
     EventSelector,
     name='EventSelector',
     toSelect=[]
+    # toSelect=[23]
 )
 
 lheWeightAna = cfg.Analyzer(
@@ -138,6 +139,7 @@ CheckHNLAnalyzer = cfg.Analyzer(
 ###                  SEQUENCE                   ###
 ###################################################
 sequence = cfg.Sequence([
+    # eventSelector,
     lheWeightAna,
     jsonAna,
     skimAna,

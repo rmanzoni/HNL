@@ -69,7 +69,6 @@ class HNLAnalyzer(Analyzer):
         #####################################################################################
 
         event.sMu         = map(Muon         , self.handles  ['sMu'        ].product())
-        # event.dSAMu       = map(PhysicsObject, self.handles  ['dSAMu'      ].product())
         event.dSAMu       = self.buildDisplacedMuons(self.handles['dSAMu'].product())
 
         # make vertex objects 
@@ -121,7 +120,8 @@ class HNLAnalyzer(Analyzer):
             matches = []
             matches = [dsa for dsa in event.dSAMu if deltaR(smu,dsa)<0.2] 
             if not len(matches):
-                dmu = DisplacedMuon(smu,event.sMu)
+                dmu = smu
+                # dmu = DisplacedMuon(smu,event.sMu)
                 dmu.reco = 1 # sMu = 1, dSAMu = 2
                 dmu.redundancy = len(matches)
                 dMus.append(dmu)
@@ -129,13 +129,14 @@ class HNLAnalyzer(Analyzer):
             if len(matches) > 0:
                 bestmatch = sorted(matches, key = lambda dsa: deltaR(smu,dsa), reverse = True)[0] 
                 if smu.dxy() < dxy_cut:
-                    dmu = DisplacedMuon(smu,event.sMu)
+                    dmu = smu
+                    # dmu = DisplacedMuon(smu,event.sMu)
                     dmu.reco = 1 # sMu = 1, dSAMu = 2 
                     dmu.redundancy = len(matches)
                     dMus.append(dmu)
                     event.n_sMuRedundant += 1
                 if smu.dxy() > dxy_cut:
-                    dmu = DisplacedMuon(dsa,event.dSAMu)
+                    dmu = bestmatch
                     dmu.reco = 2 # sMu = 1, dSAMu = 2
                     dmu.redundancy = len(matches)
                     dMus.append(dmu)
@@ -145,7 +146,7 @@ class HNLAnalyzer(Analyzer):
             matches = []
             matches = [smu for smu in event.sMu if deltaR(dsa,smu)<0.2]
             if not len(matches):
-                dmu = DisplacedMuon(dsa,event.dSAMu)
+                dmu = dsa
                 dmu.reco = 2 # sMu = 1, dSAMu = 2
                 dmu.redundancy = len(matches)
                 dMus.append(dmu)
@@ -171,10 +172,10 @@ class HNLAnalyzer(Analyzer):
         l2_reconstructed  = False
         event.hnl_reconstructable = False
         
-        if (hasattr(event.the_hnl.l1(), 'bestmuon') or hasattr(event.the_hnl.l1(), 'bestdsmuon')):
+        if (getattr(event.the_hnl.l1(), 'bestmuon',False) or getattr(event.the_hnl.l1(), 'bestdsmuon',False)):
             l1_reconstructed = True 
 
-        if (hasattr(event.the_hnl.l2(), 'bestmuon') or hasattr(event.the_hnl.l2(), 'bestdsmuon')):
+        if (getattr(event.the_hnl.l2(), 'bestmuon',False) or getattr(event.the_hnl.l2(), 'bestdsmuon',False)):
             l2_reconstructed = True 
 
         event.hnl_reconstructable = l1_reconstructed and l2_reconstructed
@@ -242,10 +243,5 @@ class HNLAnalyzer(Analyzer):
                 event.dimuonDxy = dimuonDxy
                 event.dMu1Dxy = sorted(dimuonDxy.pair, key = lambda x: x.pt(), reverse = False)[0]
                 event.dMu2Dxy = sorted(dimuonDxy.pair, key = lambda x: x.pt(), reverse = True)[0] 
-
-
-            
-
-
 
         return True

@@ -43,5 +43,8 @@ class DisplacedMuon(PhysicsObject):
 
     def track(self):
         ''' return reco::TrackRef '''   
-        return ROOT.reco.TrackRef(self.collection_, self.position_in_collection)
+        try:
+            return ROOT.reco.TrackRef(self.collection_, self.position_in_collection)
+        except:
+            print 'DisplacedMuon.track() failed'
 

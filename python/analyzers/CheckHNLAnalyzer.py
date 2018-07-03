@@ -56,16 +56,16 @@ class CheckHNLAnalyzer(Analyzer):
 
         if event.n_dimuon > 0:
             # confirm HNL reconstruction success if both gen leptons l1 and l2 are matched.
-            if (deltaR(event.dMu1Chi2,event.the_hnl.l1()) < 0.2) or (deltaR(event.dMu2Chi2,event.the_hnl.l1()) < 0.2): 
+            if (deltaR(event.dMu1Chi2,event.the_hnl.l1()) < 0.02) or (deltaR(event.dMu2Chi2,event.the_hnl.l1()) < 0.02): 
                 event.matchedL1Chi2 = True
 
-            if (deltaR(event.dMu1Chi2,event.the_hnl.l2()) < 0.2) or (deltaR(event.dMu2Chi2,event.the_hnl.l2()) < 0.2):    
+            if (deltaR(event.dMu1Chi2,event.the_hnl.l2()) < 0.02) or (deltaR(event.dMu2Chi2,event.the_hnl.l2()) < 0.02):    
                 event.matchedL2Chi2 = True
 
-            if (deltaR(event.dMu1Dxy,event.the_hnl.l1()) < 0.2) or (deltaR(event.dMu2Dxy,event.the_hnl.l1()) < 0.2): 
+            if (deltaR(event.dMu1Dxy,event.the_hnl.l1()) < 0.02) or (deltaR(event.dMu2Dxy,event.the_hnl.l1()) < 0.02): 
                 event.matchedL1Dxy = True
 
-            if (deltaR(event.dMu1Dxy,event.the_hnl.l2()) < 0.2) or (deltaR(event.dMu2Dxy,event.the_hnl.l2()) < 0.2): 
+            if (deltaR(event.dMu1Dxy,event.the_hnl.l2()) < 0.02) or (deltaR(event.dMu2Dxy,event.the_hnl.l2()) < 0.02): 
                 event.matchedL2Dxy = True
 
             event.matchedHNLChi2 = event.matchedL1Chi2 and event.matchedL2Chi2

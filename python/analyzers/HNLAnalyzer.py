@@ -157,7 +157,7 @@ class HNLAnalyzer(Analyzer):
         #####################################################################################
         # select only events with >= 3 muons
         #####################################################################################
-        if event.n_dMu < 2:
+        if event.n_dMu < 2 and abs(event.the_hnl.l1().pdgId())==13 and abs(event.the_hnl.l2().pdgId())==13:
             return False
 
         self.counters.counter('HNL').inc('>= 2 muons')
@@ -182,7 +182,6 @@ class HNLAnalyzer(Analyzer):
 
         if event.hnl_reconstructable == True:
             self.counters.counter('HNL').inc('reconstructable events')
-
 
         #####################################################################################
         # select only events with OS muon pairs and collect the pairs

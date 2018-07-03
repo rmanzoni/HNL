@@ -111,46 +111,43 @@ class HNLAnalyzer(Analyzer):
         # Merge Reco Muons
         # Create an array of DisplacedMuon objects, summarizing all sMu and dSAMus into a single array, while avoiding redundancies through dR<0.2
         dMus = []
-        dxy_cut = 1000 # cut selection for sMu / dSAMu in mm
+        dxy_cut = 100 # cut selection for sMu / dSAMu in cm
         event.n_sMuOnly = 0
         event.n_dSAMuOnly = 0
         event.n_sMuRedundant = 0
         event.n_dSAMuRedundant = 0
         for smu in event.sMu:
             matches = []
-            matches = [dsa for dsa in event.dSAMu if deltaR(smu,dsa)<0.2] 
-            if not len(matches):
+            matches = [dsa for dsa in event.dSAMu if (deltaR(smu,dsa)<0.2 and abs((smu.pt()-dsa.pt())/smu.pt())<0.3)] 
+            if len(matches) == 0:
                 dmu = smu
-                # dmu = DisplacedMuon(smu,event.sMu)
                 dmu.reco = 1 # sMu = 1, dSAMu = 2
-                dmu.redundancy = len(matches)
+                dmu.redundancy = 0
                 dMus.append(dmu)
                 event.n_sMuOnly += 1
-            if len(matches) > 0:
-                bestmatch = sorted(matches, key = lambda dsa: deltaR(smu,dsa), reverse = True)[0] 
+            else:
+                bestmatch = sorted(matches, key = lambda dsa: deltaR(smu,dsa), reverse = False)[0] 
                 if smu.dxy() < dxy_cut:
                     dmu = smu
-                    # dmu = DisplacedMuon(smu,event.sMu)
                     dmu.reco = 1 # sMu = 1, dSAMu = 2 
                     dmu.redundancy = len(matches)
                     dMus.append(dmu)
                     event.n_sMuRedundant += 1
-                if smu.dxy() > dxy_cut:
+                else:
                     dmu = bestmatch
                     dmu.reco = 2 # sMu = 1, dSAMu = 2
                     dmu.redundancy = len(matches)
                     dMus.append(dmu)
                     event.n_dSAMuRedundant += 1
-                    
+
+                event.dSAMu.remove(bestmatch)    
+
         for dsa in event.dSAMu:
-            matches = []
-            matches = [smu for smu in event.sMu if deltaR(dsa,smu)<0.2]
-            if not len(matches):
-                dmu = dsa
-                dmu.reco = 2 # sMu = 1, dSAMu = 2
-                dmu.redundancy = len(matches)
-                dMus.append(dmu)
-                event.n_dSAMuOnly += 1
+            dmu = dsa
+            dmu.reco = 2 # sMu = 1, dSAMu = 2
+            dmu.redundancy = 0 
+            dMus.append(dmu)
+            event.n_dSAMuOnly += 1
        
         event.n_dMu = len(dMus) # important to understand how well the "Merge Reco Muons" process went. 
 
@@ -235,13 +232,13 @@ class HNLAnalyzer(Analyzer):
                 # select the dimuon with lowest vertex fit chi2 as the HNL dimuon candidate
                 dimuonChi2 = sorted(dimuons, key = lambda x: (x.isSS(),x.chi2()), reverse = False)[0] 
                 event.dimuonChi2 = dimuonChi2
-                event.dMu1Chi2 = sorted(dimuonChi2.pair, key = lambda x: x.pt(), reverse = False)[0]
-                event.dMu2Chi2 = sorted(dimuonChi2.pair, key = lambda x: x.pt(), reverse = True)[0] 
+                event.dMu1Chi2 = sorted(dimuonChi2.pair, key = lambda x: x.pt(), reverse = True)[0]
+                event.dMu2Chi2 = sorted(dimuonChi2.pair, key = lambda x: x.pt(), reverse = False)[0] 
                 
                 # select the dimuon with largest displacement
                 dimuonDxy = sorted(dimuons, key = lambda x: (x.isSS(),x.dxy()), reverse = True)[0] 
                 event.dimuonDxy = dimuonDxy
-                event.dMu1Dxy = sorted(dimuonDxy.pair, key = lambda x: x.pt(), reverse = False)[0]
-                event.dMu2Dxy = sorted(dimuonDxy.pair, key = lambda x: x.pt(), reverse = True)[0] 
+                event.dMu1Dxy = sorted(dimuonDxy.pair, key = lambda x: x.pt(), reverse = True)[0]
+                event.dMu2Dxy = sorted(dimuonDxy.pair, key = lambda x: x.pt(), reverse = False)[0] 
 
         return True

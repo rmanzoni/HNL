@@ -48,7 +48,7 @@ event_vars = [
 # generic HNL reconstruction event variables
 hnlreco_vars = [
     Variable('n_sMu', lambda ev : ev.n_sMu, type=int),
-    Variable('n_dSAMu', lambda ev : ev.n_sMu, type=int),
+    Variable('n_dSAMu', lambda ev : ev.n_dSAMu, type=int),
     Variable('n_dMu', lambda ev : ev.n_dMu, type=int),
     Variable('n_pairs', lambda ev : ev.n_pairs, type=int),
     Variable('n_sMuOnly',      lambda ev : ev.n_sMuOnly, type=int),

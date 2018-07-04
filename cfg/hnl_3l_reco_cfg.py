@@ -42,7 +42,7 @@ puFileData = '/afs/cern.ch/user/a/anehrkor/public/Data_Pileup_2016_271036-284044
 ###################################################
 # Get all heppy options; set via "-o production" or "-o production=True"
 # production = True run on batch, production = False (or unset) run locally
-production         = getHeppyOption('production'        , True)
+production         = getHeppyOption('production'        , False)
 pick_events        = getHeppyOption('pick_events'       , False)
 
 ###################################################
@@ -65,7 +65,7 @@ eventSelector = cfg.Analyzer(
     EventSelector,
     name='EventSelector',
     # toSelect=[]
-    # toSelect=[1]
+    toSelect=[102]
 )
 
 lheWeightAna = cfg.Analyzer(

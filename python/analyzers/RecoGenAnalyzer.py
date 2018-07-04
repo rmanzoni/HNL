@@ -158,20 +158,41 @@ class RecoGenAnalyzer(Analyzer):
             # particle in the matching cone with the correct PDG ID
             # then to the one which is closest
             ip.matches.sort(key = lambda x : (x.pdgId()==ip.pdgId(), -deltaR(x, ip)), reverse = True )
-            if len(ip.matches):
+            if len(ip.matches) and abs(ip.pdgId())==abs(ip.matches[0].pdgId()):
                 ip.bestmatch = ip.matches[0]
-                # remove already matched particles, avoid multiple matches to the same candidate
+                # remove already matched particles, avoid multiple matches to the same candidate while recording the type of reconstruction
                 matchable.remove(ip.bestmatch)
-                # record which is which
-                if ip.bestmatch in event.electrons: ip.bestmatchtype = 0
-                if ip.bestmatch in event.photons  : ip.bestmatchtype = 1
-                if ip.bestmatch in event.muons    : ip.bestmatchtype = 2
-                if ip.bestmatch in event.taus     : ip.bestmatchtype = 3
-                if ip.bestmatch in event.dsmuons  : ip.bestmatchtype = 4
-                if ip.bestmatch in event.dgmuons  : ip.bestmatchtype = 5
+
+                if ip.bestmatch in event.electrons:
+                    ip.bestmatchtype = 0
+                    event.electrons.remove(ip.bestmatch)
+
+                if ip.bestmatch in event.photons  :
+                    ip.bestmatchtype = 1
+                    event.photons.remove(ip.bestmatch)
+
+                if ip.bestmatch in event.muons    :
+                    ip.bestmatchtype = 2
+                    event.muons.remove(ip.bestmatch)
+
+                if ip.bestmatch in event.taus     :
+                    ip.bestmatchtype = 3
+                    event.taus.remove(ip.bestmatch)
+
+                if ip.bestmatch in event.dsmuons  :
+                    ip.bestmatchtype = 4
+                    event.dsmuons.remove(ip.bestmatch)
+
+                if ip.bestmatch in event.dgmuons  :
+                    ip.bestmatchtype = 5
+                    event.dgmuons.remove(ip.bestmatch)
+            elif len(ip.matches) and abs(ip.pdgId())!=abs(ip.matches[0].pdgId()):
+                ip.bestmatchtype = -1
     
         # clear it before doing it again
         event.recoSv = None
+        # if (abs(event.the_hnl.l1().pt()-13.851562)<0.001):
+            # set_trace()
 
 
 ######### DEBUG VTX MADE OUT OF DSA MUONS

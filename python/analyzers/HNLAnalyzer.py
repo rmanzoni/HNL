@@ -46,7 +46,7 @@ class HNLAnalyzer(Analyzer):
         count = self.counters.counter('HNL')
         count.register('all events')
         count.register('>= 2 muons')
-        count.register('reconstructable events')
+        # count.register('reconstructable events')
         count.register('pairs')
         count.register('dimuons')
 
@@ -159,26 +159,27 @@ class HNLAnalyzer(Analyzer):
 
         self.counters.counter('HNL').inc('>= 2 muons')
        
-        #####################################################################################
-        # identify if the HNL is reconstructable or not, if both l1 and l2 are reconstructed.
-        # FIXME: This is the only part of code requiring Gen Information.
-        # It should be moved to CheckHNLAnalyzer.py, but is currently here to give us the
-        # possibility to preselect events only with "reconstructable HNL"
-        #####################################################################################
-        l1_reconstructed  = False
-        l2_reconstructed  = False
+        # #####################################################################################
+        # # identify if the HNL is reconstructable or not, if both l1 and l2 are reconstructed.
+        # # FIXME: This is the only part of code requiring Gen Information.
+        # # It should be moved to CheckHNLAnalyzer.py, but is currently here to give us the
+        # # possibility to preselect events only with "reconstructable HNL"
+        # #####################################################################################
+        # l1_reconstructed  = False
+        # l2_reconstructed  = False
         event.hnl_reconstructable = False
-        
-        if (getattr(event.the_hnl.l1(), 'bestmuon',False) or getattr(event.the_hnl.l1(), 'bestdsmuon',False)):
-            l1_reconstructed = True 
+        if event.recoSv:
+            event.hnl_reconstructable = True
+        # if (getattr(event.the_hnl.l1(), 'bestmuon',False) or getattr(event.the_hnl.l1(), 'bestdsmuon',False)):
+            # l1_reconstructed = True 
 
-        if (getattr(event.the_hnl.l2(), 'bestmuon',False) or getattr(event.the_hnl.l2(), 'bestdsmuon',False)):
-            l2_reconstructed = True 
+        # if (getattr(event.the_hnl.l2(), 'bestmuon',False) or getattr(event.the_hnl.l2(), 'bestdsmuon',False)):
+            # l2_reconstructed = True 
 
-        event.hnl_reconstructable = l1_reconstructed and l2_reconstructed
+        # event.hnl_reconstructable = l1_reconstructed and l2_reconstructed
 
-        if event.hnl_reconstructable == True:
-            self.counters.counter('HNL').inc('reconstructable events')
+        # if event.hnl_reconstructable == True:
+            # self.counters.counter('HNL').inc('reconstructable events')
 
         #####################################################################################
         # collect all muon pairs
@@ -240,5 +241,24 @@ class HNLAnalyzer(Analyzer):
                 event.dimuonDxy = dimuonDxy
                 event.dMu1Dxy = sorted(dimuonDxy.pair, key = lambda x: x.pt(), reverse = True)[0]
                 event.dMu2Dxy = sorted(dimuonDxy.pair, key = lambda x: x.pt(), reverse = False)[0] 
+
+                # select leptons ito average pt
+                dimuonMaxPt = sorted(dimuons, key = lambda x: (x.pair[0].pt()+x.pair[1].pt())/2, reverse = True)[0] 
+                event.dimuonMaxPt = dimuonMaxPt
+                event.dMu1MaxPt = sorted(dimuonMaxPt.pair, key = lambda x: x.pt(), reverse = True)[0] 
+                event.dMu2MaxPt = sorted(dimuonMaxPt.pair, key = lambda x: x.pt(), reverse = False)[0]
+
+                # select closest leptons ito dr
+                dimuonMinDr12 = sorted(dimuons, key = lambda x: deltaR(x.pair[0],x.pair[1]), reverse = False)[0]
+                event.dimuonMinDr12 = dimuonMinDr12
+                event.dMu1MinDr12 = sorted(dimuonMinDr12.pair, key = lambda x: x.pt(), reverse = True)[0] 
+                event.dMu2MinDr12 = sorted(dimuonMinDr12.pair, key = lambda x: x.pt(), reverse = False)[0]
+
+                # select leptons farthest to l0 ito dr
+                # DEPENDENT ON GEN INFO
+                dimuonMaxDr0a12 = sorted(dimuons, key = lambda x: (deltaR(x.pair[0],event.the_hnl.l0())+deltaR(x.pair[1],event.the_hnl.l0()))/2, reverse = True)[0]
+                event.dimuonMaxDr0a12 = dimuonMaxDr0a12
+                event.dMu1MaxDr0a12 = sorted(dimuonMaxDr0a12.pair, key = lambda x: x.pt(), reverse = True)[0] 
+                event.dMu2MaxDr0a12 = sorted(dimuonMaxDr0a12.pair, key = lambda x: x.pt(), reverse = False)[0]
 
         return True

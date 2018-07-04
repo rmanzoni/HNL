@@ -20,7 +20,18 @@ class HNLTreeProducer(TreeProducerBase):
         self.bookDiMuon(self.tree, 'dimuonDxy')
         self.bookDisplacedMuon (self.tree,'dMu1Dxy')
         self.bookDisplacedMuon (self.tree,'dMu2Dxy')
-        
+        self.bookDiMuon(self.tree, 'dimuonMaxPt')
+        self.bookDisplacedMuon (self.tree,'dMu1MaxPt')
+        self.bookDisplacedMuon (self.tree,'dMu2MaxPt')
+        self.bookDiMuon(self.tree, 'dimuonMinDr12')
+        self.bookDisplacedMuon (self.tree,'dMu1MinDr12')
+        self.bookDisplacedMuon (self.tree,'dMu2MinDr12')
+        self.bookDiMuon(self.tree, 'dimuonMaxDr0a12')
+        self.bookDisplacedMuon (self.tree,'dMu1MaxDr0a12')
+        self.bookDisplacedMuon (self.tree,'dMu2MaxDr0a12')
+
+
+
 
         # output for mc analysis
         # the W->lN, N->llnu candidate
@@ -114,6 +125,15 @@ class HNLTreeProducer(TreeProducerBase):
             self.fillDiMuon(self.tree,'dimuonDxy', event.dimuonDxy)
             self.fillDisplacedMuon(self.tree,'dMu1Dxy',   event.dMu1Dxy)
             self.fillDisplacedMuon(self.tree,'dMu2Dxy',   event.dMu2Dxy)
+            self.fillDiMuon(self.tree, 'dimuonMaxPt',event.dimuonMaxPt)
+            self.fillDisplacedMuon (self.tree,'dMu1MaxPt',event.dMu1MaxPt)
+            self.fillDisplacedMuon (self.tree,'dMu2MaxPt',event.dMu2MaxPt)
+            self.fillDiMuon(self.tree, 'dimuonMinDr12', event.dimuonMinDr12)
+            self.fillDisplacedMuon (self.tree,'dMu1MinDr12', event.dMu1MinDr12)
+            self.fillDisplacedMuon (self.tree,'dMu2MinDr12', event.dMu2MinDr12)
+            self.fillDiMuon(self.tree, 'dimuonMaxDr0a12', event.dimuonMaxDr0a12)
+            self.fillDisplacedMuon (self.tree,'dMu1MaxDr0a12', event.dMu1MaxDr0a12)
+            self.fillDisplacedMuon (self.tree,'dMu2MaxDr0a12', event.dMu2MaxDr0a12)
 
         # output of MC analysis
         self.fillHNL(self.tree, 'hnl', event.the_hnl)

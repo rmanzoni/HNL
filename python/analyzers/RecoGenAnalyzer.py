@@ -69,7 +69,6 @@ class RecoGenAnalyzer(Analyzer):
 
     def process(self, event):
         self.readCollections(event.input)
-
         self.counters.counter('RecoGenTreeAnalyzer').inc('all events')
 
         # produce collections and map our objects to convenient Heppy objects
@@ -231,7 +230,6 @@ class RecoGenAnalyzer(Analyzer):
                     event.recoSv = makeRecoVertex(sv, kinVtxTrkSize=2) # need to do some gymastics
 
             if event.recoSv:
-                
                 # primary vertex
                 pv = event.goodVertices[0]
 

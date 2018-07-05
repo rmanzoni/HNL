@@ -49,6 +49,8 @@ class HNLTreeProducer(TreeProducerBase):
         self.bookMuonTrack(self.tree, 'l0_matched_dsmuon_track')
         self.bookParticle (self.tree, 'l0_matched_dgmuon'      )
         self.bookMuonTrack(self.tree, 'l0_matched_dgmuon_track')
+        self.bookParticle (self.tree, 'l0_bestmatch'           )
+        self.var(self.tree, 'l0_bestmatchtype')
        
 
         # displaced leptons (from the HN)
@@ -63,6 +65,9 @@ class HNLTreeProducer(TreeProducerBase):
         self.bookMuonTrack(self.tree, 'l1_matched_dsmuon_track')
         self.bookParticle (self.tree, 'l1_matched_dgmuon'      )
         self.bookMuonTrack(self.tree, 'l1_matched_dgmuon_track')
+        self.bookParticle (self.tree, 'l1_bestmatch'           )
+        self.var(self.tree, 'l1_bestmatchtype')
+
         self.bookGenParticle(self.tree, 'l2')
         self.var(self.tree,'l2_bestmatchtype')
         self.bookEle      (self.tree, 'l2_matched_electron'    )
@@ -74,6 +79,8 @@ class HNLTreeProducer(TreeProducerBase):
         self.bookMuonTrack(self.tree, 'l2_matched_dsmuon_track')
         self.bookParticle (self.tree, 'l2_matched_dgmuon'      )
         self.bookMuonTrack(self.tree, 'l2_matched_dgmuon_track')
+        self.bookParticle (self.tree, 'l2_bestmatch'           )
+        self.var(self.tree, 'l2_bestmatchtype')
 
         # final neutrino
         self.bookGenParticle(self.tree, 'n')
@@ -150,6 +157,8 @@ class HNLTreeProducer(TreeProducerBase):
         if hasattr(event.the_hnl.l0(), 'besttau'     ): self.fillTau     (self.tree, 'l0_matched_tau'     , event.the_hnl.l0().besttau     )
         if hasattr(event.the_hnl.l0(), 'bestdsmuon'  ): self.fillParticle(self.tree, 'l0_matched_dsmuon'  , event.the_hnl.l0().bestdsmuon  ) ; self.fillMuonTrack(self.tree, 'l0_matched_dsmuon_track', event.the_hnl.l0().bestdsmuon )
         if hasattr(event.the_hnl.l0(), 'bestdgmuon'  ): self.fillParticle(self.tree, 'l0_matched_dgmuon'  , event.the_hnl.l0().bestdgmuon  ) ; self.fillMuonTrack(self.tree, 'l0_matched_dgmuon_track', event.the_hnl.l0().bestdgmuon )
+        if event.the_hnl.l0().bestmatch != None: self.fillParticle(self.tree, 'l0_bestmatch'       , event.the_hnl.l0().bestmatch   )
+        self.fill(self.tree, 'l0_bestmatchtype',event.the_hnl.l0().bestmatchtype)
         
         # displaced leptons (from the HN)
         self.fillGenParticle(self.tree, 'l1', event.the_hnl.l1())
@@ -160,6 +169,8 @@ class HNLTreeProducer(TreeProducerBase):
         if hasattr(event.the_hnl.l1(), 'besttau'     ): self.fillTau     (self.tree, 'l1_matched_tau'     , event.the_hnl.l1().besttau     )
         if hasattr(event.the_hnl.l1(), 'bestdsmuon'  ): self.fillParticle(self.tree, 'l1_matched_dsmuon'  , event.the_hnl.l1().bestdsmuon  ) ; self.fillMuonTrack(self.tree, 'l1_matched_dsmuon_track', event.the_hnl.l1().bestdsmuon )
         if hasattr(event.the_hnl.l1(), 'bestdgmuon'  ): self.fillParticle(self.tree, 'l1_matched_dgmuon'  , event.the_hnl.l1().bestdgmuon  ) ; self.fillMuonTrack(self.tree, 'l1_matched_dgmuon_track', event.the_hnl.l1().bestdgmuon )
+        if event.the_hnl.l1().bestmatch != None: self.fillParticle(self.tree, 'l1_bestmatch'       , event.the_hnl.l1().bestmatch   )
+        self.fill(self.tree, 'l1_bestmatchtype',event.the_hnl.l1().bestmatchtype)
 
         self.fillGenParticle(self.tree, 'l2', event.the_hnl.l2())
         self.fill(self.tree,'l2_bestmatchtype',event.the_hnl.l2().bestmatchtype)
@@ -169,6 +180,9 @@ class HNLTreeProducer(TreeProducerBase):
         if hasattr(event.the_hnl.l2(), 'besttau'     ): self.fillTau     (self.tree, 'l2_matched_tau'     , event.the_hnl.l2().besttau     )
         if hasattr(event.the_hnl.l2(), 'bestdsmuon'  ): self.fillParticle(self.tree, 'l2_matched_dsmuon'  , event.the_hnl.l2().bestdsmuon  ) ; self.fillMuonTrack(self.tree, 'l2_matched_dsmuon_track', event.the_hnl.l2().bestdsmuon )
         if hasattr(event.the_hnl.l2(), 'bestdgmuon'  ): self.fillParticle(self.tree, 'l2_matched_dgmuon'  , event.the_hnl.l2().bestdgmuon  ) ; self.fillMuonTrack(self.tree, 'l2_matched_dgmuon_track', event.the_hnl.l2().bestdgmuon )
+        if event.the_hnl.l2().bestmatch != None: self.fillParticle(self.tree, 'l2_bestmatch'       , event.the_hnl.l2().bestmatch   )
+        self.fill(self.tree, 'l2_bestmatchtype',event.the_hnl.l2().bestmatchtype)
+        
 
         # final neutrino
         self.fillGenParticle(self.tree, 'n'  , event.the_hnl.met())

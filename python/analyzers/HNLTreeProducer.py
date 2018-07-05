@@ -150,7 +150,6 @@ class HNLTreeProducer(TreeProducerBase):
 
         # the prompt lepton
         self.fillGenParticle(self.tree, 'l0' , event.the_hnl.l0())
-        self.fill(self.tree,'l0_bestmatchtype',event.the_hnl.l0().bestmatchtype)
         if hasattr(event.the_hnl.l0(), 'bestelectron'): self.fillEle     (self.tree, 'l0_matched_electron', event.the_hnl.l0().bestelectron)
         if hasattr(event.the_hnl.l0(), 'bestphoton'  ): self.fillPhoton  (self.tree, 'l0_matched_photon'  , event.the_hnl.l0().bestphoton  )
         if hasattr(event.the_hnl.l0(), 'bestmuon'    ): self.fillMuon    (self.tree, 'l0_matched_muon'    , event.the_hnl.l0().bestmuon    ) ; self.fillMuonTrack(self.tree, 'l0_matched_muon_track', event.the_hnl.l0().bestmuon.bestTrack())
@@ -162,7 +161,6 @@ class HNLTreeProducer(TreeProducerBase):
         
         # displaced leptons (from the HN)
         self.fillGenParticle(self.tree, 'l1', event.the_hnl.l1())
-        self.fill(self.tree,'l1_bestmatchtype',event.the_hnl.l1().bestmatchtype)
         if hasattr(event.the_hnl.l1(), 'bestelectron'): self.fillEle     (self.tree, 'l1_matched_electron', event.the_hnl.l1().bestelectron)
         if hasattr(event.the_hnl.l1(), 'bestphoton'  ): self.fillPhoton  (self.tree, 'l1_matched_photon'  , event.the_hnl.l1().bestphoton  )
         if hasattr(event.the_hnl.l1(), 'bestmuon'    ): self.fillMuon    (self.tree, 'l1_matched_muon'    , event.the_hnl.l1().bestmuon    ) ; self.fillMuonTrack(self.tree, 'l1_matched_muon_track', event.the_hnl.l1().bestmuon.bestTrack())        
@@ -173,7 +171,6 @@ class HNLTreeProducer(TreeProducerBase):
         self.fill(self.tree, 'l1_bestmatchtype',event.the_hnl.l1().bestmatchtype)
 
         self.fillGenParticle(self.tree, 'l2', event.the_hnl.l2())
-        self.fill(self.tree,'l2_bestmatchtype',event.the_hnl.l2().bestmatchtype)
         if hasattr(event.the_hnl.l2(), 'bestelectron'): self.fillEle     (self.tree, 'l2_matched_electron', event.the_hnl.l2().bestelectron)
         if hasattr(event.the_hnl.l2(), 'bestphoton'  ): self.fillPhoton  (self.tree, 'l2_matched_photon'  , event.the_hnl.l2().bestphoton  )
         if hasattr(event.the_hnl.l2(), 'bestmuon'    ): self.fillMuon    (self.tree, 'l2_matched_muon'    , event.the_hnl.l2().bestmuon    ) ; self.fillMuonTrack(self.tree, 'l2_matched_muon_track', event.the_hnl.l2().bestmuon.bestTrack())        

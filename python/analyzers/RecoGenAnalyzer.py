@@ -114,44 +114,44 @@ class RecoGenAnalyzer(Analyzer):
 
             # matches the corresponding "slimmed electron" to the gen particle
             if len(event.electrons):
-                dr = np.inf
-                match, dr = bestMatch(ip,event.electrons)
-                if dr < 0.2: 
+                dr2 = np.inf
+                match, dr2 = bestMatch(ip,event.electrons)
+                if dr2 < 0.04: 
                     ip.bestelectron = match
 
             # matches the corresponding "slimmed photon" to the gen particle
             if len(event.photons):
-                dr = np.inf
-                match, dr = bestMatch(ip,event.photons)
-                if dr < 0.2: 
+                dr2 = np.inf
+                match, dr2 = bestMatch(ip,event.photons)
+                if dr2 < 0.04: 
                     ip.bestphoton = match
 
             # matches the corresponding "slimmed muon" to the gen particle
             if len(event.muons):
-                dr = np.inf
-                match, dr = bestMatch(ip,event.muons)
-                if dr < 0.2: 
+                dr2 = np.inf
+                match, dr2 = bestMatch(ip,event.muons)
+                if dr2 < 0.04: 
                     ip.bestmuon = match
             
             # matches the corresponding "slimmed tau" to the gen particle
             if len(event.taus):
-                dr = np.inf
-                match, dr = bestMatch(ip,event.taus)
-                if dr < 0.2: 
+                dr2 = np.inf
+                match, dr2 = bestMatch(ip,event.taus)
+                if dr2 < 0.04: 
                     ip.besttau = match
             
             # matches the corresponding "displaced stand alone muon" to the gen particle
             if len(event.dsmuons):
-                dr = np.inf
-                match, dr = bestMatch(ip,event.dsmuons)
-                if dr < 0.2: 
+                dr2 = np.inf
+                match, dr2 = bestMatch(ip,event.dsmuons)
+                if dr2 < 0.04: 
                     ip.bestdsmuon = match
                     
             # matches the corresponding "displaced global muon" to the gen particle
             if len(event.dgmuons):
-                dr = np.inf
-                match, dr = bestMatch(ip,event.dgmuons)
-                if dr < 0.2: 
+                dr2 = np.inf
+                match, dr2 = bestMatch(ip,event.dgmuons)
+                if dr2 < 0.04: 
                     ip.bestdgmuon = match
             
             # to find the best match, give precedence to any matched 
@@ -163,12 +163,15 @@ class RecoGenAnalyzer(Analyzer):
                 # remove already matched particles, avoid multiple matches to the same candidate
                 matchable.remove(ip.bestmatch)
                 # record which is which
-                if ip.bestmatch in event.electrons: ip.bestmatchtype = 0
-                if ip.bestmatch in event.photons  : ip.bestmatchtype = 1
-                if ip.bestmatch in event.muons    : ip.bestmatchtype = 2
-                if ip.bestmatch in event.taus     : ip.bestmatchtype = 3
-                if ip.bestmatch in event.dsmuons  : ip.bestmatchtype = 4
-                if ip.bestmatch in event.dgmuons  : ip.bestmatchtype = 5
+                if ip.bestmatch in event.electrons: ip.bestmatchtype = 11
+                if ip.bestmatch in event.photons  : ip.bestmatchtype = 22
+                if ip.bestmatch in event.muons    : ip.bestmatchtype = 13
+                if ip.bestmatch in event.taus     : ip.bestmatchtype = 15
+                if ip.bestmatch in event.dsmuons  : ip.bestmatchtype = 26
+                if ip.bestmatch in event.dgmuons  : ip.bestmatchtype = 39
+
+            else:
+                ip.bestmatchtype = -1 
     
         # clear it before doing it again
         event.recoSv = None

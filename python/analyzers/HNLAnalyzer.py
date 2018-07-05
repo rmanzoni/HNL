@@ -45,7 +45,7 @@ class HNLAnalyzer(Analyzer):
         self.counters.addCounter('HNL')
         count = self.counters.counter('HNL')
         count.register('all events')
-        count.register('>= 2 muons')
+        count.register('good gen')
         # count.register('reconstructable events')
         count.register('pairs')
         count.register('dimuons')
@@ -151,14 +151,22 @@ class HNLAnalyzer(Analyzer):
        
         event.n_dMu = len(dMus) # important to understand how well the "Merge Reco Muons" process went. 
 
+        # #####################################################################################
+        # # select only events with >= 3 muons
+        # #####################################################################################
+        # if event.n_dMu < 2 and abs(event.the_hnl.l1().pdgId())==13 and abs(event.the_hnl.l2().pdgId())==13:
+            # return False
+
+        # self.counters.counter('HNL').inc('>= 2 muons')
+       
         #####################################################################################
-        # select only events with >= 3 muons
+        # select only events with good gen events
         #####################################################################################
-        if event.n_dMu < 2 and abs(event.the_hnl.l1().pdgId())==13 and abs(event.the_hnl.l2().pdgId())==13:
+        if abs(event.the_hnl.l1().pdgId())==13 and abs(event.the_hnl.l2().pdgId())==13 and abs(event.the_hnl.l1().eta())<2.4 and abs(event.the_hnl.l2().eta())<2.4 and event.the_hnl.l1().pt()>5 and event.the_hnl.l2().pt>5:
             return False
 
-        self.counters.counter('HNL').inc('>= 2 muons')
-       
+        self.counters.counter('HNL').inc('good gen')
+
         # #####################################################################################
         # # identify if the HNL is reconstructable or not, if both l1 and l2 are reconstructed.
         # # FIXME: This is the only part of code requiring Gen Information.

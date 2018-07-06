@@ -215,10 +215,10 @@ class HNLTreeProducer(TreeProducerBase):
             self.fill(self.tree, 'hnl_2d_reco_disp_sig', event.recoSv.disp2DFromBS_sig) # from beamspot
             self.fill(self.tree, 'hnl_3d_reco_disp_sig', event.recoSv.disp3DFromBS_sig) # from PV
 
-        # flag if the event is in CMS acceptance |eta|<2.5
-        is_in_acc =  abs(event.the_hnl.l0().eta())<2.5 and \
-                     abs(event.the_hnl.l1().eta())<2.5 and \
-                     abs(event.the_hnl.l2().eta())<2.5
+        # flag if the event is in CMS acceptance |eta|<2.4
+        is_in_acc =  abs(event.the_hnl.l0().eta())<2.4 and \
+                     abs(event.the_hnl.l1().eta())<2.4 and \
+                     abs(event.the_hnl.l2().eta())<2.4
  
         self.fill(self.tree, 'is_in_acc', is_in_acc)
 

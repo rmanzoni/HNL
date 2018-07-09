@@ -178,6 +178,7 @@ particle_vars = [
     Variable('phi'   , lambda p: p.phi()),
     Variable('charge', lambda p: p.charge() if hasattr(p, 'charge') else 0), # charge may be non-integer for gen particles
     Variable('mass'  , lambda p: p.mass()),
+    Variable('pdgId' , lambda p: p.pdgId()),
 ]
 
 # stage-2 L1 object

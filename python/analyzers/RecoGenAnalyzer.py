@@ -176,6 +176,10 @@ class RecoGenAnalyzer(Analyzer):
     
         # clear it before doing it again
         event.recoSv = None
+
+
+        # if hasattr(event.the_hnl.l2().bestmatch, 'pt'):
+            # set_trace()
         # if (abs(event.the_hnl.l1().pt()-13.851562)<0.001):
             # set_trace()
 

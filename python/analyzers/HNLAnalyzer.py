@@ -162,7 +162,7 @@ class HNLAnalyzer(Analyzer):
         #####################################################################################
         # select only events with good gen events
         #####################################################################################
-        if abs(event.the_hnl.l1().pdgId())==13 and abs(event.the_hnl.l2().pdgId())==13 and abs(event.the_hnl.l1().eta())<2.4 and abs(event.the_hnl.l2().eta())<2.4 and event.the_hnl.l1().pt()>5 and event.the_hnl.l2().pt>5:
+        if not(abs(event.the_hnl.l1().pdgId())==13 and abs(event.the_hnl.l2().pdgId())==13 and abs(event.the_hnl.l1().eta())<2.4 and abs(event.the_hnl.l2().eta())<2.4):
             return False
 
         self.counters.counter('HNL').inc('good gen')
@@ -268,5 +268,4 @@ class HNLAnalyzer(Analyzer):
                 event.dimuonMaxDr0a12 = dimuonMaxDr0a12
                 event.dMu1MaxDr0a12 = sorted(dimuonMaxDr0a12.pair, key = lambda x: x.pt(), reverse = True)[0] 
                 event.dMu2MaxDr0a12 = sorted(dimuonMaxDr0a12.pair, key = lambda x: x.pt(), reverse = False)[0]
-
         return True

@@ -26,12 +26,12 @@ from CMGTools.HNL.analyzers.CheckHNLAnalyzer     import CheckHNLAnalyzer
 
 
 # import samples, signal
-# from CMGTools.HNL.samples.signal import all_signals as samples
+from CMGTools.HNL.samples.signal import all_signals as samples
 # from CMGTools.HNL.samples.signal import signals_mass_3 as samples
 # from CMGTools.HNL.samples.signal import signals_test as samples
 # from CMGTools.HNL.samples.signal import signals_mass_1
 # from CMGTools.HNL.samples.signal import signals_mass_2p1
-from CMGTools.HNL.samples.signal import disp1plus as samples
+# from CMGTools.HNL.samples.signal import disp1plus as samples
 
 
 puFileMC   = '$CMSSW_BASE/src/CMGTools/H2TauTau/data/MC_Moriond17_PU25ns_V1.root'
@@ -42,7 +42,7 @@ puFileData = '/afs/cern.ch/user/a/anehrkor/public/Data_Pileup_2016_271036-284044
 ###################################################
 # Get all heppy options; set via "-o production" or "-o production=True"
 # production = True run on batch, production = False (or unset) run locally
-production         = getHeppyOption('production'        , False)
+production         = getHeppyOption('production'        , True)
 pick_events        = getHeppyOption('pick_events'       , False)
 
 ###################################################

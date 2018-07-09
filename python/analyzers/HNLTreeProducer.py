@@ -38,8 +38,7 @@ class HNLTreeProducer(TreeProducerBase):
         self.bookHNL(self.tree, 'hnl')
 
         # the prompt lepton
-        self.bookGenParticle(self.tree, 'l0')
-        self.var(self.tree,'l0_bestmatchtype')
+        self.bookParticle(self.tree, 'l0')
         self.bookEle      (self.tree, 'l0_matched_electron'    )
         self.bookPhoton   (self.tree, 'l0_matched_photon'      )
         self.bookMuon     (self.tree, 'l0_matched_muon'        )
@@ -54,8 +53,7 @@ class HNLTreeProducer(TreeProducerBase):
        
 
         # displaced leptons (from the HN)
-        self.bookGenParticle(self.tree, 'l1')
-        self.var(self.tree,'l1_bestmatchtype')
+        self.bookParticle(self.tree, 'l1')
         self.bookEle      (self.tree, 'l1_matched_electron'    )
         self.bookPhoton   (self.tree, 'l1_matched_photon'      )
         self.bookMuon     (self.tree, 'l1_matched_muon'        )
@@ -68,8 +66,7 @@ class HNLTreeProducer(TreeProducerBase):
         self.bookParticle (self.tree, 'l1_bestmatch'           )
         self.var(self.tree, 'l1_bestmatchtype')
 
-        self.bookGenParticle(self.tree, 'l2')
-        self.var(self.tree,'l2_bestmatchtype')
+        self.bookParticle(self.tree, 'l2')
         self.bookEle      (self.tree, 'l2_matched_electron'    )
         self.bookPhoton   (self.tree, 'l2_matched_photon'      )
         self.bookMuon     (self.tree, 'l2_matched_muon'        )
@@ -149,7 +146,7 @@ class HNLTreeProducer(TreeProducerBase):
         self.fillHNL(self.tree, 'hnl', event.the_hnl)
 
         # the prompt lepton
-        self.fillGenParticle(self.tree, 'l0' , event.the_hnl.l0())
+        self.fillParticle(self.tree, 'l0' , event.the_hnl.l0())
         if hasattr(event.the_hnl.l0(), 'bestelectron'): self.fillEle     (self.tree, 'l0_matched_electron', event.the_hnl.l0().bestelectron)
         if hasattr(event.the_hnl.l0(), 'bestphoton'  ): self.fillPhoton  (self.tree, 'l0_matched_photon'  , event.the_hnl.l0().bestphoton  )
         if hasattr(event.the_hnl.l0(), 'bestmuon'    ): self.fillMuon    (self.tree, 'l0_matched_muon'    , event.the_hnl.l0().bestmuon    ) ; self.fillMuonTrack(self.tree, 'l0_matched_muon_track', event.the_hnl.l0().bestmuon.bestTrack())
@@ -160,7 +157,7 @@ class HNLTreeProducer(TreeProducerBase):
         self.fill(self.tree, 'l0_bestmatchtype',event.the_hnl.l0().bestmatchtype)
         
         # displaced leptons (from the HN)
-        self.fillGenParticle(self.tree, 'l1', event.the_hnl.l1())
+        self.fillParticle(self.tree, 'l1', event.the_hnl.l1())
         if hasattr(event.the_hnl.l1(), 'bestelectron'): self.fillEle     (self.tree, 'l1_matched_electron', event.the_hnl.l1().bestelectron)
         if hasattr(event.the_hnl.l1(), 'bestphoton'  ): self.fillPhoton  (self.tree, 'l1_matched_photon'  , event.the_hnl.l1().bestphoton  )
         if hasattr(event.the_hnl.l1(), 'bestmuon'    ): self.fillMuon    (self.tree, 'l1_matched_muon'    , event.the_hnl.l1().bestmuon    ) ; self.fillMuonTrack(self.tree, 'l1_matched_muon_track', event.the_hnl.l1().bestmuon.bestTrack())        
@@ -170,7 +167,7 @@ class HNLTreeProducer(TreeProducerBase):
         if event.the_hnl.l1().bestmatch != None: self.fillParticle(self.tree, 'l1_bestmatch'       , event.the_hnl.l1().bestmatch   )
         self.fill(self.tree, 'l1_bestmatchtype',event.the_hnl.l1().bestmatchtype)
 
-        self.fillGenParticle(self.tree, 'l2', event.the_hnl.l2())
+        self.fillParticle(self.tree, 'l2', event.the_hnl.l2())
         if hasattr(event.the_hnl.l2(), 'bestelectron'): self.fillEle     (self.tree, 'l2_matched_electron', event.the_hnl.l2().bestelectron)
         if hasattr(event.the_hnl.l2(), 'bestphoton'  ): self.fillPhoton  (self.tree, 'l2_matched_photon'  , event.the_hnl.l2().bestphoton  )
         if hasattr(event.the_hnl.l2(), 'bestmuon'    ): self.fillMuon    (self.tree, 'l2_matched_muon'    , event.the_hnl.l2().bestmuon    ) ; self.fillMuonTrack(self.tree, 'l2_matched_muon_track', event.the_hnl.l2().bestmuon.bestTrack())        
@@ -215,7 +212,7 @@ class HNLTreeProducer(TreeProducerBase):
             self.fill(self.tree, 'hnl_2d_reco_disp_sig', event.recoSv.disp2DFromBS_sig) # from beamspot
             self.fill(self.tree, 'hnl_3d_reco_disp_sig', event.recoSv.disp3DFromBS_sig) # from PV
 
-        # flag if the event is in CMS acceptance |eta|<2.4
+        # flag if the event is in CMS acceptance |eta|<2.4 (general CMS is 2.5, but the muon system is 2.4)
         is_in_acc =  abs(event.the_hnl.l0().eta())<2.4 and \
                      abs(event.the_hnl.l1().eta())<2.4 and \
                      abs(event.the_hnl.l2().eta())<2.4

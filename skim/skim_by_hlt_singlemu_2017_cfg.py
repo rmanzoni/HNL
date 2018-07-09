@@ -1,4 +1,4 @@
-from triggers import mu_hlts
+from triggers import mu_hlts_2017 
 from event_content import miniaod_event_content_data, aod_event_content
 
 import FWCore.ParameterSet.Config as cms
@@ -32,7 +32,7 @@ process.maxEvents = cms.untracked.PSet(
 # skim by HLT trigger
 process.triggerSelection = cms.EDFilter( 
     'TriggerResultsFilter',
-    triggerConditions = cms.vstring(mu_hlts),
+    triggerConditions = cms.vstring(mu_hlts_2017),
     hltResults        = cms.InputTag( 'TriggerResults', '', 'HLT' ),
     l1tResults        = cms.InputTag( '' ),
     throw             = cms.bool(False),

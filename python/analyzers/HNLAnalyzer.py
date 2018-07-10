@@ -151,13 +151,6 @@ class HNLAnalyzer(Analyzer):
        
         event.n_dMu = len(dMus) # important to understand how well the "Merge Reco Muons" process went. 
 
-        # #####################################################################################
-        # # select only events with >= 3 muons
-        # #####################################################################################
-        # if event.n_dMu < 2 and abs(event.the_hnl.l1().pdgId())==13 and abs(event.the_hnl.l2().pdgId())==13:
-            # return False
-
-        # self.counters.counter('HNL').inc('>= 2 muons')
        
         #####################################################################################
         # select only events with good gen events
@@ -168,26 +161,11 @@ class HNLAnalyzer(Analyzer):
         self.counters.counter('HNL').inc('good gen')
 
         # #####################################################################################
-        # # identify if the HNL is reconstructable or not, if both l1 and l2 are reconstructed.
-        # # FIXME: This is the only part of code requiring Gen Information.
-        # # It should be moved to CheckHNLAnalyzer.py, but is currently here to give us the
-        # # possibility to preselect events only with "reconstructable HNL"
+        # TODO: Preselection for the reco muons
         # #####################################################################################
-        # l1_reconstructed  = False
-        # l2_reconstructed  = False
-        event.hnl_reconstructable = False
-        if event.recoSv:
-            event.hnl_reconstructable = True
-        # if (getattr(event.the_hnl.l1(), 'bestmuon',False) or getattr(event.the_hnl.l1(), 'bestdsmuon',False)):
-            # l1_reconstructed = True 
 
-        # if (getattr(event.the_hnl.l2(), 'bestmuon',False) or getattr(event.the_hnl.l2(), 'bestdsmuon',False)):
-            # l2_reconstructed = True 
 
-        # event.hnl_reconstructable = l1_reconstructed and l2_reconstructed
 
-        # if event.hnl_reconstructable == True:
-            # self.counters.counter('HNL').inc('reconstructable events')
 
         #####################################################################################
         # collect all muon pairs
@@ -231,6 +209,16 @@ class HNLAnalyzer(Analyzer):
                             dimuons.append(DiMuon(pair, makeRecoVertex(sv, kinVtxTrkSize=2)))
 
             #####################################################################################
+            # TODO: Check whether the correct dimuon is part of the collection dimuons
+            #####################################################################################
+            event.flag_IsThereTHEDimuon = False
+            if len(dimuons) > 0:
+                for dimu in dimuons:
+                    dMu1 = dimu.pair[0]
+                    dMu2 = dimu.pair[1] # to be continued from here
+
+
+            #####################################################################################
             # select the best dimuon pairs 
             #####################################################################################
             if len(dimuons) > 0:
@@ -271,7 +259,7 @@ class HNLAnalyzer(Analyzer):
 
 
             #####################################################################################
-            # Final Qualification and 'ok' to nominate the selection dimuon as HNL candidate
+            # TODO: Final Qualification and 'ok' to nominate the selection dimuon as HNL candidate
             #####################################################################################
 
 

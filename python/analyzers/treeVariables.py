@@ -48,9 +48,9 @@ event_vars = [
 # generic HNL reconstruction event variables
 hnlreco_vars = [
     Variable('n_sMu', lambda ev : ev.n_sMu, type=int),
-    Variable('n_dSAMu', lambda ev : ev.n_sMu, type=int),
+    Variable('n_dSAMu', lambda ev : ev.n_dSAMu, type=int),
     Variable('n_dMu', lambda ev : ev.n_dMu, type=int),
-    Variable('n_os_pairs', lambda ev : ev.n_os_pairs, type=int),
+    Variable('n_pairs', lambda ev : ev.n_pairs, type=int),
     Variable('n_sMuOnly',      lambda ev : ev.n_sMuOnly, type=int),
     Variable('n_sMuRedundant', lambda ev : ev.n_sMuRedundant, type=int),
     Variable('n_dSAMuOnly',      lambda ev : ev.n_dSAMuOnly, type=int),
@@ -58,10 +58,40 @@ hnlreco_vars = [
     Variable('n_dimuon', lambda ev : ev.n_dimuon, type=int),
 ]
 
+# Variables indicating the quality of HNL reconstruction
+check_hnlreco_vars = [
+    Variable('flag_matchedL1Chi2', lambda ev : ev.matchedL1Chi2,   ),
+    Variable('flag_matchedL2Chi2', lambda ev : ev.matchedL2Chi2,   ),
+    Variable('flag_matchedL1Dxy',  lambda ev : ev.matchedL1Dxy ,   ),
+    Variable('flag_matchedL2Dxy',  lambda ev : ev.matchedL2Dxy ,   ),
+    Variable('flag_matchedHNLChi2', lambda ev : ev.matchedHNLChi2 ,),
+    Variable('flag_matchedHNLDxy', lambda ev : ev.matchedHNLDxy ,  ),
+    Variable('flag_hnl_reconstructable', lambda ev : ev.hnl_reconstructable ,  ),
+
+]
+
 # generic DiMuon variables
 dimuon_vars = [
-    Variable('displacement2D', lambda hn : hn.displacement2D(), type = float), 
+    Variable('x', lambda hn : hn.vtx.x(), type = float), 
+    Variable('y', lambda hn : hn.vtx.y(), type = float), 
+    Variable('z', lambda hn : hn.vtx.z(), type = float), 
+    Variable('dxy', lambda hn : hn.dxy(), type = float), 
     Variable('vtxFitChi2', lambda hn : hn.vtx.chi2(), type = float),
+]
+
+# generic DiMuon variables
+displacedmuon_vars = [
+    Variable('x'    , lambda p: p.vx() ),
+    Variable('y'    , lambda p: p.vy() ),
+    Variable('z'    , lambda p: p.vz() ),
+    Variable('dxy'    , lambda p: p.dxy() ),
+    Variable('pt'    , lambda p: p.pt() ),
+    Variable('eta'   , lambda p: p.eta()),
+    Variable('phi'   , lambda p: p.phi()),
+    Variable('charge', lambda p: p.charge() if hasattr(p, 'charge') else 0), # charge may be non-integer for gen particles
+    Variable('mass'  , lambda p: p.mass()),
+    Variable('reco'  , lambda p: p.reco),
+    Variable('redundancy'  , lambda p: p.redundancy),
 ]
 
 # generic HNL variables
@@ -148,6 +178,7 @@ particle_vars = [
     Variable('phi'   , lambda p: p.phi()),
     Variable('charge', lambda p: p.charge() if hasattr(p, 'charge') else 0), # charge may be non-integer for gen particles
     Variable('mass'  , lambda p: p.mass()),
+    Variable('pdgId' , lambda p: p.pdgId()),
 ]
 
 # stage-2 L1 object

@@ -102,7 +102,8 @@ class RecoGenAnalyzer(Analyzer):
         self.assignVtx(event.taus     , myvtx)
 
         # all matchable objects
-        matchable = event.electrons + event.photons + event.muons + event.taus + event.dsmuons + event.dgmuons 
+        # matchable = event.electrons + event.photons + event.muons + event.taus + event.dsmuons + event.dgmuons 
+        matchable = event.electrons + event.photons + event.muons + event.taus + event.dsmuons 
 
         # match gen to reco
         for ip in [event.the_hnl.l0(), 

@@ -7,7 +7,7 @@ config = config()
 config.General.transferOutputs = True
 config.General.transferLogs    = True
 
-config.JobType.psetName        = 'skim_by_hlt_singlemu_cfg.py'
+config.JobType.psetName        = 'skim_by_hlt_mc_2017_cfg.py'
 config.JobType.pluginName      = 'Analysis'
 config.JobType.outputFiles     = ['miniAOD_skim.root']
 config.Data.splitting          = 'Automatic'
@@ -47,9 +47,8 @@ if __name__ == '__main__':
         except ClientException as cle:
             print "Failed submitting task: %s" % (cle)
 
-
     # subset of samples to run
-    mygroups = groups[:1]
+    mygroups = groups[:1]    # <======== ADAPT THIS TO YOUR CASE!
 
     for k, v in all_samples.iteritems():
         if k not in mygroups:
@@ -61,5 +60,5 @@ if __name__ == '__main__':
             config.Data.outputDatasetTag      = 'HNLSKIM2017_'+kk
             print 'submitting config:'
             print config
-#             submit(config)        
+            submit(config)        
         

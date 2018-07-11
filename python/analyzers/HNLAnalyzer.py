@@ -232,8 +232,8 @@ class HNLAnalyzer(Analyzer):
                 event.dMu1Dxy = sorted(dimuonDxy.pair, key = lambda x: x.pt(), reverse = True)[0]
                 event.dMu2Dxy = sorted(dimuonDxy.pair, key = lambda x: x.pt(), reverse = False)[0] 
 
-                # select leptons ito average pt
-                dimuonMaxPt = sorted(dimuons, key = lambda x: (x.pair[0].pt()+x.pair[1].pt())/2, reverse = True)[0] 
+                # select leptons ito added pt
+                dimuonMaxPt = sorted(dimuons, key = lambda x: (x.pair[0].p4() + x.pair[1].p4()).pt(), reverse = True)[0] 
                 event.dimuonMaxPt = dimuonMaxPt
                 event.dMu1MaxPt = sorted(dimuonMaxPt.pair, key = lambda x: x.pt(), reverse = True)[0] 
                 event.dMu2MaxPt = sorted(dimuonMaxPt.pair, key = lambda x: x.pt(), reverse = False)[0]
@@ -246,7 +246,8 @@ class HNLAnalyzer(Analyzer):
 
                 # select leptons farthest to l0 ito dr
                 # DEPENDENT ON GEN INFO
-                dimuonMaxDr0a12 = sorted(dimuons, key = lambda x: (deltaR(x.pair[0],event.the_hnl.l0())+deltaR(x.pair[1],event.the_hnl.l0()))/2, reverse = True)[0]
+                # (x.pair[0].p4() + x.pair[1].p4()).pt() 
+                dimuonMaxDr0a12 = sorted(dimuons, key = lambda x: deltaR(x.pair[0].p4()+x.pair[1].p4(),event.the_hnl.l0().p4()), reverse = True)[0]
                 event.dimuonMaxDr0a12 = dimuonMaxDr0a12
                 event.dMu1MaxDr0a12 = sorted(dimuonMaxDr0a12.pair, key = lambda x: x.pt(), reverse = True)[0] 
                 event.dMu2MaxDr0a12 = sorted(dimuonMaxDr0a12.pair, key = lambda x: x.pt(), reverse = False)[0]

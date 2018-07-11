@@ -77,7 +77,7 @@ class CheckHNLAnalyzer(Analyzer):
         flag_l2_matched_MaxDr0a12  = False
 
 
-        if event.n_dimuon > 0 and hasattr(event.the_hnl.l1().bestmatch, 'physObj') and hasattr(event.the_hnl.l2(),'physObj'):
+        if event.n_dimuon > 0 and hasattr(event.the_hnl.l1().bestmatch, 'physObj') and hasattr(event.the_hnl.l2().bestmatch,'physObj'):
             # confirm HNL reconstruction success if both gen leptons l1 and l2 are matched.
             if abs(event.the_hnl.l1().pdgId())==13 and abs(event.the_hnl.l2().pdgId())==13:
 

@@ -203,7 +203,9 @@ class HNLAnalyzer(Analyzer):
             #####################################################################################
             # Check whether the correct dimuon is part of the collection dimuons
             #####################################################################################
-            if len(dimuons) > 0 and hasattr(event.the_hnl.l1().bestmatch, 'physObj') and hasattr(event.the_hnl.l2(),'physObj'):
+            # if abs(event.the_hnl.l1().bestmatch.pt() - 20.650056)<0.001:
+                # set_trace()
+            if len(dimuons) > 0 and hasattr(event.the_hnl.l1().bestmatch, 'physObj') and hasattr(event.the_hnl.l2().bestmatch,'physObj'):
                 for dimu in dimuons:
                     dMu1 = dimu.pair[0]
                     dMu2 = dimu.pair[1] 

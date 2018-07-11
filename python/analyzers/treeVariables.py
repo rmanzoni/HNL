@@ -66,6 +66,8 @@ check_hnlreco_vars = [
     Variable('flag_matchedL2Dxy',  lambda ev : ev.matchedL2Dxy ,   ),
     Variable('flag_matchedHNLChi2', lambda ev : ev.matchedHNLChi2 ,),
     Variable('flag_matchedHNLDxy', lambda ev : ev.matchedHNLDxy ,  ),
+    Variable('flag_IsThereTHEDimuon', lambda ev : ev.flag_IsThereTHEDimuon , ),
+
 
 ]
 

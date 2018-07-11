@@ -89,15 +89,6 @@ class HNLAnalyzer(Analyzer):
         
         self.assignVtx(event.sMu,myvtx)
         
-        # impose the muon PDG ID and TrackRef to the displaced objects, that otherwise carry none
-        for mm in event.dSAMu:
-            mm.mass   = lambda : 0.10565837
-            mm.pdgId  = lambda : -(mm.charge()*13)
-        
-        for jj, mm in enumerate(event.dSAMu):
-            mm.track = lambda : ROOT.reco.TrackRef(self.handles['dSAMu'].product(),jj)
-            
-        
         # store the number of sMu and dSAMu per event
         event.n_sMu = len(event.sMu)
         event.n_dSAMu = len(event.dSAMu)
@@ -150,12 +141,12 @@ class HNLAnalyzer(Analyzer):
             event.n_dSAMuOnly += 1
        
         event.n_dMu = len(dMus) # important to understand how well the "Merge Reco Muons" process went. 
-
+        #TODO: prove the concatenater works reliably
        
         #####################################################################################
         # select only events with good gen events
         #####################################################################################
-        if not(abs(event.the_hnl.l1().pdgId())==13 and abs(event.the_hnl.l2().pdgId())==13 and abs(event.the_hnl.l1().eta())<2.4 and abs(event.the_hnl.l2().eta())<2.4) and abs(event.the_hnl.l0().eta()<2.4):
+        if not(abs(event.the_hnl.l1().pdgId())==13 and abs(event.the_hnl.l2().pdgId())==13 and abs(event.the_hnl.l1().eta())<2.4 and abs(event.the_hnl.l2().eta())<2.4 and abs(event.the_hnl.l0().eta())<2.4):
             return False
 
         self.counters.counter('HNL').inc('good gen')
@@ -172,6 +163,7 @@ class HNLAnalyzer(Analyzer):
         #####################################################################################
         event.pairs = [pair for pair in combinations(dMus,2)] 
         event.n_pairs = len(event.pairs)
+        event.flag_IsThereTHEDimuon = False
 
         event.n_dimuon = 0
         if len(event.pairs) > 0:
@@ -209,13 +201,15 @@ class HNLAnalyzer(Analyzer):
                             dimuons.append(DiMuon(pair, makeRecoVertex(sv, kinVtxTrkSize=2)))
 
             #####################################################################################
-            # TODO: Check whether the correct dimuon is part of the collection dimuons
+            # Check whether the correct dimuon is part of the collection dimuons
             #####################################################################################
-            event.flag_IsThereTHEDimuon = False
             if len(dimuons) > 0:
                 for dimu in dimuons:
                     dMu1 = dimu.pair[0]
-                    dMu2 = dimu.pair[1] # to be continued from here
+                    dMu2 = dimu.pair[1] # to be continued from here; .bestmatch!!!
+                    set_trace()
+                    if (dMu1 == event.the_hnl.l1().bestmatch or dMu1 == event.the_hnl.l2().bestmatch) and (dMu2 == event.the_hnl.l1().bestmatch or dMu2 == event.the_hnl.l2().bestmatch):
+                        event.flag_IsThereTHEDimuon = True
 
 
             #####################################################################################
@@ -261,7 +255,6 @@ class HNLAnalyzer(Analyzer):
             #####################################################################################
             # TODO: Final Qualification and 'ok' to nominate the selection dimuon as HNL candidate
             #####################################################################################
-
 
 
 

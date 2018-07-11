@@ -31,7 +31,8 @@ from CMGTools.HNL.analyzers.CheckHNLAnalyzer     import CheckHNLAnalyzer
 # from CMGTools.HNL.samples.signal import signals_test as samples
 # from CMGTools.HNL.samples.signal import signals_mass_1
 # from CMGTools.HNL.samples.signal import signals_mass_2p1
-from CMGTools.HNL.samples.signal import disp1plus as samples
+# from CMGTools.HNL.samples.signal import disp1plus as samples
+from CMGTools.HNL.samples.signal import HN3L_M_2p5_V_0p0173205080757_e_onshell
 
 
 puFileMC   = '$CMSSW_BASE/src/CMGTools/H2TauTau/data/MC_Moriond17_PU25ns_V1.root'
@@ -48,7 +49,7 @@ pick_events        = getHeppyOption('pick_events'       , False)
 ###################################################
 ###               HANDLE SAMPLES                ###
 ###################################################
-
+samples = [HN3L_M_2p5_V_0p0173205080757_e_onshell]
 for sample in samples:
     sample.triggers = ['HLT_IsoMu24_v%d' %i for i in range(4, 5)]
 
@@ -156,7 +157,8 @@ sequence = cfg.Sequence([
 ###            SET BATCH OR LOCAL               ###
 ###################################################
 if not production:
-    comp                 = samples[0]
+    # comp                 = samples[0]
+    comp                 = HN3L_M_2p5_V_0p0173205080757_e_onshell
     selectedComponents   = [comp]
     comp.splitFactor     = 1
     comp.fineSplitFactor = 1

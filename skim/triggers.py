@@ -24,7 +24,7 @@ mu_hlts_2017  = [
     'HLT_Mu50_v*',
 ]
 
-ele_hlts_2016 = [
+ele_hlts_2017 = [
     'HLT_Ele27_WPTight_Gsf_v*',
     'HLT_Ele32_WPTight_Gsf_v*',
     'HLT_Ele35_WPTight_Gsf_v*',

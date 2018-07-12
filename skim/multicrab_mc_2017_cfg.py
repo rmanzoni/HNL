@@ -1,3 +1,5 @@
+from collections import OrderedDict
+from datasetbkg import all_samples, groups
 from CRABClient.UserUtilities import config
 
 config = config()
@@ -5,18 +7,22 @@ config = config()
 config.General.transferOutputs = True
 config.General.transferLogs    = True
 
+config.JobType.psetName        = 'skim_by_hlt_mc_2017_cfg.py'
 config.JobType.pluginName      = 'Analysis'
-config.JobType.outputFiles     = ['BeamFit_LumiBased_NewAlignWorkflow.txt']
-# config.JobType.maxMemoryMB     = 9999
-config.JobType.priority        = 9999
+config.JobType.outputFiles     = ['miniAOD_skim.root']
+config.Data.splitting          = 'Automatic'
 
-config.Data.unitsPerJob        = 40
-config.Data.splitting          = 'LumiBased'
+# config.JobType.maxMemoryMB     = 2500
+# config.JobType.priority        = 999
 
-config.Data.publication        = False # set it to true for the real thing!
-config.Data.outputDatasetTag   = 'ReRecoSept2016v2'
+# config.Data.unitsPerJob        = 12000
+# config.Data.splitting          = 'EventAwareLumiBased'
+# JSON files:
+# /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/
+# config.Data.lumiMask           = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/Final/Cert_294927-306462_13TeV_PromptReco_Collisions17_JSON.txt'
+config.Data.publication        = True
 
-config.Site.storageSite        = 'T2_CH_CERN'
+config.Site.storageSite        = 'T2_CH_CSCS'
 # config.Site.blacklist          = ['T1_US_FNAL']
 # config.Site.whitelist          = ['T2_CH_CERN']
 
@@ -26,12 +32,12 @@ if __name__ == '__main__':
     from CRABClient.ClientExceptions import ClientException
     from httplib import HTTPException
 
-    tag = 'ReRecoSept2016v2'
+    tag = 'v1'
 
     # We want to put all the CRAB project directories from the tasks we submit here into one common directory.
     # That's why we need to set this parameter (here or above in the configuration file, it does not matter, we will not overwrite it).
-    config.General.workArea   = 'crab_data_' + tag
-    config.Data.outLFNDirBase = '/store/group/phys_tracking/beamspot/13TeV/' + tag 
+    config.General.workArea   = 'crab_mc2017_' + tag
+#     config.Data.outLFNDirBase = '/store/group/phys_tau/HLT2016/' + tag 
     
     def submit(config):
         try:
@@ -41,23 +47,18 @@ if __name__ == '__main__':
         except ClientException as cle:
             print "Failed submitting task: %s" % (cle)
 
-    datasets = {}
+    # subset of samples to run
+    mygroups = groups[:1]    # <======== ADAPT THIS TO YOUR CASE!
 
-    datasets['ZeroBiasRun2016Bv1'] = ('/ZeroBias/Run2016B-TkAlMinBias-PromptReco-v1/ALCARECO', 'BeamFit_LumiBased_NewAlignWorkflow_ALCARECO.py')
-    datasets['ZeroBiasRun2016Bv2'] = ('/ZeroBias/Run2016B-PromptReco-v2/RECO'                , 'BeamFit_LumiBased_NewAlignWorkflow_RECO.py'    )
-    datasets['ZeroBiasRun2016Cv2'] = ('/ZeroBias/Run2016C-TkAlMinBias-PromptReco-v2/ALCARECO', 'BeamFit_LumiBased_NewAlignWorkflow_ALCARECO.py')
-    datasets['ZeroBiasRun2016Dv2'] = ('/ZeroBias/Run2016D-TkAlMinBias-PromptReco-v2/ALCARECO', 'BeamFit_LumiBased_NewAlignWorkflow_ALCARECO.py')
-    datasets['ZeroBiasRun2016Ev2'] = ('/ZeroBias/Run2016E-TkAlMinBias-PromptReco-v2/ALCARECO', 'BeamFit_LumiBased_NewAlignWorkflow_ALCARECO.py')
-    datasets['ZeroBiasRun2016Fv1'] = ('/ZeroBias/Run2016F-TkAlMinBias-PromptReco-v1/ALCARECO', 'BeamFit_LumiBased_NewAlignWorkflow_ALCARECO.py')
-    datasets['ZeroBiasRun2016Gv1'] = ('/ZeroBias/Run2016G-TkAlMinBias-PromptReco-v1/ALCARECO', 'BeamFit_LumiBased_NewAlignWorkflow_ALCARECO.py')
-
-
-    
-    for k, v in datasets.iteritems():
-        config.JobType.psetName    = v[1]
-        config.General.requestName = k
-        config.Data.inputDataset   = v[0]
-        print 'submitting config:'
-        print config
-        submit(config)
-
+    for k, v in all_samples.iteritems():
+        if k not in mygroups:
+            continue
+        for kk, vv in v.iteritems():
+            config.General.requestName        = kk
+            config.Data.inputDataset          = vv[0]
+            config.Data.secondaryInputDataset = vv[1]
+            config.Data.outputDatasetTag      = 'HNLSKIM2017_'+kk
+            print 'submitting config:'
+            print config
+            submit(config)        
+        

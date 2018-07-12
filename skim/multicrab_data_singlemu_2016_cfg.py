@@ -10,12 +10,13 @@ config.General.transferLogs    = True
 config.JobType.psetName        = 'skim_by_hlt_singlemu_cfg.py'
 config.JobType.pluginName      = 'Analysis'
 config.JobType.outputFiles     = ['miniAOD_skim.root']
+config.Data.splitting          = 'Automatic'
+
 # config.JobType.maxMemoryMB     = 2500
 # config.JobType.priority        = 999
 
 # config.Data.unitsPerJob        = 12000
 # config.Data.splitting          = 'EventAwareLumiBased'
-
 # JSON files:
 # /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/
 config.Data.lumiMask           = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/Final/Cert_294927-306462_13TeV_PromptReco_Collisions17_JSON.txt'

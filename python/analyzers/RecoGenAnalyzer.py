@@ -69,7 +69,6 @@ class RecoGenAnalyzer(Analyzer):
 
     def process(self, event):
         self.readCollections(event.input)
-
         self.counters.counter('RecoGenTreeAnalyzer').inc('all events')
 
         # produce collections and map our objects to convenient Heppy objects
@@ -103,7 +102,8 @@ class RecoGenAnalyzer(Analyzer):
         self.assignVtx(event.taus     , myvtx)
 
         # all matchable objects
-        matchable = event.electrons + event.photons + event.muons + event.taus + event.dsmuons + event.dgmuons 
+        # matchable = event.electrons + event.photons + event.muons + event.taus + event.dsmuons + event.dgmuons 
+        matchable = event.electrons + event.photons + event.muons + event.taus + event.dsmuons 
 
         # match gen to reco
         for ip in [event.the_hnl.l0(), 
@@ -115,64 +115,74 @@ class RecoGenAnalyzer(Analyzer):
 
             # matches the corresponding "slimmed electron" to the gen particle
             if len(event.electrons):
-                dr = np.inf
-                match, dr = bestMatch(ip,event.electrons)
-                if dr < 0.2: 
+                dr2 = np.inf
+                match, dr2 = bestMatch(ip,event.electrons)
+                if dr2 < 0.04: 
                     ip.bestelectron = match
 
             # matches the corresponding "slimmed photon" to the gen particle
             if len(event.photons):
-                dr = np.inf
-                match, dr = bestMatch(ip,event.photons)
-                if dr < 0.2: 
+                dr2 = np.inf
+                match, dr2 = bestMatch(ip,event.photons)
+                if dr2 < 0.04: 
                     ip.bestphoton = match
 
             # matches the corresponding "slimmed muon" to the gen particle
             if len(event.muons):
-                dr = np.inf
-                match, dr = bestMatch(ip,event.muons)
-                if dr < 0.2: 
+                dr2 = np.inf
+                match, dr2 = bestMatch(ip,event.muons)
+                if dr2 < 0.04: 
                     ip.bestmuon = match
             
             # matches the corresponding "slimmed tau" to the gen particle
             if len(event.taus):
-                dr = np.inf
-                match, dr = bestMatch(ip,event.taus)
-                if dr < 0.2: 
+                dr2 = np.inf
+                match, dr2 = bestMatch(ip,event.taus)
+                if dr2 < 0.04: 
                     ip.besttau = match
             
             # matches the corresponding "displaced stand alone muon" to the gen particle
             if len(event.dsmuons):
-                dr = np.inf
-                match, dr = bestMatch(ip,event.dsmuons)
-                if dr < 0.2: 
+                dr2 = np.inf
+                match, dr2 = bestMatch(ip,event.dsmuons)
+                if dr2 < 0.04: 
                     ip.bestdsmuon = match
                     
             # matches the corresponding "displaced global muon" to the gen particle
             if len(event.dgmuons):
-                dr = np.inf
-                match, dr = bestMatch(ip,event.dgmuons)
-                if dr < 0.2: 
+                dr2 = np.inf
+                match, dr2 = bestMatch(ip,event.dgmuons)
+                if dr2 < 0.04: 
                     ip.bestdgmuon = match
             
             # to find the best match, give precedence to any matched 
             # particle in the matching cone with the correct PDG ID
             # then to the one which is closest
             ip.matches.sort(key = lambda x : (x.pdgId()==ip.pdgId(), -deltaR(x, ip)), reverse = True )
-            if len(ip.matches):
+            if len(ip.matches) and abs(ip.pdgId())==abs(ip.matches[0].pdgId()):
                 ip.bestmatch = ip.matches[0]
-                # remove already matched particles, avoid multiple matches to the same candidate
+                # remove already matched particles, avoid multiple matches to the same candidate while recording the type of reconstruction
                 matchable.remove(ip.bestmatch)
+
                 # record which is which
-                if ip.bestmatch in event.electrons: ip.bestmatchtype = 0
-                if ip.bestmatch in event.photons  : ip.bestmatchtype = 1
-                if ip.bestmatch in event.muons    : ip.bestmatchtype = 2
-                if ip.bestmatch in event.taus     : ip.bestmatchtype = 3
-                if ip.bestmatch in event.dsmuons  : ip.bestmatchtype = 4
-                if ip.bestmatch in event.dgmuons  : ip.bestmatchtype = 5
+                if ip.bestmatch in event.electrons: ip.bestmatchtype = 11
+                if ip.bestmatch in event.photons  : ip.bestmatchtype = 22
+                if ip.bestmatch in event.muons    : ip.bestmatchtype = 13
+                if ip.bestmatch in event.taus     : ip.bestmatchtype = 15
+                if ip.bestmatch in event.dsmuons  : ip.bestmatchtype = 26
+                if ip.bestmatch in event.dgmuons  : ip.bestmatchtype = 39
+
+            else:
+                ip.bestmatchtype = -1 
     
         # clear it before doing it again
         event.recoSv = None
+
+
+        # if hasattr(event.the_hnl.l2().bestmatch, 'pt'):
+            # set_trace()
+        # if (abs(event.the_hnl.l1().pt()-13.851562)<0.001):
+            # set_trace()
 
 
 ######### DEBUG VTX MADE OUT OF DSA MUONS
@@ -231,7 +241,6 @@ class RecoGenAnalyzer(Analyzer):
                     event.recoSv = makeRecoVertex(sv, kinVtxTrkSize=2) # need to do some gymastics
 
             if event.recoSv:
-                
                 # primary vertex
                 pv = event.goodVertices[0]
 

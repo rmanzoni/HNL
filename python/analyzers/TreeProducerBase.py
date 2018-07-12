@@ -1,6 +1,6 @@
 import numpy as np
 from PhysicsTools.Heppy.analyzers.core.TreeAnalyzerNumpy import TreeAnalyzerNumpy
-from CMGTools.HNL.analyzers.treeVariables import event_vars, vertex_vars, hnl_vars, particle_vertex_vars, particle_vars, lepton_vars, photon_vars, electron_vars, muon_vars, muon_track_extra_vars, tau_vars, tau_vars_extra, jet_vars, jet_vars_extra, geninfo_vars, l1obj_vars, hnlreco_vars, dimuon_vars
+from CMGTools.HNL.analyzers.treeVariables import event_vars, vertex_vars, hnl_vars, particle_vertex_vars, particle_vars, lepton_vars, photon_vars, electron_vars, muon_vars, muon_track_extra_vars, tau_vars, tau_vars_extra, jet_vars, jet_vars_extra, geninfo_vars, l1obj_vars, hnlreco_vars, dimuon_vars, check_hnlreco_vars, displacedmuon_vars
 
 class TreeProducerBase(TreeAnalyzerNumpy):
 
@@ -81,6 +81,13 @@ class TreeProducerBase(TreeAnalyzerNumpy):
     def fillHNLReco(self, tree, event):
         self.fillGeneric(tree, hnlreco_vars, event)
 
+    # check hnl reconstruction efficiency
+    def bookCheckHNLReco(self, tree):
+        self.bookGeneric(tree, check_hnlreco_vars)
+
+    def fillCheckHNLReco(self, tree, event):
+        self.fillGeneric(tree, check_hnlreco_vars, event)
+
     # Dimuon Reco
     def bookDiMuon(self, tree, p_name):
         self.bookGeneric(tree, dimuon_vars, p_name)
@@ -88,6 +95,12 @@ class TreeProducerBase(TreeAnalyzerNumpy):
     def fillDiMuon(self, tree, p_name, particle):
         self.fillGeneric(tree, dimuon_vars, particle, p_name)
 
+    # the muons from Dimuon
+    def bookDisplacedMuon(self, tree, p_name):
+        self.bookGeneric(tree, displacedmuon_vars, p_name)
+
+    def fillDisplacedMuon(self, tree, p_name, particle):
+        self.fillGeneric(tree, displacedmuon_vars, particle, p_name)
     # gen level hnl
     def bookHNL(self, tree, p_name):
         self.bookGeneric(tree, hnl_vars, p_name)

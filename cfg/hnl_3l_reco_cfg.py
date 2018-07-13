@@ -22,16 +22,14 @@ from CMGTools.HNL.analyzers.HNLGenTreeAnalyzer   import HNLGenTreeAnalyzer
 from CMGTools.HNL.analyzers.RecoGenAnalyzer      import RecoGenAnalyzer
 from CMGTools.HNL.analyzers.CheckHNLAnalyzer     import CheckHNLAnalyzer
 
-
-
-
 # import samples, signal
 # from CMGTools.HNL.samples.signal import all_signals as samples
 # from CMGTools.HNL.samples.signal import signals_mass_3 as samples
 # from CMGTools.HNL.samples.signal import signals_test as samples
 # from CMGTools.HNL.samples.signal import signals_mass_1
 # from CMGTools.HNL.samples.signal import signals_mass_2p1
-from CMGTools.HNL.samples.signal import disp1plus as samples
+# from CMGTools.HNL.samples.signal import disp1plus as samples
+from CMGTools.HNL.samples.signal import HN3L_M_2p5_V_0p0173205080757_e_onshell
 
 
 puFileMC   = '$CMSSW_BASE/src/CMGTools/H2TauTau/data/MC_Moriond17_PU25ns_V1.root'
@@ -42,12 +40,13 @@ puFileData = '/afs/cern.ch/user/a/anehrkor/public/Data_Pileup_2016_271036-284044
 ###################################################
 # Get all heppy options; set via "-o production" or "-o production=True"
 # production = True run on batch, production = False (or unset) run locally
-production         = getHeppyOption('production'        , False)
-pick_events        = getHeppyOption('pick_events'       , False)
+production         = getHeppyOption('production' , False)
+pick_events        = getHeppyOption('pick_events', False)
 
 ###################################################
 ###               HANDLE SAMPLES                ###
 ###################################################
+samples = [HN3L_M_2p5_V_0p0173205080757_e_onshell]
 
 for sample in samples:
     sample.triggers = ['HLT_IsoMu24_v%d' %i for i in range(4, 5)]
@@ -65,7 +64,7 @@ eventSelector = cfg.Analyzer(
     EventSelector,
     name='EventSelector',
     # toSelect=[]
-    toSelect=[102]
+    toSelect=[4]
 )
 
 lheWeightAna = cfg.Analyzer(
@@ -139,7 +138,7 @@ CheckHNLAnalyzer = cfg.Analyzer(
 ###                  SEQUENCE                   ###
 ###################################################
 sequence = cfg.Sequence([
-    # eventSelector,
+#     eventSelector,
     lheWeightAna,
     jsonAna,
     skimAna,
@@ -156,12 +155,12 @@ sequence = cfg.Sequence([
 ###            SET BATCH OR LOCAL               ###
 ###################################################
 if not production:
-    comp                 = samples[0]
+#     comp                 = samples[0]
+    comp                 = HN3L_M_2p5_V_0p0173205080757_e_onshell
     selectedComponents   = [comp]
     comp.splitFactor     = 1
-    comp.fineSplitFactor = 1
-    # comp.files           = comp.files[:5]
-    comp.files           = comp.files[:]
+    comp.fineSplitFactor = 4
+    comp.files           = comp.files[:20]
 
 # the following is declared in case this cfg is used in input to the
 # heppy.py script

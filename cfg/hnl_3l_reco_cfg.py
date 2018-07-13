@@ -28,8 +28,12 @@ from CMGTools.HNL.analyzers.CheckHNLAnalyzer     import CheckHNLAnalyzer
 # from CMGTools.HNL.samples.signal import signals_test as samples
 # from CMGTools.HNL.samples.signal import signals_mass_1
 # from CMGTools.HNL.samples.signal import signals_mass_2p1
+
 # from CMGTools.HNL.samples.signal import disp1plus as samples
-from CMGTools.HNL.samples.signal import HN3L_M_2p5_V_0p0173205080757_e_onshell
+# from CMGTools.HNL.samples.signal import HN3L_M_2p5_V_0p0173205080757_e_onshell
+# from CMGTools.HNL.samples.signal import disp1plus as samples
+# from CMGTools.HNL.samples.signal import HN3L_M_2p5_V_0p0173205080757_e_onshell
+from CMGTools.HNL.samples.localsignal import HN3L_M_2p5_V_0p0173205080757_e_onshell
 
 
 puFileMC   = '$CMSSW_BASE/src/CMGTools/H2TauTau/data/MC_Moriond17_PU25ns_V1.root'
@@ -64,7 +68,7 @@ eventSelector = cfg.Analyzer(
     EventSelector,
     name='EventSelector',
     # toSelect=[]
-    toSelect=[4]
+    toSelect=[7]
 )
 
 lheWeightAna = cfg.Analyzer(
@@ -155,7 +159,6 @@ sequence = cfg.Sequence([
 ###            SET BATCH OR LOCAL               ###
 ###################################################
 if not production:
-#     comp                 = samples[0]
     comp                 = HN3L_M_2p5_V_0p0173205080757_e_onshell
     selectedComponents   = [comp]
     comp.splitFactor     = 1

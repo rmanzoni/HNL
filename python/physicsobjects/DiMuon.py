@@ -30,6 +30,8 @@ class DiMuon(object):
         else:
             return 0    
 
+    # TODO: function to compute the sum of the 4-vectors
+
     # how should displacement 2D really defined as distance A=>B? B could be the HNL decay vertex, A could be (0,0,0), beam spot or primary vertex...
     # I'm not event sure what the current vertex is.... TODO: Divide and conquer!
     def dxy(self):

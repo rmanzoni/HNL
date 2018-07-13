@@ -77,7 +77,7 @@ class CheckHNLAnalyzer(Analyzer):
         flag_l2_matched_MaxDr0a12  = False
 
 
-        if event.n_dimuon > 0:
+        if event.n_dimuon > 0 and hasattr(event.the_hnl.l1().bestmatch, 'physObj') and hasattr(event.the_hnl.l2().bestmatch,'physObj'):
             # confirm HNL reconstruction success if both gen leptons l1 and l2 are matched.
             if abs(event.the_hnl.l1().pdgId())==13 and abs(event.the_hnl.l2().pdgId())==13:
 
@@ -85,83 +85,83 @@ class CheckHNLAnalyzer(Analyzer):
                 sv_y = event.the_hn.lep1.vertex().y()
                 sv_dxy = np.sqrt(sv_x*sv_x+sv_y*sv_y)                
                 
-                if (deltaR(event.dMu1Chi2,event.the_hnl.l1()) < 0.2 and abs((event.dimuonChi2.dxy()-sv_dxy)/sv_dxy) < 0.3):
+                if ( event.dMu1Chi2.physObj == event.the_hnl.l1().bestmatch.physObj):
                     event.matchedL1Chi2 = True
                     flag_l1_matched_Chi2 = True 
 
-                if (deltaR(event.dMu1Chi2,event.the_hnl.l2()) < 0.2 and abs((event.dimuonChi2.dxy()-sv_dxy)/sv_dxy) < 0.3): 
+                if ( event.dMu1Chi2.physObj == event.the_hnl.l2().bestmatch.physObj):
                     event.matchedL1Chi2 = True
                     flag_l2_matched_Chi2 = True
                 
-                if (deltaR(event.dMu2Chi2,event.the_hnl.l1()) < 0.2 and abs((event.dimuonChi2.dxy()-sv_dxy)/sv_dxy) < 0.3):
+                if ( event.dMu2Chi2.physObj == event.the_hnl.l1().bestmatch.physObj):
                     event.matchedL2Chi2 = True
                     flag_l1_matched_Chi2 = True
 
-                if (deltaR(event.dMu2Chi2,event.the_hnl.l2()) < 0.2 and abs((event.dimuonChi2.dxy()-sv_dxy)/sv_dxy) < 0.3):    
+                if ( event.dMu2Chi2.physObj == event.the_hnl.l2().bestmatch.physObj):
                     event.matchedL2Chi2 = True
                     flag_l2_matched_Chi2 = True
                
-                if (deltaR(event.dMu1Dxy,event.the_hnl.l1()) < 0.2 and abs((event.dimuonDxy.dxy()-sv_dxy)/sv_dxy) < 0.3):
+                if (event.dMu1Dxy.physObj == event.the_hnl.l1().bestmatch.physObj):
                     event.matchedL1Dxy = True
                     flag_l1_matched_Dxy = True 
 
-                if  (deltaR(event.dMu1Dxy,event.the_hnl.l2()) < 0.2 and abs((event.dimuonDxy.dxy()-sv_dxy)/sv_dxy) < 0.3): 
+                if (event.dMu1Dxy.physObj == event.the_hnl.l2().bestmatch.physObj):
                     event.matchedL1Dxy = True
                     flag_l2_matched_Dxy = True
                 
-                if (deltaR(event.dMu2Dxy,event.the_hnl.l1()) < 0.2 and abs((event.dimuonDxy.dxy()-sv_dxy)/sv_dxy) < 0.3):
+                if (event.dMu2Dxy.physObj == event.the_hnl.l1().bestmatch.physObj):
                     event.matchedL2Dxy = True
                     flag_l1_matched_Dxy = True
 
-                if (deltaR(event.dMu2Dxy,event.the_hnl.l2()) < 0.2 and abs((event.dimuonDxy.dxy()-sv_dxy)/sv_dxy) < 0.3):    
+                if (event.dMu2Dxy.physObj == event.the_hnl.l2().bestmatch.physObj):
                     event.matchedL2Dxy = True
                     flag_l2_matched_Dxy = True
 
-                if (deltaR(event.dMu1MaxPt,event.the_hnl.l1()) < 0.2 and abs((event.dimuonMaxPt.dxy()-sv_dxy)/sv_dxy) < 0.3):
+                if (event.dMu1MaxPt.physObj == event.the_hnl.l1().bestmatch.physObj):
                     event.matchedL1MaxPt = True
                     flag_l1_matched_MaxPt = True 
 
-                if (deltaR(event.dMu1MaxPt,event.the_hnl.l2()) < 0.2 and abs((event.dimuonMaxPt.dxy()-sv_dxy)/sv_dxy) < 0.3): 
+                if (event.dMu1MaxPt.physObj == event.the_hnl.l2().bestmatch.physObj):
                     event.matchedL1MaxPt = True
                     flag_l2_matched_MaxPt = True
                 
-                if (deltaR(event.dMu2MaxPt,event.the_hnl.l1()) < 0.2 and abs((event.dimuonMaxPt.dxy()-sv_dxy)/sv_dxy) < 0.3):
+                if (event.dMu2MaxPt.physObj == event.the_hnl.l1().bestmatch.physObj):
                     event.matchedL2MaxPt = True
                     flag_l1_matched_MaxPt = True
 
-                if (deltaR(event.dMu2MaxPt,event.the_hnl.l2()) < 0.2 and abs((event.dimuonMaxPt.dxy()-sv_dxy)/sv_dxy) < 0.3):    
+                if (event.dMu2MaxPt.physObj == event.the_hnl.l2().bestmatch.physObj):
                     event.matchedL2MaxPt = True
                     flag_l2_matched_MaxPt = True
                
-                if (deltaR(event.dMu1MinDr12,event.the_hnl.l1()) < 0.2 and abs((event.dimuonMinDr12.dxy()-sv_dxy)/sv_dxy) < 0.3):
+                if (event.dMu1MinDr12.physObj == event.the_hnl.l1().bestmatch.physObj):
                     event.matchedL1MinDr12 = True
                     flag_l1_matched_MinDr12 = True 
 
-                if (deltaR(event.dMu1MinDr12,event.the_hnl.l2()) < 0.2 and abs((event.dimuonMinDr12.dxy()-sv_dxy)/sv_dxy) < 0.3): 
+                if (event.dMu1MinDr12.physObj == event.the_hnl.l2().bestmatch.physObj):
                     event.matchedL1MinDr12 = True
                     flag_l2_matched_MinDr12 = True
                 
-                if (deltaR(event.dMu2MinDr12,event.the_hnl.l1()) < 0.2 and abs((event.dimuonMinDr12.dxy()-sv_dxy)/sv_dxy) < 0.3):
+                if (event.dMu2MinDr12.physObj == event.the_hnl.l1().bestmatch.physObj):
                     event.matchedL2MinDr12 = True
                     flag_l1_matched_MinDr12 = True
 
-                if (deltaR(event.dMu2MinDr12,event.the_hnl.l2()) < 0.2 and abs((event.dimuonMinDr12.dxy()-sv_dxy)/sv_dxy) < 0.3):    
+                if (event.dMu2MinDr12.physObj == event.the_hnl.l2().bestmatch.physObj):
                     event.matchedL2MinDr12 = True
                     flag_l2_matched_MinDr12 = True
 
-                if (deltaR(event.dMu1MaxDr0a12,event.the_hnl.l1()) < 0.2 and abs((event.dimuonMaxDr0a12.dxy()-sv_dxy)/sv_dxy) < 0.3):
+                if (event.dMu1MaxDr0a12.physObj == event.the_hnl.l1().bestmatch.physObj):
                     event.matchedL1MaxDr0a12 = True
                     flag_l1_matched_MaxDr0a12 = True 
 
-                if (deltaR(event.dMu1MaxDr0a12,event.the_hnl.l2()) < 0.2 and abs((event.dimuonMaxDr0a12.dxy()-sv_dxy)/sv_dxy) < 0.3): 
+                if (event.dMu1MaxDr0a12.physObj == event.the_hnl.l2().bestmatch.physObj):
                     event.matchedL1MaxDr0a12 = True
                     flag_l2_matched_MaxDr0a12 = True
                 
-                if (deltaR(event.dMu2MaxDr0a12,event.the_hnl.l1()) < 0.2 and abs((event.dimuonMaxDr0a12.dxy()-sv_dxy)/sv_dxy) < 0.3):
+                if (event.dMu2MaxDr0a12.physObj == event.the_hnl.l1().bestmatch.physObj):
                     event.matchedL2MaxDr0a12 = True
                     flag_l1_matched_MaxDr0a12 = True
 
-                if (deltaR(event.dMu2MaxDr0a12,event.the_hnl.l2()) < 0.2 and abs((event.dimuonMaxDr0a12.dxy()-sv_dxy)/sv_dxy) < 0.3):    
+                if (event.dMu2MaxDr0a12.physObj == event.the_hnl.l2().bestmatch.physObj):
                     event.matchedL2MaxDr0a12 = True
                     flag_l2_matched_MaxDr0a12 = True
 

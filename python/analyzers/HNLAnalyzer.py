@@ -88,12 +88,13 @@ class HNLAnalyzer(Analyzer):
             myvtx = event.beamspot
         
         self.assignVtx(event.sMu,myvtx)
-                     
+
         # store the number of sMu and dSAMu per event
         event.n_sMu = len(event.sMu)
         event.n_dSAMu = len(event.dSAMu)
        
         #####################################################################################
+        # MUCO
         # Concatenate all Muon Reconstructions:
         # Create an array of DisplacedMuon objects, 
         # summarizing all sMu and dSAMus into a single array, 
@@ -141,12 +142,26 @@ class HNLAnalyzer(Analyzer):
             event.n_dSAMuOnly += 1
        
         event.n_dMu = len(dMus) # important to understand how well the "Merge Reco Muons" process went. 
-
        
+        #####################################################################################
+        # Qualify the performance of the MUCO
+        #####################################################################################
+        event.flag_MUCOsuccess = False    
+        l1matched=False
+        l2matched=False
+        if len(dMus) > 1 and hasattr(event.the_hnl.l1().bestmatch, 'physObj') and hasattr(event.the_hnl.l2().bestmatch,'physObj'):
+            for dmu in dMus:
+                if dmu.physObj == event.the_hnl.l1().bestmatch.physObj:
+                    l1matched = True
+                if dmu.physObj == event.the_hnl.l2().bestmatch.physObj:
+                    l2matched = True
+        if l1matched and l2matched:
+            event.flag_MUCOsuccess = True
+
+
         #####################################################################################
         # select only events with good gen events
         #####################################################################################
-        
         if not( abs(event.the_hnl.l1().pdgId())==13   and \
                 abs(event.the_hnl.l2().pdgId())==13   and \
                 abs(event.the_hnl.l1().eta())   < 2.4 and \
@@ -168,6 +183,7 @@ class HNLAnalyzer(Analyzer):
         #####################################################################################
         event.pairs = [pair for pair in combinations(dMus,2)] 
         event.n_pairs = len(event.pairs)
+        event.flag_IsThereTHEDimuon = False
 
         event.n_dimuon = 0
         if len(event.pairs) > 0:
@@ -205,13 +221,16 @@ class HNLAnalyzer(Analyzer):
                             dimuons.append(DiMuon(pair, makeRecoVertex(sv, kinVtxTrkSize=2)))
 
             #####################################################################################
-            # TODO: Check whether the correct dimuon is part of the collection dimuons
+            # Check whether the correct dimuon is part of the collection dimuons
             #####################################################################################
-            event.flag_IsThereTHEDimuon = False
-            if len(dimuons) > 0:
+            # if abs(event.the_hnl.l1().bestmatch.pt() - 20.650056)<0.001:
+                # set_trace()
+            if len(dimuons) > 0 and hasattr(event.the_hnl.l1().bestmatch, 'physObj') and hasattr(event.the_hnl.l2().bestmatch,'physObj'):
                 for dimu in dimuons:
                     dMu1 = dimu.pair[0]
-                    dMu2 = dimu.pair[1] # to be continued from here
+                    dMu2 = dimu.pair[1] 
+                    if (dMu1.physObj == event.the_hnl.l1().bestmatch.physObj or dMu1.physObj == event.the_hnl.l2().bestmatch.physObj) and (dMu2.physObj == event.the_hnl.l1().bestmatch.physObj or dMu2.physObj == event.the_hnl.l2().bestmatch.physObj):
+                        event.flag_IsThereTHEDimuon = True
 
 
             #####################################################################################
@@ -234,8 +253,8 @@ class HNLAnalyzer(Analyzer):
                 event.dMu1Dxy = sorted(dimuonDxy.pair, key = lambda x: x.pt(), reverse = True)[0]
                 event.dMu2Dxy = sorted(dimuonDxy.pair, key = lambda x: x.pt(), reverse = False)[0] 
 
-                # select leptons ito average pt
-                dimuonMaxPt = sorted(dimuons, key = lambda x: (x.pair[0].pt()+x.pair[1].pt())/2, reverse = True)[0] 
+                # select leptons ito added momenta's pt
+                dimuonMaxPt = sorted(dimuons, key = lambda x: (x.pair[0].p4() + x.pair[1].p4()).pt(), reverse = True)[0] 
                 event.dimuonMaxPt = dimuonMaxPt
                 event.dMu1MaxPt = sorted(dimuonMaxPt.pair, key = lambda x: x.pt(), reverse = True)[0] 
                 event.dMu2MaxPt = sorted(dimuonMaxPt.pair, key = lambda x: x.pt(), reverse = False)[0]
@@ -246,9 +265,9 @@ class HNLAnalyzer(Analyzer):
                 event.dMu1MinDr12 = sorted(dimuonMinDr12.pair, key = lambda x: x.pt(), reverse = True)[0] 
                 event.dMu2MinDr12 = sorted(dimuonMinDr12.pair, key = lambda x: x.pt(), reverse = False)[0]
 
-                # select leptons farthest to l0 ito dr
+                # select leptons farthest to l0 ito dr of added momenta (l1+l2)
                 # DEPENDENT ON GEN INFO
-                dimuonMaxDr0a12 = sorted(dimuons, key = lambda x: (deltaR(x.pair[0],event.the_hnl.l0())+deltaR(x.pair[1],event.the_hnl.l0()))/2, reverse = True)[0]
+                dimuonMaxDr0a12 = sorted(dimuons, key = lambda x: deltaR(x.pair[0].p4()+x.pair[1].p4(),event.the_hnl.l0().p4()), reverse = True)[0]
                 event.dimuonMaxDr0a12 = dimuonMaxDr0a12
                 event.dMu1MaxDr0a12 = sorted(dimuonMaxDr0a12.pair, key = lambda x: x.pt(), reverse = True)[0] 
                 event.dMu2MaxDr0a12 = sorted(dimuonMaxDr0a12.pair, key = lambda x: x.pt(), reverse = False)[0]
@@ -257,7 +276,6 @@ class HNLAnalyzer(Analyzer):
             #####################################################################################
             # TODO: Final Qualification and 'ok' to nominate the selection dimuon as HNL candidate
             #####################################################################################
-
 
 
 

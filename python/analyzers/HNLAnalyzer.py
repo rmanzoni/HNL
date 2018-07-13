@@ -88,16 +88,7 @@ class HNLAnalyzer(Analyzer):
             myvtx = event.beamspot
         
         self.assignVtx(event.sMu,myvtx)
-        
-        # impose the muon PDG ID and TrackRef to the displaced objects, that otherwise carry none
-        for mm in event.dSAMu:
-            mm.mass   = lambda : 0.10565837
-            mm.pdgId  = lambda : -(mm.charge()*13)
-        
-        for jj, mm in enumerate(event.dSAMu):
-            mm.track = lambda : ROOT.reco.TrackRef(self.handles['dSAMu'].product(),jj)
-            
-        
+                     
         # store the number of sMu and dSAMu per event
         event.n_sMu = len(event.sMu)
         event.n_dSAMu = len(event.dSAMu)
@@ -155,7 +146,12 @@ class HNLAnalyzer(Analyzer):
         #####################################################################################
         # select only events with good gen events
         #####################################################################################
-        if not(abs(event.the_hnl.l1().pdgId())==13 and abs(event.the_hnl.l2().pdgId())==13 and abs(event.the_hnl.l1().eta())<2.4 and abs(event.the_hnl.l2().eta())<2.4) and abs(event.the_hnl.l0().eta()<2.4):
+        
+        if not( abs(event.the_hnl.l1().pdgId())==13   and \
+                abs(event.the_hnl.l2().pdgId())==13   and \
+                abs(event.the_hnl.l1().eta())   < 2.4 and \
+                abs(event.the_hnl.l2().eta())   < 2.4 and \
+                abs(event.the_hnl.l0().eta())   < 2.4): 
             return False
 
         self.counters.counter('HNL').inc('good gen')

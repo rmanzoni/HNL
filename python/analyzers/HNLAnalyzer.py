@@ -94,6 +94,7 @@ class HNLAnalyzer(Analyzer):
         event.n_dSAMu = len(event.dSAMu)
        
         #####################################################################################
+        # MUCO
         # Concatenate all Muon Reconstructions:
         # Create an array of DisplacedMuon objects, 
         # summarizing all sMu and dSAMus into a single array, 
@@ -141,12 +142,31 @@ class HNLAnalyzer(Analyzer):
             event.n_dSAMuOnly += 1
        
         event.n_dMu = len(dMus) # important to understand how well the "Merge Reco Muons" process went. 
-        #TODO: prove the concatenater works reliably
        
+        #####################################################################################
+        # Qualify the performance of the MUCO
+        #####################################################################################
+        event.flag_MUCOsuccess = False    
+        l1matched=False
+        l2matched=False
+        if len(dMus) > 1 and hasattr(event.the_hnl.l1().bestmatch, 'physObj') and hasattr(event.the_hnl.l2().bestmatch,'physObj'):
+            for dmu in dMus:
+                if dmu.physObj == event.the_hnl.l1().bestmatch.physObj:
+                    l1matched = True
+                if dmu.physObj == event.the_hnl.l2().bestmatch.physObj:
+                    l2matched = True
+        if l1matched and l2matched:
+            event.flag_MUCOsuccess = True
+
+
         #####################################################################################
         # select only events with good gen events
         #####################################################################################
-        if not(abs(event.the_hnl.l1().pdgId())==13 and abs(event.the_hnl.l2().pdgId())==13 and abs(event.the_hnl.l1().eta())<2.4 and abs(event.the_hnl.l2().eta())<2.4 and abs(event.the_hnl.l0().eta())<2.4):
+        if not(abs(event.the_hnl.l1().pdgId())==13 and \
+               abs(event.the_hnl.l2().pdgId())==13 and \
+               abs(event.the_hnl.l1().eta())<2.4 and \
+               abs(event.the_hnl.l2().eta())<2.4 and \
+               abs(event.the_hnl.l0().eta())<2.4):
             return False
 
         self.counters.counter('HNL').inc('good gen')

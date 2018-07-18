@@ -24,13 +24,16 @@ class DiMuon(object):
     def chi2(self):
         return self.vtx.chi2()
 
+    # check if the pair is same signed or not
     def isSS(self):
         if self.pair[0].charge()==self.pair[1].charge():
             return 1
         else:
             return 0    
 
-    # TODO: function to compute the sum of the 4-vectors
+    # function to compute the sum of the 4-vectors
+    def p4():
+        return self.pair[0].p4() + self.pair[1].p4()
 
     # how should displacement 2D really defined as distance A=>B? B could be the HNL decay vertex, A could be (0,0,0), beam spot or primary vertex...
     # I'm not event sure what the current vertex is.... TODO: Divide and conquer!

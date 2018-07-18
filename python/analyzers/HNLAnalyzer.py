@@ -80,8 +80,6 @@ class HNLAnalyzer(Analyzer):
         event.met         = self.handles['met'].product().at(0)
 
         # assign to the leptons the primary vertex, will be needed to compute a few quantities
-        # TODO! understand exactly to which extent it is reasonable to assign the PV to *all* leptons
-        #        regardless whether they're displaced or not
         if len(event.pvs):
             myvtx = event.pvs[0]
         else:
@@ -94,7 +92,7 @@ class HNLAnalyzer(Analyzer):
         event.n_dSAMu = len(event.dSAMu)
        
         #####################################################################################
-        # MUCO
+        # MUCO, the MUon COncatenator
         # Concatenate all Muon Reconstructions:
         # Create an array of DisplacedMuon objects, 
         # summarizing all sMu and dSAMus into a single array, 
@@ -103,7 +101,6 @@ class HNLAnalyzer(Analyzer):
         # Merge Reco Muons
         # Create an array of DisplacedMuon objects, summarizing all sMu and dSAMus into a single array, while avoiding redundancies through dR<0.2
         dMus = []
-        dxy_cut = 100 # cut selection for sMu / dSAMu in cm
         event.n_sMuOnly = 0
         event.n_dSAMuOnly = 0
         event.n_sMuRedundant = 0
@@ -119,7 +116,8 @@ class HNLAnalyzer(Analyzer):
                 event.n_sMuOnly += 1
             else:
                 bestmatch = sorted(matches, key = lambda dsa: deltaR(smu,dsa), reverse = False)[0] 
-                if smu.dxy() < dxy_cut:
+                # if smu.dxy() < dxy_cut:
+                if hasattr(smu.globalTrack,'p'):
                     dmu = smu
                     dmu.reco = 1 # sMu = 1, dSAMu = 2 
                     dmu.redundancy = len(matches)
@@ -237,6 +235,7 @@ class HNLAnalyzer(Analyzer):
             # select the best dimuon pairs 
             #####################################################################################
             if len(dimuons) > 0:
+                set_trace()
                 self.counters.counter('HNL').inc('dimuons')
                 
                 event.n_dimuon = len(dimuons)

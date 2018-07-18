@@ -50,7 +50,8 @@ pick_events        = getHeppyOption('pick_events', False)
 ###################################################
 ###               HANDLE SAMPLES                ###
 ###################################################
-samples = [HN3L_M_2p5_V_0p0173205080757_e_onshell]
+
+samples = [HN3L_M_2p5_V_0p0173205080757_e_onshell] #uncomment if you want to use all samples
 
 for sample in samples:
     sample.triggers = ['HLT_IsoMu24_v%d' %i for i in range(4, 5)]
@@ -159,11 +160,12 @@ sequence = cfg.Sequence([
 ###            SET BATCH OR LOCAL               ###
 ###################################################
 if not production:
-    comp                 = HN3L_M_2p5_V_0p0173205080757_e_onshell
+    # comp                 = HN3L_M_2p5_V_0p0173205080757_e_onshell
+    comp                 = samples[0]
     selectedComponents   = [comp]
     comp.splitFactor     = 1
-    comp.fineSplitFactor = 4
-    comp.files           = comp.files[:20]
+    comp.fineSplitFactor = 1
+    comp.files           = comp.files[:]
 
 # the following is declared in case this cfg is used in input to the
 # heppy.py script

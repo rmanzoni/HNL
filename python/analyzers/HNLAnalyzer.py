@@ -11,7 +11,7 @@ from PhysicsTools.Heppy.analyzers.core.AutoHandle    import AutoHandle
 from PhysicsTools.Heppy.physicsobjects.GenParticle   import GenParticle
 from PhysicsTools.Heppy.physicsobjects.Muon          import Muon
 from PhysicsTools.Heppy.physicsobjects.PhysicsObject import PhysicsObject
-from CMGTools.HNL.utils.utils                     import isAncestor, displacement2D, displacement3D, makeRecoVertex
+from CMGTools.HNL.utils.utils                     import isAncestor, displacement2D, displacement3D, makeRecoVertex, fitVertex
 from PhysicsTools.HeppyCore.utils.deltar import deltaR, deltaPhi
 
 from CMGTools.HNL.physicsobjects.DiMuon import DiMuon
@@ -192,31 +192,11 @@ class HNLAnalyzer(Analyzer):
             ########################################################################################
             dimuons = []
             for pair in event.pairs:
+                sv = None
                 if not pair[0]==pair[1]:
-                    self.tofit.clear()
-                    for il in pair:
-                        # if the reco particle is a displaced thing, it does not have the p4() method, so let's build it 
-                        myp4 = ROOT.Math.LorentzVector('<ROOT::Math::PxPyPzE4D<double> >')(il.px(), il.py(), il.pz(), sqrt(il.mass()**2 + il.px()**2 + il.py()**2 + il.pz()**2))
-                        ic = ROOT.reco.RecoChargedCandidate() # instantiate a dummy RecoChargedCandidate
-                        ic.setCharge(il.charge())           # assign the correct charge
-                        ic.setP4(myp4)                      # assign the correct p4
-                        try:
-                            ic.setTrack(il.track())
-                        except:
-                            print'ic.setTrack failed'
-                        # if il.reco == 1: # sMu = 1, dSAMu = 2
-                            # ic.setTrack(il.outerTrack())             # set the correct TrackRef
-                        # if il.reco == 2: # sMu = 1, dSAMu = 2
-                            # ic.setTrack(il.physObj.track())             # set the correct TrackRef
-                        if ic.track().isNonnull():          # check that the track is valid, there are photons around too!
-                            self.tofit.push_back(ic)
-                    # further sanity check: two *distinct* tracks
-                    if self.tofit.size() == 2 and self.tofit[0].track() != self.tofit[1].track():
-                        svtree = self.vtxfit.Fit(self.tofit) # the actual vertex fitting!
-                        if not svtree.get().isEmpty() and svtree.get().isValid(): # check that the vertex is good
-                            svtree.movePointerToTheTop()
-                            sv = svtree.currentDecayVertex().get()
-                            dimuons.append(DiMuon(pair, makeRecoVertex(sv, kinVtxTrkSize=2)))
+                    sv = fitVertex(pair)
+                    if sv != None:
+                        dimuons.append(DiMuon(pair,sv))
 
             #####################################################################################
             # Check whether the correct dimuon is part of the collection dimuons

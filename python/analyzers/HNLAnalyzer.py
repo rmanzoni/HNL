@@ -11,7 +11,7 @@ from PhysicsTools.Heppy.analyzers.core.AutoHandle    import AutoHandle
 from PhysicsTools.Heppy.physicsobjects.GenParticle   import GenParticle
 from PhysicsTools.Heppy.physicsobjects.Muon          import Muon
 from PhysicsTools.Heppy.physicsobjects.PhysicsObject import PhysicsObject
-from CMGTools.HNL.utils.utils                     import isAncestor, displacement2D, displacement3D, makeRecoVertex
+from CMGTools.HNL.utils.utils                     import isAncestor, displacement2D, displacement3D, makeRecoVertex, fitVertex
 from PhysicsTools.HeppyCore.utils.deltar import deltaR, deltaPhi
 
 from CMGTools.HNL.physicsobjects.DiMuon import DiMuon
@@ -80,8 +80,6 @@ class HNLAnalyzer(Analyzer):
         event.met         = self.handles['met'].product().at(0)
 
         # assign to the leptons the primary vertex, will be needed to compute a few quantities
-        # TODO! understand exactly to which extent it is reasonable to assign the PV to *all* leptons
-        #        regardless whether they're displaced or not
         if len(event.pvs):
             myvtx = event.pvs[0]
         else:
@@ -94,7 +92,7 @@ class HNLAnalyzer(Analyzer):
         event.n_dSAMu = len(event.dSAMu)
        
         #####################################################################################
-        # MUCO
+        # MUCO, the MUon COncatenator
         # Concatenate all Muon Reconstructions:
         # Create an array of DisplacedMuon objects, 
         # summarizing all sMu and dSAMus into a single array, 
@@ -103,14 +101,13 @@ class HNLAnalyzer(Analyzer):
         # Merge Reco Muons
         # Create an array of DisplacedMuon objects, summarizing all sMu and dSAMus into a single array, while avoiding redundancies through dR<0.2
         dMus = []
-        dxy_cut = 100 # cut selection for sMu / dSAMu in cm
         event.n_sMuOnly = 0
         event.n_dSAMuOnly = 0
         event.n_sMuRedundant = 0
         event.n_dSAMuRedundant = 0
         for smu in event.sMu:
             matches = []
-            matches = [dsa for dsa in event.dSAMu if (deltaR(smu,dsa)<0.2 and abs((smu.pt()-dsa.pt())/smu.pt())<0.3)] 
+            matches = [dsa for dsa in event.dSAMu if (deltaR(smu,dsa)<0.2)] 
             if len(matches) == 0:
                 dmu = smu
                 dmu.reco = 1 # sMu = 1, dSAMu = 2
@@ -119,7 +116,8 @@ class HNLAnalyzer(Analyzer):
                 event.n_sMuOnly += 1
             else:
                 bestmatch = sorted(matches, key = lambda dsa: deltaR(smu,dsa), reverse = False)[0] 
-                if smu.dxy() < dxy_cut:
+                # if smu.dxy() < dxy_cut:
+                if hasattr(smu.globalTrack(),'p'):
                     dmu = smu
                     dmu.reco = 1 # sMu = 1, dSAMu = 2 
                     dmu.redundancy = len(matches)
@@ -194,37 +192,15 @@ class HNLAnalyzer(Analyzer):
             ########################################################################################
             dimuons = []
             for pair in event.pairs:
+                sv = None
                 if not pair[0]==pair[1]:
-                    self.tofit.clear()
-                    for il in pair:
-                        # if the reco particle is a displaced thing, it does not have the p4() method, so let's build it 
-                        myp4 = ROOT.Math.LorentzVector('<ROOT::Math::PxPyPzE4D<double> >')(il.px(), il.py(), il.pz(), sqrt(il.mass()**2 + il.px()**2 + il.py()**2 + il.pz()**2))
-                        ic = ROOT.reco.RecoChargedCandidate() # instantiate a dummy RecoChargedCandidate
-                        ic.setCharge(il.charge())           # assign the correct charge
-                        ic.setP4(myp4)                      # assign the correct p4
-                        try:
-                            ic.setTrack(il.track())
-                        except:
-                            set_trace()
-                        # if il.reco == 1: # sMu = 1, dSAMu = 2
-                            # ic.setTrack(il.outerTrack())             # set the correct TrackRef
-                        # if il.reco == 2: # sMu = 1, dSAMu = 2
-                            # ic.setTrack(il.physObj.track())             # set the correct TrackRef
-                        if ic.track().isNonnull():          # check that the track is valid, there are photons around too!
-                            self.tofit.push_back(ic)
-                    # further sanity check: two *distinct* tracks
-                    if self.tofit.size() == 2 and self.tofit[0].track() != self.tofit[1].track():
-                        svtree = self.vtxfit.Fit(self.tofit) # the actual vertex fitting!
-                        if not svtree.get().isEmpty() and svtree.get().isValid(): # check that the vertex is good
-                            svtree.movePointerToTheTop()
-                            sv = svtree.currentDecayVertex().get()
-                            dimuons.append(DiMuon(pair, makeRecoVertex(sv, kinVtxTrkSize=2)))
+                    sv = fitVertex(pair)
+                    if sv != None:
+                        dimuons.append(DiMuon(pair,sv))
 
             #####################################################################################
             # Check whether the correct dimuon is part of the collection dimuons
             #####################################################################################
-            # if abs(event.the_hnl.l1().bestmatch.pt() - 20.650056)<0.001:
-                # set_trace()
             if len(dimuons) > 0 and hasattr(event.the_hnl.l1().bestmatch, 'physObj') and hasattr(event.the_hnl.l2().bestmatch,'physObj'):
                 for dimu in dimuons:
                     dMu1 = dimu.pair[0]

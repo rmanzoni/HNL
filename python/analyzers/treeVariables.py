@@ -60,12 +60,15 @@ hnlreco_vars = [
 
 # Variables indicating the quality of HNL reconstruction
 check_hnlreco_vars = [
-    Variable('flag_matchedL1Chi2', lambda ev : ev.matchedL1Chi2,   ),
-    Variable('flag_matchedL2Chi2', lambda ev : ev.matchedL2Chi2,   ),
-    Variable('flag_matchedL1Dxy',  lambda ev : ev.matchedL1Dxy ,   ),
-    Variable('flag_matchedL2Dxy',  lambda ev : ev.matchedL2Dxy ,   ),
+    # Variable('flag_matchedL1Chi2', lambda ev : ev.matchedL1Chi2,   ),
+    # Variable('flag_matchedL2Chi2', lambda ev : ev.matchedL2Chi2,   ),
+    # Variable('flag_matchedL1Dxy',  lambda ev : ev.matchedL1Dxy ,   ),
+    # Variable('flag_matchedL2Dxy',  lambda ev : ev.matchedL2Dxy ,   ),
     Variable('flag_matchedHNLChi2', lambda ev : ev.matchedHNLChi2 ,),
     Variable('flag_matchedHNLDxy', lambda ev : ev.matchedHNLDxy ,  ),
+    Variable('flag_matchedHNLMaxPt', lambda ev : ev.matchedHNLMaxPt,  ),
+    Variable('flag_matchedHNLMinDr12', lambda ev : ev.matchedHNLMinDr12 ,  ),
+    Variable('flag_matchedHNLMaxDr0a12', lambda ev : ev.matchedHNLMaxDr0a12,  ),
     Variable('flag_IsThereTHEDimuon', lambda ev : ev.flag_IsThereTHEDimuon , ),
     Variable('flag_MUCOsuccess', lambda ev : ev.flag_MUCOsuccess , ),
 

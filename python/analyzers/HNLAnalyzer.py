@@ -107,7 +107,7 @@ class HNLAnalyzer(Analyzer):
         event.n_dSAMuRedundant = 0
         for smu in event.sMu:
             matches = []
-            matches = [dsa for dsa in event.dSAMu if (deltaR(smu,dsa)<0.2 and abs((smu.pt()-dsa.pt())/smu.pt())<0.3)] 
+            matches = [dsa for dsa in event.dSAMu if (deltaR(smu,dsa)<0.2)] 
             if len(matches) == 0:
                 dmu = smu
                 dmu.reco = 1 # sMu = 1, dSAMu = 2
@@ -117,7 +117,7 @@ class HNLAnalyzer(Analyzer):
             else:
                 bestmatch = sorted(matches, key = lambda dsa: deltaR(smu,dsa), reverse = False)[0] 
                 # if smu.dxy() < dxy_cut:
-                if hasattr(smu.globalTrack,'p'):
+                if hasattr(smu.globalTrack(),'p'):
                     dmu = smu
                     dmu.reco = 1 # sMu = 1, dSAMu = 2 
                     dmu.redundancy = len(matches)
@@ -203,7 +203,7 @@ class HNLAnalyzer(Analyzer):
                         try:
                             ic.setTrack(il.track())
                         except:
-                            set_trace()
+                            print'ic.setTrack failed'
                         # if il.reco == 1: # sMu = 1, dSAMu = 2
                             # ic.setTrack(il.outerTrack())             # set the correct TrackRef
                         # if il.reco == 2: # sMu = 1, dSAMu = 2
@@ -221,8 +221,6 @@ class HNLAnalyzer(Analyzer):
             #####################################################################################
             # Check whether the correct dimuon is part of the collection dimuons
             #####################################################################################
-            # if abs(event.the_hnl.l1().bestmatch.pt() - 20.650056)<0.001:
-                # set_trace()
             if len(dimuons) > 0 and hasattr(event.the_hnl.l1().bestmatch, 'physObj') and hasattr(event.the_hnl.l2().bestmatch,'physObj'):
                 for dimu in dimuons:
                     dMu1 = dimu.pair[0]
@@ -235,7 +233,6 @@ class HNLAnalyzer(Analyzer):
             # select the best dimuon pairs 
             #####################################################################################
             if len(dimuons) > 0:
-                set_trace()
                 self.counters.counter('HNL').inc('dimuons')
                 
                 event.n_dimuon = len(dimuons)

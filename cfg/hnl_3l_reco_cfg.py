@@ -29,10 +29,10 @@ from CMGTools.HNL.analyzers.CheckHNLAnalyzer     import CheckHNLAnalyzer
 # from CMGTools.HNL.samples.signal import signals_mass_1
 # from CMGTools.HNL.samples.signal import signals_mass_2p1
 
-# from CMGTools.HNL.samples.signal import disp1plus as samples
 # from CMGTools.HNL.samples.signal import HN3L_M_2p5_V_0p0173205080757_e_onshell
-# from CMGTools.HNL.samples.signal import disp1plus as samples
 # from CMGTools.HNL.samples.signal import HN3L_M_2p5_V_0p0173205080757_e_onshell
+
+# from CMGTools.HNL.samples.signal import disp1plus as samples
 from CMGTools.HNL.samples.localsignal import HN3L_M_2p5_V_0p0173205080757_e_onshell
 
 
@@ -69,7 +69,7 @@ eventSelector = cfg.Analyzer(
     EventSelector,
     name='EventSelector',
     # toSelect=[]
-    toSelect=[7]
+    toSelect=[326]
 )
 
 lheWeightAna = cfg.Analyzer(
@@ -160,7 +160,7 @@ sequence = cfg.Sequence([
 ###            SET BATCH OR LOCAL               ###
 ###################################################
 if not production:
-    # comp                 = HN3L_M_2p5_V_0p0173205080757_e_onshell
+    comp                 = HN3L_M_2p5_V_0p0173205080757_e_onshell
     comp                 = samples[0]
     selectedComponents   = [comp]
     comp.splitFactor     = 1

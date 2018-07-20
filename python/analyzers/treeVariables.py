@@ -82,6 +82,7 @@ dimuon_vars = [
     Variable('z', lambda hn : hn.vtx.z(), type = float), 
     Variable('dxy', lambda hn : hn.dxy(), type = float), 
     Variable('vtxFitChi2', lambda hn : hn.vtx.chi2(), type = float),
+    Variable('dr12', lambda hn : hn.dr12(), type = float), 
 ]
 
 # generic DiMuon variables

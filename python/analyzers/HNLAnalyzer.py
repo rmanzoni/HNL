@@ -96,10 +96,11 @@ class HNLAnalyzer(Analyzer):
         # Concatenate all Muon Reconstructions:
         # Create an array of DisplacedMuon objects, 
         # summarizing all sMu and dSAMus into a single array, 
-        # avoid redundancies with dR<0.2
+        # avoid redundancies with dR < dr_cut
         #####################################################################################
         # Merge Reco Muons
-        # Create an array of DisplacedMuon objects, summarizing all sMu and dSAMus into a single array, while avoiding redundancies through dR<0.2
+        # Create an array of DisplacedMuon objects, summarizing all sMu and dSAMus into a single array, while avoiding redundancies through dR < dr_cut
+        dr_cut = 0.1
         dMus = []
         event.n_sMuOnly = 0
         event.n_dSAMuOnly = 0
@@ -107,7 +108,7 @@ class HNLAnalyzer(Analyzer):
         event.n_dSAMuRedundant = 0
         for smu in event.sMu:
             matches = []
-            matches = [dsa for dsa in event.dSAMu if (deltaR(smu,dsa)<0.2)] 
+            # matches = [dsa for dsa in event.dSAMu if (deltaR(smu,dsa) < dr_cut)] #this is commented out to turn off the MUCO 
             if len(matches) == 0:
                 dmu = smu
                 dmu.reco = 1 # sMu = 1, dSAMu = 2
@@ -190,6 +191,8 @@ class HNLAnalyzer(Analyzer):
             ########################################################################################
             # select only dimuon pairs with mutual vertices (surviving the kinematic vertex fitter)
             ########################################################################################
+            if abs(event.the_hnl.l1().pt()-18.4)<0.1:
+                set_trace()
             dimuons = []
             for pair in event.pairs:
                 sv = None

@@ -32,8 +32,11 @@ class DiMuon(object):
             return 0    
 
     # function to compute the sum of the 4-vectors
-    def p4():
+    def p4(self):
         return self.pair[0].p4() + self.pair[1].p4()
+
+    def dr12(self):
+        return deltaR(self.pair[0],self.pair[1])
 
     # how should displacement 2D really defined as distance A=>B? B could be the HNL decay vertex, A could be (0,0,0), beam spot or primary vertex...
     # I'm not event sure what the current vertex is.... TODO: Divide and conquer!

@@ -105,62 +105,67 @@ class RecoGenAnalyzer(Analyzer):
         # matchable = event.electrons + event.photons + event.muons + event.taus + event.dsmuons + event.dgmuons 
         matchable = event.electrons + event.photons + event.muons + event.taus + event.dsmuons 
 
+        #define the dr to cut on
+        dr_cut = 0.1
+
         # match gen to reco
         for ip in [event.the_hnl.l0(), 
                    event.the_hnl.l1(), 
                    event.the_hnl.l2()]:
             ip.bestmatch     = None
             ip.bestmatchtype = None
-            ip.matches = inConeCollection(ip, matchable, getattr(self.cfg_ana, 'drmax', 0.2), 0.)
+            ip.matches = inConeCollection(ip, matchable, getattr(self.cfg_ana, 'drmax', dr_cut), 0.)
 
             # matches the corresponding "slimmed electron" to the gen particle
             if len(event.electrons):
                 dr2 = np.inf
                 match, dr2 = bestMatch(ip,event.electrons)
-                if dr2 < 0.04: 
+                if dr2 < dr_cut * dr_cut: 
                     ip.bestelectron = match
 
             # matches the corresponding "slimmed photon" to the gen particle
             if len(event.photons):
                 dr2 = np.inf
                 match, dr2 = bestMatch(ip,event.photons)
-                if dr2 < 0.04: 
+                if dr2 < dr_cut * dr_cut: 
                     ip.bestphoton = match
 
             # matches the corresponding "slimmed muon" to the gen particle
             if len(event.muons):
                 dr2 = np.inf
                 match, dr2 = bestMatch(ip,event.muons)
-                if dr2 < 0.04: 
+                if dr2 < dr_cut * dr_cut: 
                     ip.bestmuon = match
             
             # matches the corresponding "slimmed tau" to the gen particle
             if len(event.taus):
                 dr2 = np.inf
                 match, dr2 = bestMatch(ip,event.taus)
-                if dr2 < 0.04: 
+                if dr2 < dr_cut * dr_cut: 
                     ip.besttau = match
             
             # matches the corresponding "displaced stand alone muon" to the gen particle
             if len(event.dsmuons):
                 dr2 = np.inf
                 match, dr2 = bestMatch(ip,event.dsmuons)
-                if dr2 < 0.04: 
+                if dr2 < dr_cut * dr_cut: 
                     ip.bestdsmuon = match
                     
             # matches the corresponding "displaced global muon" to the gen particle
             if len(event.dgmuons):
                 dr2 = np.inf
                 match, dr2 = bestMatch(ip,event.dgmuons)
-                if dr2 < 0.04: 
+                if dr2 < dr_cut * dr_cut: 
                     ip.bestdgmuon = match
             
             # to find the best match, give precedence to any matched 
             # particle in the matching cone with the correct PDG ID
             # then to the one which is closest
             ip.matches.sort(key = lambda x : (x.pdgId()==ip.pdgId(), -deltaR(x, ip)), reverse = True )
+            
             if len(ip.matches) and abs(ip.pdgId())==abs(ip.matches[0].pdgId()):
                 ip.bestmatch = ip.matches[0]
+                ip.bestmatchdR = deltaR(ip,ip.bestmatch)
                 # remove already matched particles, avoid multiple matches to the same candidate while recording the type of reconstruction
                 matchable.remove(ip.bestmatch)
 
@@ -177,12 +182,6 @@ class RecoGenAnalyzer(Analyzer):
     
         # clear it before doing it again
         event.recoSv = None
-
-
-        # if hasattr(event.the_hnl.l2().bestmatch, 'pt'):
-            # set_trace()
-        # if (abs(event.the_hnl.l1().pt()-13.851562)<0.001):
-            # set_trace()
 
 
 ######### DEBUG VTX MADE OUT OF DSA MUONS

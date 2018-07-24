@@ -16,6 +16,8 @@ TTJets_mdgrph                   = creator.makeMyPrivateMCComponent('TTJets_madgr
                
 DYJetsToLL_M50                  = creator.makeMyPrivateMCComponent('DYJetsToLL_M50'                , '/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/manzoni-HNLSKIM2017_DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8-115d0bad8e8ff59118d83f903524e0b3/USER'                       , 'PRIVATE', '*.root', 'phys03', useAAA=True)
 DYJetsToLL_M50_ext              = creator.makeMyPrivateMCComponent('DYJetsToLL_M50_ext'            , '/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/manzoni-HNLSKIM2017_DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8_ext-115d0bad8e8ff59118d83f903524e0b3/USER'                   , 'PRIVATE', '*.root', 'phys03', useAAA=True)
+
+WJetsToLNu                      = creator.makeMyPrivateMCComponent('WJetsToLNu'                    , '/WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8/lshchuts-HNLSKIM2017_WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8-115d0bad8e8ff59118d83f903524e0b3/USER'                                  , 'PRIVATE', '*.root', 'phys03', useAAA=True)
     
 WJetsToLNu_HT400To600           = creator.makeMyPrivateMCComponent('WJetsToLNu_HT400To600'         , '/WJetsToLNu_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8/lshchuts-HNLSKIM2017_WJetsToLNu_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8-115d0bad8e8ff59118d83f903524e0b3/USER'          , 'PRIVATE', '*.root', 'phys03', useAAA=True)
 WJetsToLNu_HT600To800           = creator.makeMyPrivateMCComponent('WJetsToLNu_HT600To800'         , '/WJetsToLNu_HT-600To800_TuneCP5_13TeV-madgraphMLM-pythia8/lshchuts-HNLSKIM2017_WJetsToLNu_HT-600To800_TuneCP5_13TeV-madgraphMLM-pythia8-115d0bad8e8ff59118d83f903524e0b3/USER'          , 'PRIVATE', '*.root', 'phys03', useAAA=True)
@@ -34,6 +36,10 @@ W2JetsToLNu_LHEWpT_400_inf      = creator.makeMyPrivateMCComponent('W2JetsToLNu_
 W3JetsToLNu                     = creator.makeMyPrivateMCComponent('W3JetsToLNu'                   , '/W3JetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8/lshchuts-HNLSKIM2017_W3JetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8-115d0bad8e8ff59118d83f903524e0b3/USER'                                , 'PRIVATE', '*.root', 'phys03', useAAA=True)
 W4JetsToLNu                     = creator.makeMyPrivateMCComponent('W4JetsToLNu'                   , '/W4JetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8/lshchuts-HNLSKIM2017_W4JetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8-115d0bad8e8ff59118d83f903524e0b3/USER'                                , 'PRIVATE', '*.root', 'phys03', useAAA=True)
 
+WLLJJ_WToLNu                    = creator.makeMyPrivateMCComponent('WLLJJ_WToLNu'                  , '/WLLJJ_WToLNu_EWK_TuneCP5_13TeV_madgraph-madspin-pythia8/manzoni-HNLSKIM2017_WLLJJ_WToLNu_EWK_TuneCP5_13TeV_madgraph-madspin-pythia8-115d0bad8e8ff59118d83f903524e0b3/USER'             , 'PRIVATE', '*.root', 'phys03', useAAA=True)
+WW_DoubleScattering             = creator.makeMyPrivateMCComponent('WW_DoubleScattering'           , '/WW_DoubleScattering_13TeV-pythia8_TuneCP5/manzoni-HNLSKIM2017_WW_DoubleScattering_13TeV-pythia8_TuneCP5-115d0bad8e8ff59118d83f903524e0b3/USER'                                         , 'PRIVATE', '*.root', 'phys03', useAAA=True)
+WZTo3LNu                        = creator.makeMyPrivateMCComponent('WZTo3LNu'                      , '/WZTo3LNu_TuneCP5_13TeV-amcatnloFXFX-pythia8/manzoni-HNLSKIM2017_WZTo3LNu_TuneCP5_13TeV-amcatnloFXFX-pythia8-115d0bad8e8ff59118d83f903524e0b3/USER'                                     , 'PRIVATE', '*.root', 'phys03', useAAA=True)
+ZZTo4L                          = creator.makeMyPrivateMCComponent('ZZTo4L'                        , '/ZZTo4L_13TeV_powheg_pythia8/manzoni-HNLSKIM2017_ZZTo4L_13TeV_powheg_pythia8_ext-115d0bad8e8ff59118d83f903524e0b3/USER'                                                                 , 'PRIVATE', '*.root', 'phys03', useAAA=True)
 
 hnl_bkg = [
     TTJets_amcat                  ,
@@ -42,6 +48,8 @@ hnl_bkg = [
     DYJetsToLL_M50                ,
     DYJetsToLL_M50_ext            ,
 
+    WJetsToLNu                    ,
+    
     WJetsToLNu_HT400To600         ,
     WJetsToLNu_HT600To800         ,
     WJetsToLNu_HT800To1200        ,

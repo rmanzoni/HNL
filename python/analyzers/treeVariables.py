@@ -45,6 +45,28 @@ event_vars = [
     Variable('puweight', lambda ev : ev.puWeight, type=float),
 ]
 
+# RIC
+reco_hn_vars = [
+    Variable('pt'            , lambda hn : hn.pt()                          ),
+    Variable('eta'           , lambda hn : hn.eta()                         ),
+    Variable('phi'           , lambda hn : hn.phi()                         ),
+    Variable('mass'          , lambda hn : hn.mass()                        ),
+    Variable('dr'            , lambda hn : hn.dr()                          ),
+    Variable('dphi'          , lambda hn : hn.dphi()                        ),
+    Variable('deta'          , lambda hn : hn.deta()                        ),
+    Variable('vx'            , lambda hn : hn.vtx().x()                     ),
+    Variable('vy'            , lambda hn : hn.vtx().y()                     ),
+    Variable('vz'            , lambda hn : hn.vtx().z()                     ),
+    Variable('chi2'          , lambda hn : hn.chi2()                        ),
+    Variable('disp_2d_bs'    , lambda hn : hn.disp2DFromBS()                ),
+    Variable('disp_2d_pv'    , lambda hn : hn.disp2DFromPV()                ),
+    Variable('disp_3d_pv'    , lambda hn : hn.disp3DFromPV()                ),
+    Variable('disp_2d_bs_sig', lambda hn : hn.disp2DFromBSSignificance()    ),
+    Variable('disp_2d_pv_sig', lambda hn : hn.disp2DFromPVSignificance()    ),
+    Variable('disp_3d_pv_sig', lambda hn : hn.disp3DFromPVSignificance()    ),
+    Variable('cos'           , lambda hn : hn.cosTransversePointingAngleBS()),
+]
+
 # generic HNL reconstruction event variables
 hnlreco_vars = [
     Variable('n_sMu', lambda ev : ev.n_sMu, type=int),

@@ -41,6 +41,14 @@ class HNLGenTreeAnalyzer(Analyzer):
         # produce collections
         event.genp_pruned = self.mchandles['genp_pruned'].product()
         event.genp_packed = self.mchandles['genp_packed'].product()
+                
+#         for pp in event.genp_packed:
+#             printer = lambda : 'pat::PackedGenParticle:   %d, pt  %.2f, eta  %.2f, phi  %.2f, mass  %.2f, status  %d' %(pp.pdgId(), pp.pt(), pp.eta(), pp.phi(), pp.mass(), pp.status())
+#             import pdb ; pdb.set_trace()
+#             pp.__str__ = printer
+#             import pdb ; pdb.set_trace()
+# 
+#         import pdb ; pdb.set_trace()
 
         # all gen particles
         event.genp = [ip for ip in event.genp_pruned] + [ip for ip in event.genp_packed]

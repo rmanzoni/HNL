@@ -17,7 +17,8 @@ from PhysicsTools.Heppy.analyzers.gen.LHEWeightAnalyzer  import LHEWeightAnalyze
 
 # import HNL analyzers:
 from CMGTools.HNL.analyzers.HNLAnalyzer          import HNLAnalyzer
-from CMGTools.HNL.analyzers.HNLTreeProducer      import HNLTreeProducer
+# from CMGTools.HNL.analyzers.HNLTreeProducer      import HNLTreeProducer
+from CMGTools.HNL.analyzers.HNLTreeProducerRiccardo      import HNLTreeProducer
 from CMGTools.HNL.analyzers.HNLGenTreeAnalyzer   import HNLGenTreeAnalyzer
 from CMGTools.HNL.analyzers.RecoGenAnalyzer      import RecoGenAnalyzer
 from CMGTools.HNL.analyzers.CheckHNLAnalyzer     import CheckHNLAnalyzer
@@ -33,7 +34,7 @@ from CMGTools.HNL.analyzers.CheckHNLAnalyzer     import CheckHNLAnalyzer
 # from CMGTools.HNL.samples.signal import HN3L_M_2p5_V_0p0173205080757_e_onshell
 # from CMGTools.HNL.samples.signal import disp1plus as samples
 # from CMGTools.HNL.samples.signal import HN3L_M_2p5_V_0p0173205080757_e_onshell
-from CMGTools.HNL.samples.localsignal import HN3L_M_2p5_V_0p0173205080757_e_onshell
+from CMGTools.HNL.samples.localsignal import HN3L_M_2p5_V_0p0173205080757_e_onshell, HN3L_M_2p5_V_0p00707106781187_e_onshell
 
 
 puFileMC   = '$CMSSW_BASE/src/CMGTools/H2TauTau/data/MC_Moriond17_PU25ns_V1.root'
@@ -50,12 +51,12 @@ pick_events        = getHeppyOption('pick_events', False)
 ###################################################
 ###               HANDLE SAMPLES                ###
 ###################################################
-samples = [HN3L_M_2p5_V_0p0173205080757_e_onshell]
+samples = [HN3L_M_2p5_V_0p00707106781187_e_onshell, HN3L_M_2p5_V_0p0173205080757_e_onshell]
 
 for sample in samples:
     sample.triggers = ['HLT_IsoMu24_v%d' %i for i in range(4, 5)]
 
-    sample.splitFactor = splitFactor(sample, 1e5)
+    sample.splitFactor = splitFactor(sample, 6e3)
     sample.puFileData = puFileData
     sample.puFileMC   = puFileMC
 
@@ -68,7 +69,33 @@ eventSelector = cfg.Analyzer(
     EventSelector,
     name='EventSelector',
     # toSelect=[]
-    toSelect=[7]
+    toSelect=[
+        326,
+        395,
+        402,
+        410,
+        437,
+        485,
+        613,
+        722,
+         68,
+        345,
+        614,
+        712,
+        784,
+        131,
+        355,
+        373,
+        519,
+        609,
+        633,
+        707,
+        771,
+        790,
+        879,
+        223,
+        763,
+    ]
 )
 
 lheWeightAna = cfg.Analyzer(
@@ -151,7 +178,7 @@ sequence = cfg.Sequence([
     HNLGenTreeAnalyzer,
     RecoGenAnalyzer,
     HNLAnalyzer,
-    CheckHNLAnalyzer,
+#     CheckHNLAnalyzer,
     HNLTreeProducer,
 ])
 
@@ -160,10 +187,11 @@ sequence = cfg.Sequence([
 ###################################################
 if not production:
     comp                 = HN3L_M_2p5_V_0p0173205080757_e_onshell
+#     comp                 = HN3L_M_2p5_V_0p00707106781187_e_onshell
     selectedComponents   = [comp]
     comp.splitFactor     = 1
-    comp.fineSplitFactor = 4
-    comp.files           = comp.files[:20]
+    comp.fineSplitFactor = 1
+    comp.files           = comp.files[:50]
 
 # the following is declared in case this cfg is used in input to the
 # heppy.py script

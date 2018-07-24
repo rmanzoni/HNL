@@ -102,8 +102,8 @@ class RecoGenAnalyzer(Analyzer):
         self.assignVtx(event.taus     , myvtx)
 
         # all matchable objects
-        # matchable = event.electrons + event.photons + event.muons + event.taus + event.dsmuons + event.dgmuons 
-        matchable = event.electrons + event.photons + event.muons + event.taus + event.dsmuons 
+        matchable = event.electrons + event.photons + event.muons + event.taus + event.dsmuons + event.dgmuons 
+#         matchable = event.electrons + event.photons + event.muons + event.taus + event.dsmuons 
 
         # match gen to reco
         for ip in [event.the_hnl.l0(), 
@@ -221,14 +221,20 @@ class RecoGenAnalyzer(Analyzer):
             # create a RecoChargedCandidate for each reconstructed lepton and flush it into the vector
             for il in [event.the_hnl.l1().bestmatch, 
                        event.the_hnl.l2().bestmatch]:
-                # if the reco particle is a displaced thing, it does not have the p4() method, so let's build it 
-                myp4 = ROOT.Math.LorentzVector('<ROOT::Math::PxPyPzE4D<double> >')(il.px(), il.py(), il.pz(), math.sqrt(il.mass()**2 + il.px()**2 + il.py()**2 + il.pz()**2))
                 ic = ROOT.reco.RecoChargedCandidate() # instantiate a dummy RecoChargedCandidate
                 ic.setCharge(il.charge())             # assign the correct charge
+                if il.pdgId()%13==0:
+                    if il.muonBestTrack().isNull():       # check that the track is valid, there are photons around too!
+                        continue
+                    ic.setTrack(il.muonBestTrack())
+                else: 
+                    if il.track().isNull():
+                        continue
+                    ic.setTrack(il.track())           # set the correct TrackRef
+                    
+                myp4 = ROOT.Math.LorentzVector('<ROOT::Math::PxPyPzE4D<double> >')(ic.track().px(), ic.track().py(), ic.track().pz(), np.sqrt(il.mass()**2 + ic.track().px()**2 + ic.track().py()**2 + ic.track().pz()**2))
                 ic.setP4(myp4)                        # assign the correct p4
-                ic.setTrack(il.track())               # set the correct TrackRef
-                if ic.track().isNonnull():            # check that the track is valid, there are photons around too!
-                    self.tofit.push_back(ic)
+                self.tofit.push_back(ic)
 
             # further sanity check: two *distinct* tracks
             if self.tofit.size()==2 and self.tofit[0].track() != self.tofit[1].track():

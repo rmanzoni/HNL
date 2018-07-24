@@ -5,7 +5,7 @@ from itertools import combinations, product
 
 from PhysicsTools.HeppyCore.utils.deltar import deltaR, deltaPhi
 from ROOT import TVector3, Math
-
+import ROOT
 
 class HN3L(object):
 
@@ -229,7 +229,24 @@ class HN3L(object):
     def mtVisHnMET(self):
         mtHnMET = self.calcMT(self.hnVisP4(), self.met()) if self.met() else None
         return mtHnMET
-    
+
+    # pointing angle
+    def cos(self):
+
+        perp = ROOT.math.XYZVector(self.hnVisP4().px(),
+                                   self.hnVisP4().py(),
+                                   0.)
+        
+        dxybs = ROOT.GlobalPoint(-1*(self.l0().vertex().x() - self.l1().vertex().x()), 
+                                 -1*(self.l0().vertex().y() - self.l1().vertex().y()),
+                                  0)
+        
+        vperp = ROOT.math.XYZVector(dxybs.x(), dxybs.y(), 0.)
+        
+        cos = vperp.Dot(perp)/(vperp.R()*perp.R())
+                
+        return cos
+
     # more stuff
     def calcPZeta(self):
         l0PT  = TVector3(self.l0() .p4().x(), self.l0() .p4().y(), 0.)

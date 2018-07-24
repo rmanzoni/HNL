@@ -146,8 +146,8 @@ if not production:
     selectedComponents   = [comp]
     comp.splitFactor     = 1
     comp.fineSplitFactor = 1
-#     comp.files           = comp.files[:5]
-    comp.files           = ['file:miniAOD_skim.root']
+    comp.files           = comp.files[:1]
+#     comp.files           = ['file:miniAOD_skim.root']
 
 # the following is declared in case this cfg is used in input to the
 # heppy.py script

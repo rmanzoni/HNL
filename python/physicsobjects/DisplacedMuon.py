@@ -29,7 +29,7 @@ class DisplacedMuon(PhysicsObject):
                                                                             self.physObj.py(),
                                                                             self.physObj.pz(),
                                                                             energy)
-    
+
     def mass(self):
         '''impose the muon mass to the displaced objects, that otherwise carry none'''
         return 0.10565837
@@ -48,3 +48,5 @@ class DisplacedMuon(PhysicsObject):
         except:
             print 'DisplacedMuon.track() failed'
 
+    def muonBestTrack(self):
+        return self.track()

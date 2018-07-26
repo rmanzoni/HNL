@@ -19,7 +19,7 @@ from PhysicsTools.Heppy.physicsobjects.Jet           import Jet
 from PhysicsTools.Heppy.physicsobjects.PhysicsObject import PhysicsObject
 from PhysicsTools.HeppyCore.utils.deltar             import deltaR, deltaPhi, inConeCollection, bestMatch
 
-from CMGTools.HNL.utils.utils                  import isAncestor, displacement2D, displacement3D, makeRecoVertex # utility functions
+from CMGTools.HNL.utils.utils                  import isAncestor, displacement2D, displacement3D, makeRecoVertex, fitVertex # utility functions
 from CMGTools.HNL.physicsobjects.HN3L          import HN3L
 from CMGTools.HNL.physicsobjects.DisplacedMuon import DisplacedMuon
 
@@ -79,7 +79,7 @@ class RecoGenAnalyzer(Analyzer):
         event.jets        = map(Jet          , self.handles  ['jets'       ].product())
         event.dsmuons     = self.buildDisplacedMuons(self.handles['dsmuons'].product())
         event.dgmuons     = self.buildDisplacedMuons(self.handles['dgmuons'].product())
-        
+
         # vertex stuff
         event.pvs         = self.handles['pvs'     ].product()
         event.svs         = self.handles['svs'     ].product()
@@ -102,11 +102,11 @@ class RecoGenAnalyzer(Analyzer):
         self.assignVtx(event.taus     , myvtx)
 
         # all matchable objects
-        # matchable = event.electrons + event.photons + event.muons + event.taus + event.dsmuons + event.dgmuons 
-        matchable = event.electrons + event.photons + event.muons + event.taus + event.dsmuons 
-
+        # matchable = event.electrons + event.photons + event.taus + event.muons + event.dsmuons + event.dgmuons 
+        matchable = event.electrons + event.photons + event.taus + event.muons
+        
         #define the dr to cut on
-        dr_cut = 0.1
+        dr_cut = 0.2
 
         # match gen to reco
         for ip in [event.the_hnl.l0(), 
@@ -183,7 +183,7 @@ class RecoGenAnalyzer(Analyzer):
         # clear it before doing it again
         event.recoSv = None
 
-
+        set_trace()
 ######### DEBUG VTX MADE OUT OF DSA MUONS
 #         if len(event.dsmuons) > 2:
 #             # clear the vector
@@ -213,31 +213,12 @@ class RecoGenAnalyzer(Analyzer):
 
 
         # let's refit the secondary vertex, IF both leptons match to some reco particle
-        if not(event.the_hnl.l1().bestmatch is None or \
-               event.the_hnl.l2().bestmatch is None):
-            # clear the vector
-            self.tofit.clear()
-            # create a RecoChargedCandidate for each reconstructed lepton and flush it into the vector
-            for il in [event.the_hnl.l1().bestmatch, 
-                       event.the_hnl.l2().bestmatch]:
-                # if the reco particle is a displaced thing, it does not have the p4() method, so let's build it 
-                myp4 = ROOT.Math.LorentzVector('<ROOT::Math::PxPyPzE4D<double> >')(il.px(), il.py(), il.pz(), math.sqrt(il.mass()**2 + il.px()**2 + il.py()**2 + il.pz()**2))
-                ic = ROOT.reco.RecoChargedCandidate() # instantiate a dummy RecoChargedCandidate
-                ic.setCharge(il.charge())             # assign the correct charge
-                ic.setP4(myp4)                        # assign the correct p4
-                ic.setTrack(il.track())               # set the correct TrackRef
-                if ic.track().isNonnull():            # check that the track is valid, there are photons around too!
-                    self.tofit.push_back(ic)
+        pair = [event.the_hnl.l1().bestmatch, event.the_hnl.l2().bestmatch]
+        if (pair[0] != None) and\
+           (pair[1] != None) and\
+           (pair[0].physObj != pair[1].physObj):
 
-            # further sanity check: two *distinct* tracks
-            if self.tofit.size()==2 and self.tofit[0].track() != self.tofit[1].track():
-                # fit it!
-                svtree = self.vtxfit.Fit(self.tofit) # actual vertex fitting
-                # check that the vertex is good
-                if not svtree.get().isEmpty() and svtree.get().isValid():
-                    svtree.movePointerToTheTop()
-                    sv = svtree.currentDecayVertex().get()
-                    event.recoSv = makeRecoVertex(sv, kinVtxTrkSize=2) # need to do some gymastics
+            event.recoSv = fitVertex(pair)
 
             if event.recoSv:
                 # primary vertex

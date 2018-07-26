@@ -26,9 +26,9 @@ class HNLTreeProducer(TreeProducerBase):
         self.bookDiMuon(self.tree, 'dimuonMinDr12')
         self.bookDisplacedMuon (self.tree,'dMu1MinDr12')
         self.bookDisplacedMuon (self.tree,'dMu2MinDr12')
-        self.bookDiMuon(self.tree, 'dimuonMaxDr0a12')
-        self.bookDisplacedMuon (self.tree,'dMu1MaxDr0a12')
-        self.bookDisplacedMuon (self.tree,'dMu2MaxDr0a12')
+        self.bookDiMuon(self.tree, 'dimuonMaxCosBPA')
+        self.bookDisplacedMuon (self.tree,'dMu1MaxCosBPA')
+        self.bookDisplacedMuon (self.tree,'dMu2MaxCosBPA')
 
 
 
@@ -141,9 +141,9 @@ class HNLTreeProducer(TreeProducerBase):
             self.fillDiMuon(self.tree, 'dimuonMinDr12', event.dimuonMinDr12)
             self.fillDisplacedMuon (self.tree,'dMu1MinDr12', event.dMu1MinDr12)
             self.fillDisplacedMuon (self.tree,'dMu2MinDr12', event.dMu2MinDr12)
-            self.fillDiMuon(self.tree, 'dimuonMaxDr0a12', event.dimuonMaxDr0a12)
-            self.fillDisplacedMuon (self.tree,'dMu1MaxDr0a12', event.dMu1MaxDr0a12)
-            self.fillDisplacedMuon (self.tree,'dMu2MaxDr0a12', event.dMu2MaxDr0a12)
+            self.fillDiMuon(self.tree, 'dimuonMaxCosBPA', event.dimuonMaxCosBPA)
+            self.fillDisplacedMuon (self.tree,'dMu1MaxCosBPA', event.dMu1MaxCosBPA)
+            self.fillDisplacedMuon (self.tree,'dMu2MaxCosBPA', event.dMu2MaxCosBPA)
 
         # output of MC analysis
         self.fillHNL(self.tree, 'hnl', event.the_hnl)

@@ -48,3 +48,5 @@ class DisplacedMuon(PhysicsObject):
         except:
             print 'DisplacedMuon.track() failed'
 
+    def muonBestTrack(self):
+        return self.track()

@@ -68,7 +68,7 @@ check_hnlreco_vars = [
     Variable('flag_matchedHNLDxy', lambda ev : ev.matchedHNLDxy ,  ),
     Variable('flag_matchedHNLMaxPt', lambda ev : ev.matchedHNLMaxPt,  ),
     Variable('flag_matchedHNLMinDr12', lambda ev : ev.matchedHNLMinDr12 ,  ),
-    Variable('flag_matchedHNLMaxDr0a12', lambda ev : ev.matchedHNLMaxDr0a12,  ),
+    Variable('flag_matchedHNLMaxCosBPA', lambda ev : ev.matchedHNLMaxCosBPA ,  ),
     Variable('flag_IsThereTHEDimuon', lambda ev : ev.flag_IsThereTHEDimuon , ),
     Variable('flag_MUCOsuccess', lambda ev : ev.flag_MUCOsuccess , ),
 
@@ -77,15 +77,13 @@ check_hnlreco_vars = [
 
 # generic DiMuon variables
 dimuon_vars = [
-    Variable('x', lambda hn : hn.vtx.x(), type = float), 
-    Variable('y', lambda hn : hn.vtx.y(), type = float), 
-    Variable('z', lambda hn : hn.vtx.z(), type = float), 
-    Variable('dxy', lambda hn : hn.dxy(), type = float), 
-    Variable('vtxFitChi2', lambda hn : hn.vtx.chi2(), type = float),
-    Variable('dr12', lambda hn : hn.dr12(), type = float), 
+    Variable('disp2DFromPV', lambda hn : hn.disp2DFromPV(), type = float), 
+    Variable('disp2DFromBS', lambda hn : hn.disp2DFromBS(), type = float), 
+    Variable('vtxFitChi2', lambda hn : hn.chi2(), type = float),
+    Variable('dr', lambda hn : hn.dr(), type = float), 
 ]
 
-# generic DiMuon variables
+# generic DisplacedMuon variables
 displacedmuon_vars = [
     Variable('x'    , lambda p: p.vx() ),
     Variable('y'    , lambda p: p.vy() ),

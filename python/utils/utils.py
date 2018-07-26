@@ -1,5 +1,6 @@
 import ROOT
 from math import sqrt
+from PhysicsTools.Heppy.physicsobjects.PhysicsObject import PhysicsObject
 from pdb import set_trace
 # load custom library to ROOT. This contains the kinematic vertex fitter class
 ROOT.gSystem.Load('libCMGToolsHNL')
@@ -46,21 +47,29 @@ def fitVertex(pair):
     vtx = None
     tofit.clear()
     for il in pair:
-        # if the reco particle is a displaced thing, it does not have the p4() method, so let's build it 
-        myp4 = ROOT.Math.LorentzVector('<ROOT::Math::PxPyPzE4D<double> >')(il.px(), il.py(), il.pz(), sqrt(il.mass()**2 + il.px()**2 + il.py()**2 + il.pz()**2))
+
         ic = ROOT.reco.RecoChargedCandidate() # instantiate a dummy RecoChargedCandidate
         ic.setCharge(il.charge())           # assign the correct charge
-        ic.setP4(myp4)                      # assign the correct p4
-        try:
+
+        if il.pdgId()%13==0:
+            # if il.muonBestTrack().isNull(): # check that the track is valied. e.g. photons... 
+            # if il.standAloneMuon().isNull(): # check that the track is valied. e.g. photons... 
+            if il.globalTrack().isNull(): # check that the track is valied. e.g. photons... 
+                continue
+            # ic.setTrack(il.muonBestTrack())
+            # ic.setTrack(il.standAloneMuon())
+            ic.setTrack(il.globalTrack())
+        else:
+            if il.track().isNull():
+                continue
             ic.setTrack(il.track())
-        except:
-            print'ic.setTrack failed'
-        # if il.reco == 1: # sMu = 1, dSAMu = 2
-            # ic.setTrack(il.outerTrack())             # set the correct TrackRef
-        # if il.reco == 2: # sMu = 1, dSAMu = 2
-            # ic.setTrack(il.physObj.track())             # set the correct TrackRef
+
+        # if the reco particle is a displaced thing, it does not have the p4() method, so let's build it 
+        myp4 = ROOT.Math.LorentzVector('<ROOT::Math::PxPyPzE4D<double> >')(il.px(), il.py(), il.pz(), sqrt(il.mass()**2 + il.px()**2 + il.py()**2 + il.pz()**2))
+        ic.setP4(myp4)                      # assign the correct p4
         if ic.track().isNonnull():          # check that the track is valid, there are photons around too!
             tofit.push_back(ic)
+
     # further sanity check: two *distinct* tracks
     if tofit.size() == 2 and tofit[0].track() != tofit[1].track():
         svtree = vtxfit.Fit(tofit) # the actual vertex fitting!

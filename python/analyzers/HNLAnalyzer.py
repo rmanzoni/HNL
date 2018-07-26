@@ -14,7 +14,7 @@ from PhysicsTools.Heppy.physicsobjects.PhysicsObject import PhysicsObject
 from CMGTools.HNL.utils.utils                     import isAncestor, displacement2D, displacement3D, makeRecoVertex, fitVertex
 from PhysicsTools.HeppyCore.utils.deltar import deltaR, deltaPhi
 
-from CMGTools.HNL.physicsobjects.DiMuon import DiMuon
+from CMGTools.HNL.physicsobjects.DiLepton import DiLepton
 from CMGTools.HNL.physicsobjects.DisplacedMuon import DisplacedMuon
 from pdb import set_trace
 
@@ -31,6 +31,7 @@ class HNLAnalyzer(Analyzer):
 
         self.handles['sMu']      = AutoHandle(('slimmedMuons','','PAT'),'std::vector<pat::Muon>')
         self.handles['dSAMu']    = AutoHandle(('displacedStandAloneMuons','','RECO'),'std::vector<reco::Track>')
+        self.handles['dGMu']     = AutoHandle(('displacedGlobalMuons','','RECO'),'std::vector<reco::Track>')
         self.handles['pvs']      = AutoHandle(('offlineSlimmedPrimaryVertices','','PAT'),'std::vector<reco::Vertex>')
         self.handles['svs']      = AutoHandle(('slimmedSecondaryVertices','','PAT'),'std::vector<reco::VertexCompositePtrCandidate>')
         self.handles['beamspot'] = AutoHandle(('offlineBeamSpot','','RECO'),'reco::BeamSpot')
@@ -46,7 +47,6 @@ class HNLAnalyzer(Analyzer):
         count = self.counters.counter('HNL')
         count.register('all events')
         count.register('good gen')
-        # count.register('reconstructable events')
         count.register('pairs')
         count.register('dimuons')
 
@@ -68,8 +68,9 @@ class HNLAnalyzer(Analyzer):
         # produce collections and map our objects to convenient Heppy objects
         #####################################################################################
 
-        event.sMu         = map(Muon         , self.handles  ['sMu'        ].product())
+        event.sMu         = map(Muon,self.handles['sMu'].product())
         event.dSAMu       = self.buildDisplacedMuons(self.handles['dSAMu'].product())
+        event.dGMu        = self.buildDisplacedMuons(self.handles['dGMu' ].product())
 
         # make vertex objects 
         event.pvs         = self.handles['pvs'     ].product()
@@ -88,8 +89,9 @@ class HNLAnalyzer(Analyzer):
         self.assignVtx(event.sMu,myvtx)
 
         # store the number of sMu and dSAMu per event
-        event.n_sMu = len(event.sMu)
+        event.n_sMu   = len(event.sMu)
         event.n_dSAMu = len(event.dSAMu)
+        event.n_dGMu  = len(event.dGMu)
        
         #####################################################################################
         # MUCO, the MUon COncatenator
@@ -104,41 +106,58 @@ class HNLAnalyzer(Analyzer):
         dMus = []
         event.n_sMuOnly = 0
         event.n_dSAMuOnly = 0
+        event.n_dGMuOnly = 0
         event.n_sMuRedundant = 0
         event.n_dSAMuRedundant = 0
+
+        # for smu in event.sMu:
+            # matches = []
+            # # matches = [dsa for dsa in event.dSAMu if (deltaR(smu,dsa) < dr_cut)] #this is commented out to turn off the MUCO 
+            # if len(matches) == 0:
+                # dmu = smu
+                # dmu.reco = 1 # sMu = 1, dSAMu = 2
+                # dmu.redundancy = 0
+                # dMus.append(dmu)
+                # event.n_sMuOnly += 1
+            # else:
+                # bestmatch = sorted(matches, key = lambda dsa: deltaR(smu,dsa), reverse = False)[0] 
+                # # if smu.dxy() < dxy_cut:
+                # if hasattr(smu.globalTrack(),'p'):
+                    # dmu = smu
+                    # dmu.reco = 1 # sMu = 1, dSAMu = 2 
+                    # dmu.redundancy = len(matches)
+                    # dMus.append(dmu)
+                    # event.n_sMuRedundant += 1
+                # else:
+                    # dmu = bestmatch
+                    # dmu.reco = 2 # sMu = 1, dSAMu = 2
+                    # dmu.redundancy = len(matches)
+                    # dMus.append(dmu)
+                    # event.n_dSAMuRedundant += 1
+
+                # event.dSAMu.remove(bestmatch)    
+
         for smu in event.sMu:
-            matches = []
-            # matches = [dsa for dsa in event.dSAMu if (deltaR(smu,dsa) < dr_cut)] #this is commented out to turn off the MUCO 
-            if len(matches) == 0:
-                dmu = smu
-                dmu.reco = 1 # sMu = 1, dSAMu = 2
-                dmu.redundancy = 0
-                dMus.append(dmu)
-                event.n_sMuOnly += 1
-            else:
-                bestmatch = sorted(matches, key = lambda dsa: deltaR(smu,dsa), reverse = False)[0] 
-                # if smu.dxy() < dxy_cut:
-                if hasattr(smu.globalTrack(),'p'):
-                    dmu = smu
-                    dmu.reco = 1 # sMu = 1, dSAMu = 2 
-                    dmu.redundancy = len(matches)
-                    dMus.append(dmu)
-                    event.n_sMuRedundant += 1
-                else:
-                    dmu = bestmatch
-                    dmu.reco = 2 # sMu = 1, dSAMu = 2
-                    dmu.redundancy = len(matches)
-                    dMus.append(dmu)
-                    event.n_dSAMuRedundant += 1
-
-                event.dSAMu.remove(bestmatch)    
-
-        for dsa in event.dSAMu:
-            dmu = dsa
-            dmu.reco = 2 # sMu = 1, dSAMu = 2
+            dmu = smu
+            dmu.reco = 1 # sMu = 1, dSAMu = 2
             dmu.redundancy = 0 
             dMus.append(dmu)
-            event.n_dSAMuOnly += 1
+            event.n_sMuOnly += 1
+
+        # for dsa in event.dSAMu:
+            # dmu = dsa
+            # dmu.reco = 2 # sMu = 1, dSAMu = 2
+            # dmu.redundancy = 0 
+            # dMus.append(dmu)
+            # event.n_dSAMuOnly += 1
+
+        # for dg in event.dGMu:
+            # dmu = dg
+            # dmu.reco = 3 # sMu = 1, dSAMu = 2, dGMu = 3
+            # dmu.redundancy = 0
+            # dMus.append(dmu)
+            # event.n_dGMuOnly += 1
+
        
         event.n_dMu = len(dMus) # important to understand how well the "Merge Reco Muons" process went. 
        
@@ -168,93 +187,102 @@ class HNLAnalyzer(Analyzer):
                 abs(event.the_hnl.l0().eta())   < 2.4): 
             return False
 
+        if (not hasattr(event.the_hnl.l1(), 'bestmatch')) or (event.the_hnl.l1().bestmatch is None):
+            return False
+        if (not hasattr(event.the_hnl.l2(), 'bestmatch')) or (event.the_hnl.l2().bestmatch is None):
+            return False
+
         self.counters.counter('HNL').inc('good gen')
 
         # #####################################################################################
-        # TODO: Preselection for the reco muons
+        # Preselection for the reco muons before pairing them
         # #####################################################################################
 
-
+        # some simple preselection based on pt
+        event.sMu   = [imu for imu in event.sMu   if imu.pt()>3.]
+        event.dSAMu = [imu for imu in event.dSAMu if imu.pt()>3.]
+        event.dGMu  = [imu for imu in event.dGMu  if imu.pt()>3.]
 
 
         #####################################################################################
         # collect all muon pairs
         #####################################################################################
-        event.pairs = [pair for pair in combinations(dMus,2)] 
-        event.n_pairs = len(event.pairs)
+        pairs = [pair for pair in combinations(dMus,2)] 
+        pairs = [(mu1,mu2) for mu1, mu2 in pairs if deltaR(mu1,mu2)>0.01] 
+        event.n_pairs = len(pairs)
         event.flag_IsThereTHEDimuon = False
 
         event.n_dimuon = 0
-        if len(event.pairs) > 0:
-            self.counters.counter('HNL').inc('pairs')
+        if len(pairs) == 0:
+            pass
 
-            ########################################################################################
-            # select only dimuon pairs with mutual vertices (surviving the kinematic vertex fitter)
-            ########################################################################################
-            if abs(event.the_hnl.l1().pt()-18.4)<0.1:
-                set_trace()
-            dimuons = []
-            for pair in event.pairs:
-                sv = None
-                if not pair[0]==pair[1]:
-                    sv = fitVertex(pair)
-                    if sv != None:
-                        dimuons.append(DiMuon(pair,sv))
+        self.counters.counter('HNL').inc('pairs')
 
-            #####################################################################################
-            # Check whether the correct dimuon is part of the collection dimuons
-            #####################################################################################
-            if len(dimuons) > 0 and hasattr(event.the_hnl.l1().bestmatch, 'physObj') and hasattr(event.the_hnl.l2().bestmatch,'physObj'):
-                for dimu in dimuons:
-                    dMu1 = dimu.pair[0]
-                    dMu2 = dimu.pair[1] 
-                    if (dMu1.physObj == event.the_hnl.l1().bestmatch.physObj or dMu1.physObj == event.the_hnl.l2().bestmatch.physObj) and (dMu2.physObj == event.the_hnl.l1().bestmatch.physObj or dMu2.physObj == event.the_hnl.l2().bestmatch.physObj):
-                        event.flag_IsThereTHEDimuon = True
+        ########################################################################################
+        # Vertex Fit: Select only dimuon pairs with mutual vertices
+        ########################################################################################
+        dimuons = []
+        for pair in pairs:
+            sv = None
+            # print pair[0]
+            # print pair[1]
+            if not pair[0]==pair[1]:
+                sv = fitVertex(pair)
+                if sv != None:
+                    dimuons.append(DiLepton(pair,sv,myvtx,event.beamspot))
 
-
-            #####################################################################################
-            # select the best dimuon pairs 
-            #####################################################################################
-            if len(dimuons) > 0:
-                self.counters.counter('HNL').inc('dimuons')
-                
-                event.n_dimuon = len(dimuons)
-                 
-                # select the dimuon with lowest vertex fit chi2 as the HNL dimuon candidate
-                dimuonChi2 = sorted(dimuons, key = lambda x: (x.isSS(),x.chi2()), reverse = False)[0] 
-                event.dimuonChi2 = dimuonChi2
-                event.dMu1Chi2 = sorted(dimuonChi2.pair, key = lambda x: x.pt(), reverse = True)[0]
-                event.dMu2Chi2 = sorted(dimuonChi2.pair, key = lambda x: x.pt(), reverse = False)[0] 
-                
-                # select the dimuon with largest displacement
-                dimuonDxy = sorted(dimuons, key = lambda x: (x.isSS(),x.dxy()), reverse = True)[0] 
-                event.dimuonDxy = dimuonDxy
-                event.dMu1Dxy = sorted(dimuonDxy.pair, key = lambda x: x.pt(), reverse = True)[0]
-                event.dMu2Dxy = sorted(dimuonDxy.pair, key = lambda x: x.pt(), reverse = False)[0] 
-
-                # select leptons ito added momenta's pt
-                dimuonMaxPt = sorted(dimuons, key = lambda x: (x.pair[0].p4() + x.pair[1].p4()).pt(), reverse = True)[0] 
-                event.dimuonMaxPt = dimuonMaxPt
-                event.dMu1MaxPt = sorted(dimuonMaxPt.pair, key = lambda x: x.pt(), reverse = True)[0] 
-                event.dMu2MaxPt = sorted(dimuonMaxPt.pair, key = lambda x: x.pt(), reverse = False)[0]
-
-                # select closest leptons ito dr
-                dimuonMinDr12 = sorted(dimuons, key = lambda x: deltaR(x.pair[0],x.pair[1]), reverse = False)[0]
-                event.dimuonMinDr12 = dimuonMinDr12
-                event.dMu1MinDr12 = sorted(dimuonMinDr12.pair, key = lambda x: x.pt(), reverse = True)[0] 
-                event.dMu2MinDr12 = sorted(dimuonMinDr12.pair, key = lambda x: x.pt(), reverse = False)[0]
-
-                # select leptons farthest to l0 ito dr of added momenta (l1+l2)
-                # DEPENDENT ON GEN INFO
-                dimuonMaxDr0a12 = sorted(dimuons, key = lambda x: deltaR(x.pair[0].p4()+x.pair[1].p4(),event.the_hnl.l0().p4()), reverse = True)[0]
-                event.dimuonMaxDr0a12 = dimuonMaxDr0a12
-                event.dMu1MaxDr0a12 = sorted(dimuonMaxDr0a12.pair, key = lambda x: x.pt(), reverse = True)[0] 
-                event.dMu2MaxDr0a12 = sorted(dimuonMaxDr0a12.pair, key = lambda x: x.pt(), reverse = False)[0]
+        #####################################################################################
+        # Check whether the correct dimuon is part of the collection dimuons
+        #####################################################################################
+        if len(dimuons) > 0:
+            for dimu in dimuons:
+                dMu1 = dimu.lep1()
+                dMu2 = dimu.lep2() 
+                if (dMu1.physObj == event.the_hnl.l1().bestmatch.physObj or dMu1.physObj == event.the_hnl.l2().bestmatch.physObj) and (dMu2.physObj == event.the_hnl.l1().bestmatch.physObj or dMu2.physObj == event.the_hnl.l2().bestmatch.physObj):
+                    event.flag_IsThereTHEDimuon = True
 
 
-            #####################################################################################
-            # TODO: Final Qualification and 'ok' to nominate the selection dimuon as HNL candidate
-            #####################################################################################
+        #####################################################################################
+        # select the best dimuon pairs 
+        #####################################################################################
+        event.n_dimuon = len(dimuons)
+        if len(dimuons) > 0:
+            self.counters.counter('HNL').inc('dimuons')
+             
+            # select the dimuon with lowest vertex fit chi2 as the HNL dimuon candidate
+            dimuonChi2 = sorted(dimuons, key = lambda x: (x.isSS(),x.chi2()), reverse = False)[0] 
+            event.dimuonChi2 = dimuonChi2
+            event.dMu1Chi2 = dimuonChi2.lep1()
+            event.dMu2Chi2 = dimuonChi2.lep2()
+            
+            # select the dimuon with largest displacement
+            dimuonDxy = sorted(dimuons, key = lambda x: (x.isSS(),x.disp2DFromBS()), reverse = True)[0] 
+            event.dimuonDxy = dimuonDxy
+            event.dMu1Dxy = dimuonDxy.lep1()
+            event.dMu2Dxy = dimuonDxy.lep2()
+
+            # select leptons ito added momenta's pt
+            dimuonMaxPt = sorted(dimuons, key = lambda x: (x.isSS(),x.pt()), reverse = True)[0] 
+            event.dimuonMaxPt = dimuonMaxPt
+            event.dMu1MaxPt = dimuonMaxPt.lep1()
+            event.dMu2MaxPt = dimuonMaxPt.lep2()
+
+            # select closest leptons ito dr
+            dimuonMinDr12 = sorted(dimuons, key = lambda x: (x.isSS(),x.dr()), reverse = False)[0]
+            event.dimuonMinDr12 = dimuonMinDr12
+            event.dMu1MinDr12 = dimuonMinDr12.lep1()
+            event.dMu2MinDr12 = dimuonMinDr12.lep2()
+
+            # select smallest backpointing angle in the transverse plane
+            dimuonMaxCosBPA = sorted(dimuons, key = lambda x : (x.isSS(), -x.cosTransversePointingAngleBS()), reverse=False)[0]
+            event.dimuonMaxCosBPA = dimuonMaxCosBPA
+            event.dMu1MaxCosBPA = dimuonMaxCosBPA.lep1()
+            event.dMu2MaxCosBPA = dimuonMaxCosBPA.lep2()
+
+
+        #####################################################################################
+        # TODO: Final Qualification and 'ok' to nominate the selection dimuon as HNL candidate
+        #####################################################################################
 
 
 

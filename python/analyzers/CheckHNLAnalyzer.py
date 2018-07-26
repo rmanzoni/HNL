@@ -46,7 +46,6 @@ class CheckHNLAnalyzer(Analyzer):
         count.register('correctly reconstructed HNL through max_Dxy method')
         count.register('correctly reconstructed HNL through MaxPt method')
         count.register('correctly reconstructed HNL through MinDr12 method')
-        count.register('correctly reconstructed HNL through MaxDr0a12 method')
 
     def process(self, event):
         self.counters.counter('HNL').inc('all events')
@@ -59,12 +58,12 @@ class CheckHNLAnalyzer(Analyzer):
         event.matchedL1MinDr12   = False
         event.matchedL2MinDr12   = False
         event.matchedHNLMinDr12  = False
-        event.matchedL1MaxDr0a12   = False
-        event.matchedL2MaxDr0a12   = False
-        event.matchedHNLMaxDr0a12  = False
         event.matchedL1Dxy   = False
         event.matchedL2Dxy   = False
         event.matchedHNLDxy  = False
+        event.matchedL1MaxCosBPA   = False
+        event.matchedL2MaxCosBPA   = False
+        event.matchedHNLMaxCosBPA  = False
         flag_l1_matched_Chi2 = False 
         flag_l2_matched_Chi2 = False
         flag_l1_matched_Dxy  = False
@@ -73,8 +72,8 @@ class CheckHNLAnalyzer(Analyzer):
         flag_l2_matched_MaxPt  = False
         flag_l1_matched_MinDr12  = False
         flag_l2_matched_MinDr12  = False
-        flag_l1_matched_MaxDr0a12  = False
-        flag_l2_matched_MaxDr0a12  = False
+        flag_l1_matched_MaxCosBPA  = False
+        flag_l2_matched_MaxCosBPA  = False
 
 
         if event.n_dimuon > 0 and hasattr(event.the_hnl.l1().bestmatch, 'physObj') and hasattr(event.the_hnl.l2().bestmatch,'physObj'):
@@ -149,33 +148,32 @@ class CheckHNLAnalyzer(Analyzer):
                     event.matchedL2MinDr12 = True
                     flag_l2_matched_MinDr12 = True
 
-                if (event.dMu1MaxDr0a12.physObj == event.the_hnl.l1().bestmatch.physObj):
-                    event.matchedL1MaxDr0a12 = True
-                    flag_l1_matched_MaxDr0a12 = True 
+                if (event.dMu1MaxCosBPA.physObj == event.the_hnl.l1().bestmatch.physObj):
+                    event.matchedL1MaxCosBPA = True
+                    flag_l1_matched_MaxCosBPA = True 
 
-                if (event.dMu1MaxDr0a12.physObj == event.the_hnl.l2().bestmatch.physObj):
-                    event.matchedL1MaxDr0a12 = True
-                    flag_l2_matched_MaxDr0a12 = True
+                if (event.dMu1MaxCosBPA.physObj == event.the_hnl.l2().bestmatch.physObj):
+                    event.matchedL1MaxCosBPA = True
+                    flag_l2_matched_MaxCosBPA = True
                 
-                if (event.dMu2MaxDr0a12.physObj == event.the_hnl.l1().bestmatch.physObj):
-                    event.matchedL2MaxDr0a12 = True
-                    flag_l1_matched_MaxDr0a12 = True
+                if (event.dMu2MaxCosBPA.physObj == event.the_hnl.l1().bestmatch.physObj):
+                    event.matchedL2MaxCosBPA = True
+                    flag_l1_matched_MaxCosBPA = True
 
-                if (event.dMu2MaxDr0a12.physObj == event.the_hnl.l2().bestmatch.physObj):
-                    event.matchedL2MaxDr0a12 = True
-                    flag_l2_matched_MaxDr0a12 = True
+                if (event.dMu2MaxCosBPA.physObj == event.the_hnl.l2().bestmatch.physObj):
+                    event.matchedL2MaxCosBPA = True
+                    flag_l2_matched_MaxCosBPA = True
 
                 event.matchedHNLChi2 = event.matchedL1Chi2 and event.matchedL2Chi2 and flag_l1_matched_Chi2 and flag_l2_matched_Chi2
                 event.matchedHNLDxy  = event.matchedL1Dxy  and event.matchedL2Dxy and flag_l1_matched_Dxy and flag_l2_matched_Dxy
                 event.matchedHNLMaxPt  = event.matchedL1MaxPt  and event.matchedL2MaxPt and flag_l1_matched_MaxPt and flag_l2_matched_MaxPt
                 event.matchedHNLMinDr12  = event.matchedL1MinDr12  and event.matchedL2MinDr12 and flag_l1_matched_MinDr12 and flag_l2_matched_MinDr12
-                event.matchedHNLMaxDr0a12  = event.matchedL1MaxDr0a12  and event.matchedL2MaxDr0a12 and flag_l1_matched_MaxDr0a12 and flag_l2_matched_MaxDr0a12
+                event.matchedHNLMaxCosBPA = event.matchedL1MaxCosBPA and event.matchedL2MaxCosBPA and flag_l1_matched_MaxCosBPA and flag_l2_matched_MaxCosBPA
 
         if event.matchedHNLChi2 == True: self.counters.counter('HNL').inc('correctly reconstructed HNL through min_Chi2 method')
         if event.matchedHNLDxy == True: self.counters.counter('HNL').inc('correctly reconstructed HNL through max_Dxy method')
         if event.matchedHNLMaxPt == True: self.counters.counter('HNL').inc('correctly reconstructed HNL through MaxPt method')
         if event.matchedHNLMinDr12 == True: self.counters.counter('HNL').inc('correctly reconstructed HNL through MinDr12 method')
-        if event.matchedHNLMaxDr0a12 == True: self.counters.counter('HNL').inc('correctly reconstructed HNL through MaxDr0a12 method')
 
 
         return True

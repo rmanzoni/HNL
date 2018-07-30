@@ -183,7 +183,6 @@ class RecoGenAnalyzer(Analyzer):
         # clear it before doing it again
         event.recoSv = None
 
-        set_trace()
 ######### DEBUG VTX MADE OUT OF DSA MUONS
 #         if len(event.dsmuons) > 2:
 #             # clear the vector

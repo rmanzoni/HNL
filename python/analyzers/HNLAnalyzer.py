@@ -94,48 +94,11 @@ class HNLAnalyzer(Analyzer):
         event.n_dGMu  = len(event.dGMu)
        
         #####################################################################################
-        # MUCO, the MUon COncatenator
-        # Concatenate all Muon Reconstructions:
-        # Create an array of DisplacedMuon objects, 
-        # summarizing all sMu and dSAMus into a single array, 
-        # avoid redundancies with dR < dr_cut
-        #####################################################################################
         # Merge Reco Muons
-        # Create an array of DisplacedMuon objects, summarizing all sMu and dSAMus into a single array, while avoiding redundancies through dR < dr_cut
-        dr_cut = 0.1
+        # Create an array of DisplacedMuon objects, summarizing all sMu, dSAMu and dGMu into a single array
+        # Comment those out which are not needed for the current run
+        #####################################################################################
         dMus = []
-        event.n_sMuOnly = 0
-        event.n_dSAMuOnly = 0
-        event.n_dGMuOnly = 0
-        event.n_sMuRedundant = 0
-        event.n_dSAMuRedundant = 0
-
-        # for smu in event.sMu:
-            # matches = []
-            # # matches = [dsa for dsa in event.dSAMu if (deltaR(smu,dsa) < dr_cut)] #this is commented out to turn off the MUCO 
-            # if len(matches) == 0:
-                # dmu = smu
-                # dmu.reco = 1 # sMu = 1, dSAMu = 2
-                # dmu.redundancy = 0
-                # dMus.append(dmu)
-                # event.n_sMuOnly += 1
-            # else:
-                # bestmatch = sorted(matches, key = lambda dsa: deltaR(smu,dsa), reverse = False)[0] 
-                # # if smu.dxy() < dxy_cut:
-                # if hasattr(smu.globalTrack(),'p'):
-                    # dmu = smu
-                    # dmu.reco = 1 # sMu = 1, dSAMu = 2 
-                    # dmu.redundancy = len(matches)
-                    # dMus.append(dmu)
-                    # event.n_sMuRedundant += 1
-                # else:
-                    # dmu = bestmatch
-                    # dmu.reco = 2 # sMu = 1, dSAMu = 2
-                    # dmu.redundancy = len(matches)
-                    # dMus.append(dmu)
-                    # event.n_dSAMuRedundant += 1
-
-                # event.dSAMu.remove(bestmatch)    
 
         for smu in event.sMu:
             dmu = smu

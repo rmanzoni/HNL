@@ -51,10 +51,6 @@ hnlreco_vars = [
     Variable('n_dSAMu', lambda ev : ev.n_dSAMu, type=int),
     Variable('n_dMu', lambda ev : ev.n_dMu, type=int),
     Variable('n_pairs', lambda ev : ev.n_pairs, type=int),
-    Variable('n_sMuOnly',      lambda ev : ev.n_sMuOnly, type=int),
-    Variable('n_sMuRedundant', lambda ev : ev.n_sMuRedundant, type=int),
-    Variable('n_dSAMuOnly',      lambda ev : ev.n_dSAMuOnly, type=int),
-    Variable('n_dSAMuRedundant', lambda ev : ev.n_dSAMuRedundant, type=int),
     Variable('n_dimuon', lambda ev : ev.n_dimuon, type=int),
 ]
 

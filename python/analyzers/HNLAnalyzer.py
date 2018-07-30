@@ -10,9 +10,10 @@ from PhysicsTools.Heppy.analyzers.core.Analyzer      import Analyzer
 from PhysicsTools.Heppy.analyzers.core.AutoHandle    import AutoHandle
 from PhysicsTools.Heppy.physicsobjects.GenParticle   import GenParticle
 from PhysicsTools.Heppy.physicsobjects.Muon          import Muon
+from PhysicsTools.Heppy.physicsobjects.Electron      import Electron
 from PhysicsTools.Heppy.physicsobjects.PhysicsObject import PhysicsObject
-from CMGTools.HNL.utils.utils                     import isAncestor, displacement2D, displacement3D, makeRecoVertex, fitVertex
-from PhysicsTools.HeppyCore.utils.deltar import deltaR, deltaPhi
+from CMGTools.HNL.utils.utils                        import isAncestor, displacement2D, displacement3D, makeRecoVertex, fitVertex
+from PhysicsTools.HeppyCore.utils.deltar             import deltaR, deltaPhi
 
 from CMGTools.HNL.physicsobjects.DiLepton import DiLepton
 from CMGTools.HNL.physicsobjects.DisplacedMuon import DisplacedMuon
@@ -29,7 +30,7 @@ class HNLAnalyzer(Analyzer):
     def declareHandles(self):
         super(HNLAnalyzer, self).declareHandles()
 
-        self.handles['ele']    = AutoHandle(('slimmedElectrons', '','PAT'), 'std::vector<pat::Electron>')
+        self.handles['ele']      = AutoHandle(('slimmedElectrons', '','PAT'), 'std::vector<pat::Electron>')
         self.handles['sMu']      = AutoHandle(('slimmedMuons','','PAT'),'std::vector<pat::Muon>')
         self.handles['dSAMu']    = AutoHandle(('displacedStandAloneMuons','','RECO'),'std::vector<reco::Track>')
         self.handles['dGMu']     = AutoHandle(('displacedGlobalMuons','','RECO'),'std::vector<reco::Track>')
@@ -70,6 +71,7 @@ class HNLAnalyzer(Analyzer):
         #####################################################################################
 
         event.sMu         = map(Muon,self.handles['sMu'].product())
+        event.ele         = map(Electron,self.handles['ele'].product())
         event.dSAMu       = self.buildDisplacedMuons(self.handles['dSAMu'].product())
         event.dGMu        = self.buildDisplacedMuons(self.handles['dGMu' ].product())
 
@@ -88,6 +90,7 @@ class HNLAnalyzer(Analyzer):
             myvtx = event.beamspot
         
         self.assignVtx(event.sMu,myvtx)
+        self.assignVtx(event.ele,myvtx)
 
         # store the number of sMu and dSAMu per event
         event.n_sMu   = len(event.sMu)
@@ -288,12 +291,12 @@ class HNLAnalyzer(Analyzer):
         #####################################################################################
         dMus = []
 
-        for smu in event.sMu:
-            dmu = smu
-            dmu.reco = 1 # sMu = 1, dSAMu = 2
-            dmu.redundancy = 0 
-            dMus.append(dmu)
-            event.n_sMuOnly += 1
+#        for smu in event.sMu:
+#            dmu = smu
+#            dmu.reco = 1 # sMu = 1, dSAMu = 2
+#            dmu.redundancy = 0 
+#            dMus.append(dmu)
+#            event.n_sMuOnly += 1
 
         # for dsa in event.dSAMu:
             # dmu = dsa

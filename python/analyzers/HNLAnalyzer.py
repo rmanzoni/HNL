@@ -291,26 +291,23 @@ class HNLAnalyzer(Analyzer):
         #####################################################################################
         dMus = []
 
-#        for smu in event.sMu:
-#            dmu = smu
-#            dmu.reco = 1 # sMu = 1, dSAMu = 2
-#            dmu.redundancy = 0 
-#            dMus.append(dmu)
-#            event.n_sMuOnly += 1
+        for smu in event.sMu:
+           dmu = smu
+           dmu.reco = 1 # sMu = 1, dSAMu = 2
+           dmu.redundancy = 0 
+           dMus.append(dmu)
 
         # for dsa in event.dSAMu:
             # dmu = dsa
             # dmu.reco = 2 # sMu = 1, dSAMu = 2
             # dmu.redundancy = 0 
             # dMus.append(dmu)
-            # event.n_dSAMuOnly += 1
 
         # for dg in event.dGMu:
             # dmu = dg
             # dmu.reco = 3 # sMu = 1, dSAMu = 2, dGMu = 3
             # dmu.redundancy = 0
             # dMus.append(dmu)
-            # event.n_dGMuOnly += 1
 
        
         event.n_dMu = len(dMus) # important to understand how well the "Merge Reco Muons" process went. 
@@ -338,7 +335,7 @@ class HNLAnalyzer(Analyzer):
                 abs(event.the_hnl.l2().pdgId())==13   and \
                 abs(event.the_hnl.l1().eta())   < 2.4 and \
                 abs(event.the_hnl.l2().eta())   < 2.4 and \
-                abs(event.the_hnl.l0().eta())   < 2.4): 
+                abs(event.the_hnl.l0().eta())   < 2.5): 
             return False
 
         if (not hasattr(event.the_hnl.l1(), 'bestmatch')) or (event.the_hnl.l1().bestmatch is None):
@@ -437,7 +434,5 @@ class HNLAnalyzer(Analyzer):
         #####################################################################################
         # TODO: Final Qualification and 'ok' to nominate the selection dimuon as HNL candidate
         #####################################################################################
-
-
 
         return True

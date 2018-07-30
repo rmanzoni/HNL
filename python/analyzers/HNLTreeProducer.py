@@ -51,6 +51,8 @@ class HNLTreeProducer(TreeProducerBase):
         self.bookParticle (self.tree, 'l0_bestmatch'           )
         self.var(self.tree, 'l0_bestmatchtype')
         self.var(self.tree, 'l0_bestmatchdR')
+        self.bookEle(self.tree, 'prompt_ele') 
+        self.var(self.tree, 'prompt_ana_success')
        
 
         # displaced leptons (from the HN)
@@ -159,6 +161,10 @@ class HNLTreeProducer(TreeProducerBase):
         if event.the_hnl.l0().bestmatch != None: self.fillParticle(self.tree, 'l0_bestmatch'       , event.the_hnl.l0().bestmatch   )
         self.fill(self.tree, 'l0_bestmatchtype',event.the_hnl.l0().bestmatchtype)
         if hasattr(event.the_hnl.l0(), 'bestmatchdR'  ): self.fill       (self.tree, 'l0_bestmatchdR'     ,event.the_hnl.l0().bestmatchdR)
+        if event.the_prompt_cand != None: # hasattr(event, 'the_prompt_cand'):
+            if abs(event.the_prompt_cand.pdgId()) == 11:
+                self.fillEle(self.tree, 'prompt_ele', event.the_prompt_cand)
+            self.fill(self.tree, 'prompt_ana_success', event.prompt_ana_success)
         
         # displaced leptons (from the HN)
         self.fillParticle(self.tree, 'l1', event.the_hnl.l1())

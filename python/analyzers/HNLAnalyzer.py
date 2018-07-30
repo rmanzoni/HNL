@@ -94,6 +94,10 @@ class HNLAnalyzer(Analyzer):
         event.n_dSAMu = len(event.dSAMu)
         event.n_dGMu  = len(event.dGMu)
 
+        #####################################################################################
+        # Find the prompt lepton
+        #####################################################################################
+
         # ELECTRONS
         ele_cand = []
         matchable_ele = [ele for ele in event.ele]

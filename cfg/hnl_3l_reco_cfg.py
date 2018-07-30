@@ -99,13 +99,13 @@ skimAna = cfg.Analyzer(
     name='SkimAnalyzerCount'
 )
 
-# triggerAna = cfg.Analyzer(
-    # TriggerAnalyzer,
-    # name='TriggerAnalyzer',
-    # addTriggerObjects=True,
-    # requireTrigger=True,
-    # usePrescaled=False
-# )
+triggerAna = cfg.Analyzer(
+    TriggerAnalyzer,
+    name='TriggerAnalyzer',
+    addTriggerObjects=True,
+    requireTrigger=True,
+    usePrescaled=False
+)
 
 vertexAna = cfg.Analyzer(
     VertexAnalyzer,

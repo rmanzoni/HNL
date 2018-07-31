@@ -76,7 +76,35 @@ dimuon_vars = [
     Variable('disp2DFromPV', lambda hn : hn.disp2DFromPV(), type = float), 
     Variable('disp2DFromBS', lambda hn : hn.disp2DFromBS(), type = float), 
     Variable('vtxFitChi2', lambda hn : hn.chi2(), type = float),
-    Variable('dr', lambda hn : hn.dr(), type = float), 
+
+    Variable('m_01', lambda hn : hn.m_01(), type = float), 
+    Variable('m_02', lambda hn : hn.m_02(), type = float), 
+    Variable('m_12', lambda hn : hn.m_12(), type = float), 
+
+    Variable('q_01', lambda hn : hn.q_01(), type = float), 
+    Variable('q_02', lambda hn : hn.q_02(), type = float), 
+    Variable('q_12', lambda hn : hn.q_12(), type = float), 
+    Variable('q_012', lambda hn : hn.q_012(), type = float), 
+
+    Variable('dr_01', lambda hn : hn.dr_01(), type = float), 
+    Variable('dr_02', lambda hn : hn.dr_02(), type = float), 
+    Variable('dr_12', lambda hn : hn.dr_12(), type = float), 
+    Variable('dr_hn0_vis', lambda hn : hn.dr_hn0_vis(), type = float), 
+
+    Variable('dphi_01', lambda hn : hn.dphi_01(), type = float), 
+    Variable('dphi_02', lambda hn : hn.dphi_02(), type = float), 
+    Variable('dphi_12', lambda hn : hn.dphi_12(), type = float), 
+    Variable('dphi_hn0_vis', lambda hn : hn.dphi_hn0_vis(), type = float), 
+
+    Variable('pt_01', lambda hn : hn.pt_01(), type = float), 
+    Variable('pt_02', lambda hn : hn.pt_02(), type = float), 
+    Variable('pt_12', lambda hn : hn.pt_12(), type = float), 
+    Variable('pt_012', lambda hn : hn.pt_012(), type = float), 
+
+    Variable('p_01', lambda hn : hn.p_01(), type = float), 
+    Variable('p_02', lambda hn : hn.p_02(), type = float), 
+    Variable('p_12', lambda hn : hn.p_12(), type = float), 
+    Variable('p_012', lambda hn : hn.p_012(), type = float), 
 ]
 
 # generic DisplacedMuon variables
@@ -91,7 +119,6 @@ displacedmuon_vars = [
     Variable('charge', lambda p: p.charge() if hasattr(p, 'charge') else 0), # charge may be non-integer for gen particles
     Variable('mass'  , lambda p: p.mass()),
     Variable('reco'  , lambda p: p.reco),
-    Variable('redundancy'  , lambda p: p.redundancy),
 ]
 
 # generic HNL variables

@@ -293,20 +293,17 @@ class HNLAnalyzer(Analyzer):
 
         for smu in event.sMu:
            dmu = smu
-           dmu.reco = 1 # sMu = 1, dSAMu = 2
-           dmu.redundancy = 0 
+           dmu.reco = 1 # sMu = 1, dSAMu = 2, dGMu = 3
            dMus.append(dmu)
 
         # for dsa in event.dSAMu:
             # dmu = dsa
-            # dmu.reco = 2 # sMu = 1, dSAMu = 2
-            # dmu.redundancy = 0 
+            # dmu.reco = 2 # sMu = 1, dSAMu = 2, dGMu = 3
             # dMus.append(dmu)
 
         # for dg in event.dGMu:
             # dmu = dg
             # dmu.reco = 3 # sMu = 1, dSAMu = 2, dGMu = 3
-            # dmu.redundancy = 0
             # dMus.append(dmu)
 
        

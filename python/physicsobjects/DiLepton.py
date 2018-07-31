@@ -12,7 +12,8 @@ from pdb import set_trace
 class DiLepton(object):
     '''
     '''
-    def __init__(self, pair, sv, pv, bs):
+    def __init__(self, pair, sv, pv, bs, prompt):
+        self._prompt = prompt
         self._leptons = sorted(pair, key = lambda x : x.pt(), reverse = True)
         self._vtx = sv
         self._pv  = pv
@@ -32,47 +33,120 @@ class DiLepton(object):
     def leptons(self):
         return self._leptons
 
+    def lep0(self):
+        return self._prompt()
+
     def lep1(self):
         return self.leptons()[0]
 
     def lep2(self):
         return self.leptons()[1]
 
-    def p4(self):
+    def p4_01(self):
+        return self.lep0().p4() + self.lep1().p4()
+    
+    def p4_02(self):
+        return self.lep0().p4() + self.lep2().p4()
+    
+    def p4_12(self):
         return self.lep1().p4() + self.lep2().p4()
     
-    def pt(self):
-        return self.p4().pt()
+    def pt_01(self):
+        return self.p4_01().pt()
 
-    def eta(self):
-        return self.p4().eta()
+    def pt_02(self):
+        return self.p4_02().pt()
 
-    def phi(self):
-        return self.p4().phi()
+    def pt_12(self):
+        return self.p4_12().pt()
 
-    def px(self):
-        return self.p4().px()
+    def p_01(self):
+        return self.p4_01().P()
 
-    def py(self):
-        return self.p4().py()
+    def p_02(self):
+        return self.p4_02().P()
 
-    def pz(self):
-        return self.p4().pz()
+    def p_12(self):
+        return self.p4_12().P()
 
-    def mass(self):
-        return self.p4().mass()
+    def p_012(self):
+        return self.p4_012().p()
+
+    def deta_01(self):
+        return abs(self.lep0().eta() - self.lep1().p4().eta())
+
+    def deta_02(self):
+        return abs(self.lep0().eta() - self.lep2().p4().eta())
+
+    def deta_12(self):
+        return abs(self.lep1().eta() - self.lep2().p4().eta())
+
+    def eta_12(self):
+        return self.p4_12().eta()
+
+    def deta_hn0_vis(self):
+        return abs(self.p4_12().eta() - self.lep0().p4().eta())
+
+
+    def dphi_01(self):
+        return abs(self.lep0().phi() - self.lep1().p4().phi())
+
+    def dphi_02(self):
+        return abs(self.lep0().phi() - self.lep2().p4().phi())
+
+    def dphi_12(self):
+        return abs(self.lep1().phi() - self.lep2().p4().phi())
+
+    def phi_12(self):
+        return self.p4_12().phi()
+
+    def dphi_hn0_vis(self):
+        return abs(self.p4_12().phi() - self.lep0().p4().phi())
+
+    def dr_01(self):
+        return deltaR(self.lep0(), self.lep1()) 
+
+    def dr_02(self):
+        return deltaR(self.lep0(), self.lep2()) 
+
+    def dr_12(self):
+        return deltaR(self.lep1(), self.lep2()) 
+
+    def dr_hn0_vis(self):
+        return sqrt(pow((self.eta_12()-self.lep0().eta()),2) - pow((self.phi_12()-self.lep0().phi()),2) ) 
+
+    def mass_01(self):
+        return self.p4_01().mass()
+
+    def mass_02(self):
+        return self.p4_02().mass()
+
+    def mass_12(self):
+        return self.p4_12().mass()
+
+    def q_01(self):
+        return (self.lep0().charge() + self.lep1().charge())
+
+    def q_02(self):
+        return (self.lep0().charge() + self.lep2().charge())
+
+    def q_12(self):
+        return (self.lep1().charge() + self.lep2().charge())
+
+    def q_012(self):
+        return (self.lep0().charge() + self.lep1().charge() + self.lep2().charge())
+
+    def p_12_x(self):
+        return self.p4_12().px()
+
+    def p_12_y(self):
+        return self.p4_12().py()
+
+    def p_12_z(self):
+        return self.p4_12().pz()
 
     def vtx(self):
         return self.vtx
-
-    def deta(self):
-        return abs(self.lep1().eta() - self.lep2().eta()) 
-       
-    def dphi(self):
-        return abs(deltaPhi(self.lep1().phi(), self.lep2().phi()))
-
-    def dr(self):
-        return deltaR(self.lep1(), self.lep2()) 
 
     def vtx(self):
         return self._vtx
@@ -82,6 +156,9 @@ class DiLepton(object):
 
     def isSS(self):
         return int(self.lep1().charge()==self.lep2().charge())
+
+    def isOS(self):
+        return int(self.lep1().charge()!=self.lep2().charge())
 
     def _disp3DFromPV(self):
         return ROOT.VertexDistance3D().distance(self.vtx(), self._pv)
@@ -114,8 +191,8 @@ class DiLepton(object):
         
         if not hasattr(self, '_cos'):
 
-            perp = ROOT.math.XYZVector(self.px(),
-                                       self.py(),
+            perp = ROOT.math.XYZVector(self.p_12_x(),
+                                       self.p_12_y(),
                                        0.)
         
             dxybs = ROOT.GlobalPoint(-1*((self._bs.x0() - self.vtx().x()) + (self.vtx().z() - self._bs.z0()) * self._bs.dxdz()), 

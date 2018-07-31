@@ -377,7 +377,7 @@ class HNLAnalyzer(Analyzer):
             if not pair[0]==pair[1]:
                 sv = fitVertex(pair)
                 if sv != None:
-                    dimuons.append(DiLepton(pair,sv,myvtx,event.beamspot))
+                    dimuons.append(DiLepton(pair,sv,myvtx,event.beamspot,event.the_prompt_cand))
 
         #####################################################################################
         # Check whether the correct dimuon is part of the collection dimuons
@@ -404,19 +404,19 @@ class HNLAnalyzer(Analyzer):
             event.dMu2Chi2 = dimuonChi2.lep2()
             
             # select the dimuon with largest displacement
-            dimuonDxy = sorted(dimuons, key = lambda x: (x.isSS(),x.disp2DFromBS()), reverse = True)[0] 
+            dimuonDxy = sorted(dimuons, key = lambda x: (x.isOS(),x.disp2DFromBS()), reverse = True)[0] 
             event.dimuonDxy = dimuonDxy
             event.dMu1Dxy = dimuonDxy.lep1()
             event.dMu2Dxy = dimuonDxy.lep2()
 
             # select leptons ito added momenta's pt
-            dimuonMaxPt = sorted(dimuons, key = lambda x: (x.isSS(),x.pt()), reverse = True)[0] 
+            dimuonMaxPt = sorted(dimuons, key = lambda x: (x.isOS(),x.pt_12()), reverse = True)[0] 
             event.dimuonMaxPt = dimuonMaxPt
             event.dMu1MaxPt = dimuonMaxPt.lep1()
             event.dMu2MaxPt = dimuonMaxPt.lep2()
 
             # select closest leptons ito dr
-            dimuonMinDr12 = sorted(dimuons, key = lambda x: (x.isSS(),x.dr()), reverse = False)[0]
+            dimuonMinDr12 = sorted(dimuons, key = lambda x: (x.isSS(),x.dr_12()), reverse = False)[0]
             event.dimuonMinDr12 = dimuonMinDr12
             event.dMu1MinDr12 = dimuonMinDr12.lep1()
             event.dMu2MinDr12 = dimuonMinDr12.lep2()

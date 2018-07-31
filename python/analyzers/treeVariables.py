@@ -77,34 +77,45 @@ dimuon_vars = [
     Variable('disp2DFromBS', lambda hn : hn.disp2DFromBS(), type = float), 
     Variable('vtxFitChi2', lambda hn : hn.chi2(), type = float),
 
-    Variable('m_01', lambda hn : hn.m_01(), type = float), 
-    Variable('m_02', lambda hn : hn.m_02(), type = float), 
-    Variable('m_12', lambda hn : hn.m_12(), type = float), 
-
-    Variable('q_01', lambda hn : hn.q_01(), type = float), 
-    Variable('q_02', lambda hn : hn.q_02(), type = float), 
-    Variable('q_12', lambda hn : hn.q_12(), type = float), 
-    Variable('q_012', lambda hn : hn.q_012(), type = float), 
-
-    Variable('dr_01', lambda hn : hn.dr_01(), type = float), 
-    Variable('dr_02', lambda hn : hn.dr_02(), type = float), 
-    Variable('dr_12', lambda hn : hn.dr_12(), type = float), 
-    Variable('dr_hn0_vis', lambda hn : hn.dr_hn0_vis(), type = float), 
-
-    Variable('dphi_01', lambda hn : hn.dphi_01(), type = float), 
-    Variable('dphi_02', lambda hn : hn.dphi_02(), type = float), 
-    Variable('dphi_12', lambda hn : hn.dphi_12(), type = float), 
-    Variable('dphi_hn0_vis', lambda hn : hn.dphi_hn0_vis(), type = float), 
-
-    Variable('pt_01', lambda hn : hn.pt_01(), type = float), 
-    Variable('pt_02', lambda hn : hn.pt_02(), type = float), 
+    # Variable('pt_01', lambda hn : hn.pt_01(), type = float), 
+    # Variable('pt_02', lambda hn : hn.pt_02(), type = float), 
     Variable('pt_12', lambda hn : hn.pt_12(), type = float), 
-    Variable('pt_012', lambda hn : hn.pt_012(), type = float), 
+    # Variable('pt_012', lambda hn : hn.pt_012(), type = float), 
 
-    Variable('p_01', lambda hn : hn.p_01(), type = float), 
-    Variable('p_02', lambda hn : hn.p_02(), type = float), 
+    # Variable('p_01', lambda hn : hn.p_01(), type = float), 
+    # Variable('p_02', lambda hn : hn.p_02(), type = float), 
     Variable('p_12', lambda hn : hn.p_12(), type = float), 
-    Variable('p_012', lambda hn : hn.p_012(), type = float), 
+    # Variable('p_012', lambda hn : hn.p_012(), type = float), 
+
+    # Variable('deta_01', lambda hn : hn.deta_01(), type = float), 
+    # Variable('deta_02', lambda hn : hn.deta_02(), type = float), 
+    # Variable('deta_12', lambda hn : hn.deta_12(), type = float), 
+    Variable('eta_12', lambda hn : hn.eta_12(), type = float), 
+    # Variable('deta_hn0_vis', lambda hn : hn.deta_hn0_vis(), type = float), 
+
+    # Variable('dphi_01', lambda hn : hn.dphi_01(), type = float), 
+    # Variable('dphi_02', lambda hn : hn.dphi_02(), type = float), 
+    # Variable('dphi_12', lambda hn : hn.dphi_12(), type = float), 
+    Variable('phi_12', lambda hn : hn.phi_12(), type = float), 
+    # Variable('dphi_hn0_vis', lambda hn : hn.dphi_hn0_vis(), type = float), 
+
+    # Variable('dr_01', lambda hn : hn.dr_01(), type = float), 
+    # Variable('dr_02', lambda hn : hn.dr_02(), type = float), 
+    Variable('dr_12', lambda hn : hn.dr_12(), type = float), 
+    # Variable('dr_hn0_vis', lambda hn : hn.dr_hn0_vis(), type = float), 
+
+    # Variable('mass_01', lambda hn : hn.mass_01(), type = float), 
+    # Variable('mass_02', lambda hn : hn.mass_02(), type = float), 
+    Variable('mass_12', lambda hn : hn.mass_12(), type = float), 
+
+    # Variable('q_01', lambda hn : hn.q_01(), type = float), 
+    # Variable('q_02', lambda hn : hn.q_02(), type = float), 
+    Variable('q_12', lambda hn : hn.q_12(), type = float), 
+    # Variable('q_012', lambda hn : hn.q_012(), type = float), 
+
+    Variable('p_12_x', lambda hn : hn.p_12_x(), type = float), 
+    Variable('p_12_y', lambda hn : hn.p_12_y(), type = float), 
+    Variable('p_12_z', lambda hn : hn.p_12_z(), type = float), 
 ]
 
 # generic DisplacedMuon variables
@@ -251,7 +262,7 @@ electron_vars = [
     Variable('eid_loose', lambda ele : ele.cutBasedId('POG_SPRING15_25ns_v1_Loose')),
     Variable('eid_medium', lambda ele : ele.cutBasedId('POG_SPRING15_25ns_v1_Medium')),
     Variable('eid_tight', lambda ele : ele.cutBasedId('POG_SPRING15_25ns_v1_Tight')),
-    Variable('nhits_missing', lambda ele : ele.physObj.gsfTrack().hitPattern().numberOfHits(1), int),
+    Variable('nhits_missing', lambda ele : ele.physObj.gsfTrack().hitPattern().numberOfLostHits(1), int),
     Variable('pass_conv_veto', lambda ele : ele.passConversionVeto()),
     Variable('reliso05', lambda lep : lep.relIsoR(R=0.3, dBetaFactor=0.5, allCharged=0)),
     Variable('reliso05_04', lambda lep : lep.relIsoR(R=0.4, dBetaFactor=0.5, allCharged=0)),
@@ -313,6 +324,7 @@ muon_vars = [
     Variable('is_gl'      , lambda muon : muon.isGlobalMuon()                               ),
     Variable('is_tk'      , lambda muon : muon.isTrackerMuon()                              ),
     Variable('is_pf'      , lambda muon : muon.isPFMuon()                                   ),
+    Variable('simType'    , lambda muon : muon.simType()                                    ),
 ]
 
 # for an extensive summary of possibly interesting muon variables, have a look at

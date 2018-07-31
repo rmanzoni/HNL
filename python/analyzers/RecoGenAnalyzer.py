@@ -136,6 +136,7 @@ class RecoGenAnalyzer(Analyzer):
                 match, dr2 = bestMatch(ip,event.muons)
                 if dr2 < dr_cut * dr_cut: 
                     ip.bestmuon = match
+                    
             
             # matches the corresponding "slimmed tau" to the gen particle
             if len(event.taus):

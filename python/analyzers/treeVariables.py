@@ -49,6 +49,7 @@ event_vars = [
 hnlreco_vars = [
     Variable('n_sMu', lambda ev : ev.n_sMu, type=int),
     Variable('n_dSAMu', lambda ev : ev.n_dSAMu, type=int),
+    Variable('n_dGMu', lambda ev : ev.n_dGMu, type=int),
     Variable('n_dMu', lambda ev : ev.n_dMu, type=int),
     Variable('n_pairs', lambda ev : ev.n_pairs, type=int),
     Variable('n_dimuon', lambda ev : ev.n_dimuon, type=int),
@@ -66,7 +67,6 @@ check_hnlreco_vars = [
     Variable('flag_matchedHNLMinDr12', lambda ev : ev.matchedHNLMinDr12 ,  ),
     Variable('flag_matchedHNLMaxCosBPA', lambda ev : ev.matchedHNLMaxCosBPA ,  ),
     Variable('flag_IsThereTHEDimuon', lambda ev : ev.flag_IsThereTHEDimuon , ),
-    Variable('flag_MUCOsuccess', lambda ev : ev.flag_MUCOsuccess , ),
 
 
 ]
@@ -77,41 +77,39 @@ dimuon_vars = [
     Variable('disp2DFromBS', lambda hn : hn.disp2DFromBS(), type = float), 
     Variable('vtxFitChi2', lambda hn : hn.chi2(), type = float),
 
-    # Variable('pt_01', lambda hn : hn.pt_01(), type = float), 
-    # Variable('pt_02', lambda hn : hn.pt_02(), type = float), 
+    Variable('pt_01', lambda hn : hn.pt_01(), type = float), 
+    Variable('pt_02', lambda hn : hn.pt_02(), type = float), 
     Variable('pt_12', lambda hn : hn.pt_12(), type = float), 
-    # Variable('pt_012', lambda hn : hn.pt_012(), type = float), 
 
-    # Variable('p_01', lambda hn : hn.p_01(), type = float), 
-    # Variable('p_02', lambda hn : hn.p_02(), type = float), 
+    Variable('p_01', lambda hn : hn.p_01(), type = float), 
+    Variable('p_02', lambda hn : hn.p_02(), type = float), 
     Variable('p_12', lambda hn : hn.p_12(), type = float), 
-    # Variable('p_012', lambda hn : hn.p_012(), type = float), 
 
-    # Variable('deta_01', lambda hn : hn.deta_01(), type = float), 
-    # Variable('deta_02', lambda hn : hn.deta_02(), type = float), 
-    # Variable('deta_12', lambda hn : hn.deta_12(), type = float), 
+    Variable('deta_01', lambda hn : hn.deta_01(), type = float), 
+    Variable('deta_02', lambda hn : hn.deta_02(), type = float), 
+    Variable('deta_12', lambda hn : hn.deta_12(), type = float), 
     Variable('eta_12', lambda hn : hn.eta_12(), type = float), 
-    # Variable('deta_hn0_vis', lambda hn : hn.deta_hn0_vis(), type = float), 
+    Variable('deta_hn0_vis', lambda hn : hn.deta_hn0_vis(), type = float), 
 
-    # Variable('dphi_01', lambda hn : hn.dphi_01(), type = float), 
-    # Variable('dphi_02', lambda hn : hn.dphi_02(), type = float), 
-    # Variable('dphi_12', lambda hn : hn.dphi_12(), type = float), 
+    Variable('dphi_01', lambda hn : hn.dphi_01(), type = float), 
+    Variable('dphi_02', lambda hn : hn.dphi_02(), type = float), 
+    Variable('dphi_12', lambda hn : hn.dphi_12(), type = float), 
     Variable('phi_12', lambda hn : hn.phi_12(), type = float), 
-    # Variable('dphi_hn0_vis', lambda hn : hn.dphi_hn0_vis(), type = float), 
+    Variable('dphi_hn0_vis', lambda hn : hn.dphi_hn0_vis(), type = float), 
 
-    # Variable('dr_01', lambda hn : hn.dr_01(), type = float), 
-    # Variable('dr_02', lambda hn : hn.dr_02(), type = float), 
+    Variable('dr_01', lambda hn : hn.dr_01(), type = float), 
+    Variable('dr_02', lambda hn : hn.dr_02(), type = float), 
     Variable('dr_12', lambda hn : hn.dr_12(), type = float), 
-    # Variable('dr_hn0_vis', lambda hn : hn.dr_hn0_vis(), type = float), 
+    Variable('dr_hn0_vis', lambda hn : hn.dr_hn0_vis(), type = float), 
 
-    # Variable('mass_01', lambda hn : hn.mass_01(), type = float), 
-    # Variable('mass_02', lambda hn : hn.mass_02(), type = float), 
+    Variable('mass_01', lambda hn : hn.mass_01(), type = float), 
+    Variable('mass_02', lambda hn : hn.mass_02(), type = float), 
     Variable('mass_12', lambda hn : hn.mass_12(), type = float), 
 
-    # Variable('q_01', lambda hn : hn.q_01(), type = float), 
-    # Variable('q_02', lambda hn : hn.q_02(), type = float), 
+    Variable('q_01', lambda hn : hn.q_01(), type = float), 
+    Variable('q_02', lambda hn : hn.q_02(), type = float), 
     Variable('q_12', lambda hn : hn.q_12(), type = float), 
-    # Variable('q_012', lambda hn : hn.q_012(), type = float), 
+    Variable('q_012', lambda hn : hn.q_012(), type = float), 
 
     Variable('p_12_x', lambda hn : hn.p_12_x(), type = float), 
     Variable('p_12_y', lambda hn : hn.p_12_y(), type = float), 

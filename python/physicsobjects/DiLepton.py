@@ -34,7 +34,7 @@ class DiLepton(object):
         return self._leptons
 
     def lep0(self):
-        return self._prompt()
+        return self._prompt
 
     def lep1(self):
         return self.leptons()[0]
@@ -43,7 +43,10 @@ class DiLepton(object):
         return self.leptons()[1]
 
     def p4_01(self):
-        return self.lep0().p4() + self.lep1().p4()
+        try:
+            return self.lep0().p4() + self.lep1().p4()
+        except:
+            set_trace()
     
     def p4_02(self):
         return self.lep0().p4() + self.lep2().p4()
@@ -68,9 +71,6 @@ class DiLepton(object):
 
     def p_12(self):
         return self.p4_12().P()
-
-    def p_012(self):
-        return self.p4_012().p()
 
     def deta_01(self):
         return abs(self.lep0().eta() - self.lep1().p4().eta())
@@ -113,7 +113,7 @@ class DiLepton(object):
         return deltaR(self.lep1(), self.lep2()) 
 
     def dr_hn0_vis(self):
-        return sqrt(pow((self.eta_12()-self.lep0().eta()),2) - pow((self.phi_12()-self.lep0().phi()),2) ) 
+        return sqrt(pow((self.eta_12()-self.lep0().eta()),2) + pow((self.phi_12()-self.lep0().phi()),2) ) 
 
     def mass_01(self):
         return self.p4_01().mass()

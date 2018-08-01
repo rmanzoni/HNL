@@ -184,34 +184,6 @@ class RecoGenAnalyzer(Analyzer):
         # clear it before doing it again
         event.recoSv = None
 
-######### DEBUG VTX MADE OUT OF DSA MUONS
-#         if len(event.dsmuons) > 2:
-#             # clear the vector
-#             self.tofit.clear()
-#             # create a RecoChargedCandidate for each reconstructed lepton and flush it into the vector
-#             for il in [event.dsmuons[0], event.dsmuons[1]]:
-#                 # if the reco particle is a displaced thing, it does not have the p4() method, so let's build it 
-#                 myp4 = ROOT.Math.LorentzVector('<ROOT::Math::PxPyPzE4D<double> >')(il.px(), il.py(), il.pz(), math.sqrt(il.mass()**2 + il.px()**2 + il.py()**2 + il.pz()**2))
-#                 ic = ROOT.reco.RecoChargedCandidate() # instantiate a dummy RecoChargedCandidate
-#                 ic.setCharge(il.charge())             # assign the correct charge
-#                 ic.setP4(myp4)                        # assign the correct p4
-#                 ic.setTrack(il.track())               # set the correct TrackRef
-#                 if ic.track().isNonnull():            # check that the track is valid, there are photons around too!
-#                     self.tofit.push_back(ic)
-#             # further sanity check: two *distinct* tracks
-#             if self.tofit.size()==2 and self.tofit[0].track() != self.tofit[1].track():
-#                 # fit it!
-#                 svtree = self.vtxfit.Fit(self.tofit) # actual vertex fitting
-#                 # check that the vertex is good
-#                 if not svtree.get().isEmpty() and svtree.get().isValid():
-#                     svtree.movePointerToTheTop()
-#                     sv = svtree.currentDecayVertex().get()
-#                     event.recoSv = makeRecoVertex(sv, kinVtxTrkSize=2) # need to do some gymastics
-#                     print 'good double dsa vertex! vx=%.2f, vy=%.2f, vz=%.2f' %(event.recoSv.x(), event.recoSv.y(), event.recoSv.z()) 
-#                     import pdb ; pdb.set_trace()
-
-
-
         # let's refit the secondary vertex, IF both leptons match to some reco particle
         pair = [event.the_hnl.l1().bestmatch, event.the_hnl.l2().bestmatch]
         if (pair[0] != None) and\
@@ -257,15 +229,6 @@ class RecoGenAnalyzer(Analyzer):
                 cos = vperp.Dot(perp)/(vperp.R()*perp.R())
                 
                 event.recoSv.disp2DFromBS_cos = cos
-        
-#             if (abs(event.the_hnl.l1().pdgId()) == 11 or abs(event.the_hnl.l2().pdgId()) == 11):
-#                 if (abs(event.the_hnl.l1().bestmatch.pdgId()) == 11 or abs(event.the_hnl.l2().bestmatch.pdgId()) == 11):
-#                     if event.recoSv:
-#                         print 'lept1      \t', event.the_hnl.l1()
-#                         print 'lept2      \t', event.the_hnl.l2()
-#                         print 'lept1 match\t', event.the_hnl.l1().bestmatch
-#                         print 'lept2 match\t', event.the_hnl.l2().bestmatch                
-#                         import pdb ; pdb.set_trace()
     
         return True
     

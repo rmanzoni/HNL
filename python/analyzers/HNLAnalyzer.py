@@ -48,10 +48,10 @@ class HNLAnalyzer(Analyzer):
         self.counters.addCounter('HNL')
         count = self.counters.counter('HNL')
         count.register('all events')
+        count.register('trigger matched, prompt candidate found')
         count.register('good gen')
         count.register('pairs')
         count.register('dimuons')
-
         # initiate the VertexFitter
         self.vtxfit = VertexFitter()
 
@@ -272,13 +272,11 @@ class HNLAnalyzer(Analyzer):
 #            seltau3mu = [triplet for triplet in seltau3mu if len(triplet.hltmatched)>0]
             the_prompt_cand = [ele for ele in the_prompt_cand if len(ele.hltmatched)>0]
             
-#            if len(the_prompt_cand) == 0:
-#                return False #TODO  UNCOMMENT THIS IN FINAL VERSION
-#            self.counters.counter('Tau3Mu').inc('trigger matched')
+        if not the_prompt_cand:
+            return False #TODO  UNCOMMENT THIS IN FINAL VERSION
 
-#        event.seltau3mu = seltau3mu
+        self.counters.counter('HNL').inc('trigger matched, prompt candidate found')
 
-#        event.tau3mu = self.bestTriplet(event.seltau3mu)                        
         event.the_prompt_cand = the_prompt_cand
 
 #        return True #TODO  UNCOMMENT THIS IN FINAL VERSION
@@ -291,15 +289,15 @@ class HNLAnalyzer(Analyzer):
         #####################################################################################
         dMus = []
 
-        for smu in event.sMu:
-           dmu = smu
-           dmu.reco = 1 # sMu = 1, dSAMu = 2, dGMu = 3
-           dMus.append(dmu)
+        # for smu in event.sMu:
+           # dmu = smu
+           # dmu.reco = 1 # sMu = 1, dSAMu = 2, dGMu = 3
+           # dMus.append(dmu)
 
-        # for dsa in event.dSAMu:
-            # dmu = dsa
-            # dmu.reco = 2 # sMu = 1, dSAMu = 2, dGMu = 3
-            # dMus.append(dmu)
+        for dsa in event.dSAMu:
+            dmu = dsa
+            dmu.reco = 2 # sMu = 1, dSAMu = 2, dGMu = 3
+            dMus.append(dmu)
 
         # for dg in event.dGMu:
             # dmu = dg
@@ -310,26 +308,11 @@ class HNLAnalyzer(Analyzer):
         event.n_dMu = len(dMus) # important to understand how well the "Merge Reco Muons" process went. 
        
         #####################################################################################
-        # Qualify the performance of the MUCO
-        #####################################################################################
-        event.flag_MUCOsuccess = False    
-        l1matched=False
-        l2matched=False
-        if len(dMus) > 1 and hasattr(event.the_hnl.l1().bestmatch, 'physObj') and hasattr(event.the_hnl.l2().bestmatch,'physObj'):
-            for dmu in dMus:
-                if dmu.physObj == event.the_hnl.l1().bestmatch.physObj:
-                    l1matched = True
-                if dmu.physObj == event.the_hnl.l2().bestmatch.physObj:
-                    l2matched = True
-        if l1matched and l2matched:
-            event.flag_MUCOsuccess = True
-
-
-        #####################################################################################
         # select only events with good gen events
         #####################################################################################
         if not( abs(event.the_hnl.l1().pdgId())==13   and \
                 abs(event.the_hnl.l2().pdgId())==13   and \
+                abs(event.the_hnl.l0().pdgId())==11   and \
                 abs(event.the_hnl.l1().eta())   < 2.4 and \
                 abs(event.the_hnl.l2().eta())   < 2.4 and \
                 abs(event.the_hnl.l0().eta())   < 2.5): 
@@ -431,5 +414,9 @@ class HNLAnalyzer(Analyzer):
         #####################################################################################
         # TODO: Final Qualification and 'ok' to nominate the selection dimuon as HNL candidate
         #####################################################################################
+        # event.flag_HNLRecoSuccess = False
+        # if event.dMu1MaxCosBPA.charge() != event.dMu2MaxCosBPA.charge():
+            # event.flag_HNLRecoSuccess = True 
+    
 
         return True

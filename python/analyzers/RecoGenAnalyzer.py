@@ -123,12 +123,12 @@ class RecoGenAnalyzer(Analyzer):
                 if dr2 < dr_cut * dr_cut: 
                     ip.bestelectron = match
 
-            # matches the corresponding "slimmed photon" to the gen particle
-            if len(event.photons):
-                dr2 = np.inf
-                match, dr2 = bestMatch(ip,event.photons)
-                if dr2 < dr_cut * dr_cut: 
-                    ip.bestphoton = match
+            # # matches the corresponding "slimmed photon" to the gen particle
+            # if len(event.photons):
+                # dr2 = np.inf
+                # match, dr2 = bestMatch(ip,event.photons)
+                # if dr2 < dr_cut * dr_cut: 
+                    # ip.bestphoton = match
 
             # matches the corresponding "slimmed muon" to the gen particle
             if len(event.muons):
@@ -138,12 +138,12 @@ class RecoGenAnalyzer(Analyzer):
                     ip.bestmuon = match
                     
             
-            # matches the corresponding "slimmed tau" to the gen particle
-            if len(event.taus):
-                dr2 = np.inf
-                match, dr2 = bestMatch(ip,event.taus)
-                if dr2 < dr_cut * dr_cut: 
-                    ip.besttau = match
+            # # matches the corresponding "slimmed tau" to the gen particle
+            # if len(event.taus):
+                # dr2 = np.inf
+                # match, dr2 = bestMatch(ip,event.taus)
+                # if dr2 < dr_cut * dr_cut: 
+                    # ip.besttau = match
             
             # matches the corresponding "displaced stand alone muon" to the gen particle
             if len(event.dsmuons):

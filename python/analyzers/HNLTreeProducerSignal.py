@@ -4,7 +4,7 @@ from PhysicsTools.HeppyCore.utils.deltar import deltaR
 from CMGTools.HNL.utils.utils import isAncestor, displacement2D, displacement3D, makeRecoVertex # utility functions
 from pdb import set_trace
 
-class HNLTreeProducer(TreeProducerBase):
+class HNLTreeProducerSignal(TreeProducerBase):
     '''
     '''
     def declareVariables(self, setup):
@@ -40,10 +40,10 @@ class HNLTreeProducer(TreeProducerBase):
         # the prompt lepton
         self.bookParticle(self.tree, 'l0')
         self.bookEle      (self.tree, 'l0_matched_electron'    )
-        self.bookPhoton   (self.tree, 'l0_matched_photon'      )
+        # self.bookPhoton   (self.tree, 'l0_matched_photon'      )
         self.bookMuon     (self.tree, 'l0_matched_muon'        )
         self.bookMuonTrack(self.tree, 'l0_matched_muon_track'  )
-        self.bookTau      (self.tree, 'l0_matched_tau'         )
+        # self.bookTau      (self.tree, 'l0_matched_tau'         )
         self.bookParticle (self.tree, 'l0_matched_dsmuon'      )
         self.bookMuonTrack(self.tree, 'l0_matched_dsmuon_track')
         self.bookParticle (self.tree, 'l0_matched_dgmuon'      )
@@ -58,10 +58,10 @@ class HNLTreeProducer(TreeProducerBase):
         # displaced leptons (from the HN)
         self.bookParticle(self.tree, 'l1')
         self.bookEle      (self.tree, 'l1_matched_electron'    )
-        self.bookPhoton   (self.tree, 'l1_matched_photon'      )
+        # self.bookPhoton   (self.tree, 'l1_matched_photon'      )
         self.bookMuon     (self.tree, 'l1_matched_muon'        )
         self.bookMuonTrack(self.tree, 'l1_matched_muon_track'  )
-        self.bookTau      (self.tree, 'l1_matched_tau'         )
+        # self.bookTau      (self.tree, 'l1_matched_tau'         )
         self.bookParticle (self.tree, 'l1_matched_dsmuon'      )
         self.bookMuonTrack(self.tree, 'l1_matched_dsmuon_track')
         self.bookParticle (self.tree, 'l1_matched_dgmuon'      )
@@ -72,10 +72,10 @@ class HNLTreeProducer(TreeProducerBase):
 
         self.bookParticle(self.tree, 'l2')
         self.bookEle      (self.tree, 'l2_matched_electron'    )
-        self.bookPhoton   (self.tree, 'l2_matched_photon'      )
+        # self.bookPhoton   (self.tree, 'l2_matched_photon'      )
         self.bookMuon     (self.tree, 'l2_matched_muon'        )
         self.bookMuonTrack(self.tree, 'l2_matched_muon_track'  )
-        self.bookTau      (self.tree, 'l2_matched_tau'         )
+        # self.bookTau      (self.tree, 'l2_matched_tau'         )
         self.bookParticle (self.tree, 'l2_matched_dsmuon'      )
         self.bookMuonTrack(self.tree, 'l2_matched_dsmuon_track')
         self.bookParticle (self.tree, 'l2_matched_dgmuon'      )

@@ -151,6 +151,7 @@ hnl_vars = [
     Variable('hn_phi'         , lambda hn : getattr(hn, 'hnPhi'       , default)()),
     Variable('hn_q'           , lambda hn : getattr(hn, 'hnCharge'    , default)()),
     Variable('hn_m'           , lambda hn : getattr(hn, 'hnMass'      , default)()),
+    Variable('hn_MASS'        , lambda hn : getattr(hn, 'MASS'        , default)()),
     Variable('hn_sum_pt'      , lambda hn : getattr(hn, 'hnSumPt'     , default)()),
   
     Variable('hn_vis_pt'      , lambda hn : getattr(hn, 'hnVisPt'     , default)()),

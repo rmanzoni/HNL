@@ -52,13 +52,13 @@ def fitVertex(pair):
         ic.setCharge(il.charge())           # assign the correct charge
 
         if il.pdgId()%13==0:
-            if il.muonBestTrack().isNull(): # check that the track is valid. e.g. photons... 
+            # if il.muonBestTrack().isNull(): # check that the track is valid. e.g. photons... 
             # if il.standAloneMuon().isNull(): # check that the track is valid. e.g. photons... 
-            # if il.globalTrack().isNull(): # check that the track is valid. e.g. photons... 
+            if il.globalTrack().isNull(): # check that the track is valid. e.g. photons... 
                 continue
-            ic.setTrack(il.muonBestTrack())
+            # ic.setTrack(il.muonBestTrack())
             # ic.setTrack(il.standAloneMuon())
-            # ic.setTrack(il.globalTrack())
+            ic.setTrack(il.globalTrack())
         else:
             if il.track().isNull():
                 continue

@@ -17,7 +17,6 @@ from PhysicsTools.Heppy.analyzers.gen.LHEWeightAnalyzer  import LHEWeightAnalyze
 
 from CMGTools.H2TauTau.proto.analyzers.TriggerAnalyzer   import TriggerAnalyzer
 
-
 # import HNL analyzers:
 from CMGTools.HNL.analyzers.HNLAnalyzer           import HNLAnalyzer
 from CMGTools.HNL.analyzers.HNLTreeProducerSignal import HNLTreeProducerSignal

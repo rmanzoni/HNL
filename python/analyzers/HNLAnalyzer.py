@@ -178,7 +178,9 @@ class HNLAnalyzer(Analyzer):
        
         # nothing to do ? 
 
-
+        unpackedPatTrigger = cms.EDProducer("PATTriggerObjectStandAloneUnpacker",
+    patTriggerObjectsStandAlone = cms.InputTag( 'slimmedPatTrigger' ),
+    triggerResults              = cms.InputTag( 'TriggerResults::HLT' ),)
         #####################################################################################
         # Merge Reco Muons
         # Create an array of DisplacedMuon objects, summarizing all sMu, dSAMu and dGMu into a single array

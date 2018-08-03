@@ -189,7 +189,7 @@ sequence = cfg.Sequence([
     lheWeightAna, # les houche
     jsonAna,
     skimAna,
-#    triggerAna, # not yet working
+    triggerAna, # not yet working
     vertexAna,
     pileUpAna,
     HNLAnalyzer,

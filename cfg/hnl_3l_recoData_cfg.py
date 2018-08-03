@@ -20,6 +20,7 @@ from CMGTools.H2TauTau.proto.analyzers.TriggerAnalyzer   import TriggerAnalyzer
 
 # import HNL analyzers:
 from CMGTools.HNL.analyzers.HNLAnalyzer                import HNLAnalyzer
+from CMGTools.HNL.analyzers.JetAnalyzer                import JetAnalyzer
 from CMGTools.HNL.analyzers.HNLTreeProducerSignal      import HNLTreeProducerSignal
 from CMGTools.HNL.analyzers.HNLTreeProducerData        import HNLTreeProducerData  
 from CMGTools.HNL.analyzers.HNLGenTreeAnalyzer         import HNLGenTreeAnalyzer
@@ -39,7 +40,7 @@ from CMGTools.HNL.analyzers.CheckHNLAnalyzer           import CheckHNLAnalyzer
 
 # from CMGTools.HNL.samples.signal import disp1plus as samples
 # from CMGTools.HNL.samples.localsignal import HN3L_M_2p5_V_0p0173205080757_e_onshell
-from CMGTools.HNL.samples.localsignal import HN3L_M_2p5_V_0p0173205080757_e_onshell, HN3L_M_2p5_V_0p00707106781187_e_onshell
+from CMGTools.HNL.samples.localsignal import HN3L_M_2p5_V_0p0173205080757_e_onshell, HN3L_M_2p5_V_0p00707106781187_e_onshell #,TTJets_amcat
 from CMGTools.HNL.samples.samples_mc_2017 import TTJets_amcat
 
 cfg.MODE = 'ele'
@@ -161,6 +162,25 @@ CheckHNLAnalyzer = cfg.Analyzer(
     name='CheckHNLAnalyzer',
 )
 
+# see SM HTT TWiki
+# https://twiki.cern.ch/twiki/bin/viewauth/CMS/SMTauTau2016#Jet_Energy_Corrections
+jetAna = cfg.Analyzer(
+    JetAnalyzer,
+    name              = 'JetAnalyzer',
+    jetCol            = 'slimmedJets',
+    jetPt             = 20.,
+    jetEta            = 2.4,
+    relaxJetId        = False, # relax = do not apply jet ID
+    relaxPuJetId      = True, # relax = do not apply pileup jet ID
+    jerCorr           = False,
+    puJetIDDisc       = 'pileupJetId:fullDiscriminant',
+    recalibrateJets   = True,
+    applyL2L3Residual = 'MC',
+#    mcGT              = '80X_mcRun2_asymptotic_2016_TrancheIV_v8',
+#    dataGT            = '80X_dataRun2_2016SeptRepro_v7',
+    #jesCorr = 1., # Shift jet energy scale in terms of uncertainties (1 = +1 sigma)
+)
+
 ###################################################
 ###                  SEQUENCE                   ###
 ###################################################
@@ -173,6 +193,7 @@ sequence = cfg.Sequence([
     vertexAna,
     pileUpAna,
     HNLAnalyzer,
+    jetAna,
     HNLTreeProducerData,
 ])
 

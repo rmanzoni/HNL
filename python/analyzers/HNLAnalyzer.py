@@ -38,7 +38,9 @@ class HNLAnalyzer(Analyzer):
         self.handles['pvs']      = AutoHandle(('offlineSlimmedPrimaryVertices','','PAT'),'std::vector<reco::Vertex>')
         self.handles['svs']      = AutoHandle(('slimmedSecondaryVertices','','PAT'),'std::vector<reco::VertexCompositePtrCandidate>')
         self.handles['beamspot'] = AutoHandle(('offlineBeamSpot','','RECO'),'reco::BeamSpot')
-        self.handles['met']      = AutoHandle(('slimmedMETs','','PAT'),'std::vector<pat::MET>')
+        self.handles['pfmet']    = AutoHandle(('slimmedMETs','','PAT'),'std::vector<pat::MET>')
+        self.handles['puppimet'] = AutoHandle('slimmedMETsPuppi','std::vector<pat::MET>')
+        self.handles['jets']     = AutoHandle('slimmedJets','std::vector<pat::Jet>')
 
     def assignVtx(self, particles, vtx):    
         for ip in particles:
@@ -82,7 +84,11 @@ class HNLAnalyzer(Analyzer):
         event.beamspot    = self.handles['beamspot'].product()
 
         # make met object
-        event.met         = self.handles['met'].product().at(0)
+        event.pfmet         = self.handles['pfmet'].product().at(0)
+        event.puppimet      = self.handles['puppimet'].product().at(0)
+ 
+        # make jet object
+        miniaodjets = self.handles['jets'].product()
 
         # assign to the leptons the primary vertex, will be needed to compute a few quantities
         if len(event.pvs):
@@ -169,12 +175,9 @@ class HNLAnalyzer(Analyzer):
         #####################################################################################
         ###            MET ANALYZER
         #####################################################################################
+       
+        # nothing to do ? 
 
-        event.met.phi = met.phi()
-
-        #####################################################################################
-        ###            JET ANALYZER
-        #####################################################################################
 
         #####################################################################################
         # Merge Reco Muons
@@ -303,12 +306,136 @@ class HNLAnalyzer(Analyzer):
             event.dMu1MaxCosBPA = dimuonMaxCosBPA.lep1()
             event.dMu2MaxCosBPA = dimuonMaxCosBPA.lep2()
 
+            event.selectedLeptons = [event.the_prompt_cand, event.dMu1MaxCosBPA, event.dMu2MaxCosBPA]
 
-        #####################################################################################
-        # TODO: Final Qualification and 'ok' to nominate the selection dimuon as HNL candidate
-        #####################################################################################
-        # event.flag_HNLRecoSuccess = False
-        # if event.dMu1MaxCosBPA.charge() != event.dMu2MaxCosBPA.charge():
-            # event.flag_HNLRecoSuccess = True 
-    
+#       #####################################################################################
+#       ###            JET ANALYZER
+#       #####################################################################################
+#
+#       allJets = []
+#       event.jets = []
+#       event.bJets = []
+#       event.cleanJets = []
+#       event.cleanBJets = []
+#
+#       leptons = []
+#       if hasattr(event, 'selectedLeptons'):
+#           leptons = event.selectedLeptons
+#       if hasattr(self.cfg_ana, 'toClean'):
+#           leptons = getattr(event, self.cfg_ana.toClean)
+#           
+#       if hasattr(self.cfg_ana, 'leptonCollections'):
+#           for coll in self.cfg_ana.leptonCollections:
+#               leptons += self.handles[coll].product()
+#
+#       allJets = [Jet(jet) for jet in miniaodjets]
+#
+#       ###   CONFIG   ###
+#       self.recalibrateJets = False
+#
+#       if self.recalibrateJets:
+#           self.jetReCalibrator.correctAll(allJets, event.rho, delta=0., 
+#                                               addCorr=True, addShifts=True)
+#
+#       for jet in allJets:
+#           if self.testJet(jet):
+#               event.jets.append(jet)
+#           if self.testBJet(jet):
+#               event.bJets.append(jet)
+#
+#       self.counters.counter('jets').inc('all events')
+#
+#       event.cleanJets, dummy = cleanObjectCollection(event.jets,
+#                                                      masks=leptons,
+#                                                      deltaRMin=0.5)
+#       event.cleanBJets, dummy = cleanObjectCollection(event.bJets,
+#                                                       masks=leptons,
+#                                                       deltaRMin=0.5)
+#
+#       event.allLeptons = event.sMu + event.dSAmu + event.dGmu + event.ele #+event.tau
+#       # Attach matched jets to selected + other leptons
+#       if hasattr(event, 'allLeptons'):
+#           leptons = event.allLeptons
+#           
+#       pairs = matchObjectCollection(leptons, allJets, 0.5 * 0.5)
+#       # associating a jet to each lepton
+#       for lepton in leptons:
+#           jet = pairs[lepton]
+#           if jet is None:
+#               lepton.jet = lepton
+#           else:
+#               lepton.jet = jet
+#
+#       # associating a leg to each clean jet
+#       invpairs = matchObjectCollection(event.cleanJets, leptons, 99999.)
+#       for jet in event.cleanJets:
+#           leg = invpairs[jet]
+#           jet.leg = leg
+#
+#       for jet in event.cleanJets:
+#           jet.matchGenParton = 999.0
+#
+#       event.jets30 = [jet for jet in event.jets if jet.pt() > 30]
+#       event.cleanJets30 = [jet for jet in event.cleanJets if jet.pt() > 30]
+#       if len(event.jets30) >= 2:
+#           self.counters.counter('jets').inc('at least 2 good jets')
+#       if len(event.cleanJets30) >= 2:
+#           self.counters.counter('jets').inc('at least 2 clean jets')
+#       if len(event.cleanBJets) > 0:
+#           self.counters.counter('jets').inc('at least 1 b jet')
+#           if len(event.cleanBJets) > 1:
+#               self.counters.counter('jets').inc('at least 2 b jets')
+#               
+#       # save HTs
+#       event.HT_allJets     = sum([jet.pt() for jet in allJets          ])
+#       event.HT_jets        = sum([jet.pt() for jet in event.jets       ])
+#       event.HT_bJets       = sum([jet.pt() for jet in event.bJets      ])
+#       event.HT_cleanJets   = sum([jet.pt() for jet in event.cleanJets  ])
+#       event.HT_jets30      = sum([jet.pt() for jet in event.jets30     ])
+#       event.HT_cleanJets30 = sum([jet.pt() for jet in event.cleanJets30])
+#       #####################################################################################
+#       # TODO: Final Qualification and 'ok' to nominate the selection dimuon as HNL candidate
+#       #####################################################################################
+#       # event.flag_HNLRecoSuccess = False
+#       # if event.dMu1MaxCosBPA.charge() != event.dMu2MaxCosBPA.charge():
+#           # event.flag_HNLRecoSuccess = True 
+#   
         return True
+#
+#### from jet analyzer https://github.com/rmanzoni/cmgtools-lite/blob/825_HTT/H2TauTau/python/proto/analyzers/JetAnalyzer.py#L238
+#
+#   def testJetID(self, jet):
+#       jet.puJetIdPassed = jet.puJetId()
+#       jet.pfJetIdPassed = jet.jetID("POG_PFID_Loose")
+#       puJetId = self.cfg_ana.relaxPuJetId or jet.puJetIdPassed 
+#       pfJetId = self.cfg_ana.relaxJetId or jet.pfJetIdPassed 
+#       return puJetId and pfJetId
+#
+#   def testJet(self, jet):
+#       pt = jet.pt()
+#       if hasattr(self.cfg_ana, 'ptUncTolerance') and self.cfg_ana.ptUncTolerance:
+#           pt = max(pt, pt * jet.corrJECUp/jet.corr, pt * jet.corrJECDown/jet.corr)
+#       return pt > self.cfg_ana.jetPt and \
+#           abs( jet.eta() ) < self.cfg_ana.jetEta and \
+#           self.testJetID(jet)
+#
+#   def testBJet(self, jet, csv_cut=0.8484):
+#       # medium csv working point
+#       # https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation74X
+#       jet.btagMVA = jet.btag('pfCombinedInclusiveSecondaryVertexV2BJetTags')
+#       # jet.btagFlag = jet.btagMVA > csv_cut
+#
+#       # Use the following once we start applying data-MC scale factors:
+#       jet.btagFlag = self.btagSF.isBTagged(
+#           pt=jet.pt(),
+#           eta=jet.eta(),
+#           csv=jet.btag("pfCombinedInclusiveSecondaryVertexV2BJetTags"),
+#           jetflavor=abs(jet.partonFlavour()),
+#           is_data=not self.cfg_comp.isMC,
+#           csv_cut=csv_cut
+#       )
+#
+#       return self.testJet(jet) and \
+#           abs(jet.eta()) < 2.4 and \
+#           jet.btagFlag and \
+#           self.testJetID(jet)

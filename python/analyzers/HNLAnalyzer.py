@@ -107,7 +107,7 @@ class HNLAnalyzer(Analyzer):
         if cfg.MODE == 'ele':
             matchable_ele = [ele for ele in event.ele]
             # selection
-            ele_sel_eta = 2.5; ele_sel_pt = 3; ele_sel_vtx = 0.2 
+            ele_sel_eta = 2.5; ele_sel_pt = 30; ele_sel_vtx = 0.2 
             # match collections
             matchable_ele_sel_pt = [ele for ele in matchable_ele if (ele.pt() > ele_sel_pt)] 
             matchable_ele_sel_eta = [ele for ele in matchable_ele if (abs(ele.eta()) < ele_sel_eta)] 
@@ -150,21 +150,32 @@ class HNLAnalyzer(Analyzer):
 #           # AND EVALUATING ANALYZER 
             if the_prompt_cand in ele_cand:
                 event.ele.remove(the_prompt_cand)
-                if hasattr(event.the_hnl.l0().bestmatch, 'physObj'):
-                    if  the_prompt_cand.physObj == event.the_hnl.l0().bestmatch.physObj:
-                        event.prompt_ana_success = 1
-                    else: event.prompt_ana_success = -11 # FAKE ELECTRONS
+#               if hasattr(event.the_hnl.l0().bestmatch, 'physObj'):
+#                   if  the_prompt_cand.physObj == event.the_hnl.l0().bestmatch.physObj:
+#                       event.prompt_ana_success = 1
+#                   else: event.prompt_ana_success = -11 # FAKE ELECTRONS
             if the_prompt_cand in mu_cand:
                 event.muons.remove(the_prompt_cand)
-                if hasattr(event.the_hnl.l0().bestmatch, 'physObj'):
-                    if  the_prompt_cand.physObj == event.the_hnl.l0().bestmatch.physObj:
-                        event.prompt_ana_success = 1
-                else: event.prompt_ana_success = -13 # FAKE MUONS
+#               if hasattr(event.the_hnl.l0().bestmatch, 'physObj'):
+#                   if  the_prompt_cand.physObj == event.the_hnl.l0().bestmatch.physObj:
+#                       event.prompt_ana_success = 1
+#               else: event.prompt_ana_success = -13 # FAKE MUONS
             if the_prompt_cand == None:
                 return False #TODO TURN ON FOR DATA 
 
         event.the_prompt_cand = the_prompt_cand 
        
+
+        #####################################################################################
+        ###            MET ANALYZER
+        #####################################################################################
+
+        event.met.phi = met.phi()
+
+        #####################################################################################
+        ###            JET ANALYZER
+        #####################################################################################
+
         #####################################################################################
         # Merge Reco Muons
         # Create an array of DisplacedMuon objects, summarizing all sMu, dSAMu and dGMu into a single array
@@ -193,20 +204,20 @@ class HNLAnalyzer(Analyzer):
         #####################################################################################
         # select only events with good gen events
         #####################################################################################
-        if not( abs(event.the_hnl.l1().pdgId())==13   and \
-                abs(event.the_hnl.l2().pdgId())==13   and \
-                abs(event.the_hnl.l0().pdgId())==11   and \
-                abs(event.the_hnl.l1().eta())   < 2.4 and \
-                abs(event.the_hnl.l2().eta())   < 2.4 and \
-                abs(event.the_hnl.l0().eta())   < 2.5): 
-            return False
-
-        if (not hasattr(event.the_hnl.l1(), 'bestmatch')) or (event.the_hnl.l1().bestmatch is None):
-            return False
-        if (not hasattr(event.the_hnl.l2(), 'bestmatch')) or (event.the_hnl.l2().bestmatch is None):
-            return False
-
-        self.counters.counter('HNL').inc('good gen')
+#       if not( abs(event.the_hnl.l1().pdgId())==13   and \
+#               abs(event.the_hnl.l2().pdgId())==13   and \
+#               abs(event.the_hnl.l0().pdgId())==11   and \
+#               abs(event.the_hnl.l1().eta())   < 2.4 and \
+#               abs(event.the_hnl.l2().eta())   < 2.4 and \
+#               abs(event.the_hnl.l0().eta())   < 2.5): 
+#           return False
+#
+#       if (not hasattr(event.the_hnl.l1(), 'bestmatch')) or (event.the_hnl.l1().bestmatch is None):
+#           return False
+#       if (not hasattr(event.the_hnl.l2(), 'bestmatch')) or (event.the_hnl.l2().bestmatch is None):
+#           return False
+#
+#       self.counters.counter('HNL').inc('good gen')
 
         # #####################################################################################
         # Preselection for the reco muons before pairing them
@@ -251,8 +262,8 @@ class HNLAnalyzer(Analyzer):
             for dimu in dimuons:
                 dMu1 = dimu.lep1()
                 dMu2 = dimu.lep2() 
-                if (dMu1.physObj == event.the_hnl.l1().bestmatch.physObj or dMu1.physObj == event.the_hnl.l2().bestmatch.physObj) and (dMu2.physObj == event.the_hnl.l1().bestmatch.physObj or dMu2.physObj == event.the_hnl.l2().bestmatch.physObj):
-                    event.flag_IsThereTHEDimuon = True
+#                if (dMu1.physObj == event.the_hnl.l1().bestmatch.physObj or dMu1.physObj == event.the_hnl.l2().bestmatch.physObj) and (dMu2.physObj == event.the_hnl.l1().bestmatch.physObj or dMu2.physObj == event.the_hnl.l2().bestmatch.physObj):
+#                    event.flag_IsThereTHEDimuon = True
 
 
         #####################################################################################

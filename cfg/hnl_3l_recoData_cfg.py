@@ -40,8 +40,8 @@ from CMGTools.HNL.analyzers.CheckHNLAnalyzer           import CheckHNLAnalyzer
 
 # from CMGTools.HNL.samples.signal import disp1plus as samples
 # from CMGTools.HNL.samples.localsignal import HN3L_M_2p5_V_0p0173205080757_e_onshell
-from CMGTools.HNL.samples.localsignal import HN3L_M_2p5_V_0p0173205080757_e_onshell, HN3L_M_2p5_V_0p00707106781187_e_onshell #,TTJets_amcat
-from CMGTools.HNL.samples.samples_mc_2017 import TTJets_amcat
+from CMGTools.HNL.samples.localsignal import HN3L_M_2p5_V_0p0173205080757_e_onshell, HN3L_M_2p5_V_0p00707106781187_e_onshell ,TTJets_amcat
+#from CMGTools.HNL.samples.samples_mc_2017 import TTJets_amcat
 
 cfg.MODE = 'ele'
 

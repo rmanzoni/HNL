@@ -147,6 +147,10 @@ hnl_vars = [
     Variable('w_vis_sum_pt'   , lambda hn : getattr(hn, 'visSumPt'    , default)()),
   
     Variable('hn_pt'          , lambda hn : getattr(hn, 'hnPt'        , default)()),
+    Variable('hn_px'          , lambda hn : getattr(hn, 'hnPx'        , default)()),
+    Variable('hn_py'          , lambda hn : getattr(hn, 'hnPy'        , default)()),
+    Variable('hn_pz'          , lambda hn : getattr(hn, 'hnPz'        , default)()),
+    Variable('hn_E'          , lambda hn : getattr(hn, 'hnE'        , default)()),
     Variable('hn_eta'         , lambda hn : getattr(hn, 'hnEta'       , default)()),
     Variable('hn_phi'         , lambda hn : getattr(hn, 'hnPhi'       , default)()),
     Variable('hn_q'           , lambda hn : getattr(hn, 'hnCharge'    , default)()),

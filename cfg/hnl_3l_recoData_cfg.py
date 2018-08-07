@@ -64,10 +64,10 @@ samples = [TTJets_amcat,HN3L_M_2p5_V_0p00707106781187_e_onshell, HN3L_M_2p5_V_0p
 
 for sample in samples:
     sample.triggers  = ['HLT_Ele27_WPTight_Gsf_v%d'          %i for i in range(1, 15)]
-    sample.triggers += ['HLT_Ele32_WPTight_Gsf_v%d'          %i for i in range(4, 5)]
-    sample.triggers += ['HLT_Ele35_WPTight_Gsf_v%d'          %i for i in range(4, 5)]
-    sample.triggers += ['HLT_Ele115_CaloIdVT_GsfTrkIdT_v%d'  %i for i in range(4, 5)]
-    sample.triggers += ['HLT_Ele135_CaloIdVT_GsfTrkIdT_v%d'  %i for i in range(4, 5)]
+    sample.triggers += ['HLT_Ele32_WPTight_Gsf_v%d'          %i for i in range(4, 15)]
+    sample.triggers += ['HLT_Ele35_WPTight_Gsf_v%d'          %i for i in range(4, 15)]
+    sample.triggers += ['HLT_Ele115_CaloIdVT_GsfTrkIdT_v%d'  %i for i in range(4, 15)]
+    sample.triggers += ['HLT_Ele135_CaloIdVT_GsfTrkIdT_v%d'  %i for i in range(4, 15)]
     # sample.triggers  = ['HLT_IsoMu24_v%d'                    %i for i in range(4, 5)] #muon trigger
     # sample.triggers += ['HLT_IsoMu27_v%d'                    %i for i in range(4, 5)] #muon trigger
     # sample.triggers += ['HLT_Mu50_v%d'                       %i for i in range(4, 5)] #muon trigger
@@ -128,7 +128,16 @@ pileUpAna = cfg.Analyzer(
 
 # for each path specify which filters you want the muons to match to
 triggers_and_filters = OrderedDict()
-triggers_and_filters['HLT_IsoMu24'] = ['hltL3crIsoL1sMu22L1f0L2f10QL3f24QL3trkIsoFiltered0p09'                                                                                                                ]
+triggers_and_filters['HLT_IsoMu24'] = ['hltL3crIsoL1sSingleMu22L1f0L2f10QL3f24QL3trkIsoFiltered0p07']
+triggers_and_filters['HLT_IsoMu27'] = ['hltL3crIsoL1sMu22Or25L1f0L2f10QL3f27QL3trkIsoFiltered0p07']
+triggers_and_filters['HLT_Mu50']    = ['hltL3fL1sMu22Or25L1f0L2f10QL3Filtered50Q']
+
+triggers_and_filters['HLT_Ele27_WPTight_Gsf']         = ['hltEle27WPTightGsfTrackIsoFilter']
+triggers_and_filters['HLT_Ele32_WPTight_Gsf']         = ['hltEle32WPTightGsfTrackIsoFilter']
+triggers_and_filters['HLT_Ele35_WPTight_Gsf']         = ['hltEle35noerWPTightGsfTrackIsoFilter']
+triggers_and_filters['HLT_Ele115_CaloIdVT_GsfTrkIdT'] = ['hltEle115CaloIdVTGsfTrkIdTGsfDphiFilter']
+triggers_and_filters['HLT_Ele135_CaloIdVT_GsfTrkIdT'] = ['hltEle135CaloIdVTGsfTrkIdTGsfDphiFilter']
+
 
 HNLAnalyzer = cfg.Analyzer(
     HNLAnalyzer,
@@ -172,7 +181,7 @@ jetAna = cfg.Analyzer(
     jetEta            = 2.4,
     relaxJetId        = False, # relax = do not apply jet ID
     relaxPuJetId      = True, # relax = do not apply pileup jet ID
-    jerCorr           = False,
+    jerCorr           = True,
     puJetIDDisc       = 'pileupJetId:fullDiscriminant',
     recalibrateJets   = True,
     applyL2L3Residual = 'MC',
@@ -189,7 +198,7 @@ sequence = cfg.Sequence([
     lheWeightAna, # les houche
     jsonAna,
     skimAna,
-    triggerAna, # not yet working
+#    triggerAna, # not yet working
     vertexAna,
     pileUpAna,
     HNLAnalyzer,

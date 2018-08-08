@@ -20,6 +20,7 @@ from CMGTools.H2TauTau.proto.analyzers.TriggerAnalyzer   import TriggerAnalyzer
 
 # import HNL analyzers:
 from CMGTools.HNL.analyzers.HNLAnalyzer                import HNLAnalyzer
+#from CMGTools.HNL.analyzers.JetAnalyzer                import JetAnalyzer
 from CMGTools.H2TauTau.proto.analyzers.JetAnalyzer     import JetAnalyzer
 from CMGTools.HNL.analyzers.HNLTreeProducerSignal      import HNLTreeProducerSignal
 from CMGTools.HNL.analyzers.HNLTreeProducerData        import HNLTreeProducerData  
@@ -109,6 +110,8 @@ triggerAna = cfg.Analyzer(
     name='TriggerAnalyzer',
     addTriggerObjects=True,
     requireTrigger=True,
+    triggerObjectsHandle=['slimmedPatTrigger','',''],   # for bkg MC
+#    triggerObjectsHandle=['selectedPatTrigger','',''],  # for signal MC
     usePrescaled=False
 )
 
@@ -198,7 +201,7 @@ sequence = cfg.Sequence([
     lheWeightAna, # les houche
     jsonAna,
     skimAna,
-#    triggerAna, # not yet working
+    triggerAna, # not yet working
     vertexAna,
     pileUpAna,
     HNLAnalyzer,

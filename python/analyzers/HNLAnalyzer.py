@@ -162,21 +162,23 @@ class HNLAnalyzer(Analyzer):
 #           # REMOVING PROMPT LEPTON FROM MATCHES
 #           # AND EVALUATING ANALYZER 
             if the_prompt_cand in ele_cand:
-                event.ele.remove(the_prompt_cand)
+                for i in event.ele:
+                    if i.physObj == the_prompt_cand.physObj: event.ele.remove(i)
                 if cfg.DataSignalMode == 'signal':
                     if hasattr(event.the_hnl.l0().bestmatch, 'physObj'):
                         if  the_prompt_cand.physObj == event.the_hnl.l0().bestmatch.physObj:
                             event.prompt_ana_success = 1
                         else: event.prompt_ana_success = -11 # FAKE ELECTRONS
             if the_prompt_cand in mu_cand:
-                event.muons.remove(the_prompt_cand)
+                for i in event.muons:
+                    if i.physObj == the_prompt_cand.physObj: event.muons.remove(i)
                 if cfg.DataSignalMode == 'signal':
                     if hasattr(event.the_hnl.l0().bestmatch, 'physObj'):
                         if  the_prompt_cand.physObj == event.the_hnl.l0().bestmatch.physObj:
                             event.prompt_ana_success = 1
                     else: event.prompt_ana_success = -13 # FAKE MUONS
             if the_prompt_cand == None:
-                return False #TODO TURN ON FOR DATA 
+                return False #TODO TURN ON FOR DATA
 
         event.the_prompt_cand = the_prompt_cand 
        

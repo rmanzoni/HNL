@@ -112,15 +112,17 @@ class HNLAnalyzer(Analyzer):
         ele_cand = []
         if cfg.MODE == 'ele':
             matchable_ele = [ele for ele in event.ele]
-#            for ele in matchable_ele: ele.event = event # for MVA TODO MAKES SENSE? NO! 
+            for ele in matchable_ele: ele.event = event.input.object() # for MVA 
             # selection
             ele_sel_eta = 2.5; ele_sel_pt = 30; ele_sel_vtx = 0.2 
             # match collections
             matchable_ele_sel_pt = [ele for ele in matchable_ele if (ele.pt() > ele_sel_pt)] 
             matchable_ele_sel_eta = [ele for ele in matchable_ele if (abs(ele.eta()) < ele_sel_eta)] 
             # https://github.com/rmanzoni/cmgtools-lite/blob/825_HTT/H2TauTau/python/proto/analyzers/TauEleAnalyzer.py#L193
-            matchable_ele_sel_id = [ele for ele in matchable_ele if (ele.mvaIDRun2('NonTrigSpring15MiniAOD', 'POG90') == True)] 
+#            matchable_ele_sel_id = [ele for ele in matchable_ele if (ele.mvaIDRun2('NonTrigSpring15MiniAOD', 'POG90') == True)] 
 #            matchable_ele_sel_id = [ele for ele in matchable_ele if (ele.mvaIDRun2('Fall17noIso', 'Loose') == True)] # FIXME THIS DOES NOT WORK
+#            set_trace()
+            matchable_ele_sel_id = [ele for ele in matchable_ele if (ele.electronID("MVA_ID_Iso_Fall17_Loose") == True)] # FIXME THIS DOES NOT WORK
 #            print(ele.gsfTrack())
             matchable_ele_sel_vtx = [ele for ele in matchable_ele if abs(ele.dz()) < ele_sel_vtx] # TODO what about dxy component ?
             # https://github.com/rmanzoni/cmgtools-lite/blob/825_HTT/H2TauTau/python/proto/analyzers/TauEleAnalyzer.py#L104

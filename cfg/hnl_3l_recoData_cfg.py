@@ -110,8 +110,8 @@ triggerAna = cfg.Analyzer(
     name='TriggerAnalyzer',
     addTriggerObjects=True,
     requireTrigger=True,
-    triggerObjectsHandle=['slimmedPatTrigger','',''],   # for bkg MC
-#    triggerObjectsHandle=['selectedPatTrigger','',''],  # for signal MC
+#    triggerObjectsHandle=['slimmedPatTrigger','',''],   # for bkg MC
+    triggerObjectsHandle=['selectedPatTrigger','',''],  # for signal MC
     usePrescaled=False
 )
 
@@ -201,7 +201,7 @@ sequence = cfg.Sequence([
     lheWeightAna, # les houche
     jsonAna,
     skimAna,
-    triggerAna, # not yet working
+    triggerAna, 
     vertexAna,
     pileUpAna,
     HNLAnalyzer,
@@ -214,8 +214,8 @@ sequence = cfg.Sequence([
 ###################################################
 if not production:
     # comp                 = HN3L_M_2p5_V_0p0173205080757_e_onshell
-    # comp                 = HN3L_M_2p5_V_0p00707106781187_e_onshell
-    comp                 = TTJets_amcat
+    comp                 = HN3L_M_2p5_V_0p00707106781187_e_onshell
+    # comp                 = TTJets_amcat
     # comp                 = samples
     selectedComponents   = [comp]
     comp.splitFactor     = 1

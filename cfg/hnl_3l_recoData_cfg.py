@@ -20,7 +20,7 @@ from CMGTools.H2TauTau.proto.analyzers.TriggerAnalyzer   import TriggerAnalyzer
 
 # import HNL analyzers:
 from CMGTools.HNL.analyzers.HNLAnalyzer                import HNLAnalyzer
-from CMGTools.HNL.analyzers.JetAnalyzer                import JetAnalyzer
+from CMGTools.H2TauTau.proto.analyzers.JetAnalyzer     import JetAnalyzer
 from CMGTools.HNL.analyzers.HNLTreeProducerSignal      import HNLTreeProducerSignal
 from CMGTools.HNL.analyzers.HNLTreeProducerData        import HNLTreeProducerData  
 from CMGTools.HNL.analyzers.HNLGenTreeAnalyzer         import HNLGenTreeAnalyzer

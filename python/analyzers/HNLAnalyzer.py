@@ -10,8 +10,11 @@ import PhysicsTools.HeppyCore.framework.config       as cfg
 from PhysicsTools.Heppy.analyzers.core.Analyzer      import Analyzer
 from PhysicsTools.Heppy.analyzers.core.AutoHandle    import AutoHandle
 from PhysicsTools.Heppy.physicsobjects.GenParticle   import GenParticle
+from PhysicsTools.Heppy.physicsobjects.Photon        import Photon
+from PhysicsTools.Heppy.physicsobjects.Tau           import Tau
 from PhysicsTools.Heppy.physicsobjects.Muon          import Muon
 from PhysicsTools.Heppy.physicsobjects.Electron      import Electron
+from PhysicsTools.Heppy.physicsobjects.Jet           import Jet
 from PhysicsTools.Heppy.physicsobjects.PhysicsObject import PhysicsObject
 from CMGTools.HNL.utils.utils                        import isAncestor, displacement2D, displacement3D, makeRecoVertex, fitVertex
 from PhysicsTools.HeppyCore.utils.deltar             import deltaR, deltaPhi
@@ -38,7 +41,11 @@ class HNLAnalyzer(Analyzer):
         self.handles['pvs']      = AutoHandle(('offlineSlimmedPrimaryVertices','','PAT'),'std::vector<reco::Vertex>')
         self.handles['svs']      = AutoHandle(('slimmedSecondaryVertices','','PAT'),'std::vector<reco::VertexCompositePtrCandidate>')
         self.handles['beamspot'] = AutoHandle(('offlineBeamSpot','','RECO'),'reco::BeamSpot')
-        self.handles['met']      = AutoHandle(('slimmedMETs','','PAT'),'std::vector<pat::MET>')
+        self.handles['pfmet']      = AutoHandle(('slimmedMETs','','PAT'),'std::vector<pat::MET>')
+        self.handles['puppimet']      = AutoHandle('slimmedMETsPuppi','std::vector<pat::MET>')
+        self.handles['jets']      = AutoHandle('slimmedJets','std::vector<pat::Jet>')
+        self.handles['photons'] = AutoHandle(('slimmedPhotons','','PAT'),'std::vector<pat::Photon>')
+        self.handles['taus'] = AutoHandle(('slimmedTaus', '','PAT'), 'std::vector<pat::Tau>')
 
     def assignVtx(self, particles, vtx):    
         for ip in particles:
@@ -71,10 +78,13 @@ class HNLAnalyzer(Analyzer):
         # produce collections and map our objects to convenient Heppy objects
         #####################################################################################
 
+        # make lepton objects
         event.ele         = map(Electron,self.handles['ele'].product())
         event.sMu         = map(Muon,self.handles['sMu'].product())
         event.dSAMu       = self.buildDisplacedMuons(self.handles['dSAMu'].product())
         event.dGMu        = self.buildDisplacedMuons(self.handles['dGMu' ].product())
+        event.photons     = map(Photon       , self.handles  ['photons'    ].product())
+        event.taus        = map(Tau          , self.handles  ['taus'       ].product())
 
         # make vertex objects 
         event.pvs         = self.handles['pvs'     ].product()
@@ -82,7 +92,12 @@ class HNLAnalyzer(Analyzer):
         event.beamspot    = self.handles['beamspot'].product()
 
         # make met object
-        event.met         = self.handles['met'].product().at(0)
+        event.pfmet         = self.handles['pfmet'].product().at(0)
+        event.puppimet         = self.handles['puppimet'].product().at(0)
+
+        # make jet object
+        jets = self.handles['jets'].product()        
+
 
         # assign to the leptons the primary vertex, will be needed to compute a few quantities
         if len(event.pvs):
@@ -104,10 +119,10 @@ class HNLAnalyzer(Analyzer):
         
         # ELECTRONS
         ele_cand = []
-        if cfg.MODE == 'ele':
+        if cfg.PromptLeptonMode == 'ele':
             matchable_ele = [ele for ele in event.ele]
             # selection
-            ele_sel_eta = 2.5; ele_sel_pt = 3; ele_sel_vtx = 0.2 
+            ele_sel_eta = 2.5; ele_sel_pt = 30; ele_sel_vtx = 0.2 
             # match collections
             matchable_ele_sel_pt = [ele for ele in matchable_ele if (ele.pt() > ele_sel_pt)] 
             matchable_ele_sel_eta = [ele for ele in matchable_ele if (abs(ele.eta()) < ele_sel_eta)] 
@@ -121,7 +136,7 @@ class HNLAnalyzer(Analyzer):
 
         # MUONS
         mu_cand = []
-        if cfg.MODE == 'mu':
+        if cfg.PromptLeptonMode == 'mu':
             matchable_mu = [mu for mu in event.sMu] 
             # selection
             mu_sel_eta = 2.4; mu_sel_pt = 3; mu_sel_vtx = 0.2 
@@ -129,18 +144,16 @@ class HNLAnalyzer(Analyzer):
             matchable_mu_sel_pt = [mu for mu in matchable_mu if (mu.pt() > mu_sel_pt)] 
             matchable_mu_sel_eta = [mu for mu in matchable_mu if (abs(mu.eta()) < mu_sel_eta)] 
             matchable_mu_sel_id = [mu for mu in matchable_mu if (mu.looseId() == True)] 
-            # https://github.com/rmanzoni/cmgtools-lite/blob/825_HTT/H2TauTau/python/proto/analyzers/TauEleAnalyzer.py#L193
             matchable_mu_sel_vtx = [mu for mu in matchable_mu if abs(mu.dz()) < mu_sel_vtx] # TODO what about dxy component ?
-            # https://github.com/rmanzoni/cmgtools-lite/blob/825_HTT/H2TauTau/python/proto/analyzers/TauEleAnalyzer.py#L104
             mu_cand = [mu for mu in matchable_mu if (mu in matchable_mu_sel_pt and mu in matchable_mu_sel_eta and mu in matchable_mu_sel_id and mu in matchable_mu_sel_vtx)]
 
         # PROMPT CANDIDATE
         prompt_cand = ele_cand + mu_cand # ONE IS ALWAYS EMPTY; check this:
-        if cfg.MODE == 'mu' and not len(ele_cand) == 0: print('ERROR: cfg.MODE = mu but len(ele_can) != 0')
-        if cfg.MODE == 'ele' and not len(mu_cand) == 0: print('ERROR: cfg.MODE = ele but len(mu_can) != 0')
+        if cfg.PromptLeptonMode == 'mu' and not len(ele_cand) == 0: print('ERROR: cfg.PromptLeptonMode = mu but len(ele_can) != 0')
+        if cfg.PromptLeptonMode == 'ele' and not len(mu_cand) == 0: print('ERROR: cfg.PromptLeptonMode = ele but len(mu_can) != 0')
         the_prompt_cand = None
-        # EVALUATING THE PROMPT SELECTION: EFF / PUR
-        event.prompt_ana_success = -99 # NO RECO FOUND
+
+        if cfg.DataSignalMode == 'signal': event.prompt_ana_success = -99 # NO RECO FOUND
         if not len(prompt_cand): return False # TODO TURN THIS ON FOR DATA
         if len(prompt_cand): 
         # selection: pick candidate with highest pt 
@@ -150,16 +163,18 @@ class HNLAnalyzer(Analyzer):
 #           # AND EVALUATING ANALYZER 
             if the_prompt_cand in ele_cand:
                 event.ele.remove(the_prompt_cand)
-                if hasattr(event.the_hnl.l0().bestmatch, 'physObj'):
-                    if  the_prompt_cand.physObj == event.the_hnl.l0().bestmatch.physObj:
-                        event.prompt_ana_success = 1
-                    else: event.prompt_ana_success = -11 # FAKE ELECTRONS
+                if cfg.DataSignalMode == 'signal':
+                    if hasattr(event.the_hnl.l0().bestmatch, 'physObj'):
+                        if  the_prompt_cand.physObj == event.the_hnl.l0().bestmatch.physObj:
+                            event.prompt_ana_success = 1
+                        else: event.prompt_ana_success = -11 # FAKE ELECTRONS
             if the_prompt_cand in mu_cand:
                 event.muons.remove(the_prompt_cand)
-                if hasattr(event.the_hnl.l0().bestmatch, 'physObj'):
-                    if  the_prompt_cand.physObj == event.the_hnl.l0().bestmatch.physObj:
-                        event.prompt_ana_success = 1
-                else: event.prompt_ana_success = -13 # FAKE MUONS
+                if cfg.DataSignalMode == 'signal':
+                    if hasattr(event.the_hnl.l0().bestmatch, 'physObj'):
+                        if  the_prompt_cand.physObj == event.the_hnl.l0().bestmatch.physObj:
+                            event.prompt_ana_success = 1
+                    else: event.prompt_ana_success = -13 # FAKE MUONS
             if the_prompt_cand == None:
                 return False #TODO TURN ON FOR DATA 
 
@@ -193,28 +208,31 @@ class HNLAnalyzer(Analyzer):
         #####################################################################################
         # select only events with good gen events
         #####################################################################################
-        if not( abs(event.the_hnl.l1().pdgId())==13   and \
-                abs(event.the_hnl.l2().pdgId())==13   and \
-                abs(event.the_hnl.l0().pdgId())==11   and \
-                abs(event.the_hnl.l1().eta())   < 2.4 and \
-                abs(event.the_hnl.l2().eta())   < 2.4 and \
-                abs(event.the_hnl.l0().eta())   < 2.5): 
-            return False
+        if cfg.DataSignalMode == 'signal':
+            if not( abs(event.the_hnl.l1().pdgId())==13   and \
+                    abs(event.the_hnl.l2().pdgId())==13   and \
+                    # abs(event.the_hnl.l0().pdgId())==11   and \
+                    abs(event.the_hnl.l0().pdgId())==13   and \
+                    abs(event.the_hnl.l1().eta())   < 2.4 and \
+                    abs(event.the_hnl.l2().eta())   < 2.4 and \
+                    # abs(event.the_hnl.l0().eta())   < 2.5): 
+                    abs(event.the_hnl.l0().eta())   < 2.4): 
+                return False
 
-        if (not hasattr(event.the_hnl.l1(), 'bestmatch')) or (event.the_hnl.l1().bestmatch is None):
-            return False
-        if (not hasattr(event.the_hnl.l2(), 'bestmatch')) or (event.the_hnl.l2().bestmatch is None):
-            return False
+            if (not hasattr(event.the_hnl.l1(), 'bestmatch')) or (event.the_hnl.l1().bestmatch is None):
+                return False
+            if (not hasattr(event.the_hnl.l2(), 'bestmatch')) or (event.the_hnl.l2().bestmatch is None):
+                return False
 
-        self.counters.counter('HNL').inc('good gen')
+            self.counters.counter('HNL').inc('good gen')
 
         # #####################################################################################
         # Preselection for the reco muons before pairing them
         # #####################################################################################
         # some simple preselection based on pt
-        event.sMu   = [imu for imu in event.sMu   if imu.pt()>3.]
-        event.dSAMu = [imu for imu in event.dSAMu if imu.pt()>3.]
-        event.dGMu  = [imu for imu in event.dGMu  if imu.pt()>3.]
+        event.sMu   = [imu for imu in event.sMu   if (imu.pt()>3. and abs(imu.eta())<2.4)]
+        event.dSAMu = [imu for imu in event.dSAMu if (imu.pt()>3. and abs(imu.eta())>2.4)]
+        event.dGMu  = [imu for imu in event.dGMu  if (imu.pt()>3. and abs(imu.eta())>2.4)]
 
 
         #####################################################################################
@@ -247,12 +265,13 @@ class HNLAnalyzer(Analyzer):
         #####################################################################################
         # Check whether the correct dimuon is part of the collection dimuons
         #####################################################################################
-        if len(dimuons) > 0:
-            for dimu in dimuons:
-                dMu1 = dimu.lep1()
-                dMu2 = dimu.lep2() 
-                if (dMu1.physObj == event.the_hnl.l1().bestmatch.physObj or dMu1.physObj == event.the_hnl.l2().bestmatch.physObj) and (dMu2.physObj == event.the_hnl.l1().bestmatch.physObj or dMu2.physObj == event.the_hnl.l2().bestmatch.physObj):
-                    event.flag_IsThereTHEDimuon = True
+        if cfg.DataSignalMode == 'signal':
+            if len(dimuons) > 0:
+                for dimu in dimuons:
+                    dMu1 = dimu.lep1()
+                    dMu2 = dimu.lep2() 
+                    if (dMu1.physObj == event.the_hnl.l1().bestmatch.physObj or dMu1.physObj == event.the_hnl.l2().bestmatch.physObj) and (dMu2.physObj == event.the_hnl.l1().bestmatch.physObj or dMu2.physObj == event.the_hnl.l2().bestmatch.physObj):
+                        event.flag_IsThereTHEDimuon = True
 
 
         #####################################################################################
@@ -299,5 +318,137 @@ class HNLAnalyzer(Analyzer):
         # event.flag_HNLRecoSuccess = False
         # if event.dMu1MaxCosBPA.charge() != event.dMu2MaxCosBPA.charge():
             # event.flag_HNLRecoSuccess = True 
-    
+#       #####################################################################################
+#       ###            JET ANALYZER
+#       #####################################################################################
+#
+#       allJets = []
+#       event.jets = []
+#       event.bJets = []
+#       event.cleanJets = []
+#       event.cleanBJets = []
+#
+#       leptons = []
+#       if hasattr(event, 'selectedLeptons'):
+#           leptons = event.selectedLeptons
+#       if hasattr(self.cfg_ana, 'toClean'):
+#           leptons = getattr(event, self.cfg_ana.toClean)
+#           
+#       if hasattr(self.cfg_ana, 'leptonCollections'):
+#           for coll in self.cfg_ana.leptonCollections:
+#               leptons += self.handles[coll].product()
+#
+#       allJets = [Jet(jet) for jet in miniaodjets]
+#
+#       ###   CONFIG   ###
+#       self.recalibrateJets = False
+#
+#       if self.recalibrateJets:
+#           self.jetReCalibrator.correctAll(allJets, event.rho, delta=0., 
+#                                               addCorr=True, addShifts=True)
+#
+#       for jet in allJets:
+#           if self.testJet(jet):
+#               event.jets.append(jet)
+#           if self.testBJet(jet):
+#               event.bJets.append(jet)
+#
+#       self.counters.counter('jets').inc('all events')
+#
+#       event.cleanJets, dummy = cleanObjectCollection(event.jets,
+#                                                      masks=leptons,
+#                                                      deltaRMin=0.5)
+#       event.cleanBJets, dummy = cleanObjectCollection(event.bJets,
+#                                                       masks=leptons,
+#                                                       deltaRMin=0.5)
+#
+#       event.allLeptons = event.sMu + event.dSAmu + event.dGmu + event.ele #+event.tau
+#       # Attach matched jets to selected + other leptons
+#       if hasattr(event, 'allLeptons'):
+#           leptons = event.allLeptons
+#           
+#       pairs = matchObjectCollection(leptons, allJets, 0.5 * 0.5)
+#       # associating a jet to each lepton
+#       for lepton in leptons:
+#           jet = pairs[lepton]
+#           if jet is None:
+#               lepton.jet = lepton
+#           else:
+#               lepton.jet = jet
+#
+#       # associating a leg to each clean jet
+#       invpairs = matchObjectCollection(event.cleanJets, leptons, 99999.)
+#       for jet in event.cleanJets:
+#           leg = invpairs[jet]
+#           jet.leg = leg
+#
+#       for jet in event.cleanJets:
+#           jet.matchGenParton = 999.0
+#
+#       event.jets30 = [jet for jet in event.jets if jet.pt() > 30]
+#       event.cleanJets30 = [jet for jet in event.cleanJets if jet.pt() > 30]
+#       if len(event.jets30) >= 2:
+#           self.counters.counter('jets').inc('at least 2 good jets')
+#       if len(event.cleanJets30) >= 2:
+#           self.counters.counter('jets').inc('at least 2 clean jets')
+#       if len(event.cleanBJets) > 0:
+#           self.counters.counter('jets').inc('at least 1 b jet')
+#           if len(event.cleanBJets) > 1:
+#               self.counters.counter('jets').inc('at least 2 b jets')
+#               
+#       # save HTs
+#       event.HT_allJets     = sum([jet.pt() for jet in allJets          ])
+#       event.HT_jets        = sum([jet.pt() for jet in event.jets       ])
+#       event.HT_bJets       = sum([jet.pt() for jet in event.bJets      ])
+#       event.HT_cleanJets   = sum([jet.pt() for jet in event.cleanJets  ])
+#       event.HT_jets30      = sum([jet.pt() for jet in event.jets30     ])
+#       event.HT_cleanJets30 = sum([jet.pt() for jet in event.cleanJets30])
+#       #####################################################################################
+#       # TODO: Final Qualification and 'ok' to nominate the selection dimuon as HNL candidate
+#       #####################################################################################
+#       # event.flag_HNLRecoSuccess = False
+#       # if event.dMu1MaxCosBPA.charge() != event.dMu2MaxCosBPA.charge():
+#           # event.flag_HNLRecoSuccess = True 
+#   
+        # return True
+#
+#### from jet analyzer https://github.com/rmanzoni/cmgtools-lite/blob/825_HTT/H2TauTau/python/proto/analyzers/JetAnalyzer.py#L238
+#
+#   def testJetID(self, jet):
+#       jet.puJetIdPassed = jet.puJetId()
+#       jet.pfJetIdPassed = jet.jetID("POG_PFID_Loose")
+#       puJetId = self.cfg_ana.relaxPuJetId or jet.puJetIdPassed 
+#       pfJetId = self.cfg_ana.relaxJetId or jet.pfJetIdPassed 
+#       return puJetId and pfJetId
+#
+#   def testJet(self, jet):
+#       pt = jet.pt()
+#       if hasattr(self.cfg_ana, 'ptUncTolerance') and self.cfg_ana.ptUncTolerance:
+#           pt = max(pt, pt * jet.corrJECUp/jet.corr, pt * jet.corrJECDown/jet.corr)
+#       return pt > self.cfg_ana.jetPt and \
+#           abs( jet.eta() ) < self.cfg_ana.jetEta and \
+#           self.testJetID(jet)
+#
+#   def testBJet(self, jet, csv_cut=0.8484):
+#       # medium csv working point
+#       # https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation74X
+#       jet.btagMVA = jet.btag('pfCombinedInclusiveSecondaryVertexV2BJetTags')
+#       # jet.btagFlag = jet.btagMVA > csv_cut
+#
+#       # Use the following once we start applying data-MC scale factors:
+#       jet.btagFlag = self.btagSF.isBTagged(
+#           pt=jet.pt(),
+#           eta=jet.eta(),
+#           csv=jet.btag("pfCombinedInclusiveSecondaryVertexV2BJetTags"),
+#           jetflavor=abs(jet.partonFlavour()),
+#           is_data=not self.cfg_comp.isMC,
+#           csv_cut=csv_cut
+#       )
+#
+#       return self.testJet(jet) and \
+#           abs(jet.eta()) < 2.4 and \
+#           jet.btagFlag and \
+#           self.testJetID(jet)
+
+# ) 
         return True

@@ -133,6 +133,10 @@ displacedmuon_vars = [
 # generic HNL variables
 hnl_vars = [
     Variable('w_pt'           , lambda hn : getattr(hn, 'pt'          , default)()),
+    Variable('hn_px'          , lambda hn : getattr(hn, 'hnPx'        , default)()),
+    Variable('hn_py'          , lambda hn : getattr(hn, 'hnPy'        , default)()),
+    Variable('hn_pz'          , lambda hn : getattr(hn, 'hnPz'        , default)()),
+    Variable('hn_E'          , lambda hn : getattr(hn, 'hnE'        , default)()),
     Variable('w_eta'          , lambda hn : getattr(hn, 'eta'         , default)()),
     Variable('w_phi'          , lambda hn : getattr(hn, 'phi'         , default)()),
     Variable('w_q'            , lambda hn : getattr(hn, 'charge'      , default)()),

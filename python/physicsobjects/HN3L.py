@@ -39,6 +39,18 @@ class HN3L(object):
         return self.l1().charge() + self.l2().charge()
         
     # W kinematics w/ met
+    def hnPx(self):
+        return self.hnP4().Px()
+
+    def hnPy(self):
+        return self.hnP4().Py()
+
+    def hnPz(self):
+        return self.hnP4().Pz()
+
+    def hnE(self):
+        return self.hnP4().E()
+
     def p4(self):
         return self.l0().p4() + self.l1().p4() + self.l2().p4() + self.met().p4() if self.met() else None
 

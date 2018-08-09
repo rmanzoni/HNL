@@ -92,6 +92,18 @@ class HN3L(object):
         return self.l0().pt() + self.l1().pt() + self.l2().pt()
 
     # heavy neutrino kinematics w/ met
+    def hnPx(self):
+        return self.hnP4().Px()
+
+    def hnPy(self):
+        return self.hnP4().Py()
+
+    def hnPz(self):
+        return self.hnP4().Pz()
+
+    def hnE(self):
+        return self.hnP4().E()
+
     def hnP4(self):
         return self.l1().p4() + self.l2().p4() + self.met().p4() if self.met() else None
 

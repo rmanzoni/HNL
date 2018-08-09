@@ -59,6 +59,12 @@ class DiLepton(object):
     def pz(self):
         return self.p4().pz()
 
+    def p(self):
+        return self.p4().p()
+
+    def e(self):
+        return self.p4().e()
+
     def mass(self):
         return self.p4().mass()
 

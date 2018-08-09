@@ -12,7 +12,8 @@ class HN3L(object):
     ''' 
     '''
 
-    def __init__(self, l0, l1, l2, met=None):
+    def __init__(self, hnl, l0, l1, l2, met=None):
+        self.hnl_= hnl# the hnl
         self.l0_ = l0 # prompt lepton
         self.l1_ = l1 # leading pt lepton
         self.l2_ = l2 # trailing pt displaced lepton
@@ -38,6 +39,18 @@ class HN3L(object):
         return self.l1().charge() + self.l2().charge()
         
     # W kinematics w/ met
+    def hnPx(self):
+        return self.hnP4().Px()
+
+    def hnPy(self):
+        return self.hnP4().Py()
+
+    def hnPz(self):
+        return self.hnP4().Pz()
+
+    def hnE(self):
+        return self.hnP4().E()
+
     def p4(self):
         return self.l0().p4() + self.l1().p4() + self.l2().p4() + self.met().p4() if self.met() else None
 
@@ -52,6 +65,9 @@ class HN3L(object):
 
     def mass(self):
         return self.p4().mass() if self.met() else None
+
+    def MASS(self):
+        return self.hnl_.mass()
 
     def sumPt(self):
         return self.l0().pt() + self.l1().pt() + self.l2().pt() + self.met().pt() if self.met() else None

@@ -4,7 +4,7 @@ from PhysicsTools.HeppyCore.utils.deltar import deltaR
 from CMGTools.HNL.utils.utils import isAncestor, displacement2D, displacement3D, makeRecoVertex # utility functions
 from pdb import set_trace
 
-class HNLTreeProducer(TreeProducerBase):
+class HNLTreeProducerSignal(TreeProducerBase):
     '''
     '''
     def declareVariables(self, setup):
@@ -26,9 +26,9 @@ class HNLTreeProducer(TreeProducerBase):
         self.bookDiMuon(self.tree, 'dimuonMinDr12')
         self.bookDisplacedMuon (self.tree,'dMu1MinDr12')
         self.bookDisplacedMuon (self.tree,'dMu2MinDr12')
-        self.bookDiMuon(self.tree, 'dimuonMaxDr0a12')
-        self.bookDisplacedMuon (self.tree,'dMu1MaxDr0a12')
-        self.bookDisplacedMuon (self.tree,'dMu2MaxDr0a12')
+        self.bookDiMuon(self.tree, 'dimuonMaxCosBPA')
+        self.bookDisplacedMuon (self.tree,'dMu1MaxCosBPA')
+        self.bookDisplacedMuon (self.tree,'dMu2MaxCosBPA')
 
 
 
@@ -40,44 +40,49 @@ class HNLTreeProducer(TreeProducerBase):
         # the prompt lepton
         self.bookParticle(self.tree, 'l0')
         self.bookEle      (self.tree, 'l0_matched_electron'    )
-        self.bookPhoton   (self.tree, 'l0_matched_photon'      )
+        # self.bookPhoton   (self.tree, 'l0_matched_photon'      )
         self.bookMuon     (self.tree, 'l0_matched_muon'        )
         self.bookMuonTrack(self.tree, 'l0_matched_muon_track'  )
-        self.bookTau      (self.tree, 'l0_matched_tau'         )
+        # self.bookTau      (self.tree, 'l0_matched_tau'         )
         self.bookParticle (self.tree, 'l0_matched_dsmuon'      )
         self.bookMuonTrack(self.tree, 'l0_matched_dsmuon_track')
         self.bookParticle (self.tree, 'l0_matched_dgmuon'      )
         self.bookMuonTrack(self.tree, 'l0_matched_dgmuon_track')
         self.bookParticle (self.tree, 'l0_bestmatch'           )
         self.var(self.tree, 'l0_bestmatchtype')
+        self.var(self.tree, 'l0_bestmatchdR')
+        self.bookEle(self.tree, 'prompt_ele') 
+        self.var(self.tree, 'prompt_ana_success')
        
 
         # displaced leptons (from the HN)
         self.bookParticle(self.tree, 'l1')
         self.bookEle      (self.tree, 'l1_matched_electron'    )
-        self.bookPhoton   (self.tree, 'l1_matched_photon'      )
+        # self.bookPhoton   (self.tree, 'l1_matched_photon'      )
         self.bookMuon     (self.tree, 'l1_matched_muon'        )
         self.bookMuonTrack(self.tree, 'l1_matched_muon_track'  )
-        self.bookTau      (self.tree, 'l1_matched_tau'         )
+        # self.bookTau      (self.tree, 'l1_matched_tau'         )
         self.bookParticle (self.tree, 'l1_matched_dsmuon'      )
         self.bookMuonTrack(self.tree, 'l1_matched_dsmuon_track')
         self.bookParticle (self.tree, 'l1_matched_dgmuon'      )
         self.bookMuonTrack(self.tree, 'l1_matched_dgmuon_track')
         self.bookParticle (self.tree, 'l1_bestmatch'           )
         self.var(self.tree, 'l1_bestmatchtype')
+        self.var(self.tree, 'l1_bestmatchdR')
 
         self.bookParticle(self.tree, 'l2')
         self.bookEle      (self.tree, 'l2_matched_electron'    )
-        self.bookPhoton   (self.tree, 'l2_matched_photon'      )
+        # self.bookPhoton   (self.tree, 'l2_matched_photon'      )
         self.bookMuon     (self.tree, 'l2_matched_muon'        )
         self.bookMuonTrack(self.tree, 'l2_matched_muon_track'  )
-        self.bookTau      (self.tree, 'l2_matched_tau'         )
+        # self.bookTau      (self.tree, 'l2_matched_tau'         )
         self.bookParticle (self.tree, 'l2_matched_dsmuon'      )
         self.bookMuonTrack(self.tree, 'l2_matched_dsmuon_track')
         self.bookParticle (self.tree, 'l2_matched_dgmuon'      )
         self.bookMuonTrack(self.tree, 'l2_matched_dgmuon_track')
         self.bookParticle (self.tree, 'l2_bestmatch'           )
         self.var(self.tree, 'l2_bestmatchtype')
+        self.var(self.tree, 'l2_bestmatchdR')
 
         # final neutrino
         self.bookGenParticle(self.tree, 'n')
@@ -138,9 +143,9 @@ class HNLTreeProducer(TreeProducerBase):
             self.fillDiMuon(self.tree, 'dimuonMinDr12', event.dimuonMinDr12)
             self.fillDisplacedMuon (self.tree,'dMu1MinDr12', event.dMu1MinDr12)
             self.fillDisplacedMuon (self.tree,'dMu2MinDr12', event.dMu2MinDr12)
-            self.fillDiMuon(self.tree, 'dimuonMaxDr0a12', event.dimuonMaxDr0a12)
-            self.fillDisplacedMuon (self.tree,'dMu1MaxDr0a12', event.dMu1MaxDr0a12)
-            self.fillDisplacedMuon (self.tree,'dMu2MaxDr0a12', event.dMu2MaxDr0a12)
+            self.fillDiMuon(self.tree, 'dimuonMaxCosBPA', event.dimuonMaxCosBPA)
+            self.fillDisplacedMuon (self.tree,'dMu1MaxCosBPA', event.dMu1MaxCosBPA)
+            self.fillDisplacedMuon (self.tree,'dMu2MaxCosBPA', event.dMu2MaxCosBPA)
 
         # output of MC analysis
         self.fillHNL(self.tree, 'hnl', event.the_hnl)
@@ -149,34 +154,42 @@ class HNLTreeProducer(TreeProducerBase):
         self.fillParticle(self.tree, 'l0' , event.the_hnl.l0())
         if hasattr(event.the_hnl.l0(), 'bestelectron'): self.fillEle     (self.tree, 'l0_matched_electron', event.the_hnl.l0().bestelectron)
         if hasattr(event.the_hnl.l0(), 'bestphoton'  ): self.fillPhoton  (self.tree, 'l0_matched_photon'  , event.the_hnl.l0().bestphoton  )
-        if hasattr(event.the_hnl.l0(), 'bestmuon'    ): self.fillMuon    (self.tree, 'l0_matched_muon'    , event.the_hnl.l0().bestmuon    ) ; self.fillMuonTrack(self.tree, 'l0_matched_muon_track', event.the_hnl.l0().bestmuon.bestTrack())
         if hasattr(event.the_hnl.l0(), 'besttau'     ): self.fillTau     (self.tree, 'l0_matched_tau'     , event.the_hnl.l0().besttau     )
+        if hasattr(event.the_hnl.l0(), 'bestmuon'    ): self.fillMuon    (self.tree, 'l0_matched_muon'    , event.the_hnl.l0().bestmuon    ) ; self.fillMuonTrack(self.tree, 'l0_matched_muon_track', event.the_hnl.l0().bestmuon.bestTrack()); self.fill(self.tree, 'l0_matched_muon_simType',event.the_hnl.l0().bestmuon.simType()) 
         if hasattr(event.the_hnl.l0(), 'bestdsmuon'  ): self.fillParticle(self.tree, 'l0_matched_dsmuon'  , event.the_hnl.l0().bestdsmuon  ) ; self.fillMuonTrack(self.tree, 'l0_matched_dsmuon_track', event.the_hnl.l0().bestdsmuon )
         if hasattr(event.the_hnl.l0(), 'bestdgmuon'  ): self.fillParticle(self.tree, 'l0_matched_dgmuon'  , event.the_hnl.l0().bestdgmuon  ) ; self.fillMuonTrack(self.tree, 'l0_matched_dgmuon_track', event.the_hnl.l0().bestdgmuon )
         if event.the_hnl.l0().bestmatch != None: self.fillParticle(self.tree, 'l0_bestmatch'       , event.the_hnl.l0().bestmatch   )
         self.fill(self.tree, 'l0_bestmatchtype',event.the_hnl.l0().bestmatchtype)
+        if hasattr(event.the_hnl.l0(), 'bestmatchdR'  ): self.fill       (self.tree, 'l0_bestmatchdR'     ,event.the_hnl.l0().bestmatchdR)
+        if event.the_prompt_cand != None: # hasattr(event, 'the_prompt_cand'):
+            if abs(event.the_prompt_cand.pdgId()) == 11:
+                self.fillEle(self.tree, 'prompt_ele', event.the_prompt_cand)
+            self.fill(self.tree, 'prompt_ana_success', event.prompt_ana_success)
         
         # displaced leptons (from the HN)
         self.fillParticle(self.tree, 'l1', event.the_hnl.l1())
         if hasattr(event.the_hnl.l1(), 'bestelectron'): self.fillEle     (self.tree, 'l1_matched_electron', event.the_hnl.l1().bestelectron)
         if hasattr(event.the_hnl.l1(), 'bestphoton'  ): self.fillPhoton  (self.tree, 'l1_matched_photon'  , event.the_hnl.l1().bestphoton  )
-        if hasattr(event.the_hnl.l1(), 'bestmuon'    ): self.fillMuon    (self.tree, 'l1_matched_muon'    , event.the_hnl.l1().bestmuon    ) ; self.fillMuonTrack(self.tree, 'l1_matched_muon_track', event.the_hnl.l1().bestmuon.bestTrack())        
         if hasattr(event.the_hnl.l1(), 'besttau'     ): self.fillTau     (self.tree, 'l1_matched_tau'     , event.the_hnl.l1().besttau     )
+        if hasattr(event.the_hnl.l1(), 'bestmuon'    ): self.fillMuon    (self.tree, 'l1_matched_muon'    , event.the_hnl.l1().bestmuon    ) ; self.fillMuonTrack(self.tree, 'l1_matched_muon_track', event.the_hnl.l1().bestmuon.bestTrack()); self.fill(self.tree, 'l1_matched_muon_simType',event.the_hnl.l1().bestmuon.simType()) 
         if hasattr(event.the_hnl.l1(), 'bestdsmuon'  ): self.fillParticle(self.tree, 'l1_matched_dsmuon'  , event.the_hnl.l1().bestdsmuon  ) ; self.fillMuonTrack(self.tree, 'l1_matched_dsmuon_track', event.the_hnl.l1().bestdsmuon )
         if hasattr(event.the_hnl.l1(), 'bestdgmuon'  ): self.fillParticle(self.tree, 'l1_matched_dgmuon'  , event.the_hnl.l1().bestdgmuon  ) ; self.fillMuonTrack(self.tree, 'l1_matched_dgmuon_track', event.the_hnl.l1().bestdgmuon )
         if event.the_hnl.l1().bestmatch != None: self.fillParticle(self.tree, 'l1_bestmatch'       , event.the_hnl.l1().bestmatch   )
         self.fill(self.tree, 'l1_bestmatchtype',event.the_hnl.l1().bestmatchtype)
+        if hasattr(event.the_hnl.l1(), 'bestmatchdR'  ): self.fill       (self.tree, 'l1_bestmatchdR'     ,event.the_hnl.l1().bestmatchdR)
 
         self.fillParticle(self.tree, 'l2', event.the_hnl.l2())
         if hasattr(event.the_hnl.l2(), 'bestelectron'): self.fillEle     (self.tree, 'l2_matched_electron', event.the_hnl.l2().bestelectron)
         if hasattr(event.the_hnl.l2(), 'bestphoton'  ): self.fillPhoton  (self.tree, 'l2_matched_photon'  , event.the_hnl.l2().bestphoton  )
-        if hasattr(event.the_hnl.l2(), 'bestmuon'    ): self.fillMuon    (self.tree, 'l2_matched_muon'    , event.the_hnl.l2().bestmuon    ) ; self.fillMuonTrack(self.tree, 'l2_matched_muon_track', event.the_hnl.l2().bestmuon.bestTrack())        
         if hasattr(event.the_hnl.l2(), 'besttau'     ): self.fillTau     (self.tree, 'l2_matched_tau'     , event.the_hnl.l2().besttau     )
+        if hasattr(event.the_hnl.l2(), 'bestmuon'    ): self.fillMuon    (self.tree, 'l2_matched_muon'    , event.the_hnl.l2().bestmuon    ) ; self.fillMuonTrack(self.tree, 'l2_matched_muon_track', event.the_hnl.l2().bestmuon.bestTrack()); self.fill(self.tree, 'l2_matched_muon_simType',event.the_hnl.l2().bestmuon.simType()) 
         if hasattr(event.the_hnl.l2(), 'bestdsmuon'  ): self.fillParticle(self.tree, 'l2_matched_dsmuon'  , event.the_hnl.l2().bestdsmuon  ) ; self.fillMuonTrack(self.tree, 'l2_matched_dsmuon_track', event.the_hnl.l2().bestdsmuon )
         if hasattr(event.the_hnl.l2(), 'bestdgmuon'  ): self.fillParticle(self.tree, 'l2_matched_dgmuon'  , event.the_hnl.l2().bestdgmuon  ) ; self.fillMuonTrack(self.tree, 'l2_matched_dgmuon_track', event.the_hnl.l2().bestdgmuon )
         if event.the_hnl.l2().bestmatch != None: self.fillParticle(self.tree, 'l2_bestmatch'       , event.the_hnl.l2().bestmatch   )
         self.fill(self.tree, 'l2_bestmatchtype',event.the_hnl.l2().bestmatchtype)
-        
+        if hasattr(event.the_hnl.l2(), 'bestmatchdR'  ): self.fill       (self.tree, 'l2_bestmatchdR'     ,event.the_hnl.l2().bestmatchdR)
+
+                
 
         # final neutrino
         self.fillGenParticle(self.tree, 'n'  , event.the_hnl.met())

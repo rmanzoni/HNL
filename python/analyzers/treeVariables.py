@@ -78,39 +78,74 @@ reco_hn_vars = [
 hnlreco_vars = [
     Variable('n_sMu', lambda ev : ev.n_sMu, type=int),
     Variable('n_dSAMu', lambda ev : ev.n_dSAMu, type=int),
+    Variable('n_dGMu', lambda ev : ev.n_dGMu, type=int),
     Variable('n_dMu', lambda ev : ev.n_dMu, type=int),
     Variable('n_pairs', lambda ev : ev.n_pairs, type=int),
-    Variable('n_sMuOnly',      lambda ev : ev.n_sMuOnly, type=int),
-    Variable('n_sMuRedundant', lambda ev : ev.n_sMuRedundant, type=int),
-    Variable('n_dSAMuOnly',      lambda ev : ev.n_dSAMuOnly, type=int),
-    Variable('n_dSAMuRedundant', lambda ev : ev.n_dSAMuRedundant, type=int),
     Variable('n_dimuon', lambda ev : ev.n_dimuon, type=int),
 ]
 
 # Variables indicating the quality of HNL reconstruction
 check_hnlreco_vars = [
-    Variable('flag_matchedL1Chi2', lambda ev : ev.matchedL1Chi2,   ),
-    Variable('flag_matchedL2Chi2', lambda ev : ev.matchedL2Chi2,   ),
-    Variable('flag_matchedL1Dxy',  lambda ev : ev.matchedL1Dxy ,   ),
-    Variable('flag_matchedL2Dxy',  lambda ev : ev.matchedL2Dxy ,   ),
+    # Variable('flag_matchedL1Chi2', lambda ev : ev.matchedL1Chi2,   ),
+    # Variable('flag_matchedL2Chi2', lambda ev : ev.matchedL2Chi2,   ),
+    # Variable('flag_matchedL1Dxy',  lambda ev : ev.matchedL1Dxy ,   ),
+    # Variable('flag_matchedL2Dxy',  lambda ev : ev.matchedL2Dxy ,   ),
     Variable('flag_matchedHNLChi2', lambda ev : ev.matchedHNLChi2 ,),
     Variable('flag_matchedHNLDxy', lambda ev : ev.matchedHNLDxy ,  ),
+    Variable('flag_matchedHNLMaxPt', lambda ev : ev.matchedHNLMaxPt,  ),
+    Variable('flag_matchedHNLMinDr12', lambda ev : ev.matchedHNLMinDr12 ,  ),
+    Variable('flag_matchedHNLMaxCosBPA', lambda ev : ev.matchedHNLMaxCosBPA ,  ),
     Variable('flag_IsThereTHEDimuon', lambda ev : ev.flag_IsThereTHEDimuon , ),
-    Variable('flag_MUCOsuccess', lambda ev : ev.flag_MUCOsuccess , ),
 
 
 ]
 
 # generic DiMuon variables
 dimuon_vars = [
-    Variable('x', lambda hn : hn.vtx.x(), type = float), 
-    Variable('y', lambda hn : hn.vtx.y(), type = float), 
-    Variable('z', lambda hn : hn.vtx.z(), type = float), 
-    Variable('dxy', lambda hn : hn.dxy(), type = float), 
-    Variable('vtxFitChi2', lambda hn : hn.vtx.chi2(), type = float),
+    Variable('disp2DFromPV', lambda hn : hn.disp2DFromPV(), type = float), 
+    Variable('disp2DFromBS', lambda hn : hn.disp2DFromBS(), type = float), 
+    Variable('vtxFitChi2', lambda hn : hn.chi2(), type = float),
+
+    Variable('pt_01', lambda hn : hn.pt_01(), type = float), 
+    Variable('pt_02', lambda hn : hn.pt_02(), type = float), 
+    Variable('pt_12', lambda hn : hn.pt_12(), type = float), 
+
+    Variable('p_01', lambda hn : hn.p_01(), type = float), 
+    Variable('p_02', lambda hn : hn.p_02(), type = float), 
+    Variable('p_12', lambda hn : hn.p_12(), type = float), 
+
+    Variable('deta_01', lambda hn : hn.deta_01(), type = float), 
+    Variable('deta_02', lambda hn : hn.deta_02(), type = float), 
+    Variable('deta_12', lambda hn : hn.deta_12(), type = float), 
+    Variable('eta_12', lambda hn : hn.eta_12(), type = float), 
+    Variable('deta_hn0_vis', lambda hn : hn.deta_hn0_vis(), type = float), 
+
+    Variable('dphi_01', lambda hn : hn.dphi_01(), type = float), 
+    Variable('dphi_02', lambda hn : hn.dphi_02(), type = float), 
+    Variable('dphi_12', lambda hn : hn.dphi_12(), type = float), 
+    Variable('phi_12', lambda hn : hn.phi_12(), type = float), 
+    Variable('dphi_hn0_vis', lambda hn : hn.dphi_hn0_vis(), type = float), 
+
+    Variable('dr_01', lambda hn : hn.dr_01(), type = float), 
+    Variable('dr_02', lambda hn : hn.dr_02(), type = float), 
+    Variable('dr_12', lambda hn : hn.dr_12(), type = float), 
+    Variable('dr_hn0_vis', lambda hn : hn.dr_hn0_vis(), type = float), 
+
+    Variable('mass_01', lambda hn : hn.mass_01(), type = float), 
+    Variable('mass_02', lambda hn : hn.mass_02(), type = float), 
+    Variable('mass_12', lambda hn : hn.mass_12(), type = float), 
+
+    Variable('q_01', lambda hn : hn.q_01(), type = float), 
+    Variable('q_02', lambda hn : hn.q_02(), type = float), 
+    Variable('q_12', lambda hn : hn.q_12(), type = float), 
+    Variable('q_012', lambda hn : hn.q_012(), type = float), 
+
+    Variable('p_12_x', lambda hn : hn.p_12_x(), type = float), 
+    Variable('p_12_y', lambda hn : hn.p_12_y(), type = float), 
+    Variable('p_12_z', lambda hn : hn.p_12_z(), type = float), 
 ]
 
-# generic DiMuon variables
+# generic DisplacedMuon variables
 displacedmuon_vars = [
     Variable('x'    , lambda p: p.vx() ),
     Variable('y'    , lambda p: p.vy() ),
@@ -122,12 +157,15 @@ displacedmuon_vars = [
     Variable('charge', lambda p: p.charge() if hasattr(p, 'charge') else 0), # charge may be non-integer for gen particles
     Variable('mass'  , lambda p: p.mass()),
     Variable('reco'  , lambda p: p.reco),
-    Variable('redundancy'  , lambda p: p.redundancy),
 ]
 
 # generic HNL variables
 hnl_vars = [
     Variable('w_pt'           , lambda hn : getattr(hn, 'pt'          , default)()),
+    Variable('hn_px'          , lambda hn : getattr(hn, 'hnPx'        , default)()),
+    Variable('hn_py'          , lambda hn : getattr(hn, 'hnPy'        , default)()),
+    Variable('hn_pz'          , lambda hn : getattr(hn, 'hnPz'        , default)()),
+    Variable('hn_E'          , lambda hn : getattr(hn, 'hnE'        , default)()),
     Variable('w_eta'          , lambda hn : getattr(hn, 'eta'         , default)()),
     Variable('w_phi'          , lambda hn : getattr(hn, 'phi'         , default)()),
     Variable('w_q'            , lambda hn : getattr(hn, 'charge'      , default)()),
@@ -146,6 +184,7 @@ hnl_vars = [
     Variable('hn_phi'         , lambda hn : getattr(hn, 'hnPhi'       , default)()),
     Variable('hn_q'           , lambda hn : getattr(hn, 'hnCharge'    , default)()),
     Variable('hn_m'           , lambda hn : getattr(hn, 'hnMass'      , default)()),
+    Variable('hn_MASS'        , lambda hn : getattr(hn, 'MASS'        , default)()),
     Variable('hn_sum_pt'      , lambda hn : getattr(hn, 'hnSumPt'     , default)()),
   
     Variable('hn_vis_pt'      , lambda hn : getattr(hn, 'hnVisPt'     , default)()),
@@ -325,6 +364,7 @@ muon_vars = [
     Variable('is_gl'      , lambda muon : muon.isGlobalMuon()                               ),
     Variable('is_tk'      , lambda muon : muon.isTrackerMuon()                              ),
     Variable('is_pf'      , lambda muon : muon.isPFMuon()                                   ),
+    Variable('simType'    , lambda muon : muon.simType()                                    ),
 ]
 
 # for an extensive summary of possibly interesting muon variables, have a look at

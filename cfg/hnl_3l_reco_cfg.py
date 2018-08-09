@@ -15,27 +15,42 @@ from PhysicsTools.Heppy.analyzers.core.PileUpAnalyzer    import PileUpAnalyzer
 from PhysicsTools.Heppy.analyzers.gen.GeneratorAnalyzer  import GeneratorAnalyzer
 from PhysicsTools.Heppy.analyzers.gen.LHEWeightAnalyzer  import LHEWeightAnalyzer
 
+from CMGTools.H2TauTau.proto.analyzers.TriggerAnalyzer   import TriggerAnalyzer
+
+
 # import HNL analyzers:
-from CMGTools.HNL.analyzers.HNLAnalyzer          import HNLAnalyzer
-# from CMGTools.HNL.analyzers.HNLTreeProducer      import HNLTreeProducer
-from CMGTools.HNL.analyzers.HNLTreeProducerRiccardo      import HNLTreeProducer
-from CMGTools.HNL.analyzers.HNLGenTreeAnalyzer   import HNLGenTreeAnalyzer
-from CMGTools.HNL.analyzers.RecoGenAnalyzer      import RecoGenAnalyzer
-from CMGTools.HNL.analyzers.CheckHNLAnalyzer     import CheckHNLAnalyzer
+from CMGTools.HNL.analyzers.HNLAnalyzer             import HNLAnalyzer
+##########################################################################################
+# RM: FIXME! will make order among the different tree producers of just have two different cfgs!
+from CMGTools.HNL.analyzers.HNLTreeProducerSignal   import HNLTreeProducerSignal
+from CMGTools.HNL.analyzers.HNLTreeProducerData     import HNLTreeProducerData
+from CMGTools.HNL.analyzers.HNLTreeProducerRiccardo import HNLTreeProducer
+# from CMGTools.HNL.analyzers.HNLTreeProducer         import HNLTreeProducer
+from CMGTools.HNL.analyzers.HNLGenTreeAnalyzer      import HNLGenTreeAnalyzer
+##########################################################################################
+from CMGTools.HNL.analyzers.RecoGenAnalyzer         import RecoGenAnalyzer
+from CMGTools.HNL.analyzers.CheckHNLAnalyzer        import CheckHNLAnalyzer
 
 # import samples, signal
 # from CMGTools.HNL.samples.signal import all_signals as samples
+# from CMGTools.HNL.samples.signal import all_signals_e as samples
+from CMGTools.HNL.samples.signal import all_signals_mu as samples
 # from CMGTools.HNL.samples.signal import signals_mass_3 as samples
 # from CMGTools.HNL.samples.signal import signals_test as samples
 # from CMGTools.HNL.samples.signal import signals_mass_1
 # from CMGTools.HNL.samples.signal import signals_mass_2p1
 
-# from CMGTools.HNL.samples.signal import disp1plus as samples
 # from CMGTools.HNL.samples.signal import HN3L_M_2p5_V_0p0173205080757_e_onshell
-# from CMGTools.HNL.samples.signal import disp1plus as samples
 # from CMGTools.HNL.samples.signal import HN3L_M_2p5_V_0p0173205080757_e_onshell
-from CMGTools.HNL.samples.localsignal import HN3L_M_2p5_V_0p0173205080757_e_onshell, HN3L_M_2p5_V_0p00707106781187_e_onshell
+<<<<<<< HEAD
+from CMGTools.HNL.samples.localsignal     import HN3L_M_2p5_V_0p0173205080757_e_onshell, HN3L_M_2p5_V_0p00707106781187_e_onshell
+from CMGTools.HNL.samples.samples_mc_2017 import TTJets_amcat as ttbar
 
+# RM: FIXME! this is ugly
+cfg.PromptLeptonMode = 'ele' # 'ele', 'mu'
+# cfg.PromptLeptonMode = 'mu' # 'ele', 'mu'
+# cfg.DataSignalMode = 'signal' # 'signal', 'data'
+cfg.DataSignalMode = 'data' # 'signal', 'data'
 
 puFileMC   = '$CMSSW_BASE/src/CMGTools/H2TauTau/data/MC_Moriond17_PU25ns_V1.root'
 puFileData = '/afs/cern.ch/user/a/anehrkor/public/Data_Pileup_2016_271036-284044_80bins.root'
@@ -45,18 +60,29 @@ puFileData = '/afs/cern.ch/user/a/anehrkor/public/Data_Pileup_2016_271036-284044
 ###################################################
 # Get all heppy options; set via "-o production" or "-o production=True"
 # production = True run on batch, production = False (or unset) run locally
-production         = getHeppyOption('production' , False)
+
+# production         = getHeppyOption('production' , False)
+production         = getHeppyOption('production' , True)
 pick_events        = getHeppyOption('pick_events', False)
 
 ###################################################
 ###               HANDLE SAMPLES                ###
 ###################################################
 samples = [HN3L_M_2p5_V_0p00707106781187_e_onshell, HN3L_M_2p5_V_0p0173205080757_e_onshell]
+# samples = [ttbar]
 
 for sample in samples:
-    sample.triggers = ['HLT_IsoMu24_v%d' %i for i in range(4, 5)]
+    sample.triggers  = ['HLT_Ele27_WPTight_Gsf_v%d'          %i for i in range(1, 15)] #electron trigger
+    sample.triggers += ['HLT_Ele32_WPTight_Gsf_v%d'          %i for i in range(4,  5)] #electron trigger
+    sample.triggers += ['HLT_Ele35_WPTight_Gsf_v%d'          %i for i in range(4,  5)] #electron trigger
+    sample.triggers += ['HLT_Ele115_CaloIdVT_GsfTrkIdT_v%d'  %i for i in range(4,  5)] #electron trigger
+    sample.triggers += ['HLT_Ele135_CaloIdVT_GsfTrkIdT_v%d'  %i for i in range(4,  5)] #electron trigger
+    # sample.triggers  = ['HLT_IsoMu24_v%d'                    %i for i in range(4, 5)] #muon trigger
+    # sample.triggers += ['HLT_IsoMu27_v%d'                    %i for i in range(4, 5)] #muon trigger
+    # sample.triggers += ['HLT_Mu50_v%d'                       %i for i in range(4, 5)] #muon trigger
+    # sample.triggers += ['HLT_IsoMu24_v%d'                    %i for i in range(4, 5)] #muon trigger
 
-    sample.splitFactor = splitFactor(sample, 6e3)
+    sample.splitFactor = splitFactor(sample, 1e5)
     sample.puFileData = puFileData
     sample.puFileMC   = puFileMC
 
@@ -68,34 +94,7 @@ selectedComponents = samples
 eventSelector = cfg.Analyzer(
     EventSelector,
     name='EventSelector',
-    # toSelect=[]
-    toSelect=[
-        326,
-        395,
-        402,
-        410,
-        437,
-        485,
-        613,
-        722,
-         68,
-        345,
-        614,
-        712,
-        784,
-        131,
-        355,
-        373,
-        519,
-        609,
-        633,
-        707,
-        771,
-        790,
-        879,
-        223,
-        763,
-    ]
+    toSelect=[326]
 )
 
 lheWeightAna = cfg.Analyzer(
@@ -113,13 +112,13 @@ skimAna = cfg.Analyzer(
     name='SkimAnalyzerCount'
 )
 
-# triggerAna = cfg.Analyzer(
-    # TriggerAnalyzer,
-    # name='TriggerAnalyzer',
-    # addTriggerObjects=True,
-    # requireTrigger=True,
-    # usePrescaled=False
-# )
+triggerAna = cfg.Analyzer(
+    TriggerAnalyzer,
+    name='TriggerAnalyzer',
+    addTriggerObjects=True,
+    requireTrigger=True,
+    usePrescaled=False
+)
 
 vertexAna = cfg.Analyzer(
     VertexAnalyzer,
@@ -144,11 +143,19 @@ HNLAnalyzer = cfg.Analyzer(
     name='HNLAnalyzer',
 )
 
-HNLTreeProducer = cfg.Analyzer(
-    HNLTreeProducer,
-    name='HNLTreeProducer',
-    # fillL1=False,
-)
+# RM: FIXME! here it is
+if cfg.DataSignalMode == 'signal': # 'signal', 'data'
+    HNLTreeProducer = cfg.Analyzer(
+        HNLTreeProducerSignal,
+        name='HNLTreeProducerSignal',
+        # fillL1=False,
+    )
+if cfg.DataSignalMode == 'data': # 'signal', 'data'
+    HNLTreeProducer = cfg.Analyzer(
+        HNLTreeProducerData,
+        name='HNLTreeProducerData',
+        # fillL1=False,
+    )
 
 HNLGenTreeAnalyzer = cfg.Analyzer(
     HNLGenTreeAnalyzer,
@@ -168,30 +175,62 @@ CheckHNLAnalyzer = cfg.Analyzer(
 ###################################################
 ###                  SEQUENCE                   ###
 ###################################################
-sequence = cfg.Sequence([
-#     eventSelector,
-    lheWeightAna,
-    jsonAna,
-    skimAna,
-    vertexAna,
-    pileUpAna,
-    HNLGenTreeAnalyzer,
-    RecoGenAnalyzer,
-    HNLAnalyzer,
-#     CheckHNLAnalyzer,
-    HNLTreeProducer,
-])
+# sequence = cfg.Sequence([
+# #     eventSelector,
+#     lheWeightAna,
+#     jsonAna,
+#     skimAna,
+#     vertexAna,
+#     pileUpAna,
+#     HNLGenTreeAnalyzer,
+#     RecoGenAnalyzer,
+#     HNLAnalyzer,
+# #     CheckHNLAnalyzer,
+#     HNLTreeProducer,
+# ])
+
+# RM: FIXME! here it is, again
+if cfg.DataSignalMode == 'data':
+    sequence = cfg.Sequence([
+    #     eventSelector,
+        lheWeightAna, # les houche
+        jsonAna,
+        skimAna,
+        # triggerAna,
+        vertexAna,
+        pileUpAna,
+        HNLAnalyzer,
+        HNLTreeProducer,
+    ])
+
+if cfg.DataSignalMode == 'signal':
+    sequence = cfg.Sequence([
+    #     eventSelector,
+        lheWeightAna, # les houche
+        jsonAna,
+        skimAna,
+        # triggerAna,
+        vertexAna,
+        pileUpAna,
+        HNLGenTreeAnalyzer,
+        RecoGenAnalyzer,
+        HNLAnalyzer,
+        CheckHNLAnalyzer,
+        HNLTreeProducer,
+    ])
 
 ###################################################
 ###            SET BATCH OR LOCAL               ###
 ###################################################
 if not production:
-    comp                 = HN3L_M_2p5_V_0p0173205080757_e_onshell
-#     comp                 = HN3L_M_2p5_V_0p00707106781187_e_onshell
+    # comp                 = HN3L_M_2p5_V_0p0173205080757_e_onshell
+    # comp                 = HN3L_M_2p5_V_0p00707106781187_e_onshell
+    # comp                 = samples
+    comp                 = ttbar
     selectedComponents   = [comp]
     comp.splitFactor     = 1
     comp.fineSplitFactor = 1
-    comp.files           = comp.files[:50]
+    comp.files           = comp.files[:]
 
 # the following is declared in case this cfg is used in input to the
 # heppy.py script
@@ -205,23 +244,4 @@ config = cfg.Config(
 )
 
 printComps(config.components, True)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

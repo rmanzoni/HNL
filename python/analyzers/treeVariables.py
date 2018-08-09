@@ -43,6 +43,13 @@ event_vars = [
     Variable('n_vtx', lambda ev : len(ev.goodVertices), type=int),
     Variable('weight', lambda ev : ev.eventWeight, type=float),
     Variable('puweight', lambda ev : ev.puWeight, type=float),
+
+
+#   FIXME! needed for per-sample PU reweight
+#     outputTree->Branch("_n_Interactions", &_n_Interactions, "_n_Interactions/I");
+#     outputTree->Branch("_n_trueInteractions", &_n_trueInteractions, "_n_trueInteractions/D");
+
+
 ]
 
 # RIC
@@ -237,23 +244,31 @@ lepton_vars = [
 #     Variable('weight_idiso', lambda lep : getattr(lep, 'weight_idiso', 1.)),
 #     Variable('eff_idiso_data', lambda lep : getattr(lep, 'eff_data_idiso', -999.)),
 #     Variable('eff_idiso_mc', lambda lep : getattr(lep, 'eff_mc_idiso', -999.)),
+
+#     outputTree->Branch("_dptoverpt", &_dptoverpt, "_dptoverpt[_nLeptons]/D"); # proxy to charge consistency
+#     outputTree->Branch("_ptrel", &_ptrel, "_ptrel[_nLeptons]/D");             # isolation
+#     outputTree->Branch("_ptratio", &_ptratio, "_ptratio[_nLeptons]/D");       # isolation
+
 ]
 
+
+# FIXME! UPDATE TO 2017 MVA ISO AND MINI ISOLATION
+#        EFFECTIVE AREA CORRECTION
 # electron
 electron_vars = [
     # Variable('eid_nontrigmva_loose', lambda ele : ele.mvaIDRun2("NonTrigPhys14", "Loose")),
     Variable('eid_nontrigmva_loose', lambda ele : ele.mvaRun2('NonTrigSpring15MiniAOD')),
     Variable('eid_nontrigmva_tight', lambda ele : ele.mvaIDRun2("NonTrigSpring15MiniAOD", "POG80")),
-    Variable('eid_veto', lambda ele : ele.cutBasedId('POG_SPRING15_25ns_v1_Veto')),
-    Variable('eid_loose', lambda ele : ele.cutBasedId('POG_SPRING15_25ns_v1_Loose')),
-    Variable('eid_medium', lambda ele : ele.cutBasedId('POG_SPRING15_25ns_v1_Medium')),
-    Variable('eid_tight', lambda ele : ele.cutBasedId('POG_SPRING15_25ns_v1_Tight')),
-    Variable('nhits_missing', lambda ele : ele.physObj.gsfTrack().hitPattern().numberOfHits(1), int),
-    Variable('pass_conv_veto', lambda ele : ele.passConversionVeto()),
-    Variable('reliso05', lambda lep : lep.relIsoR(R=0.3, dBetaFactor=0.5, allCharged=0)),
-    Variable('reliso05_04', lambda lep : lep.relIsoR(R=0.4, dBetaFactor=0.5, allCharged=0)),
-    Variable('reliso05_04', lambda lep : lep.relIsoR(R=0.4, dBetaFactor=0.5, allCharged=0)),
-    Variable('weight_tracking', lambda lep : getattr(lep, 'weight_tracking', 1.)),
+    Variable('eid_veto'            , lambda ele : ele.cutBasedId('POG_SPRING15_25ns_v1_Veto')),
+    Variable('eid_loose'           , lambda ele : ele.cutBasedId('POG_SPRING15_25ns_v1_Loose')),
+    Variable('eid_medium'          , lambda ele : ele.cutBasedId('POG_SPRING15_25ns_v1_Medium')),
+    Variable('eid_tight'           , lambda ele : ele.cutBasedId('POG_SPRING15_25ns_v1_Tight')),
+    Variable('nhits_missing'       , lambda ele : ele.physObj.gsfTrack().hitPattern().numberOfHits(1), int),
+    Variable('pass_conv_veto'      , lambda ele : ele.passConversionVeto()),
+    Variable('reliso05'            , lambda lep : lep.relIsoR(R=0.3, dBetaFactor=0.5, allCharged=0)),
+    Variable('reliso05_04'         , lambda lep : lep.relIsoR(R=0.4, dBetaFactor=0.5, allCharged=0)),
+    Variable('reliso05_04'         , lambda lep : lep.relIsoR(R=0.4, dBetaFactor=0.5, allCharged=0)),
+    Variable('weight_tracking'     , lambda lep : getattr(lep, 'weight_tracking', 1.)),
 ]
 
 # photon

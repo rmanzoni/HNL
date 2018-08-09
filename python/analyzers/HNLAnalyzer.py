@@ -74,6 +74,10 @@ class HNLAnalyzer(Analyzer):
         event.dsamuons    = self.buildDisplacedMuons(self.handles['dsamuons'].product())
         event.dgmuons     = self.buildDisplacedMuons(self.handles['dgmuons' ].product())
 
+        for imu in event.muons   : imu.type = 13
+        for imu in event.dsamuons: imu.type = 26
+        for imu in event.dgmuons : imu.type = 39
+
         # make vertex objects 
         event.pvs         = self.handles['pvs'     ].product()
         event.svs         = self.handles['svs'     ].product()
@@ -103,7 +107,7 @@ class HNLAnalyzer(Analyzer):
             return False
 
         # FIXME! just for testing
-        if displacement2D(event.the_hn.lep1, event.the_hn) < 40:
+        if displacement2D(event.the_hn.lep1, event.the_hn) > 40:
             return False
 #         if displacement2D(event.the_hn.lep1, event.the_hn) > 100:
 #             return False
@@ -151,8 +155,8 @@ class HNLAnalyzer(Analyzer):
             if pair[0]==pair[1]:
                 continue
             
-            print pair[0]
-            print pair[1]
+#             print pair[0]
+#             print pair[1]
             
             self.tofit.clear()
             for il in pair:
@@ -216,7 +220,7 @@ class HNLAnalyzer(Analyzer):
 #         print 'hnl_maxdls3dpv ', event.hnl_maxdls3dpv 
 #         print 'hnl_maxcos     ', event.hnl_maxcos     
  
-#         import pdb ; pdb.set_trace()        
+        import pdb ; pdb.set_trace()        
 
 
 #         if not len(dimuonsvtx):

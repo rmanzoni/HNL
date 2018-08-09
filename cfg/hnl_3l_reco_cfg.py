@@ -37,16 +37,17 @@ from CMGTools.HNL.samples.signal import all_signals_mu as samples
 
 # from CMGTools.HNL.samples.signal import HN3L_M_2p5_V_0p0173205080757_e_onshell
 # from CMGTools.HNL.samples.signal import HN3L_M_2p5_V_0p0173205080757_e_onshell
-# from CMGTools.HNL.samples.localsignal import TTJets_amcat as ttbar
-from CMGTools.HNL.samples.samples_mc_2017 import TTJets_amcat as ttbar
+# from CMGTools.HNL.samples.localsignal import TTJets_amcat as TTJets_amcat
+# from CMGTools.HNL.samples.samples_mc_2017 import TTJets_amcat
 # from CMGTools.HNL.samples.signal import disp1plus as samples
-# from CMGTools.HNL.samples.localsignal import HN3L_M_2p5_V_0p0173205080757_e_onshell
+from CMGTools.HNL.samples.localsignal import TTJets_amcat, HN3L_M_2p5_V_0p0173205080757_e_onshell
 # from CMGTools.HNL.samples.localsignal import HN3L_M_2p5_V_0p0173205080757_e_onshell, HN3L_M_2p5_V_0p00707106781187_e_onshell
 
 cfg.PromptLeptonMode = 'ele' # 'ele', 'mu'
 # cfg.PromptLeptonMode = 'mu' # 'ele', 'mu'
 # cfg.DataSignalMode = 'signal' # 'signal', 'data'
 cfg.DataSignalMode = 'data' # 'signal', 'data'
+## this should be changed to bkg&data / signal 
 
 puFileMC   = '$CMSSW_BASE/src/CMGTools/H2TauTau/data/MC_Moriond17_PU25ns_V1.root'
 puFileData = '/afs/cern.ch/user/a/anehrkor/public/Data_Pileup_2016_271036-284044_80bins.root'
@@ -65,8 +66,8 @@ pick_events        = getHeppyOption('pick_events', False)
 ###               HANDLE SAMPLES                ###
 ###################################################
 
-# samples = [HN3L_M_2p5_V_0p00707106781187_e_onshell, HN3L_M_2p5_V_0p0173205080757_e_onshell, ttbar] #comment if you want to use all samples
-samples = [ttbar]
+# samples = [HN3L_M_2p5_V_0p00707106781187_e_onshell, HN3L_M_2p5_V_0p0173205080757_e_onshell, TTJets_amcat] #comment if you want to use all samples
+samples = [TTJets_amcat]
 
 for sample in samples:
     if cfg.PromptLeptonMode == 'ele':
@@ -111,13 +112,17 @@ skimAna = cfg.Analyzer(
     name='SkimAnalyzerCount'
 )
 
+if cfg.DataSignalMode == 'data': # or bkg for that matter
+    sampleTriggerHandles = ['slimmedPatTrigger','','']   # for bkg MC
+if cfg.DataSignalMode == 'signal':
+    sampleTriggerHandles = ['selectedPatTrigger','','']  # for signal MC
+
 triggerAna = cfg.Analyzer(
     TriggerAnalyzer,
     name='TriggerAnalyzer',
     addTriggerObjects=True,
     requireTrigger=True,
-#    triggerObjectsHandle=['slimmedPatTrigger','',''],   # for bkg MC
-    triggerObjectsHandle=['selectedPatTrigger','',''],  # for signal MC
+    triggerObjectsHandle=sampleTriggerHandles,
     usePrescaled=False
 )
 
@@ -240,7 +245,7 @@ if not production:
     # comp                 = HN3L_M_2p5_V_0p0173205080757_e_onshell
     # comp                 = HN3L_M_2p5_V_0p00707106781187_e_onshell
     # comp                 = samples
-    comp                 = ttbar
+    comp                 = TTJets_amcat
     selectedComponents   = [comp]
     comp.splitFactor     = 1
     comp.fineSplitFactor = 1

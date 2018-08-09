@@ -43,10 +43,7 @@ class DiLepton(object):
         return self.leptons()[1]
 
     def p4_01(self):
-        try:
-            return self.lep0().p4() + self.lep1().p4()
-        except:
-            set_trace()
+        return self.lep0().p4() + self.lep1().p4()
     
     def p4_02(self):
         return self.lep0().p4() + self.lep2().p4()
@@ -86,7 +83,6 @@ class DiLepton(object):
 
     def deta_hn0_vis(self):
         return abs(self.p4_12().eta() - self.lep0().p4().eta())
-
 
     def dphi_01(self):
         return abs(self.lep0().phi() - self.lep1().p4().phi())
@@ -135,6 +131,9 @@ class DiLepton(object):
 
     def q_012(self):
         return (self.lep0().charge() + self.lep1().charge() + self.lep2().charge())
+
+    def p_12_E(self):
+        return self.p4_12().E()
 
     def p_12_x(self):
         return self.p4_12().px()

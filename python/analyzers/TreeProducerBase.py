@@ -231,19 +231,23 @@ class TreeProducerBase(TreeAnalyzerNumpy):
     def bookExtraMetInfo(self, tree):
         self.var(tree, 'puppimet_pt')
         self.var(tree, 'puppimet_phi')
-        self.var(tree, 'puppimet_mt1')
-        self.var(tree, 'puppimet_mt2')
-        self.var(tree, 'puppimet_mttotal')
-
+        self.var(tree, 'puppimet_cov00')
+        self.var(tree, 'puppimet_cov01')
+        self.var(tree, 'puppimet_cov11')
         self.var(tree, 'pfmet_pt')
         self.var(tree, 'pfmet_phi')
-        self.var(tree, 'pfmet_mt1')
-        self.var(tree, 'pfmet_mt2')
-        self.var(tree, 'pfmet_mttotal')
+        self.var(tree, 'pfmet_cov00')
+        self.var(tree, 'pfmet_cov01')
+        self.var(tree, 'pfmet_cov11')
 
     def fillExtraMetInfo(self, tree, event):
         self.fill(tree, 'puppimet_pt', event.puppimet.pt())
         self.fill(tree, 'puppimet_phi', event.puppimet.phi())
-
+        self.fill(tree, 'puppimet_cov00', event.puppimet.getSignificanceMatrix()(0,0))
+        self.fill(tree, 'puppimet_cov01', event.puppimet.getSignificanceMatrix()(0,1))
+        self.fill(tree, 'puppimet_cov11', event.puppimet.getSignificanceMatrix()(1,1))
         self.fill(tree, 'pfmet_pt', event.pfmet.pt())
         self.fill(tree, 'pfmet_phi', event.pfmet.phi())
+        self.fill(tree, 'pfmet_cov00', event.pfmet.getSignificanceMatrix()(0,0))
+        self.fill(tree, 'pfmet_cov01', event.pfmet.getSignificanceMatrix()(0,1))
+        self.fill(tree, 'pfmet_cov11', event.pfmet.getSignificanceMatrix()(1,1))

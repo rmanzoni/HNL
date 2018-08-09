@@ -207,22 +207,25 @@ class DiLepton(object):
         return self._cos
 
     def __str__(self):
-        return '\n'.join(['',
-                          self.lep1().__str__(),
-                          self.lep2().__str__(),
-                          '\t pt       %.2f' %self.pt(),
-                          '\t eta      %.2f' %self.eta(),
-                          '\t phi      %.2f' %self.phi(),
-                          '\t mass     %.3f' %self.mass(),
-                          '\t deltaR   %.5f' %self.dr(),
-                          '\t deltaPhi %.5f' %self.dphi(),
-                          '\t deltaEta %.5f' %self.deta(),
-                          '\t vertex x=%.2f y=%.2f z=%.2f' %(self.vtx().x(), self.vtx().y(), self.vtx().z()),
-                          '\t vertex chi2 %.5f' %self.chi2(),
-                          '\t 2d displacement from BS %.3f with L/sigma %.3f' %(self.disp2DFromBS(), self.disp2DFromBSSignificance()),
-                          '\t 2d displacement from PV %.3f with L/sigma %.3f' %(self.disp2DFromPV(), self.disp2DFromPVSignificance()),
-                          '\t 3d displacement from PV %.3f with L/sigma %.3f' %(self.disp3DFromPV(), self.disp3DFromPVSignificance()),
-                          '\t pointing angle cosine %.7f' %self.cosTransversePointingAngleBS(),
-                          '',
-                        ]) 
+        try:
+            return '\n'.join(['',
+                              self.lep1().__str__(),
+                              self.lep2().__str__(),
+                              '\t pt_12       %.2f' %self.pt_12(),
+                              '\t eta_12      %.2f' %self.eta_12(),
+                              '\t phi_12      %.2f' %self.phi_12(),
+                              '\t mass_12     %.3f' %self.mass_12(),
+                              '\t deltaR_12   %.5f' %self.dr_12(),
+                              '\t deltaPhi_12 %.5f' %self.dphi_12(),
+                              '\t deltaEta_12 %.5f' %self.deta_12(),
+                              '\t vertex x=%.2f y=%.2f z=%.2f' %(self.vtx().x(), self.vtx().y(), self.vtx().z()),
+                              '\t vertex chi2 %.5f' %self.chi2(),
+                              '\t 2d displacement from BS %.3f with L/sigma %.3f' %(self.disp2DFromBS(), self.disp2DFromBSSignificance()),
+                              '\t 2d displacement from PV %.3f with L/sigma %.3f' %(self.disp2DFromPV(), self.disp2DFromPVSignificance()),
+                              '\t 3d displacement from PV %.3f with L/sigma %.3f' %(self.disp3DFromPV(), self.disp3DFromPVSignificance()),
+                              '\t pointing angle cosine %.7f' %self.cosTransversePointingAngleBS(),
+                              '',
+                            ]) 
+        except:
+            set_trace()
 

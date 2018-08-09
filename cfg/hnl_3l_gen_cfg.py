@@ -27,6 +27,7 @@ from CMGTools.HNL.analyzers.RecoGenAnalyzer    import RecoGenAnalyzer
 from CMGTools.HNL.samples.signal import all_signals as samples
 from CMGTools.HNL.samples.signal import HN3L_M_7_V_0p00547722557505_mu_onshell
 # from CMGTools.HNL.samples.signal import signals_mass_3 as samples
+from CMGTools.HNL.samples.localsignal import HN3L_M_2p5_V_0p0173205080757_e_onshell, HN3L_M_2p5_V_0p00707106781187_e_onshell ,TTJets_amcat
 
 puFileMC   = '$CMSSW_BASE/src/CMGTools/H2TauTau/data/MC_Moriond17_PU25ns_V1.root'
 puFileData = '/afs/cern.ch/user/a/anehrkor/public/Data_Pileup_2016_271036-284044_80bins.root'
@@ -41,7 +42,7 @@ pick_events = getHeppyOption('pick_events', False)
 ###################################################
 ###               HANDLE SAMPLES                ###
 ###################################################
-samples = [HN3L_M_7_V_0p00547722557505_mu_onshell]
+samples = [HN3L_M_2p5_V_0p0173205080757_e_onshell,HN3L_M_7_V_0p00547722557505_mu_onshell]
 
 for sample in samples:
     sample.triggers = ['HLT_IsoMu24_v%d' %i for i in range(4, 5)]
@@ -134,6 +135,7 @@ sequence = cfg.Sequence([
     vertexAna,
     pileUpAna,
     mainAna,
+    jetAna
     recomatchAna,
     treeProducer,
 ])

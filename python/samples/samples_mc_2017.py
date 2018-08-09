@@ -67,12 +67,3 @@ hnl_bkg = [
     W3JetsToLNu                   ,
     W4JetsToLNu                   ,
 ]
-
-
-
-
-
-
-# '/SingleMuon/dezhu-HNLSKIM2017-6c435cbb87e441358a32d522d9d7cdf0/USER' , 'PRIVATE', '*.root', 'phys03', useAAA=True)
-
- 

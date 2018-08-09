@@ -20,7 +20,6 @@ def default():
 # event variables
 event_vars = [
     Variable('run', type=int),
-    Variable('lumi', type=int),
     Variable('event', lambda ev : ev.eventId, type=int),
     Variable('bx', lambda ev : (ev.input.eventAuxiliary().bunchCrossing() * ev.input.eventAuxiliary().isRealData()), type=int),
     Variable('orbit_number', lambda ev : (ev.input.eventAuxiliary().orbitNumber() * ev.input.eventAuxiliary().isRealData()), type=int),
@@ -82,6 +81,9 @@ hnlreco_vars = [
     Variable('n_dMu', lambda ev : ev.n_dMu, type=int),
     Variable('n_pairs', lambda ev : ev.n_pairs, type=int),
     Variable('n_dimuon', lambda ev : ev.n_dimuon, type=int),
+    Variable('dphi_met0', lambda ev : deltaPhi(ev.the_prompt_cand.phi(),ev.puppimet.phi()), type=float),   #FIXME does it work?
+    Variable('dphi_met1', lambda ev : deltaPhi(ev.dMu1MaxCosBPA.phi(),ev.puppimet.phi()) if hasattr(ev,'dMu1MaxCosBPA') else -99, type=float),     #FIXME does it work?
+    Variable('dphi_met2', lambda ev : deltaPhi(ev.dMu2MaxCosBPA.phi(),ev.puppimet.phi()) if hasattr(ev,'dMu2MaxCosBPA') else -99, type=float),     #FIXME does it work?
 ]
 
 # Variables indicating the quality of HNL reconstruction
@@ -96,8 +98,6 @@ check_hnlreco_vars = [
     Variable('flag_matchedHNLMinDr12', lambda ev : ev.matchedHNLMinDr12 ,  ),
     Variable('flag_matchedHNLMaxCosBPA', lambda ev : ev.matchedHNLMaxCosBPA ,  ),
     Variable('flag_IsThereTHEDimuon', lambda ev : ev.flag_IsThereTHEDimuon , ),
-
-
 ]
 
 # generic DiMuon variables
@@ -140,6 +140,7 @@ dimuon_vars = [
     Variable('q_12', lambda hn : hn.q_12(), type = float), 
     Variable('q_012', lambda hn : hn.q_012(), type = float), 
 
+    Variable('p_12_E', lambda hn : hn.p_12_E(), type = float), 
     Variable('p_12_x', lambda hn : hn.p_12_x(), type = float), 
     Variable('p_12_y', lambda hn : hn.p_12_y(), type = float), 
     Variable('p_12_z', lambda hn : hn.p_12_z(), type = float), 
@@ -147,10 +148,14 @@ dimuon_vars = [
 
 # generic DisplacedMuon variables
 displacedmuon_vars = [
-    Variable('x'    , lambda p: p.vx() ),
-    Variable('y'    , lambda p: p.vy() ),
-    Variable('z'    , lambda p: p.vz() ),
-    Variable('dxy'    , lambda p: p.dxy() ),
+    Variable('x'     , lambda p: p.vx() ),
+    Variable('y'     , lambda p: p.vy() ),
+    Variable('z'     , lambda p: p.vz() ),
+    Variable('px'    , lambda p: p.px() ),
+    Variable('py'    , lambda p: p.py() ),
+    Variable('pz'    , lambda p: p.pz() ),
+    Variable('E'     , lambda p: p.p4().E() ),
+    Variable('dxy'   , lambda p: p.dxy() ),
     Variable('pt'    , lambda p: p.pt() ),
     Variable('eta'   , lambda p: p.eta()),
     Variable('phi'   , lambda p: p.phi()),
@@ -180,6 +185,10 @@ hnl_vars = [
     Variable('w_vis_sum_pt'   , lambda hn : getattr(hn, 'visSumPt'    , default)()),
   
     Variable('hn_pt'          , lambda hn : getattr(hn, 'hnPt'        , default)()),
+    Variable('hn_px'          , lambda hn : getattr(hn, 'hnPx'        , default)()),
+    Variable('hn_py'          , lambda hn : getattr(hn, 'hnPy'        , default)()),
+    Variable('hn_pz'          , lambda hn : getattr(hn, 'hnPz'        , default)()),
+    Variable('hn_E'          , lambda hn : getattr(hn, 'hnE'        , default)()),
     Variable('hn_eta'         , lambda hn : getattr(hn, 'hnEta'       , default)()),
     Variable('hn_phi'         , lambda hn : getattr(hn, 'hnPhi'       , default)()),
     Variable('hn_q'           , lambda hn : getattr(hn, 'hnCharge'    , default)()),
@@ -270,6 +279,10 @@ particle_vertex_vars = [
 
 # generic lepton
 lepton_vars = [
+    Variable('px'           , lambda lep: lep.px() ),
+    Variable('py'           , lambda lep: lep.py() ),
+    Variable('pz'           , lambda lep: lep.pz() ),
+    Variable('E'            , lambda lep: lep.p4().E() ),
     Variable('dxy'          , lambda lep : lep.dxy()),
     Variable('dxy_error'    , lambda lep : lep.edxy() if hasattr(lep, 'edxy') else lep.dxy_error()),
     Variable('dz'           , lambda lep : lep.leadChargedHadrCand().dz() if hasattr(lep, 'leadChargedHadrCand') else lep.dz()),
@@ -482,7 +495,6 @@ jet_vars_extra = [
     Variable('chargedMultiplicity', lambda jet : getattr(jet, 'chargedMultiplicity', default)()),
     Variable('neutralMultiplicity', lambda jet : getattr(jet, 'neutralMultiplicity', default)()),
 ]
-
 
 # gen info
 geninfo_vars = [

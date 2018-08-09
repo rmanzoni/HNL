@@ -16,7 +16,7 @@ from PhysicsTools.Heppy.analyzers.gen.GeneratorAnalyzer  import GeneratorAnalyze
 from PhysicsTools.Heppy.analyzers.gen.LHEWeightAnalyzer  import LHEWeightAnalyzer
 
 from CMGTools.H2TauTau.proto.analyzers.TriggerAnalyzer   import TriggerAnalyzer
-
+from CMGTools.H2TauTau.proto.analyzers.JetAnalyzer       import JetAnalyzer
 
 # import HNL analyzers:
 from CMGTools.HNL.analyzers.HNLAnalyzer             import HNLAnalyzer
@@ -42,15 +42,19 @@ from CMGTools.HNL.samples.signal import all_signals_mu as samples
 
 # from CMGTools.HNL.samples.signal import HN3L_M_2p5_V_0p0173205080757_e_onshell
 # from CMGTools.HNL.samples.signal import HN3L_M_2p5_V_0p0173205080757_e_onshell
-<<<<<<< HEAD
 from CMGTools.HNL.samples.localsignal     import HN3L_M_2p5_V_0p0173205080757_e_onshell, HN3L_M_2p5_V_0p00707106781187_e_onshell
 from CMGTools.HNL.samples.samples_mc_2017 import TTJets_amcat as ttbar
+# from CMGTools.HNL.samples.samples_mc_2017 import TTJets_amcat
+# from CMGTools.HNL.samples.signal import disp1plus as samples
+# from CMGTools.HNL.samples.localsignal import TTJets_amcat, HN3L_M_2p5_V_0p0173205080757_e_onshell
+from CMGTools.HNL.samples.localsignal import HN3L_M_2p5_V_0p0173205080757_e_onshell, HN3L_M_2p5_V_0p00707106781187_e_onshell
 
 # RM: FIXME! this is ugly
 cfg.PromptLeptonMode = 'ele' # 'ele', 'mu'
 # cfg.PromptLeptonMode = 'mu' # 'ele', 'mu'
-# cfg.DataSignalMode = 'signal' # 'signal', 'data'
-cfg.DataSignalMode = 'data' # 'signal', 'data'
+cfg.DataSignalMode = 'signal' # 'signal', 'BkgOrData'
+# cfg.DataSignalMode = 'BkgOrData' # 'signal', 'BkgOrData'
+## this should be changed to bkg&data / signal 
 
 puFileMC   = '$CMSSW_BASE/src/CMGTools/H2TauTau/data/MC_Moriond17_PU25ns_V1.root'
 puFileData = '/afs/cern.ch/user/a/anehrkor/public/Data_Pileup_2016_271036-284044_80bins.root'
@@ -62,7 +66,7 @@ puFileData = '/afs/cern.ch/user/a/anehrkor/public/Data_Pileup_2016_271036-284044
 # production = True run on batch, production = False (or unset) run locally
 
 # production         = getHeppyOption('production' , False)
-production         = getHeppyOption('production' , True)
+production         = getHeppyOption('production' , False)
 pick_events        = getHeppyOption('pick_events', False)
 
 ###################################################
@@ -72,15 +76,16 @@ samples = [HN3L_M_2p5_V_0p00707106781187_e_onshell, HN3L_M_2p5_V_0p0173205080757
 # samples = [ttbar]
 
 for sample in samples:
-    sample.triggers  = ['HLT_Ele27_WPTight_Gsf_v%d'          %i for i in range(1, 15)] #electron trigger
-    sample.triggers += ['HLT_Ele32_WPTight_Gsf_v%d'          %i for i in range(4,  5)] #electron trigger
-    sample.triggers += ['HLT_Ele35_WPTight_Gsf_v%d'          %i for i in range(4,  5)] #electron trigger
-    sample.triggers += ['HLT_Ele115_CaloIdVT_GsfTrkIdT_v%d'  %i for i in range(4,  5)] #electron trigger
-    sample.triggers += ['HLT_Ele135_CaloIdVT_GsfTrkIdT_v%d'  %i for i in range(4,  5)] #electron trigger
-    # sample.triggers  = ['HLT_IsoMu24_v%d'                    %i for i in range(4, 5)] #muon trigger
-    # sample.triggers += ['HLT_IsoMu27_v%d'                    %i for i in range(4, 5)] #muon trigger
-    # sample.triggers += ['HLT_Mu50_v%d'                       %i for i in range(4, 5)] #muon trigger
-    # sample.triggers += ['HLT_IsoMu24_v%d'                    %i for i in range(4, 5)] #muon trigger
+    if cfg.PromptLeptonMode == 'ele':
+        sample.triggers  = ['HLT_Ele27_WPTight_Gsf_v%d'          %i for i in range(1, 15)] #electron trigger
+        sample.triggers += ['HLT_Ele32_WPTight_Gsf_v%d'          %i for i in range(1, 15)] #electron trigger
+        sample.triggers += ['HLT_Ele35_WPTight_Gsf_v%d'          %i for i in range(1, 15)] #electron trigger
+        sample.triggers += ['HLT_Ele115_CaloIdVT_GsfTrkIdT_v%d'  %i for i in range(1, 15)] #electron trigger
+        sample.triggers += ['HLT_Ele135_CaloIdVT_GsfTrkIdT_v%d'  %i for i in range(1, 15)] #electron trigger
+    if cfg.PromptLeptonMode == 'mu':
+        sample.triggers  = ['HLT_IsoMu24_v%d'                    %i for i in range(1, 15)] #muon trigger
+        sample.triggers += ['HLT_IsoMu27_v%d'                    %i for i in range(1, 15)] #muon trigger
+        sample.triggers += ['HLT_Mu50_v%d'                       %i for i in range(1, 15)] #muon trigger
 
     sample.splitFactor = splitFactor(sample, 1e5)
     sample.puFileData = puFileData
@@ -112,11 +117,17 @@ skimAna = cfg.Analyzer(
     name='SkimAnalyzerCount'
 )
 
+if cfg.DataSignalMode == 'BkgOrData': # or bkg for that matter
+    sampleTriggerHandles = ['slimmedPatTrigger','','']   # for bkg MC
+if cfg.DataSignalMode == 'signal':
+    sampleTriggerHandles = ['selectedPatTrigger','','']  # for signal MC
+
 triggerAna = cfg.Analyzer(
     TriggerAnalyzer,
     name='TriggerAnalyzer',
     addTriggerObjects=True,
     requireTrigger=True,
+    triggerObjectsHandle=sampleTriggerHandles,
     usePrescaled=False
 )
 
@@ -136,7 +147,16 @@ pileUpAna = cfg.Analyzer(
 
 # for each path specify which filters you want the muons to match to
 triggers_and_filters = OrderedDict()
-triggers_and_filters['HLT_IsoMu24'] = ['hltL3crIsoL1sMu22L1f0L2f10QL3f24QL3trkIsoFiltered0p09'                                                                                                                ]
+if cfg.PromptLeptonMode == 'mu':
+    triggers_and_filters['HLT_IsoMu24'] = ['hltL3crIsoL1sSingleMu22L1f0L2f10QL3f24QL3trkIsoFiltered0p07']
+    triggers_and_filters['HLT_IsoMu27'] = ['hltL3crIsoL1sMu22Or25L1f0L2f10QL3f27QL3trkIsoFiltered0p07']
+    triggers_and_filters['HLT_Mu50']    = ['hltL3fL1sMu22Or25L1f0L2f10QL3Filtered50Q']
+if cfg.PromptLeptonMode == 'ele':
+    triggers_and_filters['HLT_Ele27_WPTight_Gsf']         = ['hltEle27WPTightGsfTrackIsoFilter']
+    triggers_and_filters['HLT_Ele32_WPTight_Gsf']         = ['hltEle32WPTightGsfTrackIsoFilter']
+    triggers_and_filters['HLT_Ele35_WPTight_Gsf']         = ['hltEle35noerWPTightGsfTrackIsoFilter']
+    triggers_and_filters['HLT_Ele115_CaloIdVT_GsfTrkIdT'] = ['hltEle115CaloIdVTGsfTrkIdTGsfDphiFilter']
+    triggers_and_filters['HLT_Ele135_CaloIdVT_GsfTrkIdT'] = ['hltEle135CaloIdVTGsfTrkIdTGsfDphiFilter']
 
 HNLAnalyzer = cfg.Analyzer(
     HNLAnalyzer,
@@ -144,13 +164,13 @@ HNLAnalyzer = cfg.Analyzer(
 )
 
 # RM: FIXME! here it is
-if cfg.DataSignalMode == 'signal': # 'signal', 'data'
+if cfg.DataSignalMode == 'signal': # 'signal', 'BkgOrData'
     HNLTreeProducer = cfg.Analyzer(
         HNLTreeProducerSignal,
         name='HNLTreeProducerSignal',
         # fillL1=False,
     )
-if cfg.DataSignalMode == 'data': # 'signal', 'data'
+if cfg.DataSignalMode == 'BkgOrData': # 'signal', 'BkgOrData'
     HNLTreeProducer = cfg.Analyzer(
         HNLTreeProducerData,
         name='HNLTreeProducerData',
@@ -172,6 +192,24 @@ CheckHNLAnalyzer = cfg.Analyzer(
     name='CheckHNLAnalyzer',
 )
 
+# see SM HTT TWiki
+# https://twiki.cern.ch/twiki/bin/viewauth/CMS/SMTauTau2016#Jet_Energy_Corrections
+jetAna = cfg.Analyzer(
+    JetAnalyzer,
+    name              = 'JetAnalyzer',
+    jetCol            = 'slimmedJets',
+    jetPt             = 20.,
+    jetEta            = 2.4,
+    relaxJetId        = False, # relax = do not apply jet ID
+    relaxPuJetId      = True, # relax = do not apply pileup jet ID
+    jerCorr           = True,
+    puJetIDDisc       = 'pileupJetId:fullDiscriminant',
+    recalibrateJets   = True,
+    applyL2L3Residual = 'MC',
+#    mcGT              = '80X_mcRun2_asymptotic_2016_TrancheIV_v8',
+#    dataGT            = '80X_dataRun2_2016SeptRepro_v7',
+    #jesCorr = 1., # Shift jet energy scale in terms of uncertainties (1 = +1 sigma)
+)
 ###################################################
 ###                  SEQUENCE                   ###
 ###################################################
@@ -190,16 +228,17 @@ CheckHNLAnalyzer = cfg.Analyzer(
 # ])
 
 # RM: FIXME! here it is, again
-if cfg.DataSignalMode == 'data':
+if cfg.DataSignalMode == 'BkgOrData':
     sequence = cfg.Sequence([
     #     eventSelector,
         lheWeightAna, # les houche
         jsonAna,
         skimAna,
-        # triggerAna,
+        triggerAna,
         vertexAna,
         pileUpAna,
         HNLAnalyzer,
+        jetAna,
         HNLTreeProducer,
     ])
 
@@ -209,12 +248,13 @@ if cfg.DataSignalMode == 'signal':
         lheWeightAna, # les houche
         jsonAna,
         skimAna,
-        # triggerAna,
+        triggerAna,
         vertexAna,
         pileUpAna,
         HNLGenTreeAnalyzer,
         RecoGenAnalyzer,
         HNLAnalyzer,
+        jetAna,
         CheckHNLAnalyzer,
         HNLTreeProducer,
     ])
@@ -224,9 +264,9 @@ if cfg.DataSignalMode == 'signal':
 ###################################################
 if not production:
     # comp                 = HN3L_M_2p5_V_0p0173205080757_e_onshell
-    # comp                 = HN3L_M_2p5_V_0p00707106781187_e_onshell
+    comp                 = HN3L_M_2p5_V_0p00707106781187_e_onshell
     # comp                 = samples
-    comp                 = ttbar
+    # comp                 = TTJets_amcat
     selectedComponents   = [comp]
     comp.splitFactor     = 1
     comp.fineSplitFactor = 1

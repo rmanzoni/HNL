@@ -191,6 +191,94 @@ class HNLAnalyzer(Analyzer):
             # remove from the leptons that will be later used to find the displaced di-lepton
             event.filtered_electrons = [ele for ele in event.electrons if ele.physObj != prompt_cand.physObj]
 
+        # RM: FIXME! check this!
+        #####################################################################################
+        # Backmatching with HLT # TODO TEST THIS AND SEE IF IT WORKS PROPERLY
+        #####################################################################################
+        
+        # match only if the trigger fired
+        event.fired_triggers = [info.name for info in getattr(event, 'trigger_infos', []) if info.fired]
+
+        # trigger matching
+        if hasattr(self.cfg_ana, 'trigger_match') and len(self.cfg_ana.trigger_match.keys())>0:
+                                   
+            for lep in the_prompt_cand:
+                
+                lep.hltmatched = [] # initialise to no match
+                
+                lep.trig_objs = OrderedDict()
+                lep.trig_objs[1] = [] # initialise to no trigger objct matches
+    
+                lep.trig_matched = OrderedDict()
+                lep.trig_matched[1] = False # initialise to no match
+
+                lep.best_trig_match = OrderedDict()
+                lep.best_trig_match[1] = OrderedDict()
+
+                # add all matched objects to each muon
+                for info in event.trigger_infos:
+                                    
+                    mykey = '_'.join(info.name.split('_')[:-1])
+
+                    # start with simple matching
+                    these_objects = sorted([obj for obj in info.objects if deltaR(lep, obj)<0.15], key = lambda x : deltaR(x, lep))
+
+                    lep.trig_objs[1] += these_objects
+
+                    # get the set of trigger types from the cfg 
+                    trigger_types_to_match = self.cfg_ana.trigger_match[mykey][1]
+                    
+                    # list of tuples of matched objects
+                    good_matches = []
+
+                    # initialise the matching to None
+                    lep.best_trig_match[1][mykey] = None
+
+                    # investigate all the possible matches (leps, pairs or singlets)
+                    for t_o in these_objects:
+
+                        # intersect found trigger types to desired trigger types
+                        itypes = Counter()
+                        for ikey in trigger_types_to_match.keys():
+                            itypes[ikey] = sum([1 for iobj in t_o if iobj.triggerObjectTypes()[0]==ikey])
+                                            
+                        # all the types to match are matched then assign the 
+                        # corresponding trigger object to each lep
+                        if itypes & trigger_types_to_match == trigger_types_to_match:
+                            good_matches.append(t_o)
+                    
+                    
+                    if len(good_matches):
+                        good_matches.sort(key = lambda x : deltaR(x, lep))        
+
+                # iterate over the path:filters dictionary
+                #     the filters MUST be sorted correctly: i.e. first filter in the dictionary 
+                #     goes with the first muons and so on
+                for k, vv in self.cfg_ana.trigger_match.iteritems():
+
+                    if not any(k in name for name in event.fired_triggers):
+                         continue
+                    
+                    v = vv[0]
+                                                                 
+                    for ii, filters in enumerate(v):
+                        if not lep.best_trig_match[ii+1][k]:
+                            continue
+                        if set([filters]) & set(lep.best_trig_match[ii+1][k].filterLabels()):
+                            lep.trig_matched[ii+1] = True                 
+                    
+                    ismatched = sum(lep.trig_matched.values())            
+                                
+                    if len(v) == ismatched:
+                        lep.hltmatched.append(k)
+
+            the_prompt_cand = [lep for lep in the_prompt_cand if len(lep.hltmatched)>0] 
+            
+            if the_prompt_cand == None:
+                return False 
+
+        event.the_prompt_cand = the_prompt_cand
+
 
         # What is this?
         if cfg.DataSignalMode == 'signal': event.prompt_ana_success = -99 # NO RECO FOUND
@@ -332,4 +420,6 @@ class HNLAnalyzer(Analyzer):
                     if (dMu1.physObj == event.the_hnl.l1().bestmatch.physObj or dMu1.physObj == event.the_hnl.l2().bestmatch.physObj) and (dMu2.physObj == event.the_hnl.l1().bestmatch.physObj or dMu2.physObj == event.the_hnl.l2().bestmatch.physObj):
                         event.flag_IsThereTHEDimuon = True
 
-
+        return True
+        
+        

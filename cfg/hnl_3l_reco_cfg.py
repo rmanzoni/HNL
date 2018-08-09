@@ -45,8 +45,8 @@ from CMGTools.HNL.samples.localsignal import TTJets_amcat, HN3L_M_2p5_V_0p017320
 
 cfg.PromptLeptonMode = 'ele' # 'ele', 'mu'
 # cfg.PromptLeptonMode = 'mu' # 'ele', 'mu'
-# cfg.DataSignalMode = 'signal' # 'signal', 'data'
-cfg.DataSignalMode = 'data' # 'signal', 'data'
+# cfg.DataSignalMode = 'signal' # 'signal', 'BkgOrData'
+cfg.DataSignalMode = 'BkgOrData' # 'signal', 'BkgOrData'
 ## this should be changed to bkg&data / signal 
 
 puFileMC   = '$CMSSW_BASE/src/CMGTools/H2TauTau/data/MC_Moriond17_PU25ns_V1.root'
@@ -112,7 +112,7 @@ skimAna = cfg.Analyzer(
     name='SkimAnalyzerCount'
 )
 
-if cfg.DataSignalMode == 'data': # or bkg for that matter
+if cfg.DataSignalMode == 'BkgOrData': # or bkg for that matter
     sampleTriggerHandles = ['slimmedPatTrigger','','']   # for bkg MC
 if cfg.DataSignalMode == 'signal':
     sampleTriggerHandles = ['selectedPatTrigger','','']  # for signal MC
@@ -158,13 +158,13 @@ HNLAnalyzer = cfg.Analyzer(
     name='HNLAnalyzer',
 )
 
-if cfg.DataSignalMode == 'signal': # 'signal', 'data'
+if cfg.DataSignalMode == 'signal': # 'signal', 'BkgOrData'
     HNLTreeProducer = cfg.Analyzer(
         HNLTreeProducerSignal,
         name='HNLTreeProducerSignal',
         # fillL1=False,
     )
-if cfg.DataSignalMode == 'data': # 'signal', 'data'
+if cfg.DataSignalMode == 'BkgOrData': # 'signal', 'BkgOrData'
     HNLTreeProducer = cfg.Analyzer(
         HNLTreeProducerData,
         name='HNLTreeProducerData',
@@ -207,7 +207,7 @@ jetAna = cfg.Analyzer(
 ###################################################
 ###                  SEQUENCE                   ###
 ###################################################
-if cfg.DataSignalMode == 'data':
+if cfg.DataSignalMode == 'BkgOrData':
     sequence = cfg.Sequence([
     #     eventSelector,
         lheWeightAna, # les houche

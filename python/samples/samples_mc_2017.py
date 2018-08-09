@@ -12,7 +12,7 @@ creator = ComponentCreator()
 # FIXME! create meaningful lists
 
 TTJets_amcat                    = creator.makeMyPrivateMCComponent('TTJets_amcat'                  , '/TTJets_TuneCP5_13TeV-amcatnloFXFX-pythia8/vstampf-HNLSKIM2017_TTJets_TuneCP5_13TeV-amcatnloFXFX-pythia8-115d0bad8e8ff59118d83f903524e0b3/USER'                                         , 'PRIVATE', '*.root', 'phys03', xSec=831.76, useAAA=True)
-TTJets_amact.nGenEvents = 153432257 
+TTJets_amcat.nGenEvents = 153432257 
 # .sigma = 831.76 pb; .nevents = 39769534
 
 # TTJets_mdgrph                   = creator.makeMyPrivateMCComponent('TTJets_madgraph'               , '/TTJets_TuneCP5_13TeV-madgraphMLM-pythia8/vstampf-HNLSKIM2017_TTJets_TuneCP5_13TeV-madgraphMLM-pythia8-115d0bad8e8ff59118d83f903524e0b3/USER'                                           , 'PRIVATE', '*.root', 'phys03', useAAA=True)

@@ -37,16 +37,16 @@ from CMGTools.HNL.samples.signal import all_signals_mu as samples
 
 # from CMGTools.HNL.samples.signal import HN3L_M_2p5_V_0p0173205080757_e_onshell
 # from CMGTools.HNL.samples.signal import HN3L_M_2p5_V_0p0173205080757_e_onshell
-# from CMGTools.HNL.samples.localsignal import TTJets_amcat as TTJets_amcat
+from CMGTools.HNL.samples.localsignal import TTJets_amcat 
 # from CMGTools.HNL.samples.samples_mc_2017 import TTJets_amcat
 # from CMGTools.HNL.samples.signal import disp1plus as samples
-from CMGTools.HNL.samples.localsignal import TTJets_amcat, HN3L_M_2p5_V_0p0173205080757_e_onshell
-# from CMGTools.HNL.samples.localsignal import HN3L_M_2p5_V_0p0173205080757_e_onshell, HN3L_M_2p5_V_0p00707106781187_e_onshell
+# from CMGTools.HNL.samples.localsignal import TTJets_amcat, HN3L_M_2p5_V_0p0173205080757_e_onshell
+from CMGTools.HNL.samples.localsignal import HN3L_M_2p5_V_0p0173205080757_e_onshell, HN3L_M_2p5_V_0p00707106781187_e_onshell
 
 cfg.PromptLeptonMode = 'ele' # 'ele', 'mu'
 # cfg.PromptLeptonMode = 'mu' # 'ele', 'mu'
-# cfg.DataSignalMode = 'signal' # 'signal', 'BkgOrData'
-cfg.DataSignalMode = 'BkgOrData' # 'signal', 'BkgOrData'
+cfg.DataSignalMode = 'signal' # 'signal', 'BkgOrData'
+# cfg.DataSignalMode = 'BkgOrData' # 'signal', 'BkgOrData'
 ## this should be changed to bkg&data / signal 
 
 puFileMC   = '$CMSSW_BASE/src/CMGTools/H2TauTau/data/MC_Moriond17_PU25ns_V1.root'
@@ -67,7 +67,7 @@ pick_events        = getHeppyOption('pick_events', False)
 ###################################################
 
 # samples = [HN3L_M_2p5_V_0p00707106781187_e_onshell, HN3L_M_2p5_V_0p0173205080757_e_onshell, TTJets_amcat] #comment if you want to use all samples
-samples = [TTJets_amcat]
+# samples = [TTJets_amcat]
 
 for sample in samples:
     if cfg.PromptLeptonMode == 'ele':
@@ -243,9 +243,9 @@ if cfg.DataSignalMode == 'signal':
 ###################################################
 if not production:
     # comp                 = HN3L_M_2p5_V_0p0173205080757_e_onshell
-    # comp                 = HN3L_M_2p5_V_0p00707106781187_e_onshell
+    comp                 = HN3L_M_2p5_V_0p00707106781187_e_onshell
     # comp                 = samples
-    comp                 = TTJets_amcat
+    # comp                 = TTJets_amcat
     selectedComponents   = [comp]
     comp.splitFactor     = 1
     comp.fineSplitFactor = 1

@@ -127,7 +127,7 @@ class HNLAnalyzer(Analyzer):
             matchable_ele_sel_pt = [ele for ele in matchable_ele if (ele.pt() > ele_sel_pt)] 
             matchable_ele_sel_eta = [ele for ele in matchable_ele if (abs(ele.eta()) < ele_sel_eta)] 
 #            matchable_ele_sel_id = [ele for ele in matchable_ele if (ele.mvaIDRun2('Fall17noIso', 'Loose') == True)] # FIXME THIS DOES NOT WORK
-            matchable_ele_sel_id = [ele for ele in matchable_ele if (ele.electronID("MVA_ID_Iso_Fall17_Loose") == True)] 
+            matchable_ele_sel_id = [ele for ele in matchable_ele if (ele.electronID("MVA_ID_nonIso_Fall17_Loose") == True)] 
 #            print(ele.gsfTrack())
             matchable_ele_sel_vtx = [ele for ele in matchable_ele if abs(ele.dz()) < ele_sel_vtx] # TODO what about dxy component ?
             ele_cand = [ele for ele in matchable_ele if (ele in matchable_ele_sel_pt and ele in matchable_ele_sel_eta and ele in matchable_ele_sel_id and ele in matchable_ele_sel_vtx)]
@@ -262,7 +262,7 @@ class HNLAnalyzer(Analyzer):
             the_prompt_cand = [lep for lep in the_prompt_cand if len(lep.hltmatched)>0] 
             
             if the_prompt_cand == None:
-                return False #TODO TURN ON FOR DATA 
+                return False 
 
         event.the_prompt_cand = the_prompt_cand
        

@@ -126,14 +126,10 @@ class HNLAnalyzer(Analyzer):
             # match collections
             matchable_ele_sel_pt = [ele for ele in matchable_ele if (ele.pt() > ele_sel_pt)] 
             matchable_ele_sel_eta = [ele for ele in matchable_ele if (abs(ele.eta()) < ele_sel_eta)] 
-            # https://github.com/rmanzoni/cmgtools-lite/blob/825_HTT/H2TauTau/python/proto/analyzers/TauEleAnalyzer.py#L193
-#            matchable_ele_sel_id = [ele for ele in matchable_ele if (ele.mvaIDRun2('NonTrigSpring15MiniAOD', 'POG90') == True)] 
 #            matchable_ele_sel_id = [ele for ele in matchable_ele if (ele.mvaIDRun2('Fall17noIso', 'Loose') == True)] # FIXME THIS DOES NOT WORK
-#            set_trace()
-            matchable_ele_sel_id = [ele for ele in matchable_ele if (ele.electronID("MVA_ID_Iso_Fall17_Loose") == True)] # FIXME THIS DOES NOT WORK
+            matchable_ele_sel_id = [ele for ele in matchable_ele if (ele.electronID("MVA_ID_nonIso_Fall17_Loose") == True)] 
 #            print(ele.gsfTrack())
             matchable_ele_sel_vtx = [ele for ele in matchable_ele if abs(ele.dz()) < ele_sel_vtx] # TODO what about dxy component ?
-            # https://github.com/rmanzoni/cmgtools-lite/blob/825_HTT/H2TauTau/python/proto/analyzers/TauEleAnalyzer.py#L104
             ele_cand = [ele for ele in matchable_ele if (ele in matchable_ele_sel_pt and ele in matchable_ele_sel_eta and ele in matchable_ele_sel_id and ele in matchable_ele_sel_vtx)]
             
 
@@ -157,7 +153,7 @@ class HNLAnalyzer(Analyzer):
         the_prompt_cand = None
 
         if cfg.DataSignalMode == 'signal': event.prompt_ana_success = -99 # NO RECO FOUND
-        if not len(prompt_cand): return False # TODO TURN THIS ON FOR DATA
+        if not len(prompt_cand): return False 
         if len(prompt_cand): 
         # selection: pick candidate with highest pt 
         # there must be something better; maybe if both are matched check some additional stuff
@@ -181,10 +177,10 @@ class HNLAnalyzer(Analyzer):
                             event.prompt_ana_success = 1
                     else: event.prompt_ana_success = -13 # FAKE MUONS
             if the_prompt_cand == None:
-                return False #TODO TURN ON FOR DATA
+                return False 
 
         #####################################################################################
-        # Backmatching with HLT # TODO TEST THIS AND SEE IF IT
+        # Backmatching with HLT # TODO TEST THIS AND SEE IF IT WORKS PROPERLY
         #####################################################################################
         
         # match only if the trigger fired
@@ -263,10 +259,10 @@ class HNLAnalyzer(Analyzer):
                     if len(v) == ismatched:
                         lep.hltmatched.append(k)
 
-            the_prompt_cand = [lep for lep in the_prompt_cand if len(lep.hltmatched)>0] # FIXME SHOULDN'T BE A LIST
+            the_prompt_cand = [lep for lep in the_prompt_cand if len(lep.hltmatched)>0] 
             
             if the_prompt_cand == None:
-                return False #TODO TURN ON FOR DATA 
+                return False 
 
         event.the_prompt_cand = the_prompt_cand
        

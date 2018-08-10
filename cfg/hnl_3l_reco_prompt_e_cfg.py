@@ -16,7 +16,6 @@ from PhysicsTools.Heppy.analyzers.gen.GeneratorAnalyzer  import GeneratorAnalyze
 from PhysicsTools.Heppy.analyzers.gen.LHEWeightAnalyzer  import LHEWeightAnalyzer
 
 from CMGTools.H2TauTau.proto.analyzers.TriggerAnalyzer   import TriggerAnalyzer
-from CMGTools.H2TauTau.proto.analyzers.JetAnalyzer       import JetAnalyzer
 
 # import HNL analyzers:
 from CMGTools.HNL.analyzers.HNLAnalyzer             import HNLAnalyzer
@@ -30,11 +29,13 @@ from CMGTools.HNL.analyzers.HNLGenTreeAnalyzer      import HNLGenTreeAnalyzer
 ##########################################################################################
 from CMGTools.HNL.analyzers.RecoGenAnalyzer         import RecoGenAnalyzer
 from CMGTools.HNL.analyzers.CheckHNLAnalyzer        import CheckHNLAnalyzer
+from CMGTools.HNL.analyzers.TriggerAnalyzer         import TriggerAnalyzer
+from CMGTools.HNL.analyzers.JetAnalyzer             import JetAnalyzer
 
 # import samples, signal
 # from CMGTools.HNL.samples.signal import all_signals as samples
 # from CMGTools.HNL.samples.signal import all_signals_e as samples
-from CMGTools.HNL.samples.signal import all_signals_mu as samples
+# from CMGTools.HNL.samples.signal import all_signals_mu as samples
 # from CMGTools.HNL.samples.signal import signals_mass_3 as samples
 # from CMGTools.HNL.samples.signal import signals_test as samples
 # from CMGTools.HNL.samples.signal import signals_mass_1
@@ -42,12 +43,11 @@ from CMGTools.HNL.samples.signal import all_signals_mu as samples
 
 # from CMGTools.HNL.samples.signal import HN3L_M_2p5_V_0p0173205080757_e_onshell
 # from CMGTools.HNL.samples.signal import HN3L_M_2p5_V_0p0173205080757_e_onshell
-from CMGTools.HNL.samples.localsignal     import HN3L_M_2p5_V_0p0173205080757_e_onshell, HN3L_M_2p5_V_0p00707106781187_e_onshell
+from CMGTools.HNL.samples.localsignal import HN3L_M_2p5_V_0p0173205080757_e_onshell, HN3L_M_2p5_V_0p00707106781187_e_onshell
 # from CMGTools.HNL.samples.samples_mc_2017 import TTJets_amcat as ttbar
 # from CMGTools.HNL.samples.samples_mc_2017 import TTJets_amcat
 # from CMGTools.HNL.samples.signal import disp1plus as samples
 # from CMGTools.HNL.samples.localsignal import TTJets_amcat, HN3L_M_2p5_V_0p0173205080757_e_onshell
-from CMGTools.HNL.samples.localsignal import HN3L_M_2p5_V_0p0173205080757_e_onshell, HN3L_M_2p5_V_0p00707106781187_e_onshell
 
 # RM: FIXME! this is ugly
 cfg.DataSignalMode = 'signal' # 'signal', 'BkgOrData'
@@ -140,16 +140,17 @@ pileUpAna = cfg.Analyzer(
 
 # for each path specify which filters you want the muons to match to
 triggers_and_filters = OrderedDict()
-triggers_and_filters['HLT_Ele27_WPTight_Gsf']         = ['hltEle27WPTightGsfTrackIsoFilter']
-triggers_and_filters['HLT_Ele32_WPTight_Gsf']         = ['hltEle32WPTightGsfTrackIsoFilter']
-triggers_and_filters['HLT_Ele35_WPTight_Gsf']         = ['hltEle35noerWPTightGsfTrackIsoFilter']
-triggers_and_filters['HLT_Ele115_CaloIdVT_GsfTrkIdT'] = ['hltEle115CaloIdVTGsfTrkIdTGsfDphiFilter']
-triggers_and_filters['HLT_Ele135_CaloIdVT_GsfTrkIdT'] = ['hltEle135CaloIdVTGsfTrkIdTGsfDphiFilter']
+triggers_and_filters['HLT_Ele27_WPTight_Gsf']         = 'hltEle27WPTightGsfTrackIsoFilter'
+triggers_and_filters['HLT_Ele32_WPTight_Gsf']         = 'hltEle32WPTightGsfTrackIsoFilter'
+triggers_and_filters['HLT_Ele35_WPTight_Gsf']         = 'hltEle35noerWPTightGsfTrackIsoFilter'
+triggers_and_filters['HLT_Ele115_CaloIdVT_GsfTrkIdT'] = 'hltEle115CaloIdVTGsfTrkIdTGsfDphiFilter'
+triggers_and_filters['HLT_Ele135_CaloIdVT_GsfTrkIdT'] = 'hltEle135CaloIdVTGsfTrkIdTGsfDphiFilter'
 
 HNLAnalyzer = cfg.Analyzer(
     HNLAnalyzer,
     name='HNLAnalyzer',
     promptLepton='ele',
+    triggersAndFilters=triggers_and_filters,
 )
 
 # RM: FIXME! here it is

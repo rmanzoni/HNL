@@ -82,8 +82,8 @@ class HNLAnalyzer(Analyzer):
 
     def testLepVtx(self, lep, dxy, dz):
         # vertex
-        if abs(ele.dz()) >dz : return False
-        if abs(ele.dxy())>dxy: return False
+        if abs(lep.dz()) >dz : return False
+        if abs(lep.dxy())>dxy: return False
         # passed
         return True
     
@@ -169,138 +169,181 @@ class HNLAnalyzer(Analyzer):
 # 
 #         self.counters.counter('HNL').inc('good gen')
 # 
+
         #####################################################################################
-        # Find the prompt lepton
+        # Preselect the prompt leptons
         #####################################################################################
         
+        prompt_mu_cands  = sorted([mu  for mu  in event.muons     if self.preselectPromptMuons    (mu )] , key = lambda x : x.pt(), reverse = True)
         prompt_ele_cands = sorted([ele for ele in event.electrons if self.preselectPromptElectrons(ele)], key = lambda x : x.pt(), reverse = True)
-        prompt_mu_cands  = sorted([mu  for mu  in event.muons     if self.preselectPromptElectrons(mu)] , key = lambda x : x.pt(), reverse = True)
 
-        # PROMPT CANDIDATE
-        if self.cfg_ana.promptLepton=='mu':
-            if not len(prompt_mu_cands):
-                return False
-            prompt_cand = prompt_mu_cands[0]
-            # remove from the leptons that will be later used to find the displaced di-lepton
-            event.filtered_muons = [mu for mu in event.muons if mu.physObj != prompt_cand.physObj]
+        if   self.cfg_ana.promptLepton=='mu':
+            prompt_leps = prompt_mu_cands       
+        elif self.cfg_ana.promptLepton=='ele':
+            prompt_leps = prompt_ele_cands
+        else:
+            print 'ERROR: HNLAnalyzer not supported lepton flavour', self.cfg_ana.promptLepton
+            exit(0) 
 
-        if self.cfg_ana.promptLepton=='ele':
-            if not len(prompt_ele_cands):
-                return False
-            prompt_cand = prompt_ele_cands[0]
-            # remove from the leptons that will be later used to find the displaced di-lepton
-            event.filtered_electrons = [ele for ele in event.electrons if ele.physObj != prompt_cand.physObj]
+        if not len(prompt_leps):
+            return False
+        # RM: FIXME! put a counter here
 
-        # RM: FIXME! check this!
         #####################################################################################
-        # Backmatching with HLT # TODO TEST THIS AND SEE IF IT WORKS PROPERLY
+        # HLT matching
         #####################################################################################
         
-        # match only if the trigger fired
-        event.fired_triggers = [info.name for info in getattr(event, 'trigger_infos', []) if info.fired]
-
-        # trigger matching
-        if hasattr(self.cfg_ana, 'trigger_match') and len(self.cfg_ana.trigger_match.keys())>0:
-                                   
-            for lep in the_prompt_cand:
-                
-                lep.hltmatched = [] # initialise to no match
-                
-                lep.trig_objs = OrderedDict()
-                lep.trig_objs[1] = [] # initialise to no trigger objct matches
+        # match only if the trigger fired and if it is among those we care about
+        fired_triggers = [info for info in getattr(event, 'trigger_infos', []) if info.fired and '_'.join(info.name.split('_')[:-1]) in self.cfg_ana.triggersAndFilters.keys()]
     
-                lep.trig_matched = OrderedDict()
-                lep.trig_matched[1] = False # initialise to no match
-
-                lep.best_trig_match = OrderedDict()
-                lep.best_trig_match[1] = OrderedDict()
-
-                # add all matched objects to each muon
-                for info in event.trigger_infos:
-                                    
-                    mykey = '_'.join(info.name.split('_')[:-1])
-
-                    # start with simple matching
-                    these_objects = sorted([obj for obj in info.objects if deltaR(lep, obj)<0.15], key = lambda x : deltaR(x, lep))
-
-                    lep.trig_objs[1] += these_objects
-
-                    # get the set of trigger types from the cfg 
-                    trigger_types_to_match = self.cfg_ana.trigger_match[mykey][1]
-                    
-                    # list of tuples of matched objects
-                    good_matches = []
-
-                    # initialise the matching to None
-                    lep.best_trig_match[1][mykey] = None
-
-                    # investigate all the possible matches (leps, pairs or singlets)
-                    for t_o in these_objects:
-
-                        # intersect found trigger types to desired trigger types
-                        itypes = Counter()
-                        for ikey in trigger_types_to_match.keys():
-                            itypes[ikey] = sum([1 for iobj in t_o if iobj.triggerObjectTypes()[0]==ikey])
-                                            
-                        # all the types to match are matched then assign the 
-                        # corresponding trigger object to each lep
-                        if itypes & trigger_types_to_match == trigger_types_to_match:
-                            good_matches.append(t_o)
-                    
-                    
-                    if len(good_matches):
-                        good_matches.sort(key = lambda x : deltaR(x, lep))        
-
-                # iterate over the path:filters dictionary
-                #     the filters MUST be sorted correctly: i.e. first filter in the dictionary 
-                #     goes with the first muons and so on
-                for k, vv in self.cfg_ana.trigger_match.iteritems():
-
-                    if not any(k in name for name in event.fired_triggers):
-                         continue
-                    
-                    v = vv[0]
-                                                                 
-                    for ii, filters in enumerate(v):
-                        if not lep.best_trig_match[ii+1][k]:
-                            continue
-                        if set([filters]) & set(lep.best_trig_match[ii+1][k].filterLabels()):
-                            lep.trig_matched[ii+1] = True                 
-                    
-                    ismatched = sum(lep.trig_matched.values())            
-                                
-                    if len(v) == ismatched:
-                        lep.hltmatched.append(k)
-
-            the_prompt_cand = [lep for lep in the_prompt_cand if len(lep.hltmatched)>0] 
+        drmax=0.15
+        
+        # loop over the selected prompt leptons
+        for ilep in prompt_leps:
+        
+            # prepare the HLT obj container, empty
+            ilep.matched_hlt_obj = []
             
-            if the_prompt_cand == None:
-                return False 
+            # loop over the final HLT objects of each path
+            for info in fired_triggers:
+            
+                # get the HLT name w/o version
+                hltname     = '_'.join(info.name.split('_')[:-1])          
+                # get the filter name you want to match the offline lepton to
+                lastfilter  = self.cfg_ana.triggersAndFilters[hltname]
+                # get the corresponding HLT objects
+                lastobjects = [iobj for iobj in info.objects if lastfilter in [ilab for ilab in iobj.filterLabels()]]
+                # match HLT objects and leptons
+                matchedobjs = [iobj for iobj in lastobjects if deltaR(iobj, ilep)<drmax]
+                # extend the list of matched objects
+                ilep.matched_hlt_obj.extend(matchedobjs)
+            
+            # remove duplicates through 'set'
+            ilep.matched_hlt_obj = [iobj for iobj in set(ilep.matched_hlt_obj)]
+        
+        # now filter out non matched leptons
+        prompt_leps = [ilep for ilep in prompt_leps if len(ilep.matched_hlt_obj)>0]
+        
+        if len(prompt_leps)==0:
+            return False
+        
+        # RM: FIXME! put a counter
+        
+        import pdb ; pdb.set_trace()
 
-        event.the_prompt_cand = the_prompt_cand
+        #####################################################################################
+        # Select the prompt lepton candidate and remove it from the collection of leptons
+        #####################################################################################
 
+        # the collection is already sorted by pt, just take the first
+        prompt_lep = prompt_leps[0]
 
-        # What is this?
-        if cfg.DataSignalMode == 'signal': event.prompt_ana_success = -99 # NO RECO FOUND
+        # remove the prompt lepton from the corresponding lepton collection that will be later used to find the displaced di-lepton
+        event.filtered_muons     = [mu  for mu  in event.muons     if mu.physObj  != prompt_lep.physObj]
+        event.filtered_electrons = [ele for ele in event.electrons if ele.physObj != prompt_lep.physObj]
 
-
-        # RM: a bit convoluted, will unerstand it later
-        # REMOVING PROMPT LEPTON FROM MATCHES
-        # AND EVALUATING ANALYZER 
-        if the_prompt_cand in ele_cand:
-            if cfg.DataSignalMode == 'signal':
-                if hasattr(event.the_hnl.l0().bestmatch, 'physObj'):
-                    if  the_prompt_cand.physObj == event.the_hnl.l0().bestmatch.physObj:
-                        event.prompt_ana_success = 1
-                    else: event.prompt_ana_success = -11 # FAKE ELECTRONS
-        if the_prompt_cand in mu_cand:
-            if cfg.DataSignalMode == 'signal':
-                if hasattr(event.the_hnl.l0().bestmatch, 'physObj'):
-                    if  the_prompt_cand.physObj == event.the_hnl.l0().bestmatch.physObj:
-                        event.prompt_ana_success = 1
-                else: event.prompt_ana_success = -13 # FAKE MUONS
-
-        event.the_prompt_cand = the_prompt_cand 
+#         # trigger matching
+#         if hasattr(self.cfg_ana, 'trigger_match') and len(self.cfg_ana.trigger_match.keys())>0:
+#                                    
+#             for lep in [prompt_cand]:
+#                 
+#                 lep.hltmatched = [] # initialise to no match
+#                 
+#                 lep.trig_objs = OrderedDict()
+#                 lep.trig_objs[1] = [] # initialise to no trigger objct matches
+#     
+#                 lep.trig_matched = OrderedDict()
+#                 lep.trig_matched[1] = False # initialise to no match
+# 
+#                 lep.best_trig_match = OrderedDict()
+#                 lep.best_trig_match[1] = OrderedDict()
+# 
+#                 # add all matched objects to each muon
+#                 for info in event.trigger_infos:
+#                                     
+#                     mykey = '_'.join(info.name.split('_')[:-1])
+# 
+#                     # start with simple matching
+#                     these_objects = sorted([obj for obj in info.objects if deltaR(lep, obj)<0.15], key = lambda x : deltaR(x, lep))
+# 
+#                     lep.trig_objs[1] += these_objects
+# 
+#                     # get the set of trigger types from the cfg 
+#                     trigger_types_to_match = self.cfg_ana.trigger_match[mykey][1]
+#                     
+#                     # list of tuples of matched objects
+#                     good_matches = []
+# 
+#                     # initialise the matching to None
+#                     lep.best_trig_match[1][mykey] = None
+# 
+#                     # investigate all the possible matches (leps, pairs or singlets)
+#                     for t_o in these_objects:
+# 
+#                         # intersect found trigger types to desired trigger types
+#                         itypes = Counter()
+#                         for ikey in trigger_types_to_match.keys():
+#                             itypes[ikey] = sum([1 for iobj in t_o if iobj.triggerObjectTypes()[0]==ikey])
+#                                             
+#                         # all the types to match are matched then assign the 
+#                         # corresponding trigger object to each lep
+#                         if itypes & trigger_types_to_match == trigger_types_to_match:
+#                             good_matches.append(t_o)
+#                     
+#                     
+#                     if len(good_matches):
+#                         good_matches.sort(key = lambda x : deltaR(x, lep))        
+# 
+#                 # iterate over the path:filters dictionary
+#                 #     the filters MUST be sorted correctly: i.e. first filter in the dictionary 
+#                 #     goes with the first muons and so on
+#                 for k, vv in self.cfg_ana.trigger_match.iteritems():
+# 
+#                     if not any(k in name for name in event.fired_triggers):
+#                          continue
+#                     
+#                     v = vv[0]
+#                                                                  
+#                     for ii, filters in enumerate(v):
+#                         if not lep.best_trig_match[ii+1][k]:
+#                             continue
+#                         if set([filters]) & set(lep.best_trig_match[ii+1][k].filterLabels()):
+#                             lep.trig_matched[ii+1] = True                 
+#                     
+#                     ismatched = sum(lep.trig_matched.values())            
+#                                 
+#                     if len(v) == ismatched:
+#                         lep.hltmatched.append(k)
+# 
+#             the_prompt_cand = [lep for lep in the_prompt_cand if len(lep.hltmatched)>0] 
+#             
+#             if the_prompt_cand == None:
+#                 return False 
+# 
+#         event.the_prompt_cand = the_prompt_cand
+# 
+# 
+#         # What is this?
+#         if cfg.DataSignalMode == 'signal': event.prompt_ana_success = -99 # NO RECO FOUND
+# 
+# 
+#         # RM: a bit convoluted, will unerstand it later
+#         # REMOVING PROMPT LEPTON FROM MATCHES
+#         # AND EVALUATING ANALYZER 
+#         if the_prompt_cand in ele_cand:
+#             if cfg.DataSignalMode == 'signal':
+#                 if hasattr(event.the_hnl.l0().bestmatch, 'physObj'):
+#                     if  the_prompt_cand.physObj == event.the_hnl.l0().bestmatch.physObj:
+#                         event.prompt_ana_success = 1
+#                     else: event.prompt_ana_success = -11 # FAKE ELECTRONS
+#         if the_prompt_cand in mu_cand:
+#             if cfg.DataSignalMode == 'signal':
+#                 if hasattr(event.the_hnl.l0().bestmatch, 'physObj'):
+#                     if  the_prompt_cand.physObj == event.the_hnl.l0().bestmatch.physObj:
+#                         event.prompt_ana_success = 1
+#                 else: event.prompt_ana_success = -13 # FAKE MUONS
+# 
+#         event.the_prompt_cand = the_prompt_cand 
   
       
 #        #####################################################################################

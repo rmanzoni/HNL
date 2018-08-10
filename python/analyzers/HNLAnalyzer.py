@@ -62,8 +62,6 @@ class HNLAnalyzer(Analyzer):
         count.register('>0 trig match prompt lep')
         count.register('> 0 di-muon')
         count.register('> 0 di-muon + vtx')
-        count.register('pairs')
-        count.register('dimuons')
 
     def buildDisplacedMuons(self, collection):
         muons = [DisplacedMuon(mm, collection) for mm in collection]
@@ -83,9 +81,7 @@ class HNLAnalyzer(Analyzer):
         # passed
         return True
     
-    def preselectPromptElectrons(self, event, ele, pt=30, eta=2.5, dxy=0.045, dz=0.2):
-        # RM: this is needed god knows why to get the eleID
-        ele.event = event.input.object()
+    def preselectPromptElectrons(self, ele, pt=30, eta=2.5, dxy=0.045, dz=0.2):
         # kinematics
         if not self.testLepKin(ele, pt, eta): return False
         # id
@@ -123,6 +119,12 @@ class HNLAnalyzer(Analyzer):
         for imu in event.dgmuons : imu.type = 39
 
         event.electrons   = map(Electron, self.handles['electrons'].product())
+        
+        # prepare the electrons for ID mangling
+        for ele in event.electrons:
+            ele.event = event.input.object() # RM: this is needed god knows why to get the eleID
+            ele.rho = event.rho
+
         event.photons     = map(Photon  , self.handles['photons'  ].product())
         event.taus        = map(Tau     , self.handles['taus'     ].product())
 
@@ -148,8 +150,8 @@ class HNLAnalyzer(Analyzer):
         # Preselect the prompt leptons
         #####################################################################################
         
-        prompt_mu_cands  = sorted([mu  for mu  in event.muons     if self.preselectPromptMuons    (mu)        ], key = lambda x : x.pt(), reverse = True)
-        prompt_ele_cands = sorted([ele for ele in event.electrons if self.preselectPromptElectrons(event, ele)], key = lambda x : x.pt(), reverse = True)
+        prompt_mu_cands  = sorted([mu  for mu  in event.muons     if self.preselectPromptMuons    (mu) ], key = lambda x : x.pt(), reverse = True)
+        prompt_ele_cands = sorted([ele for ele in event.electrons if self.preselectPromptElectrons(ele)], key = lambda x : x.pt(), reverse = True)
 
         if   self.cfg_ana.promptLepton=='mu':
             prompt_leps = prompt_mu_cands       
@@ -282,6 +284,45 @@ class HNLAnalyzer(Analyzer):
         
         # save reco secondary vertex
         event.recoSv = event.displaced_dilepton_reco_cand.vtx()
+
+
+
+        # primary vertex
+        pv = event.goodVertices[0]
+
+        event.recoSv.disp3DFromBS      = ROOT.VertexDistance3D().distance(event.recoSv, pv)
+        event.recoSv.disp3DFromBS_sig  = event.recoSv.disp3DFromBS.significance()
+        
+        # create an 'ideal' vertex out of the BS
+        point = ROOT.reco.Vertex.Point(
+            event.beamspot.position().x(),
+            event.beamspot.position().y(),
+            event.beamspot.position().z(),
+        )
+        error = event.beamspot.covariance3D()
+        chi2 = 0.
+        ndof = 0.
+        bsvtx = ROOT.reco.Vertex(point, error, chi2, ndof, 2) # size? say 3? does it matter?
+                                        
+        event.recoSv.disp2DFromBS      = ROOT.VertexDistanceXY().distance(event.recoSv, bsvtx)
+        event.recoSv.disp2DFromBS_sig  = event.recoSv.disp2DFromBS.significance()
+        event.recoSv.prob              = ROOT.TMath.Prob(event.recoSv.chi2(), int(event.recoSv.ndof()))
+        
+        dilep_p4 = event.displaced_dilepton_reco_cand.lep1().p4() + event.displaced_dilepton_reco_cand.lep2().p4()
+
+        perp = ROOT.math.XYZVector(dilep_p4.px(),
+                                   dilep_p4.py(),
+                                   0.)
+        
+        dxybs = ROOT.GlobalPoint(-1*((event.beamspot.x0() - event.recoSv.x()) + (event.recoSv.z() - event.beamspot.z0()) * event.beamspot.dxdz()), 
+                                 -1*((event.beamspot.y0() - event.recoSv.y()) + (event.recoSv.z() - event.beamspot.z0()) * event.beamspot.dydz()),
+                                  0)
+        
+        vperp = ROOT.math.XYZVector(dxybs.x(), dxybs.y(), 0.)
+        
+        cos = vperp.Dot(perp)/(vperp.R()*perp.R())
+        
+        event.recoSv.disp2DFromBS_cos = cos
 
         return True
         

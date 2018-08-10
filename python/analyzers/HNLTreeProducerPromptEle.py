@@ -12,7 +12,8 @@ class HNLTreeProducerPromptEle(TreeProducerBase):
     - primary vertex
     - jet associated to the lepton
     - check lepton iso and id variables
-    - ??
+    - gen impact parameter
+    - gen pdgid
     
     make this iherit from a common reco tree producer, then specialise by lepton flavour
     '''
@@ -24,11 +25,11 @@ class HNLTreeProducerPromptEle(TreeProducerBase):
         self.var      (self.tree, 'n_cands')
         
         # gen level particles
-        self.bookHNL        (self.tree, 'hnl_gen')
-        self.bookGenParticle(self.tree, 'l0_gen' )
-        self.bookGenParticle(self.tree, 'l1_gen' )
-        self.bookGenParticle(self.tree, 'l2_gen' )
-        self.bookGenParticle(self.tree, 'n_gen'  )
+        self.bookHNL     (self.tree, 'hnl_gen')
+        self.bookParticle(self.tree, 'l0_gen' )
+        self.bookParticle(self.tree, 'l1_gen' )
+        self.bookParticle(self.tree, 'l2_gen' )
+        self.bookParticle(self.tree, 'n_gen'  )
 
         # gen primary vertex
         self.var(self.tree, 'pv_gen_x')
@@ -95,17 +96,16 @@ class HNLTreeProducerPromptEle(TreeProducerBase):
 
         # reco HNL
         self.fillHNL     (self.tree, 'hnl', event.the_3lep_cand     )
-        import pdb ; pdb.set_trace()
         self.fillEle     (self.tree, 'l0' , event.the_3lep_cand.l0())
         self.fillMuon    (self.tree, 'l1' , event.the_3lep_cand.l1())
         self.fillMuon    (self.tree, 'l2' , event.the_3lep_cand.l2())
 
         # output of MC analysis
-        self.fillHNL        (self.tree, 'hnl_gen', event.the_hnl      )
-        self.fillGenParticle(self.tree, 'l0_gen' , event.the_hnl.l0() )
-        self.fillGenParticle(self.tree, 'l1_gen' , event.the_hnl.l1() )
-        self.fillGenParticle(self.tree, 'l2_gen' , event.the_hnl.l2() )
-        self.fillGenParticle(self.tree, 'n_gen'  , event.the_hnl.met())
+        self.fillHNL     (self.tree, 'hnl_gen', event.the_hnl      )
+        self.fillParticle(self.tree, 'l0_gen' , event.the_hnl.l0() )
+        self.fillParticle(self.tree, 'l1_gen' , event.the_hnl.l1() )
+        self.fillParticle(self.tree, 'l2_gen' , event.the_hnl.l2() )
+        self.fillParticle(self.tree, 'n_gen'  , event.the_hnl.met())
 
         # true primary vertex
         self.fill(self.tree, 'pv_x', event.the_hn.vx())
@@ -131,11 +131,11 @@ class HNLTreeProducerPromptEle(TreeProducerBase):
         self.fill(self.tree, 'sv_prob', event.recoSv.prob            )
         self.fill(self.tree, 'sv_cos' , event.recoSv.disp2DFromBS_cos)
     
-        self.fill(self.tree, 'hnl_2d_reco_disp', event.recoSv.disp2DFromBS.value()) # from beamspot
-        self.fill(self.tree, 'hnl_3d_reco_disp', event.recoSv.disp3DFromBS.value()) # from PV
+        self.fill(self.tree, 'hnl_2d_disp', event.recoSv.disp2DFromBS.value()) # from beamspot
+        self.fill(self.tree, 'hnl_3d_disp', event.recoSv.disp3DFromBS.value()) # from PV
     
-        self.fill(self.tree, 'hnl_2d_reco_disp_sig', event.recoSv.disp2DFromBS_sig) # from beamspot
-        self.fill(self.tree, 'hnl_3d_reco_disp_sig', event.recoSv.disp3DFromBS_sig) # from PV
+        self.fill(self.tree, 'hnl_2d_disp_sig', event.recoSv.disp2DFromBS_sig) # from beamspot
+        self.fill(self.tree, 'hnl_3d_disp_sig', event.recoSv.disp3DFromBS_sig) # from PV
 
         # jet/met variables
         self.fillExtraMetInfo(self.tree, event)

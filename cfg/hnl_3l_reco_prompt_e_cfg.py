@@ -210,14 +210,14 @@ sequence = cfg.Sequence([
 ###            SET BATCH OR LOCAL               ###
 ###################################################
 if not production:
-    # comp                 = HN3L_M_2p5_V_0p0173205080757_e_onshell
-    comp                 = HN3L_M_2p5_V_0p00707106781187_e_onshell
+    comp                 = HN3L_M_2p5_V_0p0173205080757_e_onshell
+#     comp                 = HN3L_M_2p5_V_0p00707106781187_e_onshell
     # comp                 = samples
     # comp                 = TTJets_amcat
     selectedComponents   = [comp]
     comp.splitFactor     = 1
     comp.fineSplitFactor = 1
-    comp.files           = comp.files[:1]
+    comp.files           = comp.files[:50]
 
 # the following is declared in case this cfg is used in input to the
 # heppy.py script

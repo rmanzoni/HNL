@@ -151,6 +151,7 @@ HNLAnalyzer = cfg.Analyzer(
     name='HNLAnalyzer',
     promptLepton='ele',
     triggersAndFilters=triggers_and_filters,
+    candidate_selection='maxpt',
 )
 
 # RM: FIXME! here it is

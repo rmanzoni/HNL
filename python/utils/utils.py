@@ -75,7 +75,7 @@ def fitVertex(pair):
         svtree = vtxfit.Fit(tofit) # the actual vertex fitting!
         if not svtree.get().isEmpty() and svtree.get().isValid(): # check that the vertex is good
             svtree.movePointerToTheTop()
-            vtx = makeRecoVertex(svtree.currentDecayVertex().get(),kinVtxTrkSize=2)
+            vtx = makeRecoVertex(svtree.currentDecayVertex().get(),kinVtxTrkSize=tofit.size())
             # set_trace()
     # set_trace()
     return vtx

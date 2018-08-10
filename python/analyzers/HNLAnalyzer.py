@@ -36,17 +36,17 @@ class HNLAnalyzer(Analyzer):
         super(HNLAnalyzer, self).declareHandles()
 
         self.handles['electrons'] = AutoHandle(('slimmedElectrons'             ,'','PAT' ), 'std::vector<pat::Electron>'                    )
-        self.handles['muons']     = AutoHandle(('slimmedMuons'                 ,'','PAT' ), 'std::vector<pat::Muon>'                        )
-        self.handles['dsamuons']  = AutoHandle(('displacedStandAloneMuons'     ,'','RECO'), 'std::vector<reco::Track>'                      )
-        self.handles['dgmuons' ]  = AutoHandle(('displacedGlobalMuons'         ,'','RECO'), 'std::vector<reco::Track>'                      )
-        self.handles['photons']   = AutoHandle(('slimmedPhotons'               ,'','PAT' ), 'std::vector<pat::Photon>'                      )
-        self.handles['taus']      = AutoHandle(('slimmedTaus'                  ,'','PAT' ), 'std::vector<pat::Tau>'                         )
-        self.handles['jets']      = AutoHandle( 'slimmedJets'                             ,'std::vector<pat::Jet>'                          )
-        self.handles['pvs']       = AutoHandle(('offlineSlimmedPrimaryVertices','','PAT' ), 'std::vector<reco::Vertex>'                     )
-        self.handles['svs']       = AutoHandle(('slimmedSecondaryVertices'     ,'','PAT' ), 'std::vector<reco::VertexCompositePtrCandidate>')
-        self.handles['beamspot']  = AutoHandle(('offlineBeamSpot'              ,'','RECO'), 'reco::BeamSpot'                                )
-        self.handles['pfmet']     = AutoHandle(('slimmedMETs'                  ,'','PAT' ), 'std::vector<pat::MET>'                         )
-        self.handles['puppimet']  = AutoHandle('slimmedMETsPuppi'                         , 'std::vector<pat::MET>'                         )
+        self.handles['muons'    ] = AutoHandle(('slimmedMuons'                 ,'','PAT' ), 'std::vector<pat::Muon>'                        )
+        self.handles['dsamuons' ] = AutoHandle(('displacedStandAloneMuons'     ,'','RECO'), 'std::vector<reco::Track>'                      )
+        self.handles['dgmuons'  ] = AutoHandle(('displacedGlobalMuons'         ,'','RECO'), 'std::vector<reco::Track>'                      )
+        self.handles['photons'  ] = AutoHandle(('slimmedPhotons'               ,'','PAT' ), 'std::vector<pat::Photon>'                      )
+        self.handles['taus'     ] = AutoHandle(('slimmedTaus'                  ,'','PAT' ), 'std::vector<pat::Tau>'                         )
+        self.handles['jets'     ] = AutoHandle( 'slimmedJets'                             , 'std::vector<pat::Jet>'                         )
+        self.handles['pvs'      ] = AutoHandle(('offlineSlimmedPrimaryVertices','','PAT' ), 'std::vector<reco::Vertex>'                     )
+        self.handles['svs'      ] = AutoHandle(('slimmedSecondaryVertices'     ,'','PAT' ), 'std::vector<reco::VertexCompositePtrCandidate>')
+        self.handles['beamspot' ] = AutoHandle(('offlineBeamSpot'              ,'','RECO'), 'reco::BeamSpot'                                )
+        self.handles['pfmet'    ] = AutoHandle(('slimmedMETs'                  ,'','PAT' ), 'std::vector<pat::MET>'                         )
+        self.handles['puppimet' ] = AutoHandle('slimmedMETsPuppi'                         , 'std::vector<pat::MET>'                         )
 
     def assignVtx(self, particles, vtx):    
         for ip in particles:
@@ -97,7 +97,7 @@ class HNLAnalyzer(Analyzer):
         # passed
         return True
 
-    def preselectPromptMuons(self, mu, pt=25, eta=2.4, dxy=0.045, dz=0.2)
+    def preselectPromptMuons(self, mu, pt=25, eta=2.4, dxy=0.045, dz=0.2):
         # kinematics
         if not self.testLepKin(mu, pt, eta): return False
         # id
@@ -134,8 +134,8 @@ class HNLAnalyzer(Analyzer):
         event.beamspot    = self.handles['beamspot'].product()
 
         # make met object
-        event.pfmet         = self.handles['pfmet'   ].product().at(0)
-        event.puppimet      = self.handles['puppimet'].product().at(0)
+        event.pfmet       = self.handles['pfmet'   ].product().at(0)
+        event.puppimet    = self.handles['puppimet'].product().at(0)
 
         # make jet object
         jets = self.handles['jets'].product()        
@@ -177,14 +177,14 @@ class HNLAnalyzer(Analyzer):
         prompt_mu_cands  = sorted([mu  for mu  in event.muons     if self.preselectPromptElectrons(mu)] , key = lambda x : x.pt(), reverse = True)
 
         # PROMPT CANDIDATE
-        if cfg.PromptLeptonMode == 'mu':
+        if self.cfg_ana.promptLepton=='mu':
             if not len(prompt_mu_cands):
                 return False
             prompt_cand = prompt_mu_cands[0]
             # remove from the leptons that will be later used to find the displaced di-lepton
             event.filtered_muons = [mu for mu in event.muons if mu.physObj != prompt_cand.physObj]
 
-        if cfg.PromptLeptonMode == 'ele':
+        if self.cfg_ana.promptLepton=='ele':
             if not len(prompt_ele_cands):
                 return False
             prompt_cand = prompt_ele_cands[0]
@@ -333,9 +333,9 @@ class HNLAnalyzer(Analyzer):
         # Preselection for the reco muons before pairing them
         ########################################################################################
         # some simple preselection
-        event.muons    = [imu for imu in event.filtered_muons if imu.pt()>3. and abs(imu.eta())<2.4)]
-        event.dsamuons = [imu for imu in event.dsamuons       if imu.pt()>3. and abs(imu.eta())>2.4)]
-        event.dgmuons  = [imu for imu in event.dgmuons        if imu.pt()>3. and abs(imu.eta())>2.4)]
+        event.muons    = [imu for imu in event.filtered_muons if imu.pt()>3. and abs(imu.eta())<2.4]
+        event.dsamuons = [imu for imu in event.dsamuons       if imu.pt()>3. and abs(imu.eta())>2.4]
+        event.dgmuons  = [imu for imu in event.dgmuons        if imu.pt()>3. and abs(imu.eta())>2.4]
 
         # create all the possible di-muon pairs out of the three different collections
         dimuons = combinations(event.muons + event.dsamuons + event.dgmuons, 2)

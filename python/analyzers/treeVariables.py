@@ -308,13 +308,12 @@ lepton_vars = [
 #        EFFECTIVE AREA CORRECTION
 # electron
 electron_vars = [
-    # Variable('eid_nontrigmva_loose', lambda ele : ele.mvaIDRun2("NonTrigPhys14", "Loose")),
-    Variable('eid_nontrigmva_loose', lambda ele : ele.mvaRun2('NonTrigSpring15MiniAOD')),
-    Variable('eid_nontrigmva_tight', lambda ele : ele.mvaIDRun2("NonTrigSpring15MiniAOD", "POG80")),
-    Variable('eid_veto'            , lambda ele : ele.cutBasedId('POG_SPRING15_25ns_v1_Veto')),
-    Variable('eid_loose'           , lambda ele : ele.cutBasedId('POG_SPRING15_25ns_v1_Loose')),
-    Variable('eid_medium'          , lambda ele : ele.cutBasedId('POG_SPRING15_25ns_v1_Medium')),
-    Variable('eid_tight'           , lambda ele : ele.cutBasedId('POG_SPRING15_25ns_v1_Tight')),
+    Variable('eid_mva_noniso_loose', lambda ele : ele.cutBasedId('MVA_ID_nonIso_Fall17_Loose')),
+    Variable('eid_mva_noniso_wp90' , lambda ele : ele.cutBasedId('MVA_ID_nonIso_Fall17_wp90' )),
+    Variable('eid_mva_noniso_wp80' , lambda ele : ele.cutBasedId('MVA_ID_nonIso_Fall17_wp80' )),
+    Variable('eid_mva_iso_loose'   , lambda ele : ele.cutBasedId('MVA_ID_Iso_Fall17_Loose'   )),
+    Variable('eid_mva_iso_wp90'    , lambda ele : ele.cutBasedId('MVA_ID_Iso_Fall17_wp90'    )),
+    Variable('eid_mva_iso_wp80'    , lambda ele : ele.cutBasedId('MVA_ID_Iso_Fall17_wp80'    )),
     Variable('nhits_missing'       , lambda ele : ele.physObj.gsfTrack().hitPattern().numberOfHits(1), int),
     Variable('pass_conv_veto'      , lambda ele : ele.passConversionVeto()),
     Variable('reliso05'            , lambda lep : lep.relIsoR(R=0.3, dBetaFactor=0.5, allCharged=0)),

@@ -19,6 +19,7 @@ from PhysicsTools.Heppy.physicsobjects.Electron      import Electron
 from PhysicsTools.Heppy.physicsobjects.Jet           import Jet
 from PhysicsTools.Heppy.physicsobjects.PhysicsObject import PhysicsObject
 from CMGTools.HNL.utils.utils                        import isAncestor, displacement2D, displacement3D, makeRecoVertex, fitVertex
+from CMGTools.HNL.physicsobjects.HN3L                import HN3L
 from CMGTools.HNL.physicsobjects.DiLepton            import DiLepton
 from CMGTools.HNL.physicsobjects.DisplacedMuon       import DisplacedMuon
 
@@ -57,17 +58,12 @@ class HNLAnalyzer(Analyzer):
         self.counters.addCounter('HNL')
         count = self.counters.counter('HNL')
         count.register('all events')
-        count.register('trigger matched, prompt candidate found')
-        count.register('good gen')
+        count.register('>0 prompt lep')
+        count.register('>0 trig match prompt lep')
         count.register('> 0 di-muon')
         count.register('> 0 di-muon + vtx')
         count.register('pairs')
         count.register('dimuons')
-        # initiate the VertexFitter
-        self.vtxfit = VertexFitter()
-
-        # create a std::vector<RecoChargedCandidate> to be passed to the fitter
-        self.tofit = ROOT.std.vector('reco::RecoChargedCandidate')()
 
     def buildDisplacedMuons(self, collection):
         muons = [DisplacedMuon(mm, collection) for mm in collection]
@@ -87,11 +83,13 @@ class HNLAnalyzer(Analyzer):
         # passed
         return True
     
-    def preselectPromptElectrons(self, ele, pt=30, eta=2.5, dxy=0.045, dz=0.2):
+    def preselectPromptElectrons(self, event, ele, pt=30, eta=2.5, dxy=0.045, dz=0.2):
+        # RM: this is needed god knows why to get the eleID
+        ele.event = event.input.object()
         # kinematics
         if not self.testLepKin(ele, pt, eta): return False
         # id
-        if not ele.mvaIDRun2('NonTrigSpring15MiniAOD', 'POG90'): return False
+        if not ele.electronID("MVA_ID_nonIso_Fall17_Loose"): return False
         # vertex
         if not self.testLepVtx(ele, dxy, dz): return False
         # passed
@@ -146,36 +144,12 @@ class HNLAnalyzer(Analyzer):
         self.assignVtx(event.muons    , myvtx)
         self.assignVtx(event.electrons, myvtx)
 
-#         #####################################################################################
-#         # select only events with good gen events
-#         #####################################################################################
-#         if not( abs(event.the_hnl.l1().pdgId())==13   and \
-#                 abs(event.the_hnl.l2().pdgId())==13   and \
-#                 abs(event.the_hnl.l1().eta())   < 2.4 and \
-#                 abs(event.the_hnl.l2().eta())   < 2.4 and \
-#                 abs(event.the_hnl.l0().eta())   < 2.4): 
-#             return False
-# 
-#         # FIXME! just for testing
-#         if displacement2D(event.the_hn.lep1, event.the_hn) > 40:
-#             return False
-#         # if displacement2D(event.the_hn.lep1, event.the_hn) > 100:
-#         #    return False
-#         # import pdb ; pdb.set_trace()
-#         if (not hasattr(event.the_hnl.l1(), 'bestmatch')) or (event.the_hnl.l1().bestmatch is None):
-#             return False
-#         if (not hasattr(event.the_hnl.l2(), 'bestmatch')) or (event.the_hnl.l2().bestmatch is None):
-#             return False
-# 
-#         self.counters.counter('HNL').inc('good gen')
-# 
-
         #####################################################################################
         # Preselect the prompt leptons
         #####################################################################################
         
-        prompt_mu_cands  = sorted([mu  for mu  in event.muons     if self.preselectPromptMuons    (mu )] , key = lambda x : x.pt(), reverse = True)
-        prompt_ele_cands = sorted([ele for ele in event.electrons if self.preselectPromptElectrons(ele)], key = lambda x : x.pt(), reverse = True)
+        prompt_mu_cands  = sorted([mu  for mu  in event.muons     if self.preselectPromptMuons    (mu)        ], key = lambda x : x.pt(), reverse = True)
+        prompt_ele_cands = sorted([ele for ele in event.electrons if self.preselectPromptElectrons(event, ele)], key = lambda x : x.pt(), reverse = True)
 
         if   self.cfg_ana.promptLepton=='mu':
             prompt_leps = prompt_mu_cands       
@@ -187,7 +161,8 @@ class HNLAnalyzer(Analyzer):
 
         if not len(prompt_leps):
             return False
-        # RM: FIXME! put a counter here
+
+        self.counters.counter('HNL').inc('>0 prompt lep')
 
         #####################################################################################
         # HLT matching
@@ -227,7 +202,7 @@ class HNLAnalyzer(Analyzer):
         if len(prompt_leps)==0:
             return False
         
-        # RM: FIXME! put a counter
+        self.counters.counter('HNL').inc('>0 trig match prompt lep')
         
         #####################################################################################
         # Select the prompt lepton candidate and remove it from the collection of leptons
@@ -239,56 +214,7 @@ class HNLAnalyzer(Analyzer):
         # remove the prompt lepton from the corresponding lepton collection that will be later used to find the displaced di-lepton
         event.filtered_muons     = [mu  for mu  in event.muons     if mu.physObj  != prompt_lep.physObj]
         event.filtered_electrons = [ele for ele in event.electrons if ele.physObj != prompt_lep.physObj]
-
-#         # What is this?
-#         if cfg.DataSignalMode == 'signal': event.prompt_ana_success = -99 # NO RECO FOUND
-# 
-# 
-#         # RM: a bit convoluted, will unerstand it later
-#         # REMOVING PROMPT LEPTON FROM MATCHES
-#         # AND EVALUATING ANALYZER 
-#         if the_prompt_cand in ele_cand:
-#             if cfg.DataSignalMode == 'signal':
-#                 if hasattr(event.the_hnl.l0().bestmatch, 'physObj'):
-#                     if  the_prompt_cand.physObj == event.the_hnl.l0().bestmatch.physObj:
-#                         event.prompt_ana_success = 1
-#                     else: event.prompt_ana_success = -11 # FAKE ELECTRONS
-#         if the_prompt_cand in mu_cand:
-#             if cfg.DataSignalMode == 'signal':
-#                 if hasattr(event.the_hnl.l0().bestmatch, 'physObj'):
-#                     if  the_prompt_cand.physObj == event.the_hnl.l0().bestmatch.physObj:
-#                         event.prompt_ana_success = 1
-#                 else: event.prompt_ana_success = -13 # FAKE MUONS
-# 
-#         event.the_prompt_cand = the_prompt_cand 
-  
-      
-#        #####################################################################################
-#        # Merge Reco Muons
-#        # Create an array of DisplacedMuon objects, summarizing all sMu, dSAMu and dGMu into a single array
-#        # Comment those out which are not needed for the current run
-#        #####################################################################################
-#        dMus = []
-#
-#        for smu in event.sMu:
-#           dmu = smu
-#           dmu.reco = 1 # sMu = 1, dSAMu = 2, dGMu = 3
-#           dMus.append(dmu)
-#
-#        # for dsa in event.dSAMu:
-#            # dmu = dsa
-#            # dmu.reco = 2 # sMu = 1, dSAMu = 2, dGMu = 3
-#            # dMus.append(dmu)
-#
-#        # for dg in event.dGMu:
-#            # dmu = dg
-#            # dmu.reco = 3 # sMu = 1, dSAMu = 2, dGMu = 3
-#            # dMus.append(dmu)
-#
-#       
-#        event.n_dMu = len(dMus) # important to understand how well the "Merge Reco Muons" process went. 
-
-       
+         
         ########################################################################################
         # Preselection for the reco muons before pairing them
         ########################################################################################
@@ -298,16 +224,16 @@ class HNLAnalyzer(Analyzer):
         event.dgmuons  = [imu for imu in event.dgmuons        if imu.pt()>3. and abs(imu.eta())>2.4]
 
         # create all the possible di-muon pairs out of the three different collections
-        dimuons = combinations(event.muons + event.dsamuons + event.dgmuons, 2)
+        
+        # FIXME! configure which collections to use
+        # dimuons = combinations(event.muons + event.dsamuons + event.dgmuons, 2)
+        dimuons = combinations(event.muons, 2)
         
         dimuons = [(mu1, mu2) for mu1, mu2 in dimuons if deltaR(mu1, mu2)>0.01]
         
         if not len(dimuons):
-            # return False
-            pass
-        self.counters.counter('HNL').inc('> 0 di-muon + vtx')
-
-        event.flag_IsThereTHEDimuon = False
+            return False
+        self.counters.counter('HNL').inc('> 0 di-muon')
 
         ########################################################################################
         # Vertex Fit: Select only dimuon pairs with mutual vertices
@@ -321,7 +247,7 @@ class HNLAnalyzer(Analyzer):
 
         event.dimuonsvtx = dimuonsvtx
         
-        if len(event.dimuonsvtx):
+        if not len(event.dimuonsvtx):
             return False 
         
         self.counters.counter('HNL').inc('> 0 di-muon + vtx')
@@ -332,54 +258,31 @@ class HNLAnalyzer(Analyzer):
         
         which_candidate = getattr(self.cfg_ana, 'candidate_selection', 'maxpt')
         
-        if which_candidate == 'minmass'    : event.hnl_reco_cand = None if not len(dimuonsvtx) else sorted(dimuonsvtx, key = lambda x : (x.isSS(),  x.mass()                        ), reverse=False)[0]
-        if which_candidate == 'minchi2'    : event.hnl_reco_cand = None if not len(dimuonsvtx) else sorted(dimuonsvtx, key = lambda x : (x.isSS(),  x.chi2()                        ), reverse=False)[0]
-        if which_candidate == 'mindr'      : event.hnl_reco_cand = None if not len(dimuonsvtx) else sorted(dimuonsvtx, key = lambda x : (x.isSS(),  x.dr()                          ), reverse=False)[0]
-        if which_candidate == 'maxdphi'    : event.hnl_reco_cand = None if not len(dimuonsvtx) else sorted(dimuonsvtx, key = lambda x : (x.isSS(), -x.dphi()                        ), reverse=False)[0]
-        if which_candidate == 'mindeta'    : event.hnl_reco_cand = None if not len(dimuonsvtx) else sorted(dimuonsvtx, key = lambda x : (x.isSS(),  x.deta()                        ), reverse=False)[0]
-        if which_candidate == 'maxdisp2dbs': event.hnl_reco_cand = None if not len(dimuonsvtx) else sorted(dimuonsvtx, key = lambda x : (x.isSS(), -x.disp2DFromBS()                ), reverse=False)[0]
-        if which_candidate == 'maxdisp2dpv': event.hnl_reco_cand = None if not len(dimuonsvtx) else sorted(dimuonsvtx, key = lambda x : (x.isSS(), -x.disp2DFromPV()                ), reverse=False)[0]
-        if which_candidate == 'maxdisp3dpv': event.hnl_reco_cand = None if not len(dimuonsvtx) else sorted(dimuonsvtx, key = lambda x : (x.isSS(), -x.disp3DFromPV()                ), reverse=False)[0]
-        if which_candidate == 'maxdls2dbs' : event.hnl_reco_cand = None if not len(dimuonsvtx) else sorted(dimuonsvtx, key = lambda x : (x.isSS(), -x.disp2DFromBSSignificance()    ), reverse=False)[0]
-        if which_candidate == 'maxdls2dpv' : event.hnl_reco_cand = None if not len(dimuonsvtx) else sorted(dimuonsvtx, key = lambda x : (x.isSS(), -x.disp2DFromPVSignificance()    ), reverse=False)[0]
-        if which_candidate == 'maxdls3dpv' : event.hnl_reco_cand = None if not len(dimuonsvtx) else sorted(dimuonsvtx, key = lambda x : (x.isSS(), -x.disp3DFromPVSignificance()    ), reverse=False)[0]
-        if which_candidate == 'maxcos'     : event.hnl_reco_cand = None if not len(dimuonsvtx) else sorted(dimuonsvtx, key = lambda x : (x.isSS(), -x.cosTransversePointingAngleBS()), reverse=False)[0]
-        if which_candidate == 'maxpt'      : event.hnl_reco_cand = None if not len(dimuonsvtx) else sorted(dimuonsvtx, key = lambda x : (x.isSS(), -x.pt()                          ), reverse=False)[0]
+        if which_candidate == 'minmass'    : event.displaced_dilepton_reco_cand = None if not len(dimuonsvtx) else sorted(dimuonsvtx, key = lambda x : (x.isSS(),  x.mass()                        ), reverse=False)[0]
+        if which_candidate == 'minchi2'    : event.displaced_dilepton_reco_cand = None if not len(dimuonsvtx) else sorted(dimuonsvtx, key = lambda x : (x.isSS(),  x.chi2()                        ), reverse=False)[0]
+        if which_candidate == 'mindr'      : event.displaced_dilepton_reco_cand = None if not len(dimuonsvtx) else sorted(dimuonsvtx, key = lambda x : (x.isSS(),  x.dr()                          ), reverse=False)[0]
+        if which_candidate == 'maxdphi'    : event.displaced_dilepton_reco_cand = None if not len(dimuonsvtx) else sorted(dimuonsvtx, key = lambda x : (x.isSS(), -x.dphi()                        ), reverse=False)[0]
+        if which_candidate == 'mindeta'    : event.displaced_dilepton_reco_cand = None if not len(dimuonsvtx) else sorted(dimuonsvtx, key = lambda x : (x.isSS(),  x.deta()                        ), reverse=False)[0]
+        if which_candidate == 'maxdisp2dbs': event.displaced_dilepton_reco_cand = None if not len(dimuonsvtx) else sorted(dimuonsvtx, key = lambda x : (x.isSS(), -x.disp2DFromBS()                ), reverse=False)[0]
+        if which_candidate == 'maxdisp2dpv': event.displaced_dilepton_reco_cand = None if not len(dimuonsvtx) else sorted(dimuonsvtx, key = lambda x : (x.isSS(), -x.disp2DFromPV()                ), reverse=False)[0]
+        if which_candidate == 'maxdisp3dpv': event.displaced_dilepton_reco_cand = None if not len(dimuonsvtx) else sorted(dimuonsvtx, key = lambda x : (x.isSS(), -x.disp3DFromPV()                ), reverse=False)[0]
+        if which_candidate == 'maxdls2dbs' : event.displaced_dilepton_reco_cand = None if not len(dimuonsvtx) else sorted(dimuonsvtx, key = lambda x : (x.isSS(), -x.disp2DFromBSSignificance()    ), reverse=False)[0]
+        if which_candidate == 'maxdls2dpv' : event.displaced_dilepton_reco_cand = None if not len(dimuonsvtx) else sorted(dimuonsvtx, key = lambda x : (x.isSS(), -x.disp2DFromPVSignificance()    ), reverse=False)[0]
+        if which_candidate == 'maxdls3dpv' : event.displaced_dilepton_reco_cand = None if not len(dimuonsvtx) else sorted(dimuonsvtx, key = lambda x : (x.isSS(), -x.disp3DFromPVSignificance()    ), reverse=False)[0]
+        if which_candidate == 'maxcos'     : event.displaced_dilepton_reco_cand = None if not len(dimuonsvtx) else sorted(dimuonsvtx, key = lambda x : (x.isSS(), -x.cosTransversePointingAngleBS()), reverse=False)[0]
+        if which_candidate == 'maxpt'      : event.displaced_dilepton_reco_cand = None if not len(dimuonsvtx) else sorted(dimuonsvtx, key = lambda x : (x.isSS(), -x.pt()                          ), reverse=False)[0]
 
-        # RM: FIXME! at this point one should instantiate a 3L object
+        ########################################################################################
+        # Create a reco HNL3L object
+        ########################################################################################
+        event.the_3lep_cand = HN3L(prompt_lep, 
+                                   event.displaced_dilepton_reco_cand.lep1(), 
+                                   event.displaced_dilepton_reco_cand.lep2(), 
+                                   event.pfmet)
+        
+        # save reco secondary vertex
+        event.recoSv = event.displaced_dilepton_reco_cand.vtx()
 
-
-        # print 'hnl_minmass    ', event.hnl_minchi2    
-        # print 'hnl_minchi2    ', event.hnl_minchi2    
-        # print 'hnl_maxpt      ', event.hnl_maxpt      
-        # print 'hnl_mindr      ', event.hnl_mindr      
-        # print 'hnl_maxdphi    ', event.hnl_maxdphi    
-        # print 'hnl_mindeta    ', event.hnl_mindeta    
-        # print 'hnl_maxdisp2dbs', event.hnl_maxdisp2dbs
-        # print 'hnl_maxdisp2dpv', event.hnl_maxdisp2dpv
-        # print 'hnl_maxdisp3dpv', event.hnl_maxdisp3dpv
-        # print 'hnl_maxdls2dbs ', event.hnl_maxdls2dbs 
-        # print 'hnl_maxdls2dpv ', event.hnl_maxdls2dpv 
-        # print 'hnl_maxdls3dpv ', event.hnl_maxdls3dpv 
-        # print 'hnl_maxcos     ', event.hnl_maxcos     
-
-        # import pdb ; pdb.set_trace()        
-
-        # if not len(dimuonsvtx):
-        #     import pdb ; pdb.set_trace()        
-
-        #####################################################################################
-        # Check whether the correct dimuon is part of the collection dimuons
-        #####################################################################################
-        # RM: a bit convoluted, will unerstand it later
-        # if cfg.DataSignalMode == 'signal':
-        #     if len(dimuons) > 0:
-        #         for dimu in dimuons:
-        #             dMu1 = dimu.lep1()
-        #             dMu2 = dimu.lep2() 
-        #             if (dMu1.physObj == event.the_hnl.l1().bestmatch.physObj or dMu1.physObj == event.the_hnl.l2().bestmatch.physObj) and (dMu2.physObj == event.the_hnl.l1().bestmatch.physObj or dMu2.physObj == event.the_hnl.l2().bestmatch.physObj):
-        #                 event.flag_IsThereTHEDimuon = True
- 
         return True
         
         

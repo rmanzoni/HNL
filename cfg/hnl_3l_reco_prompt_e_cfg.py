@@ -18,19 +18,13 @@ from PhysicsTools.Heppy.analyzers.gen.LHEWeightAnalyzer  import LHEWeightAnalyze
 from CMGTools.H2TauTau.proto.analyzers.TriggerAnalyzer   import TriggerAnalyzer
 
 # import HNL analyzers:
-from CMGTools.HNL.analyzers.HNLAnalyzer             import HNLAnalyzer
-##########################################################################################
-# RM: FIXME! will make order among the different tree producers of just have two different cfgs!
-from CMGTools.HNL.analyzers.HNLTreeProducerSignal   import HNLTreeProducerSignal
-from CMGTools.HNL.analyzers.HNLTreeProducerData     import HNLTreeProducerData
-from CMGTools.HNL.analyzers.HNLTreeProducerRiccardo import HNLTreeProducer
-# from CMGTools.HNL.analyzers.HNLTreeProducer         import HNLTreeProducer
-from CMGTools.HNL.analyzers.HNLGenTreeAnalyzer      import HNLGenTreeAnalyzer
-##########################################################################################
-from CMGTools.HNL.analyzers.RecoGenAnalyzer         import RecoGenAnalyzer
-from CMGTools.HNL.analyzers.CheckHNLAnalyzer        import CheckHNLAnalyzer
-from CMGTools.HNL.analyzers.TriggerAnalyzer         import TriggerAnalyzer
-from CMGTools.HNL.analyzers.JetAnalyzer             import JetAnalyzer
+from CMGTools.HNL.analyzers.HNLAnalyzer              import HNLAnalyzer
+from CMGTools.HNL.analyzers.HNLTreeProducerPromptEle import HNLTreeProducerPromptEle
+from CMGTools.HNL.analyzers.HNLGenTreeAnalyzer       import HNLGenTreeAnalyzer
+from CMGTools.HNL.analyzers.RecoGenAnalyzer          import RecoGenAnalyzer
+from CMGTools.HNL.analyzers.CheckHNLAnalyzer         import CheckHNLAnalyzer
+from CMGTools.HNL.analyzers.TriggerAnalyzer          import TriggerAnalyzer
+from CMGTools.HNL.analyzers.JetAnalyzer              import JetAnalyzer
 
 # import samples, signal
 # from CMGTools.HNL.samples.signal import all_signals as samples
@@ -110,6 +104,7 @@ skimAna = cfg.Analyzer(
     name='SkimAnalyzerCount'
 )
 
+# RM: FIXME! make this fail safe in trigger ana itself
 if cfg.DataSignalMode == 'BkgOrData': # or bkg for that matter
     sampleTriggerHandles = ['slimmedPatTrigger','','']   # for bkg MC
 if cfg.DataSignalMode == 'signal':
@@ -155,18 +150,10 @@ HNLAnalyzer = cfg.Analyzer(
 )
 
 # RM: FIXME! here it is
-if cfg.DataSignalMode == 'signal': # 'signal', 'BkgOrData'
-    HNLTreeProducer = cfg.Analyzer(
-        HNLTreeProducerSignal,
-        name='HNLTreeProducerSignal',
-        # fillL1=False,
-    )
-if cfg.DataSignalMode == 'BkgOrData': # 'signal', 'BkgOrData'
-    HNLTreeProducer = cfg.Analyzer(
-        HNLTreeProducerData,
-        name='HNLTreeProducerData',
-        # fillL1=False,
-    )
+HNLTreeProducer = cfg.Analyzer(
+    HNLTreeProducerPromptEle,
+    name='HNLTreeProducerPromptEle',
+)
 
 HNLGenTreeAnalyzer = cfg.Analyzer(
     HNLGenTreeAnalyzer,
@@ -204,51 +191,20 @@ jetAna = cfg.Analyzer(
 ###################################################
 ###                  SEQUENCE                   ###
 ###################################################
-# sequence = cfg.Sequence([
-# #     eventSelector,
-#     lheWeightAna,
-#     jsonAna,
-#     skimAna,
-#     vertexAna,
-#     pileUpAna,
-#     HNLGenTreeAnalyzer,
-#     RecoGenAnalyzer,
-#     HNLAnalyzer,
-# #     CheckHNLAnalyzer,
-#     HNLTreeProducer,
-# ])
-
-# RM: FIXME! here it is, again
-if cfg.DataSignalMode == 'BkgOrData':
-    sequence = cfg.Sequence([
-    #     eventSelector,
-        lheWeightAna, # les houche
-        jsonAna,
-        skimAna,
-        triggerAna,
-        vertexAna,
-        pileUpAna,
-        HNLAnalyzer,
-        jetAna,
-        HNLTreeProducer,
-    ])
-
-if cfg.DataSignalMode == 'signal':
-    sequence = cfg.Sequence([
-    #     eventSelector,
-        lheWeightAna, # les houche
-        jsonAna,
-        skimAna,
-        triggerAna,
-        vertexAna,
-        pileUpAna,
-        HNLGenTreeAnalyzer,
-        RecoGenAnalyzer,
-        HNLAnalyzer,
-        jetAna,
-#         CheckHNLAnalyzer,
-#         HNLTreeProducer,
-    ])
+sequence = cfg.Sequence([
+#     eventSelector,
+    lheWeightAna, # les houches
+    jsonAna,
+    skimAna,
+    triggerAna,
+    vertexAna,
+    pileUpAna,
+    HNLGenTreeAnalyzer,
+    RecoGenAnalyzer,
+    HNLAnalyzer,
+    jetAna,
+    HNLTreeProducer,
+])
 
 ###################################################
 ###            SET BATCH OR LOCAL               ###

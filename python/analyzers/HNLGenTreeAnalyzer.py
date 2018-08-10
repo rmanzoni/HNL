@@ -96,7 +96,7 @@ class HNLGenTreeAnalyzer(Analyzer):
         event.the_hn.vishn = event.the_hn.lep1.finallep.p4() + event.the_hn.lep2.finallep.p4()
 
         # make it into a handy class
-        event.the_hnl = HN3L(event.the_hn,event.the_pl.finallep, event.the_hn.lep1.finallep, event.the_hn.lep2.finallep, event.the_hn.neu)
+        event.the_hnl = HN3L(event.the_pl.finallep, event.the_hn.lep1.finallep, event.the_hn.lep2.finallep, event.the_hn.neu)
 
         return True
     

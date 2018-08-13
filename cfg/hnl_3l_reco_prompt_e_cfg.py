@@ -41,7 +41,7 @@ from CMGTools.HNL.samples.localsignal import HN3L_M_2p5_V_0p0173205080757_e_onsh
 # from CMGTools.HNL.samples.samples_mc_2017 import TTJets_amcat as ttbar
 # from CMGTools.HNL.samples.samples_mc_2017 import TTJets_amcat
 # from CMGTools.HNL.samples.signal import disp1plus as samples
-# from CMGTools.HNL.samples.localsignal import TTJets_amcat, HN3L_M_2p5_V_0p0173205080757_e_onshell
+from CMGTools.HNL.samples.localsignal import TTJets_amcat as ttbar
 
 # RM: FIXME! this is ugly
 cfg.DataSignalMode = 'signal' # 'signal', 'BkgOrData'

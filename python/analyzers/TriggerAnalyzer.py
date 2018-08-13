@@ -136,10 +136,12 @@ class TriggerAnalyzer(Analyzer):
                 return False
                 
         if self.cfg_ana.addTriggerObjects:
+#             import pdb ; pdb.set_trace()
             try:
                 triggerObjects = self.handles['triggerObjects_slim'].product()
             except:
                 triggerObjects = self.handles['triggerObjects_sel' ].product()
+#             import pdb ; pdb.set_trace()
                 
             for to in triggerObjects:
                 # unpack filter labels if needed (in 2017 it is)

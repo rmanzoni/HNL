@@ -36,16 +36,16 @@ class HNLGenTreeAnalyzer(Analyzer):
     def process(self, event):
         self.readCollections(event.input)
         
-        # no point to run this if it's not a HNL signal
-        if 'HN3L' not in self.cfg_comp.name:
-            return True
-
         self.counters.counter('HNLGenTree').inc('all events')
 
         # produce collections
         event.genp_pruned = self.mchandles['genp_pruned'].product()
         event.genp_packed = self.mchandles['genp_packed'].product()
-                
+
+        # no point to run this if it's not a HNL signal
+        if 'HN3L' not in self.cfg_comp.name:
+            return True
+        
 #         for pp in event.genp_packed:
 #             printer = lambda : 'pat::PackedGenParticle:   %d, pt  %.2f, eta  %.2f, phi  %.2f, mass  %.2f, status  %d' %(pp.pdgId(), pp.pt(), pp.eta(), pp.phi(), pp.mass(), pp.status())
 #             import pdb ; pdb.set_trace()

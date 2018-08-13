@@ -65,7 +65,7 @@ pick_events        = getHeppyOption('pick_events', False)
 ###               HANDLE SAMPLES                ###
 ###################################################
 samples = [HN3L_M_2p5_V_0p00707106781187_e_onshell, HN3L_M_2p5_V_0p0173205080757_e_onshell]
-# samples = [ttbar]
+samples += [ttbar]
 
 for sample in samples:
     sample.triggers  = ['HLT_Ele27_WPTight_Gsf_v%d'          %i for i in range(1, 15)] #electron trigger
@@ -105,18 +105,13 @@ skimAna = cfg.Analyzer(
 )
 
 # RM: FIXME! make this fail safe in trigger ana itself
-if cfg.DataSignalMode == 'BkgOrData': # or bkg for that matter
-    sampleTriggerHandles = ['slimmedPatTrigger','','']   # for bkg MC
-if cfg.DataSignalMode == 'signal':
-    sampleTriggerHandles = ['selectedPatTrigger','','']  # for signal MC
-
 triggerAna = cfg.Analyzer(
     TriggerAnalyzer,
     name='TriggerAnalyzer',
     addTriggerObjects=True,
     requireTrigger=True,
-    triggerObjectsHandle=sampleTriggerHandles,
-    usePrescaled=False
+    usePrescaled=False,
+    unpackLabels=True,
 )
 
 vertexAna = cfg.Analyzer(
@@ -215,10 +210,9 @@ sequence = cfg.Sequence([
 ###            SET BATCH OR LOCAL               ###
 ###################################################
 if not production:
-#     comp                 = HN3L_M_2p5_V_0p0173205080757_e_onshell
+    comp                 = HN3L_M_2p5_V_0p0173205080757_e_onshell
 #     comp                 = HN3L_M_2p5_V_0p00707106781187_e_onshell
-    comp                 = samples
-    comp                 = ttbar
+#     comp                 = ttbar
     selectedComponents   = [comp]
     comp.splitFactor     = 1
     comp.fineSplitFactor = 1

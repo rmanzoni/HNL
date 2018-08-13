@@ -27,42 +27,12 @@ class TriggerAnalyzer(Analyzer):
     def declareHandles(self):
         super(TriggerAnalyzer, self).declareHandles()
 
-        if hasattr(self.cfg_ana, 'triggerResultsHandle'):
-            myhandle = self.cfg_ana.triggerResultsHandle
-            self.handles['triggerResultsHLT'] = AutoHandle(
-                (myhandle[0], myhandle[1], myhandle[2]),
-                'edm::TriggerResults'
-                )
-        else:    
-            trig_proc_name = 'HLT2' if 'reHLT' in self.cfg_comp.dataset else 'HLT'
-            self.handles['triggerResultsHLT'] = AutoHandle(
-                ('TriggerResults', '', trig_proc_name),
-                'edm::TriggerResults'
-                )
+        self.handles['triggerResultsHLT'  ] = AutoHandle(('TriggerResults', '', 'HLT'),'edm::TriggerResults')
 
-        if hasattr(self.cfg_ana, 'triggerObjectsHandle'):
-            myhandle = self.cfg_ana.triggerObjectsHandle
-            self.handles['triggerObjects'] = AutoHandle(
-                (myhandle[0], myhandle[1], myhandle[2]),
-                'std::vector<pat::TriggerObjectStandAlone>'
-                )
-        else:    
-            self.handles['triggerObjects'] =  AutoHandle(
-                'selectedPatTrigger',
-                'std::vector<pat::TriggerObjectStandAlone>'
-                )
+        self.handles['triggerObjects_slim'] = AutoHandle('slimmedPatTrigger' , 'std::vector<pat::TriggerObjectStandAlone>')
+        self.handles['triggerObjects_sel' ] = AutoHandle('selectedPatTrigger', 'std::vector<pat::TriggerObjectStandAlone>')
  
-        if hasattr(self.cfg_ana, 'triggerPrescalesHandle'):
-            myhandle = self.cfg_ana.triggerPrescalesHandle
-            self.handles['triggerPrescales'] = AutoHandle(
-                (myhandle[0], myhandle[1], myhandle[2]),
-                'pat::PackedTriggerPrescales'
-                )
-        else:    
-            self.handles['triggerPrescales'] =  AutoHandle(
-                'patTrigger',
-                'pat::PackedTriggerPrescales'
-                )
+        self.handles['triggerPrescales'   ] =  AutoHandle('patTrigger', 'pat::PackedTriggerPrescales')
  
     def beginLoop(self, setup):
         super(TriggerAnalyzer,self).beginLoop(setup)
@@ -166,7 +136,11 @@ class TriggerAnalyzer(Analyzer):
                 return False
                 
         if self.cfg_ana.addTriggerObjects:
-            triggerObjects = self.handles['triggerObjects'].product()
+            try:
+                triggerObjects = self.handles['triggerObjects_slim'].product()
+            except:
+                triggerObjects = self.handles['triggerObjects_sel' ].product()
+                
             for to in triggerObjects:
                 # unpack filter labels if needed (in 2017 it is)
                 if getattr(self.cfg_ana, 'unpackLabels', False):

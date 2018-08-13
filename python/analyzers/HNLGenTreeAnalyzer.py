@@ -35,6 +35,10 @@ class HNLGenTreeAnalyzer(Analyzer):
         
     def process(self, event):
         self.readCollections(event.input)
+        
+        # no point to run this if it's not a HNL signal
+        if 'HN3L' not in self.cfg_comp.name:
+            return True
 
         self.counters.counter('HNLGenTree').inc('all events')
 

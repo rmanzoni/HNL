@@ -154,12 +154,12 @@ displacedmuon_vars = [
     Variable('px'    , lambda p: p.px() ),
     Variable('py'    , lambda p: p.py() ),
     Variable('pz'    , lambda p: p.pz() ),
-    Variable('E'     , lambda p: p.p4().E() ),
+    Variable('e'     , lambda p: p.p4().E() ),
     Variable('dxy'   , lambda p: p.dxy() ),
     Variable('pt'    , lambda p: p.pt() ),
     Variable('eta'   , lambda p: p.eta()),
     Variable('phi'   , lambda p: p.phi()),
-    Variable('charge', lambda p: p.charge() if hasattr(p, 'charge') else 0), # charge may be non-integer for gen particles
+    Variable('q'     , lambda p: p.charge() if hasattr(p, 'charge') else 0), # charge may be non-integer for gen particles
     Variable('mass'  , lambda p: p.mass()),
     Variable('reco'  , lambda p: p.reco),
 ]
@@ -254,9 +254,9 @@ particle_vars = [
     Variable('pt'    , lambda p: p.pt() ),
     Variable('eta'   , lambda p: p.eta()),
     Variable('phi'   , lambda p: p.phi()),
-    Variable('charge', lambda p: p.charge() if hasattr(p, 'charge') else 0), # charge may be non-integer for gen particles
+    Variable('q'     , lambda p: p.charge() if hasattr(p, 'charge') else 0), # charge may be non-integer for gen particles
     Variable('mass'  , lambda p: p.mass()),
-    Variable('pdgId' , lambda p: p.pdgId()),
+    Variable('pdgid' , lambda p: p.pdgId()),
 ]
 
 # stage-2 L1 object
@@ -281,7 +281,7 @@ lepton_vars = [
     Variable('px'           , lambda lep: lep.px() ),
     Variable('py'           , lambda lep: lep.py() ),
     Variable('pz'           , lambda lep: lep.pz() ),
-    Variable('E'            , lambda lep: lep.p4().E() ),
+    Variable('e'            , lambda lep: lep.p4().E() ),
     Variable('dxy'          , lambda lep : lep.dxy()),
     Variable('dxy_error'    , lambda lep : lep.edxy() if hasattr(lep, 'edxy') else lep.dxy_error()),
     Variable('dz'           , lambda lep : lep.leadChargedHadrCand().dz() if hasattr(lep, 'leadChargedHadrCand') else lep.dz()),
@@ -385,7 +385,7 @@ muon_track_extra_vars = [
     Variable('sigma_pt_over_pt'               , lambda track : track.ptError()/track.pt()                       ),
     Variable('eta'                            , lambda track : track.eta()                                      ),
     Variable('phi'                            , lambda track : track.phi()                                      ),
-    Variable('charge'                         , lambda track : track.charge()                                   ),
+    Variable('q'                              , lambda track : track.charge()                                   ),
     Variable('ndof'                           , lambda track : track.ndof()                                     ),
     Variable('chi2_over_ndof'                 , lambda track : track.normalizedChi2()                           ),
     Variable('n_pix_hits'                     , lambda track : track.hitPattern().numberOfValidPixelHits()      ),

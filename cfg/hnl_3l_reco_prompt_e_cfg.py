@@ -188,8 +188,8 @@ jetAna = cfg.Analyzer(
     recalibrateJets   = False,
     applyL2L3Residual = 'MC',
     # RM: FIXME! check the GTs
-#    mcGT              = '80X_mcRun2_asymptotic_2016_TrancheIV_v8',
-#    dataGT            = '80X_dataRun2_2016SeptRepro_v7',
+#    mcGT              = '94X_mc2017_realistic_v14',
+#    dataGT            = '94X_dataRun2_v6',
     #jesCorr = 1., # Shift jet energy scale in terms of uncertainties (1 = +1 sigma)
 )
 ###################################################
@@ -205,7 +205,7 @@ sequence = cfg.Sequence([
     pileUpAna,
     genAna,
     HNLGenTreeAnalyzer,
-    RecoGenAnalyzer,
+#     RecoGenAnalyzer,
     HNLAnalyzer,
     jetAna,
     HNLTreeProducer,
@@ -215,10 +215,10 @@ sequence = cfg.Sequence([
 ###            SET BATCH OR LOCAL               ###
 ###################################################
 if not production:
-    comp                 = HN3L_M_2p5_V_0p0173205080757_e_onshell
+#     comp                 = HN3L_M_2p5_V_0p0173205080757_e_onshell
 #     comp                 = HN3L_M_2p5_V_0p00707106781187_e_onshell
-    # comp                 = samples
-    # comp                 = TTJets_amcat
+    comp                 = samples
+    comp                 = ttbar
     selectedComponents   = [comp]
     comp.splitFactor     = 1
     comp.fineSplitFactor = 1

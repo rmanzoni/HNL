@@ -1,15 +1,15 @@
 import ROOT
 from CMGTools.HNL.analyzers.TreeProducerBase import TreeProducerBase
-from PhysicsTools.HeppyCore.utils.deltar import deltaR
+from PhysicsTools.HeppyCore.utils.deltar import deltaR, bestMatch
 from CMGTools.HNL.utils.utils import isAncestor, displacement2D, displacement3D, makeRecoVertex # utility functions
 from pdb import set_trace
 
 class HNLTreeProducerPromptEle(TreeProducerBase):
     '''
     RM: add more info:
-    - reco-gen matching
     - gen impact parameter  ==> how to do it at gen level?
     - test it on other MCs
+    - gen met including pu (all neutrinos)
     make this iherit from a common reco tree producer, then specialise by lepton flavour
     '''
     def declareVariables(self, setup):
@@ -25,10 +25,15 @@ class HNLTreeProducerPromptEle(TreeProducerBase):
         self.bookMuon(self.tree, 'l1' )
         self.bookMuon(self.tree, 'l2' )
         
+        # book the matched  gen particle
+        self.bookParticle(self.tree, 'l0_gen_match')
+        self.bookParticle(self.tree, 'l1_gen_match')
+        self.bookParticle(self.tree, 'l2_gen_match')
+
         # relevant for signal: check if reco matched with gen, save a bool
-        self.var(self.tree, 'l0_gen_matched' )
-        self.var(self.tree, 'l1_gen_matched' )
-        self.var(self.tree, 'l2_gen_matched' )
+        self.var(self.tree, 'l0_is_real')
+        self.var(self.tree, 'l1_is_real')
+        self.var(self.tree, 'l2_is_real')
 
         # reco primary vertex
         self.var(self.tree, 'pv_x')
@@ -113,12 +118,13 @@ class HNLTreeProducerPromptEle(TreeProducerBase):
         self.fillMuon    (self.tree, 'l1' , event.the_3lep_cand.l1())
         self.fillMuon    (self.tree, 'l2' , event.the_3lep_cand.l2())
 
-        # output of MC analysis
-        self.fillHNL     (self.tree, 'hnl_gen', event.the_hnl      )
-        self.fillParticle(self.tree, 'l0_gen' , event.the_hnl.l0() )
-        self.fillParticle(self.tree, 'l1_gen' , event.the_hnl.l1() )
-        self.fillParticle(self.tree, 'l2_gen' , event.the_hnl.l2() )
-        self.fillParticle(self.tree, 'n_gen'  , event.the_hnl.met())
+        # output of MC analysis ONLY FOR SIGNAL
+        if hasattr(event, 'the_hnl'):
+            self.fillHNL     (self.tree, 'hnl_gen', event.the_hnl      )
+            self.fillParticle(self.tree, 'l0_gen' , event.the_hnl.l0() )
+            self.fillParticle(self.tree, 'l1_gen' , event.the_hnl.l1() )
+            self.fillParticle(self.tree, 'l2_gen' , event.the_hnl.l2() )
+            self.fillParticle(self.tree, 'n_gen'  , event.the_hnl.met())
 
         # reco primary vertex
         pv = event.goodVertices[0]
@@ -130,9 +136,10 @@ class HNLTreeProducerPromptEle(TreeProducerBase):
         self.fill(self.tree, 'pv_ze', pv.zError())
         
         # true primary vertex
-        self.fill(self.tree, 'pv_gen_x', event.the_hn.vx())
-        self.fill(self.tree, 'pv_gen_y', event.the_hn.vy())
-        self.fill(self.tree, 'pv_gen_z', event.the_hn.vz())
+        if hasattr(event, 'the_hnl'):
+            self.fill(self.tree, 'pv_gen_x', event.the_hn.vx())
+            self.fill(self.tree, 'pv_gen_y', event.the_hn.vy())
+            self.fill(self.tree, 'pv_gen_z', event.the_hn.vz())
 
         # beamspot
         self.fill(self.tree, 'bs_x', event.beamspot.x0())
@@ -145,13 +152,14 @@ class HNLTreeProducerPromptEle(TreeProducerBase):
         self.fill(self.tree, 'bs_dydz', event.beamspot.dydz())
 
         # true HN decay vertex
-        self.fill(self.tree, 'sv_x', event.the_hn.lep1.vertex().x()) # don't use the final lepton to get the vertex from!
-        self.fill(self.tree, 'sv_y', event.the_hn.lep1.vertex().y()) # don't use the final lepton to get the vertex from!
-        self.fill(self.tree, 'sv_z', event.the_hn.lep1.vertex().z()) # don't use the final lepton to get the vertex from!
+        if hasattr(event, 'the_hn'):
+            self.fill(self.tree, 'sv_gen_x', event.the_hn.lep1.vertex().x()) # don't use the final lepton to get the vertex from!
+            self.fill(self.tree, 'sv_gen_y', event.the_hn.lep1.vertex().y()) # don't use the final lepton to get the vertex from!
+            self.fill(self.tree, 'sv_gen_z', event.the_hn.lep1.vertex().z()) # don't use the final lepton to get the vertex from!
 
-        # displacements
-        self.fill(self.tree, 'hnl_2d_gen_disp', displacement2D(event.the_hn.lep1, event.the_hn))
-        self.fill(self.tree, 'hnl_3d_gen_disp', displacement3D(event.the_hn.lep1, event.the_hn))
+            # displacements
+            self.fill(self.tree, 'hnl_2d_gen_disp', displacement2D(event.the_hn.lep1, event.the_hn))
+            self.fill(self.tree, 'hnl_3d_gen_disp', displacement3D(event.the_hn.lep1, event.the_hn))
         
         # reco secondary vertex and displacement
         self.fill(self.tree, 'sv_x'   , event.recoSv.x()             )
@@ -182,14 +190,30 @@ class HNLTreeProducerPromptEle(TreeProducerBase):
         self.fill(self.tree, 'nj'  , len(event.cleanJets) )
         self.fill(self.tree, 'nbj' , len(event.cleanBJets))
 
+        # gen match
+        stable_genp  = [pp for pp in event.genParticles if pp.status()==1]
+        stable_genp += [pp for pp in event.genp_packed if pp.status()==1]
+        
+        tomatch = [(event.the_3lep_cand.l0(), 0.05*0.05),
+                   (event.the_3lep_cand.l1(), 0.2 *0.2 ),
+                   (event.the_3lep_cand.l2(), 0.2 *0.2 )]
+    
+        for ilep, idr2 in tomatch:
+            bestmatch, dr2 = bestMatch(ilep, stable_genp)
+            if dr2 < idr2:
+                ilep.bestmatch = bestmatch
+
         # relevant for signal: check if reco matched with gen, save a bool
-        self.fill(self.tree, 'l0_gen_matched', deltaR(event.the_3lep_cand.l0(), event.the_hnl.l0())<0.05 )
-        self.fill(self.tree, 'l1_gen_matched', deltaR(event.the_3lep_cand.l0(), event.the_hnl.l0())<0.2  )
-        self.fill(self.tree, 'l2_gen_matched', deltaR(event.the_3lep_cand.l0(), event.the_hnl.l0())<0.2  )
+        if hasattr(event.the_3lep_cand.l0(), 'bestmatch'): self.fillParticle(self.tree, 'l0_gen_match', event.the_3lep_cand.l0().bestmatch)
+        if hasattr(event.the_3lep_cand.l1(), 'bestmatch'): self.fillParticle(self.tree, 'l1_gen_match', event.the_3lep_cand.l1().bestmatch)
+        if hasattr(event.the_3lep_cand.l2(), 'bestmatch'): self.fillParticle(self.tree, 'l2_gen_match', event.the_3lep_cand.l2().bestmatch)
 
-
-#         import pdb ; pdb.set_trace()
-
+        # FIXME! matching by pointer does not work, so let's trick it with deltaR
+        if hasattr(event, 'the_hnl'):
+            if hasattr(event.the_3lep_cand.l0(), 'bestmatch'): self.fill(self.tree, 'l0_is_real', deltaR(event.the_3lep_cand.l0().bestmatch,event.the_hnl.l0()) < 0.01)
+            if hasattr(event.the_3lep_cand.l1(), 'bestmatch'): self.fill(self.tree, 'l1_is_real', deltaR(event.the_3lep_cand.l1().bestmatch,event.the_hnl.l1()) < 0.05)
+            if hasattr(event.the_3lep_cand.l2(), 'bestmatch'): self.fill(self.tree, 'l2_is_real', deltaR(event.the_3lep_cand.l2().bestmatch,event.the_hnl.l2()) < 0.05)
+        
         self.fillTree(event)
 
 

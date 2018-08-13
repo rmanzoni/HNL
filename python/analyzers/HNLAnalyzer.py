@@ -324,6 +324,23 @@ class HNLAnalyzer(Analyzer):
         
         event.recoSv.disp2DFromBS_cos = cos
 
+        ########################################################################################
+        # Define event.selectedLeptons, will be used by JetAnalyzer.py
+        ########################################################################################
+
+        # the selected 3 leptons must be leptons and not jets
+        event.selectedLeptons = [event.the_3lep_cand.l0(),
+                                 event.the_3lep_cand.l1(),
+                                 event.the_3lep_cand.l2()]
+
+        # plus any isolated electron or muon is also a good lepton rather than a jet
+        event.selMuons     = [mu  for mu  in event.muons     if self.preselectPromptMuons    (mu , pt=10) and mu .relIsoR(R=0.3, dBetaFactor=0.5, allCharged=0)<0.2]
+        event.selElectrons = [ele for ele in event.electrons if self.preselectPromptElectrons(ele, pt=10) and ele.relIsoR(R=0.3, dBetaFactor=0.5, allCharged=0)<0.2]
+        # RM: what about taus?
+
+        event.selectedLeptons += event.selMuons
+        event.selectedLeptons += event.selElectrons
+
         return True
         
         

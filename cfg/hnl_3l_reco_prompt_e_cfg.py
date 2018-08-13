@@ -133,6 +133,9 @@ pileUpAna = cfg.Analyzer(
     true=True
 )
 
+genAna = GeneratorAnalyzer.defaultConfig
+genAna.allGenTaus = True # save in event.gentaus *ALL* taus, regardless whether hadronic / leptonic decay
+
 # for each path specify which filters you want the muons to match to
 triggers_and_filters = OrderedDict()
 triggers_and_filters['HLT_Ele27_WPTight_Gsf']         = 'hltEle27WPTightGsfTrackIsoFilter'
@@ -177,13 +180,14 @@ jetAna = cfg.Analyzer(
     name              = 'JetAnalyzer',
     jetCol            = 'slimmedJets',
     jetPt             = 20.,
-    jetEta            = 2.4,
+    jetEta            = 5.,
     relaxJetId        = False, # relax = do not apply jet ID
     relaxPuJetId      = True, # relax = do not apply pileup jet ID
-    jerCorr           = True,
+    jerCorr           = False,
     puJetIDDisc       = 'pileupJetId:fullDiscriminant',
-    recalibrateJets   = True,
+    recalibrateJets   = False,
     applyL2L3Residual = 'MC',
+    # RM: FIXME! check the GTs
 #    mcGT              = '80X_mcRun2_asymptotic_2016_TrancheIV_v8',
 #    dataGT            = '80X_dataRun2_2016SeptRepro_v7',
     #jesCorr = 1., # Shift jet energy scale in terms of uncertainties (1 = +1 sigma)
@@ -199,6 +203,7 @@ sequence = cfg.Sequence([
     triggerAna,
     vertexAna,
     pileUpAna,
+    genAna,
     HNLGenTreeAnalyzer,
     RecoGenAnalyzer,
     HNLAnalyzer,

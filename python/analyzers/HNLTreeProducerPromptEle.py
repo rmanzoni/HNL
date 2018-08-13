@@ -8,13 +8,8 @@ class HNLTreeProducerPromptEle(TreeProducerBase):
     '''
     RM: add more info:
     - reco-gen matching
-    - beamspot
-    - primary vertex
-    - jet associated to the lepton
-    - check lepton iso and id variables
-    - gen impact parameter
-    - gen pdgid
-    
+    - gen impact parameter  ==> how to do it at gen level?
+    - test it on other MCs
     make this iherit from a common reco tree producer, then specialise by lepton flavour
     '''
     def declareVariables(self, setup):
@@ -24,6 +19,45 @@ class HNLTreeProducerPromptEle(TreeProducerBase):
         self.bookEvent(self.tree)
         self.var      (self.tree, 'n_cands')
         
+        # reco variables
+        self.bookHNL (self.tree, 'hnl')
+        self.bookEle (self.tree, 'l0' )
+        self.bookMuon(self.tree, 'l1' )
+        self.bookMuon(self.tree, 'l2' )
+        
+        # relevant for signal: check if reco matched with gen, save a bool
+        self.var(self.tree, 'l0_gen_matched' )
+        self.var(self.tree, 'l1_gen_matched' )
+        self.var(self.tree, 'l2_gen_matched' )
+
+        # reco primary vertex
+        self.var(self.tree, 'pv_x')
+        self.var(self.tree, 'pv_y')
+        self.var(self.tree, 'pv_z')
+        self.var(self.tree, 'pv_xe')
+        self.var(self.tree, 'pv_ye')
+        self.var(self.tree, 'pv_ze')
+
+        # beamspot
+        self.var(self.tree, 'bs_x')
+        self.var(self.tree, 'bs_y')
+        self.var(self.tree, 'bs_z')
+        self.var(self.tree, 'bs_sigma_x')
+        self.var(self.tree, 'bs_sigma_y')
+        self.var(self.tree, 'bs_sigma_z')
+        self.var(self.tree, 'bs_dxdz')
+        self.var(self.tree, 'bs_dydz')
+        
+        # reco HN decay vertex (when present)
+        self.var(self.tree, 'sv_x' )
+        self.var(self.tree, 'sv_y' )
+        self.var(self.tree, 'sv_z' )
+        self.var(self.tree, 'sv_xe')
+        self.var(self.tree, 'sv_ye')
+        self.var(self.tree, 'sv_ze')
+        self.var(self.tree, 'sv_prob')
+        self.var(self.tree, 'sv_cos')
+
         # gen level particles
         self.bookHNL     (self.tree, 'hnl_gen')
         self.bookParticle(self.tree, 'l0_gen' )
@@ -40,27 +74,6 @@ class HNLTreeProducerPromptEle(TreeProducerBase):
         self.var(self.tree, 'sv_gen_x')
         self.var(self.tree, 'sv_gen_y')
         self.var(self.tree, 'sv_gen_z')
-
-        # reco variables
-        self.bookHNL     (self.tree, 'hnl')
-        self.bookEle     (self.tree, 'l0' )
-        self.bookMuon    (self.tree, 'l1' )
-        self.bookMuon    (self.tree, 'l2' )
-
-        # reco primary vertex
-        self.var(self.tree, 'pv_x')
-        self.var(self.tree, 'pv_y')
-        self.var(self.tree, 'pv_z')
-        
-        # reco HN decay vertex (when present)
-        self.var(self.tree, 'sv_x' )
-        self.var(self.tree, 'sv_y' )
-        self.var(self.tree, 'sv_z' )
-        self.var(self.tree, 'sv_xe')
-        self.var(self.tree, 'sv_ye')
-        self.var(self.tree, 'sv_ze')
-        self.var(self.tree, 'sv_prob')
-        self.var(self.tree, 'sv_cos')
 
         # displacements
         self.var(self.tree, 'hnl_2d_gen_disp')
@@ -107,10 +120,29 @@ class HNLTreeProducerPromptEle(TreeProducerBase):
         self.fillParticle(self.tree, 'l2_gen' , event.the_hnl.l2() )
         self.fillParticle(self.tree, 'n_gen'  , event.the_hnl.met())
 
+        # reco primary vertex
+        pv = event.goodVertices[0]
+        self.fill(self.tree, 'pv_x' , pv.x())
+        self.fill(self.tree, 'pv_y' , pv.y())
+        self.fill(self.tree, 'pv_z' , pv.z())
+        self.fill(self.tree, 'pv_xe', pv.xError())
+        self.fill(self.tree, 'pv_ye', pv.yError())
+        self.fill(self.tree, 'pv_ze', pv.zError())
+        
         # true primary vertex
-        self.fill(self.tree, 'pv_x', event.the_hn.vx())
-        self.fill(self.tree, 'pv_y', event.the_hn.vy())
-        self.fill(self.tree, 'pv_z', event.the_hn.vz())
+        self.fill(self.tree, 'pv_gen_x', event.the_hn.vx())
+        self.fill(self.tree, 'pv_gen_y', event.the_hn.vy())
+        self.fill(self.tree, 'pv_gen_z', event.the_hn.vz())
+
+        # beamspot
+        self.fill(self.tree, 'bs_x', event.beamspot.x0())
+        self.fill(self.tree, 'bs_y', event.beamspot.y0())
+        self.fill(self.tree, 'bs_z', event.beamspot.z0())
+        self.fill(self.tree, 'bs_sigma_x', event.beamspot.BeamWidthX())
+        self.fill(self.tree, 'bs_sigma_y', event.beamspot.BeamWidthY())
+        self.fill(self.tree, 'bs_sigma_z', event.beamspot.sigmaZ())
+        self.fill(self.tree, 'bs_dxdz', event.beamspot.dxdz())
+        self.fill(self.tree, 'bs_dydz', event.beamspot.dydz())
 
         # true HN decay vertex
         self.fill(self.tree, 'sv_x', event.the_hn.lep1.vertex().x()) # don't use the final lepton to get the vertex from!
@@ -149,6 +181,14 @@ class HNLTreeProducerPromptEle(TreeProducerBase):
         self.fill(self.tree, 'htbj', event.HT_bJets       )
         self.fill(self.tree, 'nj'  , len(event.cleanJets) )
         self.fill(self.tree, 'nbj' , len(event.cleanBJets))
+
+        # relevant for signal: check if reco matched with gen, save a bool
+        self.fill(self.tree, 'l0_gen_matched', deltaR(event.the_3lep_cand.l0(), event.the_hnl.l0())<0.05 )
+        self.fill(self.tree, 'l1_gen_matched', deltaR(event.the_3lep_cand.l0(), event.the_hnl.l0())<0.2  )
+        self.fill(self.tree, 'l2_gen_matched', deltaR(event.the_3lep_cand.l0(), event.the_hnl.l0())<0.2  )
+
+
+#         import pdb ; pdb.set_trace()
 
         self.fillTree(event)
 

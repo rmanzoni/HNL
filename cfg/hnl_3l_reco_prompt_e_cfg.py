@@ -210,9 +210,9 @@ sequence = cfg.Sequence([
 ###            SET BATCH OR LOCAL               ###
 ###################################################
 if not production:
-    comp                 = HN3L_M_2p5_V_0p0173205080757_e_onshell
+#    comp                 = HN3L_M_2p5_V_0p0173205080757_e_onshell
 #     comp                 = HN3L_M_2p5_V_0p00707106781187_e_onshell
-#     comp                 = ttbar
+    comp                 = ttbar
     selectedComponents   = [comp]
     comp.splitFactor     = 1
     comp.fineSplitFactor = 1

@@ -192,7 +192,7 @@ class HNLTreeProducerPromptEle(TreeProducerBase):
 
         # gen match
         stable_genp  = [pp for pp in event.genParticles if pp.status()==1]
-#        stable_genp += [pp for pp in event.genp_packed if pp.status()==1]
+        stable_genp += [pp for pp in event.genp_packed if pp.status()==1]
         
         tomatch = [(event.the_3lep_cand.l0(), 0.05*0.05),
                    (event.the_3lep_cand.l1(), 0.2 *0.2 ),

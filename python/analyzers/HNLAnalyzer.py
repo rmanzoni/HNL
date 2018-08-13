@@ -342,5 +342,3 @@ class HNLAnalyzer(Analyzer):
         event.selectedLeptons += event.selElectrons
 
         return True
-        
-        

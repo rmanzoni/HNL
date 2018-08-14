@@ -47,13 +47,13 @@ ZZTo4L_ext          .nGenEvents = 98009599
 #.sigma = 1.256 pb
 
 WJetsToLNu_HT400To600           = creator.makeMyPrivateMCComponent('WJetsToLNu_HT400To600'         , '/WJetsToLNu_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8/lshchuts-HNLSKIM2017_WJetsToLNu_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8-115d0bad8e8ff59118d83f903524e0b3/USER'          , 'PRIVATE', '*.root', 'phys03', xSec=48.91, useAAA=True)
-#.sigma = 48.91 ± 0.072 pb (LO); .nevents = 5572699 
+#.sigma = 48.91 \pm 0.072 pb (LO); .nevents = 5572699 
 WJetsToLNu_HT600To800           = creator.makeMyPrivateMCComponent('WJetsToLNu_HT600To800'         , '/WJetsToLNu_HT-600To800_TuneCP5_13TeV-madgraphMLM-pythia8/lshchuts-HNLSKIM2017_WJetsToLNu_HT-600To800_TuneCP5_13TeV-madgraphMLM-pythia8-115d0bad8e8ff59118d83f903524e0b3/USER'          , 'PRIVATE', '*.root', 'phys03', xSec=12.05, useAAA=True)
-#.sigma = 12.05 ± 0.0073 pb (LO); .nevents = 4443563
+#.sigma = 12.05 \pm 0.0073 pb (LO); .nevents = 4443563
 WJetsToLNu_HT800To1200          = creator.makeMyPrivateMCComponent('WJetsToLNu_HT800To1200'        , '/WJetsToLNu_HT-800To1200_TuneCP5_13TeV-madgraphMLM-pythia8/lshchuts-HNLSKIM2017_WJetsToLNu_HT-800To1200_TuneCP5_13TeV-madgraphMLM-pythia8-115d0bad8e8ff59118d83f903524e0b3/USER'        , 'PRIVATE', '*.root', 'phys03', xSec=5.501, useAAA=True)
-#.sigma = 5.501 ± 0.017 pb (LO); .nevents = 8675292 
+#.sigma = 5.501 \pm 0.017 pb (LO); .nevents = 8675292 
 WJetsToLNu_HT1200To2500         = creator.makeMyPrivateMCComponent('WJetsToLNu_HT1200To2500'       , '/WJetsToLNu_HT-1200To2500_TuneCP5_13TeV-madgraphMLM-pythia8/lshchuts-HNLSKIM2017_WJetsToLNu_HT-1200To2500_TuneCP5_13TeV-madgraphMLM-pythia8-115d0bad8e8ff59118d83f903524e0b3/USER'      , 'PRIVATE', '*.root', 'phys03', xSec=1.329, useAAA=True)
-#.sigma = 1.329 ± 0.0025 pb (LO); .nevents = 5696067 
+#.sigma = 1.329 \pm 0.0025 pb (LO); .nevents = 5696067 
 # WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8.sigma = 20508.9*3 pb
  
 W1JetsToLNu_LHEWpT_250_400      = creator.makeMyPrivateMCComponent('W1JetsToLNu_LHEWpT_250_400'    , '/W1JetsToLNu_LHEWpT_250-400_TuneCP5_13TeV-amcnloFXFX-pythia8/lshchuts-HNLSKIM2017_W1JetsToLNu_LHEWpT_250-400_TuneCP5_13TeV-amcnloFXFX-pythia8-115d0bad8e8ff59118d83f903524e0b3/USER'    , 'PRIVATE', '*.root', 'phys03', useAAA=True)

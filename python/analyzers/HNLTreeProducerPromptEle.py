@@ -8,8 +8,8 @@ class HNLTreeProducerPromptEle(TreeProducerBase):
     '''
     RM: add more info:
     - gen impact parameter  ==> how to do it at gen level?
-    - test it on other MCs
     - gen met including pu (all neutrinos)
+    - di-lepton isolation
     make this iherit from a common reco tree producer, then specialise by lepton flavour
     '''
     def declareVariables(self, setup):

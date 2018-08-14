@@ -334,8 +334,8 @@ class HNLAnalyzer(Analyzer):
                                  event.the_3lep_cand.l2()]
 
         # plus any isolated electron or muon is also a good lepton rather than a jet
-        event.selMuons     = [mu  for mu  in event.muons     if self.preselectPromptMuons    (mu , pt=10) and mu .relIsoR(R=0.3, dBetaFactor=0.5, allCharged=0)<0.2]
-        event.selElectrons = [ele for ele in event.electrons if self.preselectPromptElectrons(ele, pt=10) and ele.relIsoR(R=0.3, dBetaFactor=0.5, allCharged=0)<0.2]
+        event.selMuons     = [mu  for mu  in event.muons     if self.preselectPromptMuons    (mu , pt=10) and mu .relIsoR(R=0.3, dBetaFactor=0.5, allCharged=0)<0.15]
+        event.selElectrons = [ele for ele in event.electrons if self.preselectPromptElectrons(ele, pt=10) and ele.relIsoR(R=0.3, dBetaFactor=0.5, allCharged=0)<0.15]
         # RM: what about taus?
 
         event.selectedLeptons += event.selMuons

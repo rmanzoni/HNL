@@ -39,14 +39,10 @@ from CMGTools.HNL.analyzers.JetAnalyzer              import JetAnalyzer
 # from CMGTools.HNL.samples.signal import HN3L_M_2p5_V_0p0173205080757_e_onshell
 from CMGTools.HNL.samples.localsignal import HN3L_M_2p5_V_0p0173205080757_e_onshell, HN3L_M_2p5_V_0p00707106781187_e_onshell
 # from CMGTools.HNL.samples.samples_mc_2017 import TTJets_amcat as ttbar
+from CMGTools.HNL.samples.samples_data_2017 import Single_ele_2017
 # from CMGTools.HNL.samples.samples_mc_2017 import TTJets_amcat
 # from CMGTools.HNL.samples.signal import disp1plus as samples
 from CMGTools.HNL.samples.localsignal import TTJets_amcat as ttbar
-
-# RM: FIXME! this is ugly
-cfg.DataSignalMode = 'signal' # 'signal', 'BkgOrData'
-# cfg.DataSignalMode = 'BkgOrData' # 'signal', 'BkgOrData'
-## this should be changed to bkg&data / signal 
 
 puFileMC   = '$CMSSW_BASE/src/CMGTools/H2TauTau/data/MC_Moriond17_PU25ns_V1.root'
 puFileData = '/afs/cern.ch/user/a/anehrkor/public/Data_Pileup_2016_271036-284044_80bins.root'
@@ -65,7 +61,7 @@ pick_events        = getHeppyOption('pick_events', False)
 ###               HANDLE SAMPLES                ###
 ###################################################
 samples = [HN3L_M_2p5_V_0p00707106781187_e_onshell, HN3L_M_2p5_V_0p0173205080757_e_onshell]
-samples += [ttbar]
+samples += [ttbar,Single_ele_2017]
 
 for sample in samples:
     sample.triggers  = ['HLT_Ele27_WPTight_Gsf_v%d'          %i for i in range(1, 15)] #electron trigger
@@ -104,7 +100,6 @@ skimAna = cfg.Analyzer(
     name='SkimAnalyzerCount'
 )
 
-# RM: FIXME! make this fail safe in trigger ana itself
 triggerAna = cfg.Analyzer(
     TriggerAnalyzer,
     name='TriggerAnalyzer',
@@ -211,8 +206,9 @@ sequence = cfg.Sequence([
 ###################################################
 if not production:
 #     comp                 = HN3L_M_2p5_V_0p0173205080757_e_onshell
-    comp                 = HN3L_M_2p5_V_0p00707106781187_e_onshell
-#     comp                 = ttbar
+#    comp                 = HN3L_M_2p5_V_0p00707106781187_e_onshell
+    comp                 = ttbar
+#    comp                 = Single_ele_2017
     selectedComponents   = [comp]
     comp.splitFactor     = 1
     comp.fineSplitFactor = 1

@@ -313,14 +313,15 @@ electron_vars = [
     Variable('eid_mva_iso_loose'   , lambda ele : ele.electronID('MVA_ID_Iso_Fall17_Loose'   )),
     Variable('eid_mva_iso_wp90'    , lambda ele : ele.electronID('MVA_ID_Iso_Fall17_wp90'    )),
     Variable('eid_mva_iso_wp80'    , lambda ele : ele.electronID('MVA_ID_Iso_Fall17_wp80'    )),
+    Variable('eid_cut_tight'       , lambda ele : ele.cutBasedId('POG_FALL17_94X_v1_Tight'   )),
+    Variable('eid_cut_medium'      , lambda ele : ele.cutBasedId('POG_FALL17_94X_v1_Medium'  )),
+    Variable('eid_cut_loose'       , lambda ele : ele.cutBasedId('POG_FALL17_94X_v1_Loose'   )),
     Variable('n_hits_miss'         , lambda ele : ele.gsfTrack().hitPattern().numberOfLostHits(1), int),
     Variable('pass_conv_veto'      , lambda ele : ele.passConversionVeto()),
     Variable('reliso05'            , lambda lep : lep.relIsoR(R=0.3, dBetaFactor=0.5, allCharged=0)),
     Variable('reliso05_04'         , lambda lep : lep.relIsoR(R=0.4, dBetaFactor=0.5, allCharged=0)),
     Variable('reliso05_04'         , lambda lep : lep.relIsoR(R=0.4, dBetaFactor=0.5, allCharged=0)),
     Variable('weight_tracking'     , lambda lep : getattr(lep, 'weight_tracking', 1.)),
-    Variable('eid_cut_based_tight' , lambda ele : ele.cutBasedId('POG_FALL17_94X_v1_Tight'   )),
-    Variable('eid_cut_based_medium', lambda ele : ele.cutBasedId('POG_FALL17_94X_v1_Medium'  )),
 ]
 
 # photon

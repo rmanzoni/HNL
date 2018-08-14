@@ -21,6 +21,8 @@ class HNLTreeProducerPromptEle(TreeProducerBase):
         
         # reco variables
         self.bookHNL (self.tree, 'hnl')
+        self.var     (self.tree, 'hnl_iso_abs')
+        self.var     (self.tree, 'hnl_iso_rel')
         self.bookEle (self.tree, 'l0' )
         self.bookMuon(self.tree, 'l1' )
         self.bookMuon(self.tree, 'l2' )
@@ -117,10 +119,12 @@ class HNLTreeProducerPromptEle(TreeProducerBase):
         self.fill(self.tree, 'n_cands', len(event.dimuonsvtx))
 
         # reco HNL
-        self.fillHNL     (self.tree, 'hnl', event.the_3lep_cand     )
-        self.fillEle     (self.tree, 'l0' , event.the_3lep_cand.l0())
-        self.fillMuon    (self.tree, 'l1' , event.the_3lep_cand.l1())
-        self.fillMuon    (self.tree, 'l2' , event.the_3lep_cand.l2())
+        self.fillHNL (self.tree, 'hnl'        , event.the_3lep_cand           )
+        self.fill    (self.tree, 'hnl_iso_abs', event.the_3lep_cand.abs_ch_iso)
+        self.fill    (self.tree, 'hnl_iso_rel', event.the_3lep_cand.rel_ch_iso)
+        self.fillEle (self.tree, 'l0'         , event.the_3lep_cand.l0()      )
+        self.fillMuon(self.tree, 'l1'         , event.the_3lep_cand.l1()      )
+        self.fillMuon(self.tree, 'l2'         , event.the_3lep_cand.l2()      )
 
         # output of MC analysis ONLY FOR SIGNAL
         if hasattr(event, 'the_hnl'):

@@ -48,6 +48,7 @@ class HNLAnalyzer(Analyzer):
         self.handles['beamspot' ] = AutoHandle(('offlineBeamSpot'              ,'','RECO'), 'reco::BeamSpot'                                )
         self.handles['pfmet'    ] = AutoHandle(('slimmedMETs'                  ,'','PAT' ), 'std::vector<pat::MET>'                         )
         self.handles['puppimet' ] = AutoHandle('slimmedMETsPuppi'                         , 'std::vector<pat::MET>'                         )
+        self.handles['pfcand'   ] = AutoHandle('packedPFCandidates'                       , 'std::vector<pat::PackedCandidate> '            )
 
     def assignVtx(self, particles, vtx):    
         for ip in particles:
@@ -138,7 +139,10 @@ class HNLAnalyzer(Analyzer):
         event.puppimet    = self.handles['puppimet'].product().at(0)
 
         # make jet object
-        jets = self.handles['jets'].product()        
+        jets = map(Jet, self.handles['jets'].product())        
+
+        # make PF candidates
+        pfs = map(PhysicsObject, self.handles['pfcand'].product())
 
         # assign to the leptons the primary vertex, will be needed to compute a few quantities
         myvtx = event.pvs[0] if len(event.pvs) else event.beamspot
@@ -285,8 +289,6 @@ class HNLAnalyzer(Analyzer):
         # save reco secondary vertex
         event.recoSv = event.displaced_dilepton_reco_cand.vtx()
 
-
-
         # primary vertex
         pv = event.goodVertices[0]
 
@@ -347,4 +349,18 @@ class HNLAnalyzer(Analyzer):
         event.veto_eles = [ele for ele in event.selMuons     if ele.physObj not in [event.the_3lep_cand.l0().physObj, event.the_3lep_cand.l1().physObj, event.the_3lep_cand.l2().physObj] ]
         event.veto_mus  = [mu  for mu  in event.selElectrons if mu .physObj not in [event.the_3lep_cand.l0().physObj, event.the_3lep_cand.l1().physObj, event.the_3lep_cand.l2().physObj] ]
 
+        ########################################################################################
+        # charged PF isolation
+        ########################################################################################        
+        chargedpfs = [ipf for ipf in pfs if ipf.charge()!=0 and abs(ipf.pdgId())!=11 and abs(ipf.pdgId())!=13]
+        chargedpfs = [ipf for ipf in chargedpfs if ipf.pt()>0.6 and abs(ipf.eta())<2.5]
+        chargedpfs = [ipf for ipf in chargedpfs if abs(ipf.dxy(event.recoSv.position()))<0.1 and abs(ipf.dz(event.recoSv.position()))<0.5]
+
+        chisopfs = [ipf for ipf in chargedpfs if deltaR(ipf, event.the_3lep_cand.hnP4())<0.5]
+
+        event.the_3lep_cand.abs_ch_iso = sum([ipf.pt() for ipf in chisopfs])
+        event.the_3lep_cand.rel_ch_iso = event.the_3lep_cand.abs_ch_iso/event.the_3lep_cand.hnP4().pt()
+
         return True
+        
+        

@@ -63,6 +63,10 @@ class HNLTreeProducerPromptEle(TreeProducerBase):
         self.var(self.tree, 'sv_prob')
         self.var(self.tree, 'sv_cos')
 
+        # lepton vetoes
+        self.var(self.tree, 'pass_e_veto')
+        self.var(self.tree, 'pass_m_veto')
+        
         # gen level particles
         self.bookHNL     (self.tree, 'hnl_gen')
         self.bookParticle(self.tree, 'l0_gen' )
@@ -213,6 +217,10 @@ class HNLTreeProducerPromptEle(TreeProducerBase):
             if hasattr(event.the_3lep_cand.l0(), 'bestmatch'): self.fill(self.tree, 'l0_is_real', deltaR(event.the_3lep_cand.l0().bestmatch,event.the_hnl.l0()) < 0.01)
             if hasattr(event.the_3lep_cand.l1(), 'bestmatch'): self.fill(self.tree, 'l1_is_real', deltaR(event.the_3lep_cand.l1().bestmatch,event.the_hnl.l1()) < 0.05)
             if hasattr(event.the_3lep_cand.l2(), 'bestmatch'): self.fill(self.tree, 'l2_is_real', deltaR(event.the_3lep_cand.l2().bestmatch,event.the_hnl.l2()) < 0.05)
+
+        # extra lepton veto
+        self.fill(self.tree, 'pass_e_veto', len(event.veto_eles)==0)
+        self.fill(self.tree, 'pass_m_veto', len(event.veto_mus )==0)
         
         self.fillTree(event)
 

@@ -341,6 +341,12 @@ class HNLAnalyzer(Analyzer):
         event.selectedLeptons += event.selMuons
         event.selectedLeptons += event.selElectrons
 
+        ########################################################################################
+        # Extra prompt and isolated lepton veto
+        ########################################################################################        
+        event.veto_eles = [ele for ele in event.selMuons     if ele.physObj not in [event.the_3lep_cand.l0().physObj, event.the_3lep_cand.l1().physObj, event.the_3lep_cand.l2().physObj] ]
+        event.veto_mus  = [mu  for mu  in event.selElectrons if mu .physObj not in [event.the_3lep_cand.l0().physObj, event.the_3lep_cand.l1().physObj, event.the_3lep_cand.l2().physObj] ]
+
         return True
         
         

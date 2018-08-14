@@ -31,60 +31,60 @@ class HN3L(object):
     def met(self):
         return self.met_
 
-    def charge(self):
+    def WCharge(self):
         return self.l0().charge() + self.l1().charge() + self.l2().charge()
 
     def hnCharge(self):
         return self.l1().charge() + self.l2().charge()
         
     # W kinematics w/ met
-    def hnPx(self):
-        return self.hnP4().Px()
+    def WPx(self):
+        return self.WP4().Px()
 
-    def hnPy(self):
-        return self.hnP4().Py()
+    def WPy(self):
+        return self.WP4().Py()
 
-    def hnPz(self):
-        return self.hnP4().Pz()
+    def WPz(self):
+        return self.WP4().Pz()
 
-    def hnE(self):
-        return self.hnP4().E()
+    def WE(self):
+        return self.WP4().E()
 
-    def p4(self):
+    def WP4(self):
         return self.l0().p4() + self.l1().p4() + self.l2().p4() + self.met().p4() if self.met() else None
 
-    def pt(self):
-        return self.p4().pt() if self.met() else None
+    def WPt(self):
+        return self.WP4().pt() if self.met() else None
 
-    def eta(self):
-        return self.p4().eta() if self.met() else None
+    def WEta(self):
+        return self.WP4().eta() if self.met() else None
 
-    def phi(self):
-        return self.p4().phi() if self.met() else None
+    def WPhi(self):
+        return self.WP4().phi() if self.met() else None
 
-    def mass(self):
-        return self.p4().mass() if self.met() else None
+    def WMass(self):
+        return self.WP4().mass() if self.met() else None
 
-    def sumPt(self):
+    def WSumPt(self):
         return self.l0().pt() + self.l1().pt() + self.l2().pt() + self.met().pt() if self.met() else None
 
     # W kinematics w/o met
-    def visP4(self):
+    def WVisP4(self):
         return self.l0().p4() + self.l1().p4() + self.l2().p4()
 
-    def visPt(self):
-        return self.visP4().pt()
+    def WVisPt(self):
+        return self.WVisP4().pt()
 
-    def visEta(self):
-        return self.visP4().eta()
+    def WVisEta(self):
+        return self.WVisP4().eta()
 
-    def visPhi(self):
-        return self.visP4().phi()
+    def WVisPhi(self):
+        return self.WVisP4().phi()
 
-    def visMass(self):
-        return self.visP4().mass()
+    def WVisMass(self):
+        return self.WVisP4().mass()
 
-    def visSumPt(self):
+    def WVisSumPt(self):
         return self.l0().pt() + self.l1().pt() + self.l2().pt()
 
     # heavy neutrino kinematics w/ met
@@ -133,6 +133,9 @@ class HN3L(object):
 
     def hnVisMass(self):
         return self.hnVisP4().mass()
+
+    def hnVisE(self):
+        return self.hnVisP4().E()
 
     def hnVisSumPt(self):
         return self.l1().pt() + self.l2().pt()

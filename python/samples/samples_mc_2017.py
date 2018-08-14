@@ -15,7 +15,7 @@ TTJets_amcat                    = creator.makeMyPrivateMCComponent('TTJets_amcat
 TTJets_amcat        .nGenEvents = 153432257 
 #.sigma = 831.76 pb; .nevents = 39769534
 
-TTJets_mdgrph                   = creator.makeMyPrivateMCComponent('TTJets_madgraph'               , '/TTJets_TuneCP5_13TeV-madgraphMLM-pythia8/vstampf-HNLSKIM2017_TTJets_TuneCP5_13TeV-madgraphMLM-pythia8-115d0bad8e8ff59118d83f903524e0b3/USER'                                           , 'PRIVATE', '*.root', 'phys03', useAAA=True)
+TTJets_mdgrph                   = creator.makeMyPrivateMCComponent('TTJets_madgraph'               , '/TTJets_TuneCP5_13TeV-madgraphMLM-pythia8/vstampf-HNLSKIM2017_TTJets_TuneCP5_13TeV-madgraphMLM-pythia8-115d0bad8e8ff59118d83f903524e0b3/USER'                                           , 'PRIVATE', '*.root', 'phys03', xSec=831.76, useAAA=True)
 TTJets_mdgrph       .nGenEvents = 615134
 #.sigma = NOT FOUND pb; .nevents = 158461 
               
@@ -28,12 +28,15 @@ DYJetsToLL_M50_ext  .nGenEvents = 158048935
 
 WLLJJ_WToLNu_EWK                = creator.makeMyPrivateMCComponent('WLLJJ_WToLNu_EWK'              , '/WLLJJ_WToLNu_EWK_TuneCP5_13TeV_madgraph-madspin-pythia8/manzoni-HNLSKIM2017_WLLJJ_WToLNu_EWK_TuneCP5_13TeV_madgraph-madspin-pythia8-115d0bad8e8ff59118d83f903524e0b3/USER'             , 'PRIVATE', '*.root', 'phys03', useAAA=True)
 WLLJJ_WToLNu_EWK    .nGenEvents = 880000
+#.sigma = NOT FOUND pb
 
 WW_DoubleScattering             = creator.makeMyPrivateMCComponent('WW_DoubleScattering'           , '/WW_DoubleScattering_13TeV-pythia8_TuneCP5/manzoni-HNLSKIM2017_WW_DoubleScattering_13TeV-pythia8_TuneCP5-115d0bad8e8ff59118d83f903524e0b3/USER'                                         , 'PRIVATE', '*.root', 'phys03', useAAA=True)
 WW_DoubleScattering .nGenEvents = 1000000 
+#.sigma = NOT FOUND pb
  
 WZTo3LNu                        = creator.makeMyPrivateMCComponent('WZTo3LNu'                      , '/WZTo3LNu_TuneCP5_13TeV-amcatnloFXFX-pythia8/manzoni-HNLSKIM2017_WZTo3LNu_TuneCP5_13TeV-amcatnloFXFX-pythia8-115d0bad8e8ff59118d83f903524e0b3/USER'                                     , 'PRIVATE', '*.root', 'phys03', useAAA=True)
 WZTo3LNu            .nGenEvents = 10881896 
+#.sigma = NOT FOUND pb
 
 ZZTo4L                          = creator.makeMyPrivateMCComponent('ZZTo4L'                        , '/ZZTo4L_13TeV_powheg_pythia8/manzoni-HNLSKIM2017_ZZTo4L_13TeV_powheg_pythia8-115d0bad8e8ff59118d83f903524e0b3/USER'                                                                     , 'PRIVATE', '*.root', 'phys03', xSec=1.256, useAAA=True)
 ZZTo4L              .nGenEvents = 6835701 
@@ -43,14 +46,14 @@ ZZTo4L_ext                      = creator.makeMyPrivateMCComponent('ZZTo4L_ext' 
 ZZTo4L_ext          .nGenEvents = 98009599
 #.sigma = 1.256 pb
 
-WJetsToLNu_HT400To600           = creator.makeMyPrivateMCComponent('WJetsToLNu_HT400To600'         , '/WJetsToLNu_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8/lshchuts-HNLSKIM2017_WJetsToLNu_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8-115d0bad8e8ff59118d83f903524e0b3/USER'          , 'PRIVATE', '*.root', 'phys03', useAAA=True)
-#.sigma = NOT FOUND pb; .nevents = 5572699 
-WJetsToLNu_HT600To800           = creator.makeMyPrivateMCComponent('WJetsToLNu_HT600To800'         , '/WJetsToLNu_HT-600To800_TuneCP5_13TeV-madgraphMLM-pythia8/lshchuts-HNLSKIM2017_WJetsToLNu_HT-600To800_TuneCP5_13TeV-madgraphMLM-pythia8-115d0bad8e8ff59118d83f903524e0b3/USER'          , 'PRIVATE', '*.root', 'phys03', useAAA=True)
-#.sigma = NOT FOUND pb; .nevents = 4443563
-WJetsToLNu_HT800To1200          = creator.makeMyPrivateMCComponent('WJetsToLNu_HT800To1200'        , '/WJetsToLNu_HT-800To1200_TuneCP5_13TeV-madgraphMLM-pythia8/lshchuts-HNLSKIM2017_WJetsToLNu_HT-800To1200_TuneCP5_13TeV-madgraphMLM-pythia8-115d0bad8e8ff59118d83f903524e0b3/USER'        , 'PRIVATE', '*.root', 'phys03', useAAA=True)
-#.sigma = NOT FOUND pb; .nevents = 8675292 
-WJetsToLNu_HT1200To2500         = creator.makeMyPrivateMCComponent('WJetsToLNu_HT1200To2500'       , '/WJetsToLNu_HT-1200To2500_TuneCP5_13TeV-madgraphMLM-pythia8/lshchuts-HNLSKIM2017_WJetsToLNu_HT-1200To2500_TuneCP5_13TeV-madgraphMLM-pythia8-115d0bad8e8ff59118d83f903524e0b3/USER'      , 'PRIVATE', '*.root', 'phys03', useAAA=True)
-#.sigma = NOT FOUND pb; .nevents = 5696067 
+WJetsToLNu_HT400To600           = creator.makeMyPrivateMCComponent('WJetsToLNu_HT400To600'         , '/WJetsToLNu_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8/lshchuts-HNLSKIM2017_WJetsToLNu_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8-115d0bad8e8ff59118d83f903524e0b3/USER'          , 'PRIVATE', '*.root', 'phys03', xSec=48.91, useAAA=True)
+#.sigma = 48.91 ± 0.072 pb (LO); .nevents = 5572699 
+WJetsToLNu_HT600To800           = creator.makeMyPrivateMCComponent('WJetsToLNu_HT600To800'         , '/WJetsToLNu_HT-600To800_TuneCP5_13TeV-madgraphMLM-pythia8/lshchuts-HNLSKIM2017_WJetsToLNu_HT-600To800_TuneCP5_13TeV-madgraphMLM-pythia8-115d0bad8e8ff59118d83f903524e0b3/USER'          , 'PRIVATE', '*.root', 'phys03', xSec=12.05, useAAA=True)
+#.sigma = 12.05 ± 0.0073 pb (LO); .nevents = 4443563
+WJetsToLNu_HT800To1200          = creator.makeMyPrivateMCComponent('WJetsToLNu_HT800To1200'        , '/WJetsToLNu_HT-800To1200_TuneCP5_13TeV-madgraphMLM-pythia8/lshchuts-HNLSKIM2017_WJetsToLNu_HT-800To1200_TuneCP5_13TeV-madgraphMLM-pythia8-115d0bad8e8ff59118d83f903524e0b3/USER'        , 'PRIVATE', '*.root', 'phys03', xSec=5.501, useAAA=True)
+#.sigma = 5.501 ± 0.017 pb (LO); .nevents = 8675292 
+WJetsToLNu_HT1200To2500         = creator.makeMyPrivateMCComponent('WJetsToLNu_HT1200To2500'       , '/WJetsToLNu_HT-1200To2500_TuneCP5_13TeV-madgraphMLM-pythia8/lshchuts-HNLSKIM2017_WJetsToLNu_HT-1200To2500_TuneCP5_13TeV-madgraphMLM-pythia8-115d0bad8e8ff59118d83f903524e0b3/USER'      , 'PRIVATE', '*.root', 'phys03', xSec=1.329, useAAA=True)
+#.sigma = 1.329 ± 0.0025 pb (LO); .nevents = 5696067 
 # WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8.sigma = 20508.9*3 pb
  
 W1JetsToLNu_LHEWpT_250_400      = creator.makeMyPrivateMCComponent('W1JetsToLNu_LHEWpT_250_400'    , '/W1JetsToLNu_LHEWpT_250-400_TuneCP5_13TeV-amcnloFXFX-pythia8/lshchuts-HNLSKIM2017_W1JetsToLNu_LHEWpT_250-400_TuneCP5_13TeV-amcnloFXFX-pythia8-115d0bad8e8ff59118d83f903524e0b3/USER'    , 'PRIVATE', '*.root', 'phys03', useAAA=True)
@@ -75,6 +78,7 @@ W3JetsToLNu                     = creator.makeMyPrivateMCComponent('W3JetsToLNu'
 W4JetsToLNu                     = creator.makeMyPrivateMCComponent('W4JetsToLNu'                   , '/W4JetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8/lshchuts-HNLSKIM2017_W4JetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8-115d0bad8e8ff59118d83f903524e0b3/USER'                                , 'PRIVATE', '*.root', 'phys03', xSec=542.4*1.17, useAAA=True)
 #.sigma = 542.4*1.17 pb; .nevents = 3356894; .L = 5289.712704535714 pb^-1  
 
+# LINK for crosssections: https://twiki.cern.ch/twiki/bin/viewauth/CMS/SummaryTable1G25ns
 
 hnl_bkg = [
     TTJets_amcat                  ,
@@ -89,19 +93,19 @@ hnl_bkg = [
     ZZTo4L                        ,
     ZZTo4L_ext                    ,
 
-    WJetsToLNu_HT400To600         ,
-    WJetsToLNu_HT600To800         ,
-    WJetsToLNu_HT800To1200        ,
-    WJetsToLNu_HT1200To2500       ,
+#    WJetsToLNu_HT400To600         ,
+#    WJetsToLNu_HT600To800         ,
+#    WJetsToLNu_HT800To1200        ,
+#    WJetsToLNu_HT1200To2500       ,
  
-    W1JetsToLNu_LHEWpT_250_400    ,
-    W1JetsToLNu_LHEWpT_400_inf    ,
-    W1JetsToLNu_LHEWpT_400_inf_ext,
+#    W1JetsToLNu_LHEWpT_250_400    ,
+#    W1JetsToLNu_LHEWpT_400_inf    ,
+#    W1JetsToLNu_LHEWpT_400_inf_ext,
  
-    W2JetsToLNu_LHEWpT_50_150     ,
-    W2JetsToLNu_LHEWpT_100_150    ,
-    W2JetsToLNu_LHEWpT_250_400    ,
-    W2JetsToLNu_LHEWpT_400_inf    ,
+#    W2JetsToLNu_LHEWpT_50_150     ,
+#    W2JetsToLNu_LHEWpT_100_150    ,
+#    W2JetsToLNu_LHEWpT_250_400    ,
+#    W2JetsToLNu_LHEWpT_400_inf    ,
  
     W3JetsToLNu                   ,
     W4JetsToLNu                   ,

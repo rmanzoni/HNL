@@ -278,6 +278,7 @@ particle_vertex_vars = [
 
 # generic lepton
 lepton_vars = [
+    Variable('pte'          , lambda lep: lep.ptErr() ),
     Variable('px'           , lambda lep: lep.px() ),
     Variable('py'           , lambda lep: lep.py() ),
     Variable('pz'           , lambda lep: lep.pz() ),
@@ -366,19 +367,20 @@ vertex_vars = [
 
 # muon
 muon_vars = [
-    Variable('reliso05'   , lambda muon : muon.relIsoR(R=0.4, dBetaFactor=0.5, allCharged=0)),
-    Variable('reliso05_03', lambda muon : muon.relIsoR(R=0.3, dBetaFactor=0.5, allCharged=0)),
-    Variable('id_s'       , lambda muon : muon.isSoftMuon(muon.associatedVertex)            ),
-    Variable('id_l'       , lambda muon : muon.muonID('POG_ID_Loose')                       ),
-    Variable('id_m'       , lambda muon : muon.muonID('POG_ID_Medium')                      ),
-    Variable('id_t'       , lambda muon : muon.muonID('POG_ID_Tight')                       ),
-    Variable('id_tnv'     , lambda muon : muon.muonID('POG_ID_TightNoVtx')                  ),
-    Variable('id_hpt'     , lambda muon : muon.muonID('POG_ID_HighPt')                      ),
-    Variable('is_sa'      , lambda muon : muon.isStandAloneMuon()                           ),
-    Variable('is_gl'      , lambda muon : muon.isGlobalMuon()                               ),
-    Variable('is_tk'      , lambda muon : muon.isTrackerMuon()                              ),
-    Variable('is_pf'      , lambda muon : muon.isPFMuon()                                   ),
-    Variable('simType'    , lambda muon : muon.simType()                                    ),
+    Variable('reliso05'   , lambda muon : muon.relIsoR(R=0.4, dBetaFactor=0.5, allCharged=0) ),
+    Variable('reliso05_03', lambda muon : muon.relIsoR(R=0.3, dBetaFactor=0.5, allCharged=0) ),
+    Variable('id_s'       , lambda muon : muon.isSoftMuon(muon.associatedVertex)             ),
+    Variable('id_l'       , lambda muon : muon.muonID('POG_ID_Loose')                        ),
+    Variable('id_m'       , lambda muon : muon.muonID('POG_ID_Medium')                       ),
+    Variable('id_t'       , lambda muon : muon.muonID('POG_ID_Tight')                        ),
+    Variable('id_tnv'     , lambda muon : muon.muonID('POG_ID_TightNoVtx')                   ),
+    Variable('id_hpt'     , lambda muon : muon.muonID('POG_ID_HighPt')                       ),
+    Variable('is_sa'      , lambda muon : muon.isStandAloneMuon()                            ),
+    Variable('is_gl'      , lambda muon : muon.isGlobalMuon()                                ),
+    Variable('is_tk'      , lambda muon : muon.isTrackerMuon()                               ),
+    Variable('is_pf'      , lambda muon : muon.isPFMuon()                                    ),
+    Variable('is_oot'     , lambda muon : muon.isoot if hasattr(muon, 'isoot') else default()),
+    Variable('simType'    , lambda muon : muon.simType()                                     ),
 ]
 
 # for an extensive summary of possibly interesting muon variables, have a look at

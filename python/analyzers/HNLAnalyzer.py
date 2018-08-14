@@ -102,6 +102,53 @@ class HNLAnalyzer(Analyzer):
         # passed
         return True
 
+    def isOotMuon(self, muon):
+        '''
+        returns True if the muon fires the out-of-time selection proposed by Piotr
+        https://indico.cern.ch/event/695762/contributions/2853865/attachments/1599433/2535174/ptraczyk_201802_oot_fakes.pdf
+        
+        For in-time muons you want this to return False.
+        '''
+        cmb = muon.time()
+        rpc = muon.rpcTime()
+        
+        # I guess one needs to understand which type of time is needed
+        # there is an enum to do that
+        # http://cmslxr.fnal.gov/source/DataFormats/MuonReco/interface/MuonTime.h#0007
+        
+        if rpc.direction == -1:
+            rpc.time    = rpc.timeAtIpOutIn()
+            rpc.timeerr = rpc.timeAtIpOutInErr()
+        elif rpc.direction == 1:
+            rpc.time = rpc.timeAtIpInOut()
+            rpc.timeerr = rpc.timeAtIpInOutErr()
+        else:
+            # print 'WARNING: undefined muon direction, cannot understand RPC time'
+            return False
+
+        if cmb.direction == -1:
+            cmb.time    = cmb.timeAtIpOutIn()
+            cmb.timeerr = cmb.timeAtIpOutInErr()
+        elif cmb.direction == 1:
+            cmb.time = cmb.timeAtIpInOut()
+            cmb.timeerr = cmb.timeAtIpInOutErr()
+        else:
+            # print 'WARNING: undefined muon direction, cannot understand CMB time'
+            return False
+        
+        cmbok = (cmb.nDof>7)
+        rpcok = (rpc.nDof>1 and rpc.timeerr==0)
+        
+        if rpcok:
+            if abs(rpc.time)>10 and not (cmbok and abs(cmb.time)<10):
+                return True
+        else:
+            if cmbok and (cmb.time>20 or cmb.time<-45):
+                return True
+        
+        return False
+
+
     def process(self, event):
         self.readCollections(event.input)
         self.counters.counter('HNL').inc('all events')
@@ -118,6 +165,11 @@ class HNLAnalyzer(Analyzer):
         for imu in event.muons   : imu.type = 13
         for imu in event.dsamuons: imu.type = 26
         for imu in event.dgmuons : imu.type = 39
+
+        # save a flag to know whether the muons is likely OOT
+        # FIXME! for displaced too?
+        for imu in event.muons:
+            imu.isoot = self.isOotMuon(imu)
 
         event.electrons   = map(Electron, self.handles['electrons'].product())
         
@@ -364,3 +416,4 @@ class HNLAnalyzer(Analyzer):
         return True
         
         
+    

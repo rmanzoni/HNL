@@ -19,7 +19,7 @@ from CMGTools.H2TauTau.proto.analyzers.TriggerAnalyzer   import TriggerAnalyzer
 
 # import HNL analyzers:
 from CMGTools.HNL.analyzers.HNLAnalyzer              import HNLAnalyzer
-from CMGTools.HNL.analyzers.HNLTreeProducerPromptEle import HNLTreeProducerPromptEle
+from CMGTools.HNL.analyzers.HNLTreeProducerPromptMu  import HNLTreeProducerPromptMu
 from CMGTools.HNL.analyzers.HNLGenTreeAnalyzer       import HNLGenTreeAnalyzer
 from CMGTools.HNL.analyzers.RecoGenAnalyzer          import RecoGenAnalyzer
 from CMGTools.HNL.analyzers.CheckHNLAnalyzer         import CheckHNLAnalyzer
@@ -141,8 +141,8 @@ HNLAnalyzer = cfg.Analyzer(
 
 # RM: FIXME! here it is
 HNLTreeProducer = cfg.Analyzer(
-    HNLTreeProducerPromptEle,
-    name='HNLTreeProducerPromptEle',
+    HNLTreeProducerPromptMu,
+    name='HNLTreeProducerPromptMu',
 )
 
 HNLGenTreeAnalyzer = cfg.Analyzer(

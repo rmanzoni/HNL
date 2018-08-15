@@ -342,7 +342,9 @@ class HNLAnalyzer(Analyzer):
         event.recoSv = event.displaced_dilepton_reco_cand.vtx()
 
         # primary vertex
-        pv = event.goodVertices[0]
+        if not len(event.goodVertices):
+            return False
+        else:  pv = event.goodVertices[0]  # or just like above?  myvtx = event.pvs[0] if len(event.pvs) else event.beamspot
 
         event.recoSv.disp3DFromBS      = ROOT.VertexDistance3D().distance(event.recoSv, pv)
         event.recoSv.disp3DFromBS_sig  = event.recoSv.disp3DFromBS.significance()

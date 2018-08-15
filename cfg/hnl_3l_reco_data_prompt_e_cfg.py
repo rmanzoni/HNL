@@ -20,29 +20,11 @@ from CMGTools.H2TauTau.proto.analyzers.TriggerAnalyzer   import TriggerAnalyzer
 # import HNL analyzers:
 from CMGTools.HNL.analyzers.HNLAnalyzer              import HNLAnalyzer
 from CMGTools.HNL.analyzers.HNLTreeProducerPromptEle import HNLTreeProducerPromptEle
-from CMGTools.HNL.analyzers.HNLGenTreeAnalyzer       import HNLGenTreeAnalyzer
-from CMGTools.HNL.analyzers.RecoGenAnalyzer          import RecoGenAnalyzer
-from CMGTools.HNL.analyzers.CheckHNLAnalyzer         import CheckHNLAnalyzer
 from CMGTools.HNL.analyzers.TriggerAnalyzer          import TriggerAnalyzer
 from CMGTools.HNL.analyzers.JetAnalyzer              import JetAnalyzer
 
 # import samples, signal
-# from CMGTools.HNL.samples.signal import all_signals as samples
-# from CMGTools.HNL.samples.signal import all_signals_e as samples
-# from CMGTools.HNL.samples.signal import all_signals_mu as samples
-# from CMGTools.HNL.samples.signal import signals_mass_3 as samples
-# from CMGTools.HNL.samples.signal import signals_test as samples
-# from CMGTools.HNL.samples.signal import signals_mass_1
-# from CMGTools.HNL.samples.signal import signals_mass_2p1
-
-# from CMGTools.HNL.samples.signal import HN3L_M_2p5_V_0p0173205080757_e_onshell
-# from CMGTools.HNL.samples.signal import HN3L_M_2p5_V_0p0173205080757_e_onshell
-from CMGTools.HNL.samples.localsignal import HN3L_M_2p5_V_0p0173205080757_e_onshell, HN3L_M_2p5_V_0p00707106781187_e_onshell
-# from CMGTools.HNL.samples.samples_mc_2017 import TTJets_amcat as ttbar
 from CMGTools.HNL.samples.samples_data_2017 import Single_ele_2017
-# from CMGTools.HNL.samples.samples_mc_2017 import TTJets_amcat
-# from CMGTools.HNL.samples.signal import disp1plus as samples
-from CMGTools.HNL.samples.localsignal import TTJets_amcat as ttbar
 
 puFileMC   = '$CMSSW_BASE/src/CMGTools/H2TauTau/data/MC_Moriond17_PU25ns_V1.root'
 puFileData = '/afs/cern.ch/user/a/anehrkor/public/Data_Pileup_2016_271036-284044_80bins.root'
@@ -60,8 +42,7 @@ pick_events        = getHeppyOption('pick_events', False)
 ###################################################
 ###               HANDLE SAMPLES                ###
 ###################################################
-samples = [HN3L_M_2p5_V_0p00707106781187_e_onshell, HN3L_M_2p5_V_0p0173205080757_e_onshell]
-samples += [ttbar,Single_ele_2017]
+samples = [Single_ele_2017]
 
 for sample in samples:
     sample.triggers  = ['HLT_Ele27_WPTight_Gsf_v%d'          %i for i in range(1, 15)] #electron trigger
@@ -123,9 +104,6 @@ pileUpAna = cfg.Analyzer(
     true=True
 )
 
-genAna = GeneratorAnalyzer.defaultConfig
-genAna.allGenTaus = True # save in event.gentaus *ALL* taus, regardless whether hadronic / leptonic decay
-
 # for each path specify which filters you want the muons to match to
 triggers_and_filters = OrderedDict()
 triggers_and_filters['HLT_Ele27_WPTight_Gsf']         = 'hltEle27WPTightGsfTrackIsoFilter'
@@ -146,21 +124,6 @@ HNLAnalyzer = cfg.Analyzer(
 HNLTreeProducer = cfg.Analyzer(
     HNLTreeProducerPromptEle,
     name='HNLTreeProducerPromptEle',
-)
-
-HNLGenTreeAnalyzer = cfg.Analyzer(
-    HNLGenTreeAnalyzer,
-    name='HNLGenTreeAnalyzer',
-)
-
-RecoGenAnalyzer = cfg.Analyzer(
-    RecoGenAnalyzer,
-    name='RecoGenAnalyzer',
-)
-
-CheckHNLAnalyzer = cfg.Analyzer(
-    CheckHNLAnalyzer,
-    name='CheckHNLAnalyzer',
 )
 
 # see SM HTT TWiki
@@ -187,15 +150,11 @@ jetAna = cfg.Analyzer(
 ###################################################
 sequence = cfg.Sequence([
 #     eventSelector,
-    lheWeightAna, # les houches
     jsonAna,
     skimAna,
     triggerAna,
     vertexAna,
     pileUpAna,
-    genAna,
-    HNLGenTreeAnalyzer,
-#     RecoGenAnalyzer,
     HNLAnalyzer,
     jetAna,
     HNLTreeProducer,
@@ -207,8 +166,8 @@ sequence = cfg.Sequence([
 if not production:
 #     comp                 = HN3L_M_2p5_V_0p0173205080757_e_onshell
 #    comp                 = HN3L_M_2p5_V_0p00707106781187_e_onshell
-    comp                 = ttbar
-#    comp                 = Single_ele_2017
+#    comp                 = ttbar
+    comp                 = Single_ele_2017
     selectedComponents   = [comp]
     comp.splitFactor     = 1
     comp.fineSplitFactor = 1

@@ -18,13 +18,11 @@ from PhysicsTools.Heppy.analyzers.gen.LHEWeightAnalyzer  import LHEWeightAnalyze
 from CMGTools.H2TauTau.proto.analyzers.TriggerAnalyzer   import TriggerAnalyzer
 
 # import HNL analyzers:
-from CMGTools.HNL.analyzers.HNLAnalyzer              import HNLAnalyzer
-from CMGTools.HNL.analyzers.HNLTreeProducerPromptEle import HNLTreeProducerPromptEle
-from CMGTools.HNL.analyzers.HNLGenTreeAnalyzer       import HNLGenTreeAnalyzer
-from CMGTools.HNL.analyzers.RecoGenAnalyzer          import RecoGenAnalyzer
-from CMGTools.HNL.analyzers.CheckHNLAnalyzer         import CheckHNLAnalyzer
-from CMGTools.HNL.analyzers.TriggerAnalyzer          import TriggerAnalyzer
-from CMGTools.HNL.analyzers.JetAnalyzer              import JetAnalyzer
+from CMGTools.HNL.analyzers.HNLAnalyzer        import HNLAnalyzer
+from CMGTools.HNL.analyzers.HNLTreeProducer    import HNLTreeProducer
+from CMGTools.HNL.analyzers.HNLGenTreeAnalyzer import HNLGenTreeAnalyzer
+from CMGTools.HNL.analyzers.TriggerAnalyzer    import TriggerAnalyzer
+from CMGTools.HNL.analyzers.JetAnalyzer        import JetAnalyzer
 
 # import samples, signal
 # from CMGTools.HNL.samples.signal import all_signals as samples
@@ -61,7 +59,7 @@ pick_events        = getHeppyOption('pick_events', False)
 ###               HANDLE SAMPLES                ###
 ###################################################
 samples = [HN3L_M_2p5_V_0p00707106781187_e_onshell, HN3L_M_2p5_V_0p0173205080757_e_onshell]
-samples += [ttbar,Single_ele_2017]
+samples += [ttbar]
 
 for sample in samples:
     sample.triggers  = ['HLT_Ele27_WPTight_Gsf_v%d'          %i for i in range(1, 15)] #electron trigger
@@ -113,7 +111,7 @@ vertexAna = cfg.Analyzer(
     VertexAnalyzer,
     name='VertexAnalyzer',
     fixedWeight=1,
-    keepFailingEvents=True,
+    keepFailingEvents=False,
     verbose=False
 )
 
@@ -142,25 +140,15 @@ HNLAnalyzer = cfg.Analyzer(
     candidate_selection='maxpt',
 )
 
-# RM: FIXME! here it is
 HNLTreeProducer = cfg.Analyzer(
-    HNLTreeProducerPromptEle,
-    name='HNLTreeProducerPromptEle',
+    HNLTreeProducer,
+    name='HNLTreeProducer',
+    promptLepType='ele',
 )
 
 HNLGenTreeAnalyzer = cfg.Analyzer(
     HNLGenTreeAnalyzer,
     name='HNLGenTreeAnalyzer',
-)
-
-RecoGenAnalyzer = cfg.Analyzer(
-    RecoGenAnalyzer,
-    name='RecoGenAnalyzer',
-)
-
-CheckHNLAnalyzer = cfg.Analyzer(
-    CheckHNLAnalyzer,
-    name='CheckHNLAnalyzer',
 )
 
 # see SM HTT TWiki
@@ -193,9 +181,8 @@ sequence = cfg.Sequence([
     triggerAna,
     vertexAna,
     pileUpAna,
-#    genAna,
-#    HNLGenTreeAnalyzer,
-#     RecoGenAnalyzer,
+    genAna,
+    HNLGenTreeAnalyzer,
     HNLAnalyzer,
     jetAna,
     HNLTreeProducer,
@@ -206,9 +193,8 @@ sequence = cfg.Sequence([
 ###################################################
 if not production:
 #     comp                 = HN3L_M_2p5_V_0p0173205080757_e_onshell
-#    comp                 = HN3L_M_2p5_V_0p00707106781187_e_onshell
-#    comp                 = ttbar
-    comp                 = Single_ele_2017
+#     comp                 = HN3L_M_2p5_V_0p00707106781187_e_onshell
+    comp                 = ttbar
     selectedComponents   = [comp]
     comp.splitFactor     = 1
     comp.fineSplitFactor = 1

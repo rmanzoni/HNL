@@ -1,10 +1,11 @@
 import ROOT
+import numpy as np
 from CMGTools.HNL.analyzers.TreeProducerBase import TreeProducerBase
 from PhysicsTools.HeppyCore.utils.deltar import deltaR, bestMatch
 from CMGTools.HNL.utils.utils import isAncestor, displacement2D, displacement3D, makeRecoVertex # utility functions
 from pdb import set_trace
 
-class HNLTreeProducerPromptMu(TreeProducerBase):
+class HNLTreeProducer(TreeProducerBase):
     '''
     RM: add more info:
     - gen impact parameter  ==> how to do it at gen level?
@@ -23,7 +24,15 @@ class HNLTreeProducerPromptMu(TreeProducerBase):
         self.bookHNL (self.tree, 'hnl')
         self.var     (self.tree, 'hnl_iso_abs')
         self.var     (self.tree, 'hnl_iso_rel')
-        self.bookMuon(self.tree, 'l0' )
+        
+        if   self.cfg_ana.promptLepType == 'ele':
+            self.bookEle (self.tree, 'l0')
+        elif self.cfg_ana.promptLepType == 'mu':
+            self.bookMuon(self.tree, 'l0')
+        else:
+             print 'ERROR: prompt lepton type non specified or missing! Exit'
+             exit(0)
+    
         self.bookMuon(self.tree, 'l1' )
         self.bookMuon(self.tree, 'l2' )
         
@@ -106,6 +115,9 @@ class HNLTreeProducerPromptMu(TreeProducerBase):
         self.var(self.tree, 'htbj')
         self.var(self.tree, 'nj'  )
         self.var(self.tree, 'nbj' )
+        
+        # LHE weight
+        self.var(self.tree, 'lhe_weight')
 
     def process(self, event):
         '''
@@ -122,9 +134,10 @@ class HNLTreeProducerPromptMu(TreeProducerBase):
         self.fillHNL (self.tree, 'hnl'        , event.the_3lep_cand           )
         self.fill    (self.tree, 'hnl_iso_abs', event.the_3lep_cand.abs_ch_iso)
         self.fill    (self.tree, 'hnl_iso_rel', event.the_3lep_cand.rel_ch_iso)
-        self.fillMuon(self.tree, 'l0'         , event.the_3lep_cand.l0()      )
         self.fillMuon(self.tree, 'l1'         , event.the_3lep_cand.l1()      )
         self.fillMuon(self.tree, 'l2'         , event.the_3lep_cand.l2()      )
+        if self.cfg_ana.promptLepType == 'ele': self.fillEle (self.tree, 'l0', event.the_3lep_cand.l0())
+        if self.cfg_ana.promptLepType == 'mu' : self.fillMuon(self.tree, 'l0', event.the_3lep_cand.l0())
 
         # output of MC analysis ONLY FOR SIGNAL
         if hasattr(event, 'the_hnl'):
@@ -227,6 +240,9 @@ class HNLTreeProducerPromptMu(TreeProducerBase):
         self.fill(self.tree, 'pass_e_veto', len(event.veto_eles)==0)
         self.fill(self.tree, 'pass_m_veto', len(event.veto_mus )==0)
         
+        # LHE weight
+        self.fill(self.tree, 'lhe_weight', np.sign(getattr(event, 'LHE_originalWeight', 1.)))
+                
         self.fillTree(event)
 
 

@@ -59,6 +59,7 @@ class HNLAnalyzer(Analyzer):
         self.counters.addCounter('HNL')
         count = self.counters.counter('HNL')
         count.register('all events')
+        count.register('>0 good vtx')
         count.register('>0 prompt lep')
         count.register('>0 trig match prompt lep')
         count.register('> 0 di-muon')
@@ -154,6 +155,14 @@ class HNLAnalyzer(Analyzer):
         self.counters.counter('HNL').inc('all events')
 
         #####################################################################################
+        # primary vertex
+        #####################################################################################
+        if not len(event.goodVertices):
+            return False
+
+        self.counters.counter('HNL').inc('>0 good vtx')
+
+        #####################################################################################
         # produce collections and map our objects to convenient Heppy objects
         #####################################################################################
 
@@ -197,10 +206,10 @@ class HNLAnalyzer(Analyzer):
         pfs = map(PhysicsObject, self.handles['pfcand'].product())
 
         # assign to the leptons the primary vertex, will be needed to compute a few quantities
-        myvtx = event.pvs[0] if len(event.pvs) else event.beamspot
+        pv = event.goodVertices[0]
         
-        self.assignVtx(event.muons    , myvtx)
-        self.assignVtx(event.electrons, myvtx)
+        self.assignVtx(event.muons    , pv)
+        self.assignVtx(event.electrons, pv)
 
         #####################################################################################
         # Preselect the prompt leptons
@@ -301,7 +310,7 @@ class HNLAnalyzer(Analyzer):
             if pair[0]==pair[1]: continue
             sv = fitVertex(pair)
             if not sv: continue
-            dimuonsvtx.append(DiLepton(pair, sv, myvtx, event.beamspot))
+            dimuonsvtx.append(DiLepton(pair, sv, pv, event.beamspot))
 
         event.dimuonsvtx = dimuonsvtx
         
@@ -340,11 +349,6 @@ class HNLAnalyzer(Analyzer):
         
         # save reco secondary vertex
         event.recoSv = event.displaced_dilepton_reco_cand.vtx()
-
-        # primary vertex
-        if not len(event.goodVertices):
-            return False
-        else:  pv = event.goodVertices[0]  # or just like above?  myvtx = event.pvs[0] if len(event.pvs) else event.beamspot
 
         event.recoSv.disp3DFromBS      = ROOT.VertexDistance3D().distance(event.recoSv, pv)
         event.recoSv.disp3DFromBS_sig  = event.recoSv.disp3DFromBS.significance()

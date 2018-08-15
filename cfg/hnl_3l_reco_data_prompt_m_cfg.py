@@ -16,15 +16,13 @@ from PhysicsTools.Heppy.analyzers.core.PileUpAnalyzer    import PileUpAnalyzer
 from CMGTools.H2TauTau.proto.analyzers.TriggerAnalyzer   import TriggerAnalyzer
 
 # import HNL analyzers:
-from CMGTools.HNL.analyzers.HNLAnalyzer              import HNLAnalyzer
-from CMGTools.HNL.analyzers.HNLTreeProducerPromptMu  import HNLTreeProducerPromptMu
-from CMGTools.HNL.analyzers.TriggerAnalyzer          import TriggerAnalyzer
-from CMGTools.HNL.analyzers.JetAnalyzer              import JetAnalyzer
+from CMGTools.HNL.analyzers.HNLAnalyzer     import HNLAnalyzer
+from CMGTools.HNL.analyzers.HNLTreeProducer import HNLTreeProducer
+from CMGTools.HNL.analyzers.TriggerAnalyzer import TriggerAnalyzer
+from CMGTools.HNL.analyzers.JetAnalyzer     import JetAnalyzer
 
 from CMGTools.HNL.samples.samples_data_2017 import Single_mu_2017
 
-puFileMC   = '$CMSSW_BASE/src/CMGTools/H2TauTau/data/MC_Moriond17_PU25ns_V1.root'
-puFileData = '/afs/cern.ch/user/a/anehrkor/public/Data_Pileup_2016_271036-284044_80bins.root'
 
 ###################################################
 ###                   OPTIONS                   ###
@@ -43,13 +41,11 @@ samples = [Single_mu_2017]
 
 
 for sample in samples:
-    sample.triggers  = ['HLT_IsoMu24_v%d'                    %i for i in range(1, 15)] #muon trigger
-    sample.triggers += ['HLT_IsoMu27_v%d'                    %i for i in range(1, 15)] #muon trigger
-    sample.triggers += ['HLT_Mu50_v%d'                       %i for i in range(1, 15)] #muon trigger
+    sample.triggers  = ['HLT_IsoMu24_v%d' %i for i in range(1, 15)] #muon trigger
+    sample.triggers += ['HLT_IsoMu27_v%d' %i for i in range(1, 15)] #muon trigger
+    sample.triggers += ['HLT_Mu50_v%d'    %i for i in range(1, 15)] #muon trigger
 
     sample.splitFactor = splitFactor(sample, 1e5)
-    sample.puFileData = puFileData
-    sample.puFileMC   = puFileMC
 
 selectedComponents = samples
 
@@ -85,7 +81,7 @@ vertexAna = cfg.Analyzer(
     VertexAnalyzer,
     name='VertexAnalyzer',
     fixedWeight=1,
-    keepFailingEvents=True,
+    keepFailingEvents=False,
     verbose=False
 )
 
@@ -109,12 +105,11 @@ HNLAnalyzer = cfg.Analyzer(
     candidate_selection='maxpt',
 )
 
-# RM: FIXME! here it is
 HNLTreeProducer = cfg.Analyzer(
-    HNLTreeProducerPromptMu,
-    name='HNLTreeProducerPromptMu',
+    HNLTreeProducer,
+    name='HNLTreeProducer',
+    promptLepType='mu',
 )
-
 
 # see SM HTT TWiki
 # https://twiki.cern.ch/twiki/bin/viewauth/CMS/SMTauTau2016#Jet_Energy_Corrections

@@ -12,22 +12,17 @@ from PhysicsTools.Heppy.analyzers.core.SkimAnalyzerCount import SkimAnalyzerCoun
 from PhysicsTools.Heppy.analyzers.core.EventSelector     import EventSelector
 from PhysicsTools.Heppy.analyzers.objects.VertexAnalyzer import VertexAnalyzer
 from PhysicsTools.Heppy.analyzers.core.PileUpAnalyzer    import PileUpAnalyzer
-from PhysicsTools.Heppy.analyzers.gen.GeneratorAnalyzer  import GeneratorAnalyzer
-from PhysicsTools.Heppy.analyzers.gen.LHEWeightAnalyzer  import LHEWeightAnalyzer
 
 from CMGTools.H2TauTau.proto.analyzers.TriggerAnalyzer   import TriggerAnalyzer
 
 # import HNL analyzers:
-from CMGTools.HNL.analyzers.HNLAnalyzer              import HNLAnalyzer
-from CMGTools.HNL.analyzers.HNLTreeProducerPromptEle import HNLTreeProducerPromptEle
-from CMGTools.HNL.analyzers.TriggerAnalyzer          import TriggerAnalyzer
-from CMGTools.HNL.analyzers.JetAnalyzer              import JetAnalyzer
+from CMGTools.HNL.analyzers.HNLAnalyzer     import HNLAnalyzer
+from CMGTools.HNL.analyzers.HNLTreeProducer import HNLTreeProducer
+from CMGTools.HNL.analyzers.TriggerAnalyzer import TriggerAnalyzer
+from CMGTools.HNL.analyzers.JetAnalyzer     import JetAnalyzer
 
 # import samples, signal
 from CMGTools.HNL.samples.samples_data_2017 import Single_ele_2017
-
-puFileMC   = '$CMSSW_BASE/src/CMGTools/H2TauTau/data/MC_Moriond17_PU25ns_V1.root'
-puFileData = '/afs/cern.ch/user/a/anehrkor/public/Data_Pileup_2016_271036-284044_80bins.root'
 
 ###################################################
 ###                   OPTIONS                   ###
@@ -52,8 +47,6 @@ for sample in samples:
     sample.triggers += ['HLT_Ele135_CaloIdVT_GsfTrkIdT_v%d'  %i for i in range(1, 15)] #electron trigger
 
     sample.splitFactor = splitFactor(sample, 1e5)
-    sample.puFileData = puFileData
-    sample.puFileMC   = puFileMC
 
 selectedComponents = samples
 
@@ -64,11 +57,6 @@ eventSelector = cfg.Analyzer(
     EventSelector,
     name='EventSelector',
     toSelect=[326]
-)
-
-lheWeightAna = cfg.Analyzer(
-    LHEWeightAnalyzer, name="LHEWeightAnalyzer",
-    useLumiInfo=False
 )
 
 jsonAna = cfg.Analyzer(
@@ -94,7 +82,7 @@ vertexAna = cfg.Analyzer(
     VertexAnalyzer,
     name='VertexAnalyzer',
     fixedWeight=1,
-    keepFailingEvents=True,
+    keepFailingEvents=False,
     verbose=False
 )
 
@@ -120,10 +108,10 @@ HNLAnalyzer = cfg.Analyzer(
     candidate_selection='maxpt',
 )
 
-# RM: FIXME! here it is
 HNLTreeProducer = cfg.Analyzer(
-    HNLTreeProducerPromptEle,
-    name='HNLTreeProducerPromptEle',
+    HNLTreeProducer,
+    name='HNLTreeProducer',
+    promptLepType='ele',
 )
 
 # see SM HTT TWiki
@@ -164,9 +152,6 @@ sequence = cfg.Sequence([
 ###            SET BATCH OR LOCAL               ###
 ###################################################
 if not production:
-#     comp                 = HN3L_M_2p5_V_0p0173205080757_e_onshell
-#    comp                 = HN3L_M_2p5_V_0p00707106781187_e_onshell
-#    comp                 = ttbar
     comp                 = Single_ele_2017
     selectedComponents   = [comp]
     comp.splitFactor     = 1

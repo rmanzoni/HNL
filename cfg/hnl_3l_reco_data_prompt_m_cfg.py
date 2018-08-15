@@ -95,9 +95,6 @@ pileUpAna = cfg.Analyzer(
     true=True
 )
 
-genAna = GeneratorAnalyzer.defaultConfig
-genAna.allGenTaus = True # save in event.gentaus *ALL* taus, regardless whether hadronic / leptonic decay
-
 # for each path specify which filters you want the muons to match to
 triggers_and_filters = OrderedDict()
 triggers_and_filters['HLT_IsoMu24'] = 'hltL3crIsoL1sSingleMu22L1f0L2f10QL3f24QL3trkIsoFiltered0p07'
@@ -157,10 +154,7 @@ sequence = cfg.Sequence([
 ###            SET BATCH OR LOCAL               ###
 ###################################################
 if not production:
-#     comp                 = HN3L_M_2p5_V_0p0173205080757_e_onshell
-#    comp                 = HN3L_M_2p5_V_0p00707106781187_e_onshell
-    comp                 = ttbar
-#    comp                 = Single_ele_2017
+    comp                 = Single_mu_2017
     selectedComponents   = [comp]
     comp.splitFactor     = 1
     comp.fineSplitFactor = 1

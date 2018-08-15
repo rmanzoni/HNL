@@ -80,6 +80,34 @@ W4JetsToLNu                     = creator.makeMyPrivateMCComponent('W4JetsToLNu'
 
 # LINK for crosssections: https://twiki.cern.ch/twiki/bin/viewauth/CMS/SummaryTable1G25ns
 
+##########################################################################################
+# assign to each sample its own PU profile file. For 2017 it is important to do it per-sample
+##########################################################################################
+# TTJets_amcat                   .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_TTJets_amcat.root'                   # not in Albert
+# TTJets_mdgrph                  .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_TTJets_mdgrph.root'                  # not in Albert
+DYJetsToLL_M50                 .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_DYJetsToLL_M50.root'                 # in Albert DYJetsToLL  /DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM
+DYJetsToLL_M50_ext             .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_DYJetsToLL_M50_ext.root'             # in Albert DYJetsToLL-ext  /DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14_ext1-v1/MINIAODSIM
+# WLLJJ_WToLNu_EWK               .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_WLLJJ_WToLNu_EWK.root'               # not in Albert
+# WW_DoubleScattering            .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_WW_DoubleScattering.root'            # not in Albert
+WZTo3LNu                       .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_WZTo3LNu.root'                       # in Albert WZTo3LNu  /WZTo3LNu_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM
+ZZTo4L                         .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_ZZTo4L.root'                         # in Albert ZZTo4L  /ZZTo4L_13TeV_powheg_pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM
+ZZTo4L_ext                     .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_ZZTo4L_ext.root'                     # in Albert ZZTo4L-ext  /ZZTo4L_13TeV_powheg_pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14_ext1-v1/MINIAODSIM
+# WJetsToLNu_HT400To600          .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_WJetsToLNu_HT400To600.root'          # not in Albert
+# WJetsToLNu_HT600To800          .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_WJetsToLNu_HT600To800.root'          # not in Albert
+# WJetsToLNu_HT800To1200         .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_WJetsToLNu_HT800To1200.root'         # not in Albert
+# WJetsToLNu_HT1200To2500        .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_WJetsToLNu_HT1200To2500.root'        # not in Albert
+# W1JetsToLNu_LHEWpT_250_400     .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_W1JetsToLNu_LHEWpT_250_400.root'     # not in Albert
+# W1JetsToLNu_LHEWpT_400_inf     .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_W1JetsToLNu_LHEWpT_400_inf.root'     # not in Albert
+# W1JetsToLNu_LHEWpT_400_inf_ext .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_W1JetsToLNu_LHEWpT_400_inf_ext.root' # not in Albert
+# W2JetsToLNu_LHEWpT_50_150      .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_W2JetsToLNu_LHEWpT_50_150.root'      # not in Albert
+# W2JetsToLNu_LHEWpT_100_150     .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_W2JetsToLNu_LHEWpT_100_150.root'     # not in Albert
+# W2JetsToLNu_LHEWpT_250_400     .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_W2JetsToLNu_LHEWpT_250_400.root'     # not in Albert
+# W2JetsToLNu_LHEWpT_400_inf     .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_W2JetsToLNu_LHEWpT_400_inf.root'     # not in Albert
+W3JetsToLNu                    .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_W3JetsToLNu.root'                    # in Albert W3JetsToLNu-LO  /W3JetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM
+W4JetsToLNu                    .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_W4JetsToLNu.root'                    # in Albert W4JetsToLNu-LO  /W4JetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM
+
+
+##########################################################################################
 hnl_bkg = [
     TTJets_amcat                  ,
     TTJets_mdgrph                 ,
@@ -110,4 +138,25 @@ hnl_bkg = [
     W3JetsToLNu                   ,
     W4JetsToLNu                   ,
 ] 
+
+
+##########################################################################################
+#  data PileUp profile
+##########################################################################################
+# https://twiki.cern.ch/twiki/bin/view/CMS/PileupJSONFileforData#Pileup_JSON_Files_For_Run_II
+# have a loo at this too, the mb cross section might be off https://hypernews.cern.ch/HyperNews/CMS/get/luminosity/755.html
+'''
+pileupCalc.py -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/Final/Cert_294927-306462_13TeV_PromptReco_Collisions17_JSON.txt\
+              --inputLumiJSON /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/PileUp/pileup_latest.txt\
+              --calcMode true --minBiasXsec 69200 --maxPileupBin 200 --numPileupBins 200  pileup_data_golden_json_2017.root
+'''
+for ibkg in hnl_bkg:
+    ibkg.puFileData = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_data_golden_json_2017.root'
+
+
+
+
+
+
+
 

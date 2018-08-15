@@ -23,7 +23,6 @@ from CMGTools.HNL.analyzers.JetAnalyzer     import JetAnalyzer
 
 from CMGTools.HNL.samples.samples_data_2017 import Single_mu_2017
 
-
 ###################################################
 ###                   OPTIONS                   ###
 ###################################################
@@ -38,7 +37,6 @@ pick_events        = getHeppyOption('pick_events', False)
 ###               HANDLE SAMPLES                ###
 ###################################################
 samples = [Single_mu_2017]
-
 
 for sample in samples:
     sample.triggers  = ['HLT_IsoMu24_v%d' %i for i in range(1, 15)] #muon trigger

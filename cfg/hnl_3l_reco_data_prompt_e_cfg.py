@@ -21,7 +21,6 @@ from CMGTools.HNL.analyzers.HNLTreeProducer import HNLTreeProducer
 from CMGTools.HNL.analyzers.TriggerAnalyzer import TriggerAnalyzer
 from CMGTools.HNL.analyzers.JetAnalyzer     import JetAnalyzer
 
-# import samples, signal
 from CMGTools.HNL.samples.samples_data_2017 import Single_ele_2017
 
 ###################################################

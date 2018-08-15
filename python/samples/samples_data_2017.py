@@ -21,7 +21,6 @@ Single_mu_2017   = creator.makeMyPrivateDataComponent('Single_mu_2017'  , '/Sing
 Single_mu_2017.nGenEvents = 738091715 # 128496874 (B) + 154640002 (C) + 69031074 (D) + 151165497 (E) + 234758268 (F)
 
 hnl_data = [
-    Single_ele_2017     ,
-    Single_mu_2017      ,
+    Single_ele_2017,
+    Single_mu_2017 ,
 ] 
-

@@ -265,7 +265,7 @@ class HNLAnalyzer(Analyzer):
         
         # now filter out non matched leptons
         prompt_leps = [ilep for ilep in prompt_leps if len(ilep.matched_hlt_obj)>0]
-        
+                
         if len(prompt_leps)==0:
             return False
         

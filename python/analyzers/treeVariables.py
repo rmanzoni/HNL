@@ -278,22 +278,24 @@ particle_vertex_vars = [
 
 # generic lepton
 lepton_vars = [
-    Variable('pte'          , lambda lep: lep.ptErr() ),
-    Variable('px'           , lambda lep: lep.px() ),
-    Variable('py'           , lambda lep: lep.py() ),
-    Variable('pz'           , lambda lep: lep.pz() ),
-    Variable('e'            , lambda lep: lep.p4().E() ),
-    Variable('dxy'          , lambda lep : lep.dxy()),
-    Variable('dxy_error'    , lambda lep : lep.edxy() if hasattr(lep, 'edxy') else lep.dxy_error()),
-    Variable('dz'           , lambda lep : lep.leadChargedHadrCand().dz() if hasattr(lep, 'leadChargedHadrCand') else lep.dz()),
-    Variable('dz_error'     , lambda lep : lep.edz() if hasattr(lep, 'edz') else -1.),
-    Variable('weight_id'    , lambda lep : getattr(lep, 'idweight', 1.)),
-    Variable('weight_id_unc', lambda lep : getattr(lep, 'idweightunc', 1.)),
+    Variable('pte'            , lambda lep : lep.ptErr() ),
+    Variable('px'             , lambda lep : lep.px() ),
+    Variable('py'             , lambda lep : lep.py() ),
+    Variable('pz'             , lambda lep : lep.pz() ),
+    Variable('e'              , lambda lep : lep.p4().E() ),
+    Variable('dxy'            , lambda lep : lep.dxy()),
+    Variable('dxy_error'      , lambda lep : lep.edxy() if hasattr(lep, 'edxy') else lep.dxy_error()),
+    Variable('dz'             , lambda lep : lep.leadChargedHadrCand().dz() if hasattr(lep, 'leadChargedHadrCand') else lep.dz()),
+    Variable('dz_error'       , lambda lep : lep.edz() if hasattr(lep, 'edz') else -1.),
     Variable('weight'),
-#     Variable('weight_trigger', lambda lep : getattr(lep, 'weight_trigger', 1.)),
+    Variable('weight_id'      , lambda lep : getattr(lep, 'idweight'       , 1.)),
+    Variable('weight_trigger' , lambda lep : getattr(lep, 'weight_trigger' , 1.)),
+    Variable('weight_idiso'   , lambda lep : getattr(lep, 'weight_idiso'   , 1.)),
+    Variable('weight_tracking', lambda lep : getattr(lep, 'weight_tracking', 1.)),
+
+#     Variable('weight_id_unc', lambda lep : getattr(lep, 'idweightunc', 1.)),
 #     Variable('eff_trigger_data', lambda lep : getattr(lep, 'eff_data_trigger', -999.)),
 #     Variable('eff_trigger_mc', lambda lep : getattr(lep, 'eff_mc_trigger', -999.)),
-#     Variable('weight_idiso', lambda lep : getattr(lep, 'weight_idiso', 1.)),
 #     Variable('eff_idiso_data', lambda lep : getattr(lep, 'eff_data_idiso', -999.)),
 #     Variable('eff_idiso_mc', lambda lep : getattr(lep, 'eff_mc_idiso', -999.)),
 
@@ -322,7 +324,6 @@ electron_vars = [
     Variable('reliso05'            , lambda lep : lep.relIsoR(R=0.3, dBetaFactor=0.5, allCharged=0)),
     Variable('reliso05_04'         , lambda lep : lep.relIsoR(R=0.4, dBetaFactor=0.5, allCharged=0)),
     Variable('reliso05_04'         , lambda lep : lep.relIsoR(R=0.4, dBetaFactor=0.5, allCharged=0)),
-    Variable('weight_tracking'     , lambda lep : getattr(lep, 'weight_tracking', 1.)),
 ]
 
 # photon

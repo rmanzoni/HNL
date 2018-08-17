@@ -11,7 +11,7 @@ class LeptonWeighter(Analyzer):
     def __init__(self, cfg_ana, cfg_comp, looperName):
         super(LeptonWeighter, self).__init__(cfg_ana, cfg_comp, looperName)
 
-        self.leptonName = self.cfg_ana.lepton
+        self.getter = self.cfg_ana.getter
         
         self.scaleFactors = {}
         for sf_name, sf_file in self.cfg_ana.scaleFactorFiles.items():
@@ -50,7 +50,7 @@ class LeptonWeighter(Analyzer):
 
     def process(self, event):
         self.readCollections(event.input)
-        lep = getattr(event, self.leptonName)
+        lep = self.getter(event)
         lep.weight = 1.
 
         for sf_name in self.scaleFactors:

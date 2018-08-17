@@ -23,10 +23,11 @@ from CMGTools.HNL.analyzers.HNLTreeProducer    import HNLTreeProducer
 from CMGTools.HNL.analyzers.HNLGenTreeAnalyzer import HNLGenTreeAnalyzer
 from CMGTools.HNL.analyzers.TriggerAnalyzer    import TriggerAnalyzer
 from CMGTools.HNL.analyzers.JetAnalyzer        import JetAnalyzer
+from CMGTools.HNL.analyzers.LeptonWeighter     import LeptonWeighter
 
 # import samples, signal
-from CMGTools.HNL.samples.samples_mc_2017 import DYJetsToLL_M50, hnl_bkg_essentials
 from CMGTools.HNL.samples.localsignal import TTJets_amcat as ttbar
+from CMGTools.HNL.samples.samples_mc_2017 import DYJetsToLL_M50, hnl_bkg_essentials
 
 ###################################################
 ###                   OPTIONS                   ###
@@ -42,8 +43,9 @@ pick_events        = getHeppyOption('pick_events', False)
 ###               HANDLE SAMPLES                ###
 ###################################################
 samples = hnl_bkg_essentials
+auxsamples = [ttbar, DYJetsToLL_M50]
 
-for sample in samples:
+for sample in samples+auxsamples:
     sample.triggers  = ['HLT_IsoMu24_v%d'%i for i in range(1, 15)] #muon trigger
     sample.triggers += ['HLT_IsoMu27_v%d'%i for i in range(1, 15)] #muon trigger
     sample.triggers += ['HLT_Mu50_v%d'   %i for i in range(1, 15)] #muon trigger
@@ -116,6 +118,21 @@ HNLAnalyzer = cfg.Analyzer(
     candidate_selection='maxpt',
 )
 
+muonWeighter = cfg.Analyzer(
+    LeptonWeighter,
+    name='LeptonWeighter_prompt_mu',
+    scaleFactorFiles={
+        'trigger' :('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_v17_1.root', 'm_trg_SingleMu_Mu24ORMu27_desy'),
+        'idiso'   :('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_v17_1.root', 'm_id'),
+        'tracking':('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_v17_1.root', 'm_iso'),
+    },
+    dataEffFiles={
+        # 'trigger':('$CMSSW_BASE/src/CMGTools/H2TauTau/data/htt_scalefactors_v16_2.root', 'm_trgIsoMu22orTkIsoMu22_desy'),
+    },
+    getter = lambda event : event.the_3lep_cand.l0(),
+    disable=False
+)
+
 HNLTreeProducer = cfg.Analyzer(
     HNLTreeProducer,
     name='HNLTreeProducer',
@@ -160,6 +177,7 @@ sequence = cfg.Sequence([
     genAna,
     HNLGenTreeAnalyzer,
     HNLAnalyzer,
+    muonWeighter,
     jetAna,
     HNLTreeProducer,
 ])

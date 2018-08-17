@@ -155,7 +155,9 @@ if not production:
     selectedComponents   = [comp]
     comp.splitFactor     = 1
     comp.fineSplitFactor = 1
-    comp.files           = comp.files[:50]
+#     comp.files           = comp.files[:50]
+    comp.files           = ['root://cms-xrd-global.cern.ch//store/user/vstampf/SingleElectron/HNLSKIM2017/180709_175219/0001/miniAOD_skim_1764.root',
+                            'root://cms-xrd-global.cern.ch//store/user/vstampf/SingleElectron/HNLSKIM2017/180709_175219/0001/miniAOD_skim_1251.root']
 
 # the following is declared in case this cfg is used in input to the
 # heppy.py script

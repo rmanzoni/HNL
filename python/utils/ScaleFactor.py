@@ -126,6 +126,7 @@ class ScaleFactor(object):
     def getFactorWS(self, pt, eta, tag, isFake=False, iso=None, dm=None):
         ''' See https://github.com/CMS-HTT/CorrectionsWorkspace
         '''
+#         import pdb ; pdb.set_trace()
         self.ws.var('_'.join([self.obj_tag, 'pt'])).setVal(pt)
         self.ws.var('_'.join([self.obj_tag, 'eta'])).setVal(eta)
         if iso is not None:

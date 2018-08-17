@@ -23,6 +23,7 @@ from CMGTools.HNL.analyzers.HNLTreeProducer    import HNLTreeProducer
 from CMGTools.HNL.analyzers.HNLGenTreeAnalyzer import HNLGenTreeAnalyzer
 from CMGTools.HNL.analyzers.TriggerAnalyzer    import TriggerAnalyzer
 from CMGTools.HNL.analyzers.JetAnalyzer        import JetAnalyzer
+from CMGTools.HNL.analyzers.LeptonWeighter     import LeptonWeighter
 
 # import samples, signal
 from CMGTools.HNL.samples.localsignal import HN3L_M_2p5_V_0p0173205080757_e_onshell, HN3L_M_2p5_V_0p00707106781187_e_onshell
@@ -43,8 +44,9 @@ pick_events        = getHeppyOption('pick_events', False)
 ###               HANDLE SAMPLES                ###
 ###################################################
 samples = hnl_bkg_essentials
+auxsamples = [ttbar, DYJetsToLL_M50]
 
-for sample in samples:
+for sample in samples+auxsamples:
     sample.triggers  = ['HLT_Ele27_WPTight_Gsf_v%d'          %i for i in range(1, 15)] #electron trigger
     sample.triggers += ['HLT_Ele32_WPTight_Gsf_v%d'          %i for i in range(1, 15)] #electron trigger
     sample.triggers += ['HLT_Ele35_WPTight_Gsf_v%d'          %i for i in range(1, 15)] #electron trigger
@@ -121,6 +123,21 @@ HNLAnalyzer = cfg.Analyzer(
     candidate_selection='maxpt',
 )
 
+eleWeighter = cfg.Analyzer(
+    LeptonWeighter,
+    name='LeptonWeighter_prompt_ele',
+    scaleFactorFiles={
+        'trigger' :('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_v17_1.root', 'e_trg_SingleEle_Ele32OREle35_desy'),
+        'idiso'   :('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_v17_1.root', 'e_id'),
+        'tracking':('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_v17_1.root', 'e_iso'),
+    },
+    dataEffFiles={
+        # 'trigger':('$CMSSW_BASE/src/CMGTools/H2TauTau/data/htt_scalefactors_v16_2.root', 'm_trgIsoMu22orTkIsoMu22_desy'),
+    },
+    getter = lambda event : event.the_3lep_cand.l0(),
+    disable=False
+)
+
 HNLTreeProducer = cfg.Analyzer(
     HNLTreeProducer,
     name='HNLTreeProducer',
@@ -165,6 +182,7 @@ sequence = cfg.Sequence([
     genAna,
     HNLGenTreeAnalyzer,
     HNLAnalyzer,
+    eleWeighter,
     jetAna,
     HNLTreeProducer,
 ])

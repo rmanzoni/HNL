@@ -46,6 +46,14 @@ ZZTo4L_ext                      = creator.makeMyPrivateMCComponent('ZZTo4L_ext' 
 ZZTo4L_ext          .nGenEvents = 98009599
 #.sigma = 1.256 pb
 
+
+WJetsToLNu                      = creator.makeMyPrivateMCComponent('WJetsToLNu'                    , '/WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8/lshchuts-HNLSKIM2017_WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8-115d0bad8e8ff59118d83f903524e0b3/USER'                                  , 'PRIVATE', '*.root', 'phys03', xSec=6362., useAAA=True)
+WJetsToLNu          .nGenEvents = 44652002 # check the production efficiency in Lesya's crab job
+#.sigma = (8580+11370)*0.1063*3 pb ==> xs W+ + xs W- * BR -->l nu *3  
+
+
+
+
 WJetsToLNu_HT400To600           = creator.makeMyPrivateMCComponent('WJetsToLNu_HT400To600'         , '/WJetsToLNu_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8/lshchuts-HNLSKIM2017_WJetsToLNu_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8-115d0bad8e8ff59118d83f903524e0b3/USER'          , 'PRIVATE', '*.root', 'phys03', xSec=48.91, useAAA=True)
 #.sigma = 48.91 \pm 0.072 pb (LO); .nevents = 5572699 
 WJetsToLNu_HT600To800           = creator.makeMyPrivateMCComponent('WJetsToLNu_HT600To800'         , '/WJetsToLNu_HT-600To800_TuneCP5_13TeV-madgraphMLM-pythia8/lshchuts-HNLSKIM2017_WJetsToLNu_HT-600To800_TuneCP5_13TeV-madgraphMLM-pythia8-115d0bad8e8ff59118d83f903524e0b3/USER'          , 'PRIVATE', '*.root', 'phys03', xSec=12.05, useAAA=True)
@@ -103,6 +111,7 @@ ZZTo4L_ext                     .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGT
 # W2JetsToLNu_LHEWpT_100_150     .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_W2JetsToLNu_LHEWpT_100_150.root'     # not in Albert
 # W2JetsToLNu_LHEWpT_250_400     .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_W2JetsToLNu_LHEWpT_250_400.root'     # not in Albert
 # W2JetsToLNu_LHEWpT_400_inf     .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_W2JetsToLNu_LHEWpT_400_inf.root'     # not in Albert
+WJetsToLNu                     .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_WJetsToLNu.root'                    # in Albert W3JetsToLNu-LO  /W3JetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM
 W3JetsToLNu                    .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_W3JetsToLNu.root'                    # in Albert W3JetsToLNu-LO  /W3JetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM
 W4JetsToLNu                    .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_W4JetsToLNu.root'                    # in Albert W4JetsToLNu-LO  /W4JetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM
 
@@ -135,6 +144,7 @@ hnl_bkg = [
 #    W2JetsToLNu_LHEWpT_250_400    ,
 #    W2JetsToLNu_LHEWpT_400_inf    ,
  
+    WJetsToLNu                    ,
     W3JetsToLNu                   ,
     W4JetsToLNu                   ,
 ] 

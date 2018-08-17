@@ -12,6 +12,7 @@ samples['DYJetsToLL_M50_ext'] = 'pileup_DYJetsToLL-ext'
 samples['WZTo3LNu'          ] = 'pileup_WZTo3LNu'      
 samples['ZZTo4L'            ] = 'pileup_ZZTo4L'        
 samples['ZZTo4L_ext'        ] = 'pileup_ZZTo4L-ext'    
+samples['WJetsToLNu'        ] = 'pileup_WJetsToLNu-LO'
 samples['W3JetsToLNu'       ] = 'pileup_W3JetsToLNu-LO'
 samples['W4JetsToLNu'       ] = 'pileup_W4JetsToLNu-LO'
 

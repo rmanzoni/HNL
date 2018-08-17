@@ -91,7 +91,7 @@ W4JetsToLNu                     = creator.makeMyPrivateMCComponent('W4JetsToLNu'
 ##########################################################################################
 # assign to each sample its own PU profile file. For 2017 it is important to do it per-sample
 ##########################################################################################
-# TTJets_amcat                   .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_TTJets_amcat.root'                   # not in Albert
+TTJets_amcat                   .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_TTJets_amcat.root'                   # not in Albert, derived manually
 # TTJets_mdgrph                  .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_TTJets_mdgrph.root'                  # not in Albert
 DYJetsToLL_M50                 .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_DYJetsToLL_M50.root'                 # in Albert DYJetsToLL  /DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM
 DYJetsToLL_M50_ext             .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_DYJetsToLL_M50_ext.root'             # in Albert DYJetsToLL-ext  /DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14_ext1-v1/MINIAODSIM
@@ -130,25 +130,32 @@ hnl_bkg = [
     ZZTo4L                        ,
     ZZTo4L_ext                    ,
 
-#    WJetsToLNu_HT400To600         ,
-#    WJetsToLNu_HT600To800         ,
-#    WJetsToLNu_HT800To1200        ,
-#    WJetsToLNu_HT1200To2500       ,
+    WJetsToLNu_HT400To600         ,
+    WJetsToLNu_HT600To800         ,
+    WJetsToLNu_HT800To1200        ,
+    WJetsToLNu_HT1200To2500       ,
  
-#    W1JetsToLNu_LHEWpT_250_400    ,
-#    W1JetsToLNu_LHEWpT_400_inf    ,
-#    W1JetsToLNu_LHEWpT_400_inf_ext,
+    W1JetsToLNu_LHEWpT_250_400    ,
+    W1JetsToLNu_LHEWpT_400_inf    ,
+    W1JetsToLNu_LHEWpT_400_inf_ext,
  
-#    W2JetsToLNu_LHEWpT_50_150     ,
-#    W2JetsToLNu_LHEWpT_100_150    ,
-#    W2JetsToLNu_LHEWpT_250_400    ,
-#    W2JetsToLNu_LHEWpT_400_inf    ,
+    W2JetsToLNu_LHEWpT_50_150     ,
+    W2JetsToLNu_LHEWpT_100_150    ,
+    W2JetsToLNu_LHEWpT_250_400    ,
+    W2JetsToLNu_LHEWpT_400_inf    ,
  
     WJetsToLNu                    ,
     W3JetsToLNu                   ,
     W4JetsToLNu                   ,
 ] 
 
+hnl_bkg_essentials = [
+    TTJets_amcat      ,
+    DYJetsToLL_M50_ext,
+    WZTo3LNu          ,
+    ZZTo4L            ,
+    WJetsToLNu        ,
+]
 
 ##########################################################################################
 #  data PileUp profile

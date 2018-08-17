@@ -25,7 +25,7 @@ from CMGTools.HNL.analyzers.TriggerAnalyzer    import TriggerAnalyzer
 from CMGTools.HNL.analyzers.JetAnalyzer        import JetAnalyzer
 
 # import samples, signal
-from CMGTools.HNL.samples.samples_mc_2017 import DYJetsToLL_M50
+from CMGTools.HNL.samples.samples_mc_2017 import DYJetsToLL_M50, hnl_bkg_essentials
 from CMGTools.HNL.samples.localsignal import TTJets_amcat as ttbar
 
 ###################################################
@@ -41,7 +41,7 @@ pick_events        = getHeppyOption('pick_events', False)
 ###################################################
 ###               HANDLE SAMPLES                ###
 ###################################################
-samples = [ttbar, DYJetsToLL_M50]
+samples = hnl_bkg_essentials
 
 for sample in samples:
     sample.triggers  = ['HLT_IsoMu24_v%d'%i for i in range(1, 15)] #muon trigger

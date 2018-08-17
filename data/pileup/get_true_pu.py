@@ -17,7 +17,7 @@ TTJets_amcat = creator.makeMCComponent(
     useAAA  = True
 )
 
-outfile = ROOT.TFile.Open('pileup_TTJets_amcat.root', 'recreate')
+outfile = ROOT.TFile.Open('pileup_TTJets_amcat_TEST.root', 'recreate')
 
 # fill with true interactions
 h_ti = ROOT.TH1F('pileup', 'pileup', 200, 0, 200)
@@ -50,8 +50,8 @@ for i in range(3):
                 h_ti.Fill(pu.nTrueInteractions())
                 break
 
-    totevents += j
-    print '\tprocessed %d events so far' %(events.size())
+    totevents += events.size()
+    print '\tprocessed %d events so far' %(totevents)
 
 outfile.cd()
 h_ti.Write()

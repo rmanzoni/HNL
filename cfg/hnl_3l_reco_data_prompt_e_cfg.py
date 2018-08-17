@@ -21,7 +21,7 @@ from CMGTools.HNL.analyzers.HNLTreeProducer import HNLTreeProducer
 from CMGTools.HNL.analyzers.TriggerAnalyzer import TriggerAnalyzer
 from CMGTools.HNL.analyzers.JetAnalyzer     import JetAnalyzer
 
-from CMGTools.HNL.samples.samples_data_2017 import Single_ele_2017
+from CMGTools.HNL.samples.samples_data_2017_noskim import Single_ele_2017B
 
 ###################################################
 ###                   OPTIONS                   ###
@@ -36,7 +36,7 @@ pick_events        = getHeppyOption('pick_events', False)
 ###################################################
 ###               HANDLE SAMPLES                ###
 ###################################################
-samples = [Single_ele_2017]
+samples = [Single_ele_2017B]
 
 for sample in samples:
     sample.triggers  = ['HLT_Ele27_WPTight_Gsf_v%d'          %i for i in range(1, 15)] #electron trigger
@@ -55,7 +55,7 @@ selectedComponents = samples
 eventSelector = cfg.Analyzer(
     EventSelector,
     name='EventSelector',
-    toSelect=[326]
+    toSelect=[140900505]
 )
 
 jsonAna = cfg.Analyzer(
@@ -136,7 +136,7 @@ jetAna = cfg.Analyzer(
 ###                  SEQUENCE                   ###
 ###################################################
 sequence = cfg.Sequence([
-#     eventSelector,
+#    eventSelector,
     jsonAna,
     skimAna,
     triggerAna,
@@ -151,13 +151,14 @@ sequence = cfg.Sequence([
 ###            SET BATCH OR LOCAL               ###
 ###################################################
 if not production:
-    comp                 = Single_ele_2017
+    comp                 = Single_ele_2017B
     selectedComponents   = [comp]
     comp.splitFactor     = 1
     comp.fineSplitFactor = 1
-#     comp.files           = comp.files[:50]
-    comp.files           = ['root://cms-xrd-global.cern.ch//store/user/vstampf/SingleElectron/HNLSKIM2017/180709_175219/0001/miniAOD_skim_1764.root',
-                            'root://cms-xrd-global.cern.ch//store/user/vstampf/SingleElectron/HNLSKIM2017/180709_175219/0001/miniAOD_skim_1251.root']
+    comp.files           = comp.files[:50]
+#    comp.files = ['root://cms-xrd-global.cern.ch//store/data/Run2017F/SingleElectron/MINIAOD/31Mar2018-v1/100000/46B02DB3-C037-E811-8155-0CC47A7C360E.root']
+#    comp.files           = ['root://cms-xrd-global.cern.ch//store/user/vstampf/SingleElectron/HNLSKIM2017/180709_175219/0001/miniAOD_skim_1764.root',
+# 'root://cms-xrd-global.cern.ch//store/user/vstampf/SingleElectron/HNLSKIM2017/180709_175219/0001/miniAOD_skim_1251.root']
 
 # the following is declared in case this cfg is used in input to the
 # heppy.py script

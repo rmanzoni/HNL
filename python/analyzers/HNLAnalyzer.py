@@ -38,8 +38,8 @@ class HNLAnalyzer(Analyzer):
 
         self.handles['electrons'] = AutoHandle(('slimmedElectrons'             ,'','PAT' ), 'std::vector<pat::Electron>'                    )
         self.handles['muons'    ] = AutoHandle(('slimmedMuons'                 ,'','PAT' ), 'std::vector<pat::Muon>'                        )
-        self.handles['dsamuons' ] = AutoHandle(('displacedStandAloneMuons'     ,'','RECO'), 'std::vector<reco::Track>'                      )
-        self.handles['dgmuons'  ] = AutoHandle(('displacedGlobalMuons'         ,'','RECO'), 'std::vector<reco::Track>'                      )
+#        self.handles['dsamuons' ] = AutoHandle(('displacedStandAloneMuons'     ,'','RECO'), 'std::vector<reco::Track>'                      )
+#        self.handles['dgmuons'  ] = AutoHandle(('displacedGlobalMuons'         ,'','RECO'), 'std::vector<reco::Track>'                      )
         self.handles['photons'  ] = AutoHandle(('slimmedPhotons'               ,'','PAT' ), 'std::vector<pat::Photon>'                      )
         self.handles['taus'     ] = AutoHandle(('slimmedTaus'                  ,'','PAT' ), 'std::vector<pat::Tau>'                         )
         self.handles['jets'     ] = AutoHandle( 'slimmedJets'                             , 'std::vector<pat::Jet>'                         )
@@ -168,12 +168,12 @@ class HNLAnalyzer(Analyzer):
 
         # make muon collections
         event.muons       = map(Muon, self.handles['muons'].product())
-        event.dsamuons    = self.buildDisplacedMuons(self.handles['dsamuons'].product())
-        event.dgmuons     = self.buildDisplacedMuons(self.handles['dgmuons' ].product())
+#        event.dsamuons    = self.buildDisplacedMuons(self.handles['dsamuons'].product())
+#        event.dgmuons     = self.buildDisplacedMuons(self.handles['dgmuons' ].product())
 
         for imu in event.muons   : imu.type = 13
-        for imu in event.dsamuons: imu.type = 26
-        for imu in event.dgmuons : imu.type = 39
+#        for imu in event.dsamuons: imu.type = 26
+#        for imu in event.dgmuons : imu.type = 39
 
         # save a flag to know whether the muons is likely OOT
         # FIXME! for displaced too?
@@ -203,7 +203,11 @@ class HNLAnalyzer(Analyzer):
         jets = map(Jet, self.handles['jets'].product())        
 
         # make PF candidates
+#        try:
         pfs = map(PhysicsObject, self.handles['pfcand'].product())
+#            set_trace()
+#            return False
+#        except: set_trace()
 
         # assign to the leptons the primary vertex, will be needed to compute a few quantities
         pv = event.goodVertices[0]
@@ -265,7 +269,7 @@ class HNLAnalyzer(Analyzer):
         
         # now filter out non matched leptons
         prompt_leps = [ilep for ilep in prompt_leps if len(ilep.matched_hlt_obj)>0]
-                
+        
         if len(prompt_leps)==0:
             return False
         
@@ -287,8 +291,8 @@ class HNLAnalyzer(Analyzer):
         ########################################################################################
         # some simple preselection
         event.muons    = [imu for imu in event.filtered_muons if imu.pt()>3. and abs(imu.eta())<2.4]
-        event.dsamuons = [imu for imu in event.dsamuons       if imu.pt()>3. and abs(imu.eta())>2.4]
-        event.dgmuons  = [imu for imu in event.dgmuons        if imu.pt()>3. and abs(imu.eta())>2.4]
+#        event.dsamuons = [imu for imu in event.dsamuons       if imu.pt()>3. and abs(imu.eta())>2.4]
+#        event.dgmuons  = [imu for imu in event.dgmuons        if imu.pt()>3. and abs(imu.eta())>2.4]
 
         # create all the possible di-muon pairs out of the three different collections
         

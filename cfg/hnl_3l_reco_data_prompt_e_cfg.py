@@ -21,7 +21,7 @@ from CMGTools.HNL.analyzers.HNLTreeProducer import HNLTreeProducer
 from CMGTools.HNL.analyzers.TriggerAnalyzer import TriggerAnalyzer
 from CMGTools.HNL.analyzers.JetAnalyzer     import JetAnalyzer
 
-from CMGTools.HNL.samples.samples_data_2017_noskim import Single_ele_2017B
+from CMGTools.HNL.samples.samples_data_2017_noskim import Single_ele_2017, Single_ele_2017B
 
 ###################################################
 ###                   OPTIONS                   ###
@@ -29,14 +29,15 @@ from CMGTools.HNL.samples.samples_data_2017_noskim import Single_ele_2017B
 # Get all heppy options; set via "-o production" or "-o production=True"
 # production = True run on batch, production = False (or unset) run locally
 
+production         = getHeppyOption('production' , True)
 # production         = getHeppyOption('production' , False)
-production         = getHeppyOption('production' , False)
 pick_events        = getHeppyOption('pick_events', False)
 
 ###################################################
 ###               HANDLE SAMPLES                ###
 ###################################################
-samples = [Single_ele_2017B]
+# samples = [Single_ele_2017B]
+samples = Single_ele_2017
 
 for sample in samples:
     sample.triggers  = ['HLT_Ele27_WPTight_Gsf_v%d'          %i for i in range(1, 15)] #electron trigger

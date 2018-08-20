@@ -26,8 +26,8 @@ from CMGTools.HNL.analyzers.JetAnalyzer        import JetAnalyzer
 from CMGTools.HNL.analyzers.LeptonWeighter     import LeptonWeighter
 
 # import samples, signal
-from CMGTools.HNL.samples.localsignal import HN3L_M_2p5_V_0p0173205080757_e_onshell, HN3L_M_2p5_V_0p00707106781187_e_onshell
-from CMGTools.HNL.samples.localsignal import TTJets_amcat as ttbar
+# from CMGTools.HNL.samples.localsignal import HN3L_M_2p5_V_0p0173205080757_e_onshell, HN3L_M_2p5_V_0p00707106781187_e_onshell
+# from CMGTools.HNL.samples.localsignal import TTJets_amcat as ttbar
 from CMGTools.HNL.samples.samples_mc_2017 import DYJetsToLL_M50, hnl_bkg_essentials
 
 ###################################################
@@ -36,15 +36,17 @@ from CMGTools.HNL.samples.samples_mc_2017 import DYJetsToLL_M50, hnl_bkg_essenti
 # Get all heppy options; set via "-o production" or "-o production=True"
 # production = True run on batch, production = False (or unset) run locally
 
+production         = getHeppyOption('production' , True)
 # production         = getHeppyOption('production' , False)
-production         = getHeppyOption('production' , False)
 pick_events        = getHeppyOption('pick_events', False)
 
 ###################################################
 ###               HANDLE SAMPLES                ###
 ###################################################
 samples = hnl_bkg_essentials
-auxsamples = [ttbar, DYJetsToLL_M50]
+auxsamples = [] #[ttbar, DYJetsToLL_M50]
+
+samples = [comp for comp in samples if comp.name=='TTJets_amcat']
 
 for sample in samples+auxsamples:
     sample.triggers  = ['HLT_Ele27_WPTight_Gsf_v%d'          %i for i in range(1, 15)] #electron trigger

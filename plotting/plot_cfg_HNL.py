@@ -21,13 +21,14 @@ from CMGTools.HNL.plotter.metrics import ams_hists
 Cut = namedtuple('Cut', ['name', 'cut'])
 
 int_lumi = 41000.0 # pb #### FIXME 
+#int_lumi = 80000.0 # pb #### FIXME 
 
 def prepareCuts():
     cuts = []
     inc_cut = '&&'.join([cat_Inc])
     # inc_cut += '&& l2_decayModeFinding'
 
-    cuts.append(Cut('inclusive', inc_cut + '&&  l1_q != l2_q'))
+    cuts.append(Cut('inclusive', inc_cut + '&&  l1_q != l2_q  &&  l0_eid_mva_noniso_loose & l0_reliso05<0.15  &&  l1_id_m & l2_id_m'))
 
     return cuts
 
@@ -61,6 +62,7 @@ def makePlots(variables, cuts, total_weight, sample_dict, hist_dict, qcd_from_sa
         for variable in variables:
         # for plot in plots.itervalues():
             plot = plots[variable.name]
+            plot.Group('data_obs', ['data_2017B_e', 'data_2017C_e', 'data_2017D_e', 'data_2017E_e', 'data_2017F_e'])
             createDefaultGroups(plot)
             if make_plots:
                 HistDrawer.draw(plot, plot_dir='plots/'+cut.name)
@@ -95,7 +97,7 @@ if __name__ == '__main__':
     add_ttbar_sys = False
     add_tes_sys = False
 
-    analysis_dir = '/eos/user/v/vstampf/ntuples/bkg_mc_prompt_e/' # input
+    analysis_dir = '/eos/user/v/vstampf/ntuples/'#bkg_mc_prompt_e/' # input
 
     total_weight = 'weight'
 # FIXME fix this 

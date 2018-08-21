@@ -56,7 +56,7 @@ dycol =  TColor.GetColor(248,206,104)
 wcol = TColor.GetColor(222,90,106)
 ttcol = TColor.GetColor(155,152,204)
 zlcol = TColor.GetColor(100,182,232)
-dibosoncol = TColor.GetColor(222,90,106)
+dibosoncol = kBlue+2 #TColor.GetColor(222,90,106)
 
 # Backgrounds
 sHTT_QCD = Style(lineColor=1, markerColor=qcdcol, fillColor=qcdcol)

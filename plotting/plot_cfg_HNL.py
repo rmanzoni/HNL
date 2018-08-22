@@ -5,7 +5,7 @@ from operator import itemgetter
 from numpy import array
 
 from CMGTools.HNL.plotter.PlotConfigs import HistogramCfg, VariableCfg
-from CMGTools.HNL.plotter.categories_TauMu import cat_Inc
+from CMGTools.HNL.plotter.categories_HNL import cat_Inc
 from CMGTools.HNL.plotter.HistCreator import createHistograms, createTrees
 from CMGTools.HNL.plotter.HistDrawer import HistDrawer
 from CMGTools.HNL.plotter.Variables import taumu_vars, hnl_vars, getVars
@@ -63,6 +63,8 @@ def makePlots(variables, cuts, total_weight, sample_dict, hist_dict, qcd_from_sa
         # for plot in plots.itervalues():
             plot = plots[variable.name]
             plot.Group('data_obs', ['data_2017B_e', 'data_2017C_e', 'data_2017D_e', 'data_2017E_e', 'data_2017F_e'])
+            try: print(plot.SignalHists())
+            except: set_trace()
             createDefaultGroups(plot)
             if make_plots:
                 HistDrawer.draw(plot, plot_dir='plots/'+cut.name)

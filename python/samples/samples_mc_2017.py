@@ -34,9 +34,9 @@ WW_DoubleScattering             = creator.makeMyPrivateMCComponent('WW_DoubleSca
 WW_DoubleScattering .nGenEvents = 1000000 
 #.sigma = NOT FOUND pb
  
-WZTo3LNu                        = creator.makeMyPrivateMCComponent('WZTo3LNu'                      , '/WZTo3LNu_TuneCP5_13TeV-amcatnloFXFX-pythia8/manzoni-HNLSKIM2017_WZTo3LNu_TuneCP5_13TeV-amcatnloFXFX-pythia8-115d0bad8e8ff59118d83f903524e0b3/USER'                                     , 'PRIVATE', '*.root', 'phys03', useAAA=True)
+WZTo3LNu                        = creator.makeMyPrivateMCComponent('WZTo3LNu'                      , '/WZTo3LNu_TuneCP5_13TeV-amcatnloFXFX-pythia8/manzoni-HNLSKIM2017_WZTo3LNu_TuneCP5_13TeV-amcatnloFXFX-pythia8-115d0bad8e8ff59118d83f903524e0b3/USER'                                     , 'PRIVATE', '*.root', 'phys03', xSec=4.4297, useAAA=True)
 WZTo3LNu            .nGenEvents = 10881896 
-#.sigma = NOT FOUND pb
+#.sigma = 4.4297 pb
 
 ZZTo4L                          = creator.makeMyPrivateMCComponent('ZZTo4L'                        , '/ZZTo4L_13TeV_powheg_pythia8/manzoni-HNLSKIM2017_ZZTo4L_13TeV_powheg_pythia8-115d0bad8e8ff59118d83f903524e0b3/USER'                                                                     , 'PRIVATE', '*.root', 'phys03', xSec=1.256, useAAA=True)
 ZZTo4L              .nGenEvents = 6835701 

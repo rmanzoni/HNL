@@ -256,15 +256,15 @@ additional_extra_tau_vars = [
 
 hnl_vars = [
     VCfg(name='l0_pt', binning={'nbinsx':40, 'xmin':0., 'xmax':100.}, unit='GeV', xtitle='prompt electron p_{T}'),
-    VCfg(name='l0_eta', binning={'nbinsx':20, 'xmin':-2.5, 'xmax':2.5}, unit=None, xtitle='prompt electron #eta'),
-    VCfg(name='l1_pt', binning={'nbinsx':40, 'xmin':0., 'xmax':100.}, unit='GeV', xtitle='1st muon p_{T}'),
-    VCfg(name='l1_eta', binning={'nbinsx':20, 'xmin':-2.5, 'xmax':2.5}, unit=None, xtitle='1st muon #eta'),
-    VCfg(name='l2_pt', binning={'nbinsx':40, 'xmin':0., 'xmax':100.}, unit='GeV', xtitle='2nd muon p_{T}'),
-    VCfg(name='l2_eta', binning={'nbinsx':20, 'xmin':-2.5, 'xmax':2.5}, unit=None, xtitle='2nd muon #eta'),
-    VCfg(name='hnl_m_12', binning={'nbinsx':40, 'xmin':70, 'xmax':110}, unit='GeV', xtitle='dimuon mass'),
-    VCfg(name='hnl_w_vis_m', binning={'nbinsx':40, 'xmin':0, 'xmax':250}, unit='GeV', xtitle='vis W mass'),
-    VCfg(name='hnl_2d_disp', binning={'nbinsx':40, 'xmin':0, 'xmax':200}, unit='cm', xtitle='2D displacement'),
-    VCfg(name='hnl_3d_disp', binning={'nbinsx':40, 'xmin':0, 'xmax':200}, unit='cm', xtitle='3D displacement'),
+#    VCfg(name='l0_eta', binning={'nbinsx':20, 'xmin':-2.5, 'xmax':2.5}, unit=None, xtitle='prompt electron #eta'),
+#    VCfg(name='l1_pt', binning={'nbinsx':40, 'xmin':0., 'xmax':100.}, unit='GeV', xtitle='1st muon p_{T}'),
+#    VCfg(name='l1_eta', binning={'nbinsx':20, 'xmin':-2.5, 'xmax':2.5}, unit=None, xtitle='1st muon #eta'),
+#    VCfg(name='l2_pt', binning={'nbinsx':40, 'xmin':0., 'xmax':100.}, unit='GeV', xtitle='2nd muon p_{T}'),
+#    VCfg(name='l2_eta', binning={'nbinsx':20, 'xmin':-2.5, 'xmax':2.5}, unit=None, xtitle='2nd muon #eta'),
+#    VCfg(name='hnl_m_12', binning={'nbinsx':40, 'xmin':70, 'xmax':110}, unit='GeV', xtitle='dimuon mass'),
+#    VCfg(name='hnl_w_vis_m', binning={'nbinsx':40, 'xmin':0, 'xmax':250}, unit='GeV', xtitle='vis W mass'),
+#    VCfg(name='hnl_2d_disp', binning={'nbinsx':40, 'xmin':0, 'xmax':200}, unit='cm', xtitle='2D displacement'),
+#    VCfg(name='hnl_3d_disp', binning={'nbinsx':40, 'xmin':0, 'xmax':200}, unit='cm', xtitle='3D displacement'),
 ]
 
 taumu_vars = generic_vars + muon_l1_vars + tau_l2_vars + tau_mu_special_vars
@@ -277,7 +277,7 @@ tautau_vars = generic_vars + tau_l1_vars + tau_l2_vars + tau_tau_special_vars
 
 all_vars = generic_vars + muon_l1_vars + muon_l2_vars + tau_l2_vars + additional_tau_vars + tau_tau_special_vars + tau_mu_special_vars # + additional_tau_vars 
 
-
+#
 dict_all_vars = {}
 for v in all_vars:
     dict_all_vars[v.name] = v

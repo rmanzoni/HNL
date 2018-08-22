@@ -284,7 +284,7 @@ class DataMCPlot(object):
                        xmin=None, xmax=None, ymin=None, ymax=None):
         '''Draw ratios.
 
-        The stack is considered as a single histogram.'''
+        The stack is considered a single histogram.'''
         denom = None
         # import pdb; pdb.set_trace()
         histForRatios = []

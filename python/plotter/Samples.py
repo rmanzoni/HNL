@@ -63,7 +63,7 @@ def createSampleLists(analysis_dir='/eos/user/v/vstampf/ntuples/',
     if channel == 'm':
         bkg_dir = 'bkg_mc_m/'
         sig_dir = 'sig_mc_m/ntuples/'
-        dataB = Single_mu_2017B; dataC = Single_mu_2017C; dataD = Single_mu_2017D; dataE = Single_mu_2017E; dataF = Single_mu_2017F; 
+        dataB = Single_mu_2017B;  dataC = Single_mu_2017C;  dataD = Single_mu_2017D;  dataE = Single_mu_2017E;  dataF = Single_mu_2017F; 
 
     samples_essential = [
 #        SampleCfg(name='DYJets'              , dir_name=DYJetsToLL_M50      .name, ana_dir=analysis_dir, tree_prod_name=tree_prod_name,
@@ -83,6 +83,9 @@ def createSampleLists(analysis_dir='/eos/user/v/vstampf/ntuples/',
 
         SampleCfg(name='ZZTo4L_%s'%channel              , dir_name=ZZTo4L              .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name,
                   xsec=ZZTo4L             .xSection, sumweights=ZZTo4L             .nGenEvents),
+
+        SampleCfg(name='WZTo3Lnu_%s'%channel            , dir_name=WZTo3LNu            .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name,
+                  xsec=WZTo3LNu           .xSection, sumweights=WZTo3LNu           .nGenEvents),
         ]
 
     samples_signal = [
@@ -110,8 +113,6 @@ def createSampleLists(analysis_dir='/eos/user/v/vstampf/ntuples/',
 #        SampleCfg(name='ZZTo4L_ext'          , dir_name=ZZTo4L_ext          .name, ana_dir=analysis_dir, tree_prod_name=tree_prod_name,
 #                  xsec=ZZTo4L_ext         .xSection, sumweights=ZZTo4L_ext         .nGenEvents),
 
-#        SampleCfg(name='WZTo3Lnu'            , dir_name=WZTo3LNu            .name, ana_dir=analysis_dir, tree_prod_name=tree_prod_name,
-#                  xsec=WZTo3LNu           .xSection, sumweights=WZTo3LNu           .nGenEvents),
 
 #        SampleCfg(name='WW_DoubleScattering' , dir_name=WW_DoubleScattering .name, ana_dir=analysis_dir, tree_prod_name=tree_prod_name,
 #                  xsec=WW_DoubleScattering.xSection, sumweights=WW_DoubleScattering.nGenEvents),
@@ -160,5 +161,6 @@ def setSumWeights(sample, weight_dir='MCWeighter'):
         if 'Sum Weights' in counters:
             sample.sumweights = counters['Sum Weights']
     except IOError:
-        # print 'Warning: could not find sum weights information for sample', sample.name
-        pass
+        print 'Warning: could not find sum weights information for sample', sample.name
+#        pass
+

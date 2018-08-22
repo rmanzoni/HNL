@@ -63,11 +63,11 @@ def makePlots(variables, cuts, total_weight, sample_dict, hist_dict, qcd_from_sa
         # for plot in plots.itervalues():
             plot = plots[variable.name]
             plot.Group('data_obs', ['data_2017B_e', 'data_2017C_e', 'data_2017D_e', 'data_2017E_e', 'data_2017F_e'])
-            try: print(plot.SignalHists())
-            except: set_trace()
             createDefaultGroups(plot)
             if make_plots:
                 HistDrawer.draw(plot, plot_dir='plots/'+cut.name)
+#            try: print(plot.SignalHists())
+#            except: set_trace()
 
     print '\nOptimisation results:'
     all_vals = ams_dict.items()

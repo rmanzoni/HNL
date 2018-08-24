@@ -198,7 +198,7 @@ class DataMCPlot(object):
             if same == '':
                 same = 'same'
         yaxis = self.supportHist.GetYaxis()
-        yaxis.SetRangeUser(0.01, ymax(self._SortedHistograms()))
+        yaxis.SetRangeUser(0.01, 1.5*ymax(self._SortedHistograms()))
         self.DrawLegend()
         if TPad.Pad():
             TPad.Pad().Update()

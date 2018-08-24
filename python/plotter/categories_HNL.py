@@ -1,8 +1,8 @@
 from CMGTools.HNL.plotter.categories_common import categories_common
 from CMGTools.HNL.plotter.cut import Cut
 
-pt1 = 5
-pt2 = 5
+pt1 = 4
+pt2 = 4
 
 #inc_sig_tau = Cut('!veto_dilepton && !veto_thirdlepton && !veto_otherlepton && l2_byIsolationMVArun2v1DBoldDMwLT>3.5 && l2_againstMuon3>1.5 && l2_againstElectronMVA6>0.5 && l2_decayModeFinding>0.5 && l2_pt>{pt2}'.format(pt2=pt2))
 inc_sig_tau = Cut('l2_pt>{pt2}'.format(pt2=pt2))

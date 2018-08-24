@@ -28,8 +28,8 @@ from CMGTools.HNL.analyzers.LeptonWeighter     import LeptonWeighter
 # import samples, signal
 # from CMGTools.HNL.samples.localsignal import TTJets_amcat as ttbar
 # from CMGTools.HNL.samples.samples_mc_2017 import DYJetsToLL_M50, hnl_bkg_essentials
-# from CMGTools.HNL.samples.signal import all_signals_mu
-from CMGTools.HNL.samples.samples_mc_2017_noskim import DYJetsToLL_M5to50
+from CMGTools.HNL.samples.signal import all_signals_mu
+# from CMGTools.HNL.samples.samples_mc_2017_noskim import DYJetsToLL_M5to50
 
 
 ###################################################
@@ -46,7 +46,8 @@ pick_events        = getHeppyOption('pick_events', False)
 ###               HANDLE SAMPLES                ###
 ###################################################
 # samples = hnl_bkg_essentials
-samples = [DYJetsToLL_M5to50]
+# samples = [DYJetsToLL_M5to50]
+samples = all_signals_mu
 auxsamples = []#[ttbar, DYJetsToLL_M50]
 
 # samples = [comp for comp in samples if comp.name=='TTJets_amcat']
@@ -112,9 +113,15 @@ genAna.allGenTaus = True # save in event.gentaus *ALL* taus, regardless whether 
 
 # for each path specify which filters you want the muons to match to
 triggers_and_filters = OrderedDict()
-triggers_and_filters['HLT_IsoMu24'] = 'hltL3crIsoL1sSingleMu22L1f0L2f10QL3f24QL3trkIsoFiltered0p07'
-#hltL3crIsoL1sMu22L1f0L2f10QL3f24QL3trkIsoFiltered0p09' #2016
-triggers_and_filters['HLT_IsoMu27'] = 'hltL3crIsoL1sMu22Or25L1f0L2f10QL3f27QL3trkIsoFiltered0p07'
+
+## 2017
+# triggers_and_filters['HLT_IsoMu24'] = 'hltL3crIsoL1sSingleMu22L1f0L2f10QL3f24QL3trkIsoFiltered0p07'
+# triggers_and_filters['HLT_IsoMu27'] = 'hltL3crIsoL1sMu22Or25L1f0L2f10QL3f27QL3trkIsoFiltered0p07'
+# triggers_and_filters['HLT_Mu50']    = 'hltL3fL1sMu22Or25L1f0L2f10QL3Filtered50Q'
+
+## 2016 ## from https://cmsweb.cern.ch/confdb/#config=/cdaq/physics/Run2016/25ns15e33/v4.0.1/HLT/V3
+triggers_and_filters['HLT_IsoMu24'] = 'hltL3crIsoL1sMu22L1f0L2f10QL3f24QL3trkIsoFiltered0p09'
+triggers_and_filters['HLT_IsoMu27'] = 'hltL3crIsoL1sMu22Or25L1f0L2f10QL3f27QL3trkIsoFiltered0p09'
 triggers_and_filters['HLT_Mu50']    = 'hltL3fL1sMu22Or25L1f0L2f10QL3Filtered50Q'
 
 HNLAnalyzer = cfg.Analyzer(
@@ -194,7 +201,8 @@ sequence = cfg.Sequence([
 ###################################################
 if not production:
 #     comp                 = ttbar
-    comp                 = DYJetsToLL_M5to50
+#    comp                 = DYJetsToLL_M5to50
+    comp                 = all_signals_mu[0]
     selectedComponents   = [comp]
     comp.splitFactor     = 1
     comp.fineSplitFactor = 1

@@ -198,7 +198,7 @@ class DataMCPlot(object):
             if same == '':
                 same = 'same'
         yaxis = self.supportHist.GetYaxis()
-        yaxis.SetRangeUser(0.01, ymax(self._SortedHistograms()))
+        yaxis.SetRangeUser(0.01, 1.5*ymax(self._SortedHistograms()))
         self.DrawLegend()
         if TPad.Pad():
             TPad.Pad().Update()
@@ -284,7 +284,7 @@ class DataMCPlot(object):
                        xmin=None, xmax=None, ymin=None, ymax=None):
         '''Draw ratios.
 
-        The stack is considered a single histogram.'''
+        The stack is considered as a single histogram.'''
         denom = None
         # import pdb; pdb.set_trace()
         histForRatios = []

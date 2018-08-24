@@ -11,6 +11,7 @@ from CMGTools.HNL.plotter.PlotConfigs import SampleCfg, HistogramCfg
 
 from CMGTools.HNL.samples.samples_mc_2017 import hnl_bkg
 from CMGTools.HNL.samples.samples_data_2017_noskim import Single_ele_2017B, Single_ele_2017C, Single_ele_2017D, Single_ele_2017E, Single_ele_2017F
+from CMGTools.HNL.samples.samples_mc_2017_noskim import DYJetsToLL_M5to50
 from CMGTools.HNL.samples.samples_mc_2017 import TTJets_amcat, TTJets_mdgrph, DYJetsToLL_M50, DYJetsToLL_M50_ext, WJetsToLNu, W3JetsToLNu, W4JetsToLNu, WLLJJ_WToLNu_EWK, WW_DoubleScattering, WZTo3LNu, ZZTo4L, ZZTo4L_ext
 from CMGTools.HNL.samples.signal import HN3L_M_3_V_0p00316227766017_e_onshell as HN3L_M3
 
@@ -68,6 +69,8 @@ def createSampleLists(analysis_dir='/eos/user/v/vstampf/ntuples/',
     samples_essential = [
 #        SampleCfg(name='DYJets'              , dir_name=DYJetsToLL_M50      .name, ana_dir=analysis_dir, tree_prod_name=tree_prod_name,
 #                  xsec=DYJetsToLL_M50     .xSection, sumweights=DYJetsToLL_M50     .nGenEvents),
+#        SampleCfg(name='DYJets_M5_%s'%channel           , dir_name=DYJetsToLL_M5to50   .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name,
+#                  xsec=DYJetsToLL_M5to50  .xSection, sumweights=DYJetsToLL_M5to50  .nGenEvents),
 
         SampleCfg(name='DYJets_ext_%s'%channel          , dir_name=DYJetsToLL_M50_ext  .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name,
                   xsec=DYJetsToLL_M50_ext .xSection, sumweights=DYJetsToLL_M50_ext .nGenEvents),

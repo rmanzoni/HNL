@@ -29,7 +29,8 @@ from CMGTools.HNL.analyzers.LeptonWeighter     import LeptonWeighter
 # from CMGTools.HNL.samples.localsignal import HN3L_M_2p5_V_0p0173205080757_e_onshell, HN3L_M_2p5_V_0p00707106781187_e_onshell
 # from CMGTools.HNL.samples.localsignal import TTJets_amcat as ttbar
 # from CMGTools.HNL.samples.samples_mc_2017 import DYJetsToLL_M50, hnl_bkg_essentials
-from CMGTools.HNL.samples.signal import all_signals_e
+from CMGTools.HNL.samples.samples_mc_2017_noskim import DYJetsToLL_M5to50
+# from CMGTools.HNL.samples.signal import all_signals_e
 
 ###################################################
 ###                   OPTIONS                   ###
@@ -45,7 +46,7 @@ pick_events        = getHeppyOption('pick_events', False)
 ###               HANDLE SAMPLES                ###
 ###################################################
 #samples = hnl_bkg_essentials
-samples = all_signals_e
+samples = [DYJetsToLL_M5to50]
 auxsamples = [] #[ttbar, DYJetsToLL_M50]
 
 #samples = [comp for comp in samples if comp.name=='TTJets_amcat']
@@ -179,7 +180,7 @@ sequence = cfg.Sequence([
 #     eventSelector,
     lheWeightAna, # les houches
     jsonAna,
-    skimAna,
+#    skimAna,
     triggerAna,
     vertexAna,
     pileUpAna,
@@ -197,7 +198,7 @@ sequence = cfg.Sequence([
 if not production:
 #     comp                 = HN3L_M_2p5_V_0p0173205080757_e_onshell
 #    comp                 = HN3L_M_2p5_V_0p00707106781187_e_onshell
-    comp                 = all_signals_e[0]
+    comp                 = DYJetsToLL_M5to50
 #     comp                 = ttbar
     selectedComponents   = [comp]
     comp.splitFactor     = 1

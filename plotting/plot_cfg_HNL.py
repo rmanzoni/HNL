@@ -26,9 +26,17 @@ int_lumi = 41000.0 # pb #### FIXME
 def prepareCuts():
     cuts = []
     inc_cut = '&&'.join([cat_Inc])
-    # inc_cut += '&& l2_decayModeFinding'
+    inc_cut += '  &&  l1_q != l2_q'
+    inc_cut += '  &&  l0_reliso05 < 0.15'
+    inc_cut += '  &&  l0_dz < 0.2'
+#    cuts.append(Cut('looser', inc_cut + '  &&  l0_eid_mva_noniso_loose  &&  l1_id_m & l2_id_m'))
+#    cuts.append(Cut('tighter_e_loose', inc_cut + '  &&  l0_eid_mva_noniso_loose  &&  l1_dz < 0.2  &&  l2_dz < 0.2  &&  l1_reliso05 < 0.15  &&  l2_reliso05 < 0.15  &&  l1_id_t  &&  l2_id_t'))
+#    cuts.append(Cut('tighter_e_medium', inc_cut + '  &&  l0_eid_cut_medium  &&  l1_dz < 0.2  &&  l2_dz < 0.2  &&  l1_reliso05 < 0.15  &&  l2_reliso05 < 0.15  &&  l1_id_t  &&  l2_id_t'))
+#    cuts.append(Cut('tighter_e_tight', inc_cut + '  &&  l0_eid_cut_tight  &&  l1_dz < 0.2  &&  l2_dz < 0.2  &&  l1_reliso05 < 0.15  &&  l2_reliso05 < 0.15  &&  l1_id_t  &&  l2_id_t'))
+    cuts.append(Cut('slide_14', inc_cut + '  &&  l0_eid_mva_noniso_loose  &&  l1_dz < 0.2  &&  l2_dz < 0.2  &&  l1_reliso05 < 0.15  &&  l2_reliso05 < 0.15  &&  l1_id_t  &&  l2_id_t'))
+    cuts.append(Cut('slide_15', inc_cut + '  &&  l0_eid_mva_noniso_loose  &&  l1_dz < 0.2  &&  l2_dz < 0.2  &&  l1_reliso05 < 0.15  &&  l2_reliso05 < 0.15  &&  l1_id_t  &&  l2_id_t'))
+    cuts.append(Cut('slide_16', inc_cut + '  &&  l0_eid_mva_noniso_loose  &&  l1_dz < 0.2  &&  l2_dz < 0.2  &&  l1_reliso05 < 0.15  &&  l2_reliso05 < 0.15  &&  l1_id_t  &&  l2_id_t'))
 
-    cuts.append(Cut('inclusive', inc_cut + '&&  l1_q != l2_q  &&  l0_eid_mva_noniso_loose & l0_reliso05<0.15  &&  l1_id_m & l2_id_m'))
 
     return cuts
 

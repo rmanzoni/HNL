@@ -69,20 +69,14 @@ def createSampleLists(analysis_dir='/eos/user/v/vstampf/ntuples/',
 #        SampleCfg(name='DYJets'              , dir_name=DYJetsToLL_M50      .name, ana_dir=analysis_dir, tree_prod_name=tree_prod_name,
 #                  xsec=DYJetsToLL_M50     .xSection, sumweights=DYJetsToLL_M50     .nGenEvents),
 
-        SampleCfg(name='DYJets_ext_%s'%channel          , dir_name=DYJetsToLL_M50_ext  .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name,
-                  xsec=DYJetsToLL_M50_ext .xSection, sumweights=DYJetsToLL_M50_ext .nGenEvents),
-
-        SampleCfg(name='TTJets_amc_%s'%channel          , dir_name=TTJets_amcat        .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name,
-                  xsec=TTJets_amcat       .xSection, sumweights=TTJets_amcat       .nGenEvents),
-
 #        SampleCfg(name='TTJets_mdg'          , dir_name=TTJets_mdgrph       .name, ana_dir=analysis_dir, tree_prod_name=tree_prod_name,
 #                  xsec=TTJets_mdgrph      .xSection, sumweights=TTJets_mdgrph      .nGenEvents),
 
-        SampleCfg(name='WJetsToLNu_%s'%channel          , dir_name=WJetsToLNu          .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name,
-                  xsec=WJetsToLNu         .xSection, sumweights=WJetsToLNu         .nGenEvents),        
-
-        SampleCfg(name='ZZTo4L_%s'%channel              , dir_name=ZZTo4L              .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name,
-                  xsec=ZZTo4L             .xSection, sumweights=ZZTo4L             .nGenEvents),
+        SampleCfg(name='DYJets_ext_%s'%channel, dir_name=DYJetsToLL_M50_ext  .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=DYJetsToLL_M50_ext .xSection, sumweights=DYJetsToLL_M50_ext .nGenEvents),
+        SampleCfg(name='TTJets_amc_%s'%channel, dir_name=TTJets_amcat        .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=TTJets_amcat       .xSection, sumweights=TTJets_amcat       .nGenEvents),
+        SampleCfg(name='WJetsToLNu_%s'%channel, dir_name=WJetsToLNu          .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=WJetsToLNu         .xSection, sumweights=WJetsToLNu         .nGenEvents),        
+        SampleCfg(name='ZZTo4L_%s'%channel    , dir_name=ZZTo4L              .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=ZZTo4L             .xSection, sumweights=ZZTo4L             .nGenEvents),
+        SampleCfg(name='WZTo3LNu_%s'%channel  , dir_name=WZTo3LNu            .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=WZTo3LNu           .xSection, sumweights=WZTo3LNu           .nGenEvents),
         ]
 
     samples_signal = [

@@ -5,11 +5,10 @@ from operator import itemgetter
 from numpy import array
 
 from CMGTools.HNL.plotter.PlotConfigs import HistogramCfg, VariableCfg
-from CMGTools.HNL.plotter.categories_TauMu import cat_Inc
+# from CMGTools.HNL.plotter.categories_TauMu import cat_Inc
 from CMGTools.HNL.plotter.HistCreator import createHistograms, createTrees
 from CMGTools.HNL.plotter.HistDrawer import HistDrawer
-from CMGTools.HNL.plotter.Variables import taumu_vars, hnl_vars, getVars
-from CMGTools.HNL.plotter.helper_methods import getVertexWeight
+from CMGTools.HNL.plotter.Variables import hnl_vars, getVars
 from CMGTools.HNL.samples.samples_mc_2017 import hnl_bkg
 from pdb import set_trace
 # from CMGTools.HNL.plotter.qcdEstimationMSSMltau import estimateQCDWMSSM, createQCDWHistograms
@@ -25,10 +24,19 @@ int_lumi = 41000.0 # pb #### FIXME
 
 def prepareCuts():
     cuts = []
-    inc_cut = '&&'.join([cat_Inc])
+    # inc_cut = '&&'.join([cat_Inc])
     # inc_cut += '&& l2_decayModeFinding'
 
-    cuts.append(Cut('inclusive', inc_cut + '&&  l1_q != l2_q  &&  l0_eid_mva_noniso_loose & l0_reliso05<0.15  &&  l1_id_m & l2_id_m'))
+    cuts.append(Cut('ttjetsloose', 'nbj>1'))
+#     cuts.append(Cut('zmmloose' , 'l1_pt>5  & l2_pt>5  & l1_q!=l2_q & l1_id_t & l2_id_t & l1_reliso05<0.2 & l2_reliso05<0.2 & l1_dz<0.2 & l2_dz<0.2 & l1_dxy<0.045 & l2_dxy<0.045 & nbj==0 & pass_e_veto & pass_m_veto'))
+#     cuts.append(Cut('zmmhighpt', 'l1_pt>15  & l2_pt>15  & l1_q!=l2_q & l1_id_t & l2_id_t & l1_reliso05<0.2 & l2_reliso05<0.2 & l1_dz<0.2 & l2_dz<0.2 & l1_dxy<0.045 & l2_dxy<0.045 & nbj==0 & pass_e_veto & pass_m_veto'))
+#     cuts.append(Cut('zmm'      , 'l1_pt>10 & l2_pt>10 & l1_q!=l2_q & !l0_eid_mva_iso_loose & l0_reliso05>0.15 & l1_id_t & l2_id_t & l1_reliso05<0.2 & l2_reliso05<0.2 & l1_dz<0.2 & l2_dz<0.2 & l1_dxy<0.045 & l2_dxy<0.045 & nbj==0 & pass_e_veto & pass_m_veto'))
+
+#     cuts.append(Cut('inclusive'    , 'l0_pt>30 & l1_pt>4 & l2_pt>4 & l1_q != l2_q && l0_eid_mva_iso_loose & l0_reliso05<0.15'))
+#     cuts.append(Cut('inclusive'    , 'l0_pt>30 & l1_pt>4 & l2_pt>4 & l1_q != l2_q && l0_eid_mva_iso_loose & l0_reliso05<0.15 & l1_id_m & l2_id_m & l1_reliso05<0.2 & l2_reliso05<0.2'))
+#     cuts.append(Cut('inc_nobj'     , 'l0_pt>30 & l1_pt>4 & l2_pt>4 & l1_q != l2_q && l0_eid_mva_iso_loose & l0_reliso05<0.15 & l1_id_m & l2_id_m & l1_reliso05<0.2 & l2_reliso05<0.2 & nbj==0'))
+#     cuts.append(Cut('inc_nobj_veto', 'l0_pt>30 & l1_pt>4 & l2_pt>4 & l1_q != l2_q && l0_eid_mva_iso_loose & l0_reliso05<0.15 & l1_id_m & l2_id_m & l1_reliso05<0.2 & l2_reliso05<0.2 & nbj==0 & pass_e_veto & pass_m_veto'))
+#     cuts.append(Cut('stringent'    , 'l0_pt>30 & l1_pt>4 & l2_pt>4 & sv_prob>0.1 & sv_cos>0.9 & hnl_2d_disp_sig>3 & abs(hnl_w_q)==1 & hnl_iso_rel<0.2 & hnl_hn_q==0 & hnl_pt_12>20 & l0_eid_mva_iso_loose & l1_is_oot==0 & l2_is_oot==0 & pass_e_veto & pass_m_veto & l1_id_l & l2_id_l & l0_reliso05<0.2 & nbj==0 & hnl_2d_disp>2'))
 
     return cuts
 
@@ -59,10 +67,12 @@ def makePlots(variables, cuts, total_weight, sample_dict, hist_dict, qcd_from_sa
         cfg_main.vars = variables
 
         plots = createHistograms(cfg_main, verbose=False, friend_func=friend_func)
+        #plots.legendPos = 'right'
         for variable in variables:
         # for plot in plots.itervalues():
             plot = plots[variable.name]
             plot.Group('data_obs', ['data_2017B_e', 'data_2017C_e', 'data_2017D_e', 'data_2017E_e', 'data_2017F_e'])
+            plot.Group('Diboson', ['WZTo3LNu_e', 'ZZTo4L_e'])
             createDefaultGroups(plot)
             if make_plots:
                 HistDrawer.draw(plot, plot_dir='plots/'+cut.name)
@@ -85,8 +95,6 @@ def makePlots(variables, cuts, total_weight, sample_dict, hist_dict, qcd_from_sa
 
 if __name__ == '__main__':
         
-    data2016G = False
-
     friend_func = None
     
     qcd_from_same_sign = True
@@ -102,9 +110,6 @@ if __name__ == '__main__':
     total_weight = 'weight'
 # FIXME fix this 
 #    total_weight = 'weight * (1. - 0.0772790*(l2_gen_match == 5 && l2_decayMode==0) - 0.138582*(l2_gen_match == 5 && l2_decayMode==1) - 0.220793*(l2_gen_match == 5 && l2_decayMode==10) )' # Tau ID eff scale factor
-
-    if data2016G:
-        total_weight = '(' + total_weight + '*' + getVertexWeight(True) + ')'
 
     print total_weight
 

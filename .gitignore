@@ -10,6 +10,9 @@ __init__.py
 # FOLDERS
 plotting/plots/*
 
+# HEPPY
+tmp_heppy.py
+
 # AFS FILES?
 .__afs*
 

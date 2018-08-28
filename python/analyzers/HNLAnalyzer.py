@@ -203,11 +203,11 @@ class HNLAnalyzer(Analyzer):
         jets = map(Jet, self.handles['jets'].product())        
 
         # make PF candidates
-#        try:
-        pfs = map(PhysicsObject, self.handles['pfcand'].product())
+        try:
+            pfs = map(PhysicsObject, self.handles['pfcand'].product())
 #            set_trace()
-#            return False
-#        except: set_trace()
+            return False
+        except: print(event.eventId, event.run, event.lumi); set_trace()
 
         # assign to the leptons the primary vertex, will be needed to compute a few quantities
         pv = event.goodVertices[0]

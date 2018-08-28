@@ -11,8 +11,11 @@ from CMGTools.HNL.plotter.PlotConfigs import SampleCfg, HistogramCfg
 
 from CMGTools.HNL.samples.samples_mc_2017 import hnl_bkg
 from CMGTools.HNL.samples.samples_data_2017_noskim import Single_ele_2017B, Single_ele_2017C, Single_ele_2017D, Single_ele_2017E, Single_ele_2017F
+from CMGTools.HNL.samples.samples_data_2017_noskim import Single_mu_2017B,  Single_mu_2017C,  Single_mu_2017D,  Single_mu_2017E,  Single_mu_2017F
 from CMGTools.HNL.samples.samples_mc_2017 import TTJets_amcat, TTJets_mdgrph, DYJetsToLL_M50, DYJetsToLL_M50_ext, WJetsToLNu, W3JetsToLNu, W4JetsToLNu, WLLJJ_WToLNu_EWK, WW_DoubleScattering, WZTo3LNu, ZZTo4L, ZZTo4L_ext
-from CMGTools.HNL.samples.signal import HN3L_M_3_V_0p00316227766017_e_onshell as HN3L_M3
+from CMGTools.HNL.samples.samples_mc_2017_noskim import DYJetsToLL_M5to50
+from CMGTools.HNL.samples.signal import HN3L_M_3_V_0p00316227766017_e_onshell  as HN3L_M3_e
+from CMGTools.HNL.samples.signal import HN3L_M_3_V_0p00316227766017_mu_onshell as HN3L_M3_m
 
 if "/sDYReweighting_cc.so" not in gSystem.GetLibraries(): 
     gROOT.ProcessLine(".L %s/src/CMGTools/HNL/python/plotter/DYReweighting.cc+" % os.environ['CMSSW_BASE']);
@@ -61,42 +64,43 @@ def createSampleLists(analysis_dir='/eos/user/v/vstampf/ntuples/',
         sig_dir = 'sig_mc_e/ntuples/'
         dataB = Single_ele_2017B; dataC = Single_ele_2017C; dataD = Single_ele_2017D; dataE = Single_ele_2017E; dataF = Single_ele_2017F; 
     if channel == 'm':
+        data_dir = '/eos/user/v/vstampf/ntuples/data_2017_m_noskim/'
         bkg_dir = 'bkg_mc_m/'
         sig_dir = 'sig_mc_m/ntuples/'
         dataB = Single_mu_2017B; dataC = Single_mu_2017C; dataD = Single_mu_2017D; dataE = Single_mu_2017E; dataF = Single_mu_2017F; 
 
     samples_essential = [
-#        SampleCfg(name='DYJets'              , dir_name=DYJetsToLL_M50      .name, ana_dir=analysis_dir, tree_prod_name=tree_prod_name,
-#                  xsec=DYJetsToLL_M50     .xSection, sumweights=DYJetsToLL_M50     .nGenEvents),
+#        SampleCfg(name='DYJets_M50_%s'%channel  , dir_name=DYJetsToLL_M50      .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=DYJetsToLL_M50     .xSection, sumweights=DYJetsToLL_M50     .nGenEvents),
 
 #        SampleCfg(name='TTJets_mdg'          , dir_name=TTJets_mdgrph       .name, ana_dir=analysis_dir, tree_prod_name=tree_prod_name,
 #                  xsec=TTJets_mdgrph      .xSection, sumweights=TTJets_mdgrph      .nGenEvents),
 
-        SampleCfg(name='DYJets_ext_%s'%channel, dir_name=DYJetsToLL_M50_ext  .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=DYJetsToLL_M50_ext .xSection, sumweights=DYJetsToLL_M50_ext .nGenEvents),
-        SampleCfg(name='TTJets_amc_%s'%channel, dir_name=TTJets_amcat        .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=TTJets_amcat       .xSection, sumweights=TTJets_amcat       .nGenEvents),
-        SampleCfg(name='WJetsToLNu_%s'%channel, dir_name=WJetsToLNu          .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=WJetsToLNu         .xSection, sumweights=WJetsToLNu         .nGenEvents),        
-        SampleCfg(name='ZZTo4L_%s'%channel    , dir_name=ZZTo4L              .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=ZZTo4L             .xSection, sumweights=ZZTo4L             .nGenEvents),
-        SampleCfg(name='WZTo3LNu_%s'%channel  , dir_name=WZTo3LNu            .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=WZTo3LNu           .xSection, sumweights=WZTo3LNu           .nGenEvents),
+        SampleCfg(name='DYJets_M5T50_%s'%channel, dir_name=DYJetsToLL_M5to50   .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=DYJetsToLL_M5to50  .xSection, sumweights=DYJetsToLL_M5to50  .nGenEvents),
+        SampleCfg(name='DYJets_M50_x_%s'%channel, dir_name=DYJetsToLL_M50_ext  .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=DYJetsToLL_M50_ext .xSection, sumweights=DYJetsToLL_M50_ext .nGenEvents),
+        SampleCfg(name='TTJets_amc_%s'%channel  , dir_name=TTJets_amcat        .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=TTJets_amcat       .xSection, sumweights=TTJets_amcat       .nGenEvents),
+        SampleCfg(name='WJetsToLNu_%s'%channel  , dir_name=WJetsToLNu          .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=WJetsToLNu         .xSection, sumweights=WJetsToLNu         .nGenEvents),        
+        SampleCfg(name='ZZTo4L_%s'%channel      , dir_name=ZZTo4L              .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=ZZTo4L             .xSection, sumweights=ZZTo4L             .nGenEvents),
+        SampleCfg(name='WZTo3LNu_%s'%channel    , dir_name=WZTo3LNu            .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=WZTo3LNu           .xSection, sumweights=WZTo3LNu           .nGenEvents),
         ]
 
-    samples_signal = [
-        SampleCfg(name='HN3L_M3_%s'%channel             , dir_name=HN3L_M3             .name, ana_dir=analysis_dir+sig_dir, tree_prod_name=tree_prod_name,
-                  xsec=200.0                       , sumweights=HN3L_M3            .nGenEvents, is_signal=True)
+    samples_signal_e = [
+        SampleCfg(name='HN3L_M3_e'              , dir_name=HN3L_M3_e           .name, ana_dir=analysis_dir+sig_dir, tree_prod_name=tree_prod_name, xsec=200.0                       , sumweights=HN3L_M3_e          .nGenEvents, is_signal=True)
         ]
+    samples_signal_m = [
+        SampleCfg(name='HN3L_M3_m'              , dir_name=HN3L_M3_m           .name, ana_dir=analysis_dir+sig_dir, tree_prod_name=tree_prod_name, xsec=200.0                       , sumweights=HN3L_M3_m          .nGenEvents, is_signal=True)
+        ]
+    
+    if channel == 'e': samples_signal = samples_signal_e
+    if channel == 'm': samples_signal = samples_signal_m
 
     samples_essential += samples_signal
 
     samples_data = [
-        SampleCfg(name='data_2017B_%s'%channel          , dir_name=dataB               .name, ana_dir=data_dir           , tree_prod_name=tree_prod_name,
-                  is_data=True),                                                                                         
-        SampleCfg(name='data_2017C_%s'%channel          , dir_name=dataC               .name, ana_dir=data_dir           , tree_prod_name=tree_prod_name,
-                  is_data=True),                                                                                         
-        SampleCfg(name='data_2017D_%s'%channel          , dir_name=dataD               .name, ana_dir=data_dir           , tree_prod_name=tree_prod_name,
-                  is_data=True),                                                                                         
-        SampleCfg(name='data_2017E_%s'%channel          , dir_name=dataE               .name, ana_dir=data_dir           , tree_prod_name=tree_prod_name,
-                  is_data=True),                                                                                         
-        SampleCfg(name='data_2017F_%s'%channel          , dir_name=dataF               .name, ana_dir=data_dir           , tree_prod_name=tree_prod_name,
-                  is_data=True),
+        SampleCfg(name='data_2017B_%s'%channel          , dir_name=dataB               .name, ana_dir=data_dir           , tree_prod_name=tree_prod_name,  is_data=True),    
+        SampleCfg(name='data_2017C_%s'%channel          , dir_name=dataC               .name, ana_dir=data_dir           , tree_prod_name=tree_prod_name, is_data=True),  
+        SampleCfg(name='data_2017D_%s'%channel          , dir_name=dataD               .name, ana_dir=data_dir           , tree_prod_name=tree_prod_name, is_data=True),                       
+        SampleCfg(name='data_2017E_%s'%channel          , dir_name=dataE               .name, ana_dir=data_dir           , tree_prod_name=tree_prod_name, is_data=True),   
+        SampleCfg(name='data_2017F_%s'%channel          , dir_name=dataF               .name, ana_dir=data_dir           , tree_prod_name=tree_prod_name, is_data=True),
     ]
 
     samples_additional = [

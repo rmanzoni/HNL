@@ -13,8 +13,12 @@ creator = ComponentCreator()
 
 DYJetsToLL_M5to50                  = creator.makeMCComponent('DYJetsToLL_M5to50'                , '/DYJetsToLL_M-5to50_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v2/MINIAODSIM'                       , 'CMS', '.*root', xSec=71310.0, useAAA=True)
 # .sigma = 71310 \pm 70 pb
+DYJetsToLL_M5to50.nGenEvents = DYJetsToLL_M5to50.dataset_entries
 
-hnl_bkg = [DYJetsToLL_M5to50]
+DYJetsToLL_M50                     = creator.makeMCComponent('DYJetsToLL_M50'                   , '/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM'                         , 'CMS', '.*root', xSec=1921.8*3, useAAA=True)
+DYJetsToLL_M50.nGenEvents = DYJetsToLL_M50.dataset_entries
+
+hnl_bkg = [DYJetsToLL_M5to50, DYJetsToLL_M50]
 ##########################################################################################
 #  data PileUp profile
 ##########################################################################################

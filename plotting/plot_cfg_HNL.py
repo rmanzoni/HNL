@@ -48,19 +48,19 @@ def prepareCuts():
        slide 15 - ttbar:  |M_ll - m_Z| > 15 GeV (if OSSF); |M_3l - m_Z| > 15 GeV (if OSSF); >= 1 b-jets; veto M_ll < 12 GeV (conversion)
        slide 17 - WZ:     OSSF pair present; |M_ll -m_Z|< 15 GeV; |M_3l -m_Z| > 15 GeV; 0 b-jets; E_T^miss > 50 GeV ; p_T > 25, 15, 10 GeV (l0,1,2)
 
-       E_T^Miss == puppimet_pt, M_T == hnl_mt_0 + hnl_mt_1 + hnl_mt_2
+       E_T^Miss == puppimet_pt, M_T == mt_hnvis OR M_T == hnl_mt_0 + hnl_mt_1 + hnl_mt_2?
     '''
     mz = 91.18
-    CR_DY    = '  &&  abs(hnl_m_12 - 91.18) < 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj == 0  &&  puppimet_pt < 30  &&  (hnl_mt_0 + hnl_mt_1 + hnl_mt_2) < 30'
+    CR_DY    = '  &&  abs(hnl_m_12 - 91.18) < 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj == 0  &&  puppimet_pt < 30  && hnl_mt_hnvis < 30' # (hnl_mt_0 + hnl_mt_1 + hnl_mt_2) < 30'
     CR_ttbar = '  &&  abs(hnl_m_12 - 91.18) > 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj >= 1  &&  hnl_m_12 > 12'
     CR_WZ    = '  &&  abs(hnl_m_12 - 91.18) < 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj == 0  &&  puppimet_pt > 50  &&  l0_pt > 25  &&  l1_pt > 15  &&  l2_pt > 10'
 #    cuts.append(Cut('looser', inc_cut + '  &&  l0_eid_mva_noniso_loose  &&  l1_id_m & l2_id_m'))
 #    cuts.append(Cut('tighter_e_loose', inc_cut + '  &&  l0_eid_mva_noniso_loose' + tighter))
 #    cuts.append(Cut('tighter_e_medium', inc_cut + '  &&  l0_eid_cut_medium' + tighter))
 #    cuts.append(Cut('tighter_e_tight', inc_cut + '  &&  l0_eid_cut_tight' + tighter))
-    cuts.append(Cut('DY', inc_cut + '  &&  l0_eid_mva_noniso_loose' + looser + CR_DY))
-    cuts.append(Cut('TTbar', inc_cut + '  &&  l0_eid_mva_noniso_loose' + looser + CR_ttbar))
-    cuts.append(Cut('WZ', inc_cut + '  &&  l0_eid_mva_noniso_loose' + looser + CR_WZ))
+    cuts.append(Cut('CR_DY', inc_cut + '  &&  l0_eid_mva_noniso_loose' + looser + CR_DY))
+#    cuts.append(Cut('CR_TTbar', inc_cut + '  &&  l0_eid_mva_noniso_loose' + looser + CR_ttbar))
+#    cuts.append(Cut('CR_WZ', inc_cut + '  &&  l0_eid_mva_noniso_loose' + looser + CR_WZ))
 
     return cuts
 
@@ -98,6 +98,7 @@ def makePlots(variables, cuts, total_weight, sample_dict, hist_dict, qcd_from_sa
             plot = plots[variable.name]
             plot.Group('data_obs', ['data_2017B_e', 'data_2017C_e', 'data_2017D_e', 'data_2017E_e', 'data_2017F_e'])
             plot.Group('Diboson', ['WZTo3LNu_e', 'ZZTo4L_e'])
+            plot.Group('DY', ['DYJets_M5T50_e', 'DYJets_M50_x_e'])
             createDefaultGroups(plot)
             if make_plots:
                 HistDrawer.draw(plot, plot_dir='plots/'+cut.name)

@@ -321,10 +321,10 @@ hnl_vars = [
 
 
 CR_vars = [
-    VCfg(name='l0_jet_pt'      , binning={'nbinsx':40, 'xmin':0.  , 'xmax':200.}, unit='GeV', xtitle='p_{T}^{Cone} (leading)'),
-    VCfg(name='l2_jet_pt'      , binning={'nbinsx':40, 'xmin':0.  , 'xmax':200.}, unit='GeV', xtitle='p_{T}^{Cone} (trailing)'),
-    VCfg(name='hnl_m_12_wide', drawname='hnl_m_12', binning={'nbinsx':80, 'xmin':0   , 'xmax':150 }, unit='GeV', xtitle='dimuon mass'),
-    VCfg(name='hnl_mt_0'       , binning={'nbinsx':40, 'xmin':0   , 'xmax':200 }, unit='GeV', xtitle='M_{T} (leading)'),
+    VCfg(name='l0_jet_pt'      , binning={'nbinsx':16, 'xmin':0.  , 'xmax':200.}, unit='GeV', xtitle='p_{T}^{Cone} (leading)'),
+    VCfg(name='l2_jet_pt'      , binning={'nbinsx':16, 'xmin':0.  , 'xmax':200.}, unit='GeV', xtitle='p_{T}^{Cone} (trailing)'),
+    VCfg(name='hnl_m_12_wide', drawname='hnl_m_12', binning={'nbinsx':24, 'xmin':0   , 'xmax':150 }, unit='GeV', xtitle='dimuon mass'),
+    VCfg(name='hnl_mt_0'       , binning={'nbinsx':16, 'xmin':0   , 'xmax':200 }, unit='GeV', xtitle='M_{T} (leading)'),
 ]
 
 taumu_vars = generic_vars + muon_l1_vars + tau_l2_vars + tau_mu_special_vars

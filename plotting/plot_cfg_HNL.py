@@ -77,8 +77,8 @@ def prepareCuts(mode):
     tighter = '  &&  l1_dz < 0.2  &&  l2_dz < 0.2  &&  l1_reliso05 < 0.15  &&  l2_reliso05 < 0.15  &&  l1_id_t  &&  l2_id_t'
 
     cuts.append(Cut('CR_DY', inc_cut + l0_loose + looser + CR_DY))
-#    cuts.append(Cut('CR_TTbar', inc_cut + l0_loose + looser + CR_ttbar))
-#    cuts.append(Cut('CR_WZ', inc_cut + l0_loose + looser + CR_WZ))
+    cuts.append(Cut('CR_TTbar', inc_cut + l0_loose + looser + CR_ttbar))
+    cuts.append(Cut('CR_WZ', inc_cut + l0_loose + looser + CR_WZ))
 
 #    cuts.append(Cut('looser', inc_cut + l0_loose + '  &&  l1_id_m & l2_id_m'))
 #    cuts.append(Cut('tighter_e_loose', inc_cut + l0_loose + tighter))
@@ -120,7 +120,7 @@ def makePlots(variables, cuts, total_weight, sample_dict, hist_dict, qcd_from_sa
             plot = plots[variable.name]
             plot.Group('data_obs', ['data_2017B_e', 'data_2017C_e', 'data_2017D_e', 'data_2017E_e', 'data_2017F_e'])
             plot.Group('single t', ['ST_tW_at_5f_incD_e', 'ST_tW_t_5f_incD_e'])
-            plot.Group('Diboson', ['WZTo3LNu_e', 'ZZTo4L_e'])
+            plot.Group('Diboson', ['WZTo3LNu_e', 'ZZTo4L_e', 'WWTo2L2Nu_e'])
             plot.Group('Triboson', ['ZZZ_e', 'WWW_e', 'WGGJets_e'])
             plot.Group('ttV', ['TTZToLLNuNu_e', 'TTWJetsToLNu_e'])
             plot.Group('DY', ['DYJets_M5T50_e', 'DYJets_M50_x_e', 'DYJets_M50_e'])

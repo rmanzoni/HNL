@@ -204,7 +204,7 @@ ST_tW_top_5f_inclusiveDecays .nGenEvents = ST_tW_top_5f_inclusiveDecays.dataset_
 ##########################################################################################
 # assign to each sample its own PU profile file. For 2017 it is important to do it per-sample
 ##########################################################################################
-# DYJetsToLL_M5to50 .puFileMC= os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_DYJetsToLL_M5to50.root' # not yet added
+DYJetsToLL_M5to50 .puFileMC= os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_DYJetsToLL_M5to50.root' 
 DYJetsToLL_M50    .puFileMC= os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_DYJetsToLL_M50.root' 
 ZZZ  .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_ZZZ.root' # derived manually 
 WZZ  .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_WZZ.root' # derived manually 

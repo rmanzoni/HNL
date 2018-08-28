@@ -232,7 +232,7 @@ hnl_bkg_noskim = [
     WWW, 
     WWTo2L2Nu, 
     WGGJets, 
-    TWJetsToLNu, 
+    TTWJetsToLNu, 
     TTZToLLNuNu, 
     TTZToLL, 
     ST_s_channel_4f_leptonDecays, 

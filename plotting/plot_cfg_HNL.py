@@ -22,13 +22,14 @@ Cut = namedtuple('Cut', ['name', 'cut'])
 int_lumi = 41000.0 # pb #### FIXME 
 #int_lumi = 80000.0 # pb #### FIXME 
 
-def prepareCuts():
+def prepareCuts(mode):
     cuts = []
     inc_cut = '&&'.join([cat_Inc])
     inc_cut += '  &&  l1_q != l2_q'
     inc_cut += '  &&  l0_reliso05 < 0.15'
     inc_cut += '  &&  l0_dz < 0.2'
 
+    ## RICCARDO
 #    cuts.append(Cut('ttjetsloose', 'nbj>1'))
 #     cuts.append(Cut('zmmloose' , 'l1_pt>5  & l2_pt>5  & l1_q!=l2_q & l1_id_t & l2_id_t & l1_reliso05<0.2 & l2_reliso05<0.2 & l1_dz<0.2 & l2_dz<0.2 & l1_dxy<0.045 & l2_dxy<0.045 & nbj==0 & pass_e_veto & pass_m_veto'))
 #     cuts.append(Cut('zmmhighpt', 'l1_pt>15  & l2_pt>15  & l1_q!=l2_q & l1_id_t & l2_id_t & l1_reliso05<0.2 & l2_reliso05<0.2 & l1_dz<0.2 & l2_dz<0.2 & l1_dxy<0.045 & l2_dxy<0.045 & nbj==0 & pass_e_veto & pass_m_veto'))
@@ -40,10 +41,8 @@ def prepareCuts():
 #     cuts.append(Cut('inc_nobj_veto', 'l0_pt>30 & l1_pt>4 & l2_pt>4 & l1_q != l2_q && l0_eid_mva_iso_loose & l0_reliso05<0.15 & l1_id_m & l2_id_m & l1_reliso05<0.2 & l2_reliso05<0.2 & nbj==0 & pass_e_veto & pass_m_veto'))
 #     cuts.append(Cut('stringent'    , 'l0_pt>30 & l1_pt>4 & l2_pt>4 & sv_prob>0.1 & sv_cos>0.9 & hnl_2d_disp_sig>3 & abs(hnl_w_q)==1 & hnl_iso_rel<0.2 & hnl_hn_q==0 & hnl_pt_12>20 & l0_eid_mva_iso_loose & l1_is_oot==0 & l2_is_oot==0 & pass_e_veto & pass_m_veto & l1_id_l & l2_id_l & l0_reliso05<0.2 & nbj==0 & hnl_2d_disp>2'))
 
-    # vinzenz
-    looser  = '  &&  l1_reliso05 < 0.15  &&  l2_reliso05 < 0.15  &&  l1_id_m  &&  l2_id_m'
-    tighter = '  &&  l1_dz < 0.2  &&  l2_dz < 0.2  &&  l1_reliso05 < 0.15  &&  l2_reliso05 < 0.15  &&  l1_id_t  &&  l2_id_t'
-
+    ### VINZENZ
+    ## CONTROL REGIONS
     '''slide 14 - DY:     OSSF pair present; |M_ll - m_Z| < 15 GeV; |M_3l - m_Z| > 15 GeV; 0 b-jets; E_T^miss < 30GeV; M_T < 30GeV
        slide 15 - ttbar:  |M_ll - m_Z| > 15 GeV (if OSSF); |M_3l - m_Z| > 15 GeV (if OSSF); >= 1 b-jets; veto M_ll < 12 GeV (conversion)
        slide 17 - WZ:     OSSF pair present; |M_ll -m_Z|< 15 GeV; |M_3l -m_Z| > 15 GeV; 0 b-jets; E_T^miss > 50 GeV ; p_T > 25, 15, 10 GeV (l0,1,2)
@@ -51,17 +50,40 @@ def prepareCuts():
        E_T^Miss == puppimet_pt, M_T == mt_hnvis OR M_T == hnl_mt_0 + hnl_mt_1 + hnl_mt_2?
     '''
     mz = 91.18
+
     CR_DY    = '  &&  abs(hnl_m_12 - 91.18) < 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj == 0  &&  puppimet_pt < 30  && hnl_mt_hnvis < 30' # (hnl_mt_0 + hnl_mt_1 + hnl_mt_2) < 30'
     CR_ttbar = '  &&  abs(hnl_m_12 - 91.18) > 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj >= 1  &&  hnl_m_12 > 12'
     CR_WZ    = '  &&  abs(hnl_m_12 - 91.18) < 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj == 0  &&  puppimet_pt > 50  &&  l0_pt > 25  &&  l1_pt > 15  &&  l2_pt > 10'
-#    cuts.append(Cut('looser', inc_cut + '  &&  l0_eid_mva_noniso_loose  &&  l1_id_m & l2_id_m'))
-#    cuts.append(Cut('tighter_e_loose', inc_cut + '  &&  l0_eid_mva_noniso_loose' + tighter))
-#    cuts.append(Cut('tighter_e_medium', inc_cut + '  &&  l0_eid_cut_medium' + tighter))
-#    cuts.append(Cut('tighter_e_tight', inc_cut + '  &&  l0_eid_cut_tight' + tighter))
-    cuts.append(Cut('CR_DY', inc_cut + '  &&  l0_eid_mva_noniso_loose' + looser + CR_DY))
-#    cuts.append(Cut('CR_TTbar', inc_cut + '  &&  l0_eid_mva_noniso_loose' + looser + CR_ttbar))
-#    cuts.append(Cut('CR_WZ', inc_cut + '  &&  l0_eid_mva_noniso_loose' + looser + CR_WZ))
 
+    prompt_e_loose = '  &&  l0_eid_mva_noniso_loose'
+    prompt_e_medium = '  &&  l0_eid_cut_medium'
+    prompt_e_tight = '  &&  l0_eid_cut_tight'
+    
+    prompt_mu_loose = '  &&  l0_eid_mva_noniso_loose'
+    prompt_mu_medium = '  &&  l0_eid_cut_medium'
+    prompt_mu_tight = '  &&  l0_eid_cut_tight'
+
+    if mode == 'e':
+        l0_loose = prompt_e_loose
+        l0_medium = prompt_e_medium
+        l0_tight = prompt_e_tight
+
+    if mode == 'm':
+        l0_loose = prompt_mu_loose
+        l0_medium = prompt_mu_medium
+        l0_tight = prompt_mu_tight
+
+    looser  = '  &&  l1_reliso05 < 0.15  &&  l2_reliso05 < 0.15  &&  l1_id_m  &&  l2_id_m'
+    tighter = '  &&  l1_dz < 0.2  &&  l2_dz < 0.2  &&  l1_reliso05 < 0.15  &&  l2_reliso05 < 0.15  &&  l1_id_t  &&  l2_id_t'
+
+    cuts.append(Cut('CR_DY', inc_cut + l0_loose + looser + CR_DY))
+#    cuts.append(Cut('CR_TTbar', inc_cut + l0_loose + looser + CR_ttbar))
+#    cuts.append(Cut('CR_WZ', inc_cut + l0_loose + looser + CR_WZ))
+
+#    cuts.append(Cut('looser', inc_cut + l0_loose + '  &&  l1_id_m & l2_id_m'))
+#    cuts.append(Cut('tighter_e_loose', inc_cut + l0_loose + tighter))
+#    cuts.append(Cut('tighter_e_medium', inc_cut + l0_medium' + tighter))
+#    cuts.append(Cut('tighter_e_tight', inc_cut + l0_tight' + tighter))
     return cuts
 
 def createSamples(analysis_dir, total_weight, qcd_from_same_sign, w_qcd_mssm_method, r_qcd_os_ss):
@@ -98,7 +120,7 @@ def makePlots(variables, cuts, total_weight, sample_dict, hist_dict, qcd_from_sa
             plot = plots[variable.name]
             plot.Group('data_obs', ['data_2017B_e', 'data_2017C_e', 'data_2017D_e', 'data_2017E_e', 'data_2017F_e'])
             plot.Group('Diboson', ['WZTo3LNu_e', 'ZZTo4L_e'])
-            plot.Group('DY', ['DYJets_M5T50_e', 'DYJets_M50_x_e'])
+            plot.Group('DY', ['DYJets_M5T50_e', 'DYJets_M50_x_e', 'DYJets_M50_e'])
             createDefaultGroups(plot)
             if make_plots:
                 HistDrawer.draw(plot, plot_dir='plots/'+cut.name)
@@ -121,6 +143,10 @@ def makePlots(variables, cuts, total_weight, sample_dict, hist_dict, qcd_from_sa
 
 if __name__ == '__main__':
         
+
+    mode = 'e' 
+#    mode = 'm'
+
     friend_func = None
     
     qcd_from_same_sign = True
@@ -139,7 +165,7 @@ if __name__ == '__main__':
 
     print total_weight
 
-    cuts = prepareCuts()
+    cuts = prepareCuts(mode)
 
     variables = createVariables()
 

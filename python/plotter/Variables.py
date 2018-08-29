@@ -282,8 +282,8 @@ hnl_vars = [
     VCfg(name='l1_reliso05'      , binning={'nbinsx':50, 'xmin':0., 'xmax':2}, unit=None, xtitle='1st muon relative isolation cone 0.4'),
     VCfg(name='l2_reliso05'      , binning={'nbinsx':50, 'xmin':0., 'xmax':2}, unit=None, xtitle='2nd muon relative isolation cone 0.4'),
       
-    VCfg(name='hnl_m_01'         , binning={'nbinsx':40, 'xmin':0   , 'xmax':200 }, unit='GeV', xtitle='mass(e,#mu_1)'),
-    VCfg(name='hnl_m_02'         , binning={'nbinsx':40, 'xmin':0   , 'xmax':200 }, unit='GeV', xtitle='mass(e,#mu_1)'),
+    VCfg(name='hnl_m_01'         , binning={'nbinsx':40, 'xmin':0   , 'xmax':200 }, unit='GeV', xtitle='mass(e, #mu_1)'),
+    VCfg(name='hnl_m_02'         , binning={'nbinsx':40, 'xmin':0   , 'xmax':200 }, unit='GeV', xtitle='mass(e, #mu_2)'),
     
     VCfg(name='hnl_m_12_wide'    , drawname='hnl_m_12', binning={'nbinsx':80, 'xmin':0   , 'xmax':200 }, unit='GeV', xtitle='dimuon mass'),
     VCfg(name='hnl_m_12_z'       , drawname='hnl_m_12', binning={'nbinsx':40, 'xmin':70  , 'xmax':110 }, unit='GeV', xtitle='dimuon mass'),

@@ -39,8 +39,10 @@ class DataMCPlot(object):
         self.stack = None
         self.legendOn = True
         self.legend = None
-        self.legendBorders = 0.20, 0.46, 0.44, 0.89
-        self.legendPos = 'left'
+#        self.legendBorders = 0.20, 0.46, 0.44, 0.89
+#        self.legendPos = 'left'
+        self.legendBorders = 0.20, 0.78, 0.80, 0.88
+        self.legendPos = 'top'
         # self.lastDraw = None
         # self.lastDrawArgs = None
         self.nostack = None
@@ -211,6 +213,11 @@ class DataMCPlot(object):
             self.legend.SetFillColor(0)
             self.legend.SetFillStyle(0)
             self.legend.SetLineColor(0)
+            self.legend.SetNColumns(5) # number of comps / 2 (or 3) + 1
+            self.legend.SetEntrySeparation(0.2) 
+            self.legend.SetColumnSeparation(0.2) 
+            self.legend.SetBorderSize(0)
+            self.legend.SetMargin(0.25)
         else:
             self.legend.Clear()
         hists = self._SortedHistograms(reverse=True)
@@ -415,10 +422,10 @@ class DataMCPlot(object):
             if ymin is None:
                 ymin = 0.01
             if ymax is None:
-                ymax = mx*1.3
+                ymax = mx*1.8
                 centrality = self.supportHist.weighted.GetRMS()/(self.supportHist.weighted.GetXaxis().GetXmax() - self.supportHist.weighted.GetXaxis().GetXmin())
                 if centrality > 0.15:
-                    ymax = mx*2.0
+                    ymax = mx*2.2
 
             self.supportHist.GetYaxis().SetRangeUser(ymin, ymax)
             self.axisWasSet = True
@@ -437,6 +444,7 @@ class DataMCPlot(object):
         self.DrawLegend(print_norm=print_norm)
         if TPad.Pad():
             TPad.Pad().Update()
+        set_trace()
 
     def DrawNormalizedStack(self, opt='',
                             xmin=None, xmax=None, ymin=0.001, ymax=None):

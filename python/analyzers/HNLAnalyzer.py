@@ -156,7 +156,7 @@ class HNLAnalyzer(Analyzer):
             pfs = map(PhysicsObject, self.handles['pfcand'].product())
 #            set_trace()
             return False
-        except: print(event.eventId, event.run, event.lumi); set_trace()
+        except: print(event.eventId, event.run, event.lumi); return False#; set_trace()
 
         self.readCollections(event.input)
         self.counters.counter('HNL').inc('all events')

@@ -76,22 +76,23 @@ def prepareCuts(mode):
 
     looser  = '  &&  l1_reliso05 < 0.15  &&  l2_reliso05 < 0.15  &&  l1_id_m  &&  l2_id_m'
     tighter = '  &&  l1_dz < 0.2  &&  l2_dz < 0.2  &&  l1_reliso05 < 0.15  &&  l2_reliso05 < 0.15  &&  l1_id_t  &&  l2_id_t'
+    veto    = '  &&  pass_e_veto  &&  pass_m_veto'
 
     noIDnorIso = '  &&  l1_dz < 0.2  &&  l2_dz < 0.2' 
     IDmNoIso   = noIDnorIso + '  &&  l1_id_m  &&  l2_id_m'
     IDmIso15   = IDmNoIso   + '  &&  l1_reliso05 < 0.15  &&  l2_reliso05 < 0.15'
 
-    cuts.append(Cut('CR_DY_noIDnorIso'   , inc_cut + l0_tight + noIDnorIso + CR_DY))
-    cuts.append(Cut('CR_TTbar_noIDnorIso', inc_cut + l0_tight + noIDnorIso + CR_ttbar))
-    cuts.append(Cut('CR_WZ_noIDnorIso'   , inc_cut + l0_tight + noIDnorIso + CR_WZ))
+#    cuts.append(Cut('CR_DY_noIDnorIso'   , inc_cut + l0_tight + noIDnorIso + CR_DY))
+#    cuts.append(Cut('CR_TTbar_noIDnorIso', inc_cut + l0_tight + noIDnorIso + CR_ttbar))
+#    cuts.append(Cut('CR_WZ_noIDnorIso'   , inc_cut + l0_tight + noIDnorIso + CR_WZ))
 
-    cuts.append(Cut('CR_DY_IDmNoIso'   , inc_cut + l0_tight + IDmNoIso + CR_DY))
-    cuts.append(Cut('CR_TTbar_IDmNoIso', inc_cut + l0_tight + IDmNoIso + CR_ttbar))
-    cuts.append(Cut('CR_WZ_IDmNoIso'   , inc_cut + l0_tight + IDmNoIso + CR_WZ))
+#    cuts.append(Cut('CR_DY_IDmNoIso'   , inc_cut + l0_tight + IDmNoIso + CR_DY))
+#    cuts.append(Cut('CR_TTbar_IDmNoIso', inc_cut + l0_tight + IDmNoIso + CR_ttbar))
+#    cuts.append(Cut('CR_WZ_IDmNoIso'   , inc_cut + l0_tight + IDmNoIso + CR_WZ))
 
-    cuts.append(Cut('CR_DY_IDmIso15'   , inc_cut + l0_tight + IDmIso15 + CR_DY))
-    cuts.append(Cut('CR_TTbar_IDmIso15', inc_cut + l0_tight + IDmIso15 + CR_ttbar))
-    cuts.append(Cut('CR_WZ_IDmIso15'   , inc_cut + l0_tight + IDmIso15 + CR_WZ))
+#    cuts.append(Cut('CR_DY_IDmIso15'   , inc_cut + l0_tight + IDmIso15 + CR_DY))
+#    cuts.append(Cut('CR_TTbar_IDmIso15', inc_cut + l0_tight + IDmIso15 + CR_ttbar))
+#    cuts.append(Cut('CR_WZ_IDmIso15'   , inc_cut + l0_tight + IDmIso15 + CR_WZ))
 
 #    cuts.append(Cut('CR_DY', inc_cut + l0_loose + looser + CR_DY))
 #    cuts.append(Cut('CR_TTbar', inc_cut + l0_loose + looser + CR_ttbar))
@@ -100,7 +101,7 @@ def prepareCuts(mode):
 #    cuts.append(Cut('looser', inc_cut + l0_loose + '  &&  l1_id_m & l2_id_m'))
 #    cuts.append(Cut('tighter_e_loose', inc_cut + l0_loose + tighter))
 #    cuts.append(Cut('tighter_e_medium', inc_cut + l0_medium' + tighter))
-#    cuts.append(Cut('tighter_e_tight', inc_cut + l0_tight' + tighter))
+    cuts.append(Cut('tighter_e_tight', inc_cut + l0_tight + tighter))
     return cuts
 
 def createSamples(analysis_dir, total_weight, qcd_from_same_sign, w_qcd_mssm_method, r_qcd_os_ss):

@@ -2,6 +2,7 @@ import copy
 from collections import namedtuple
 from operator import itemgetter
 
+from shutil import copyfile
 from numpy import array
 
 from CMGTools.HNL.plotter.PlotConfigs import HistogramCfg, VariableCfg
@@ -24,7 +25,7 @@ int_lumi = 41000.0 # pb #### FIXME
 
 def prepareCuts(mode):
     cuts = []
-    inc_cut = '&&'.join([cat_Inc])
+    inc_cut =   'l1_pt > 4  &&  l2_pt > 4' #'.join([cat_Inc])
     inc_cut += '  &&  l1_q != l2_q'
     inc_cut += '  &&  l0_reliso05 < 0.15'
     inc_cut += '  &&  l0_dz < 0.2'
@@ -47,38 +48,54 @@ def prepareCuts(mode):
        slide 15 - ttbar:  |M_ll - m_Z| > 15 GeV (if OSSF); |M_3l - m_Z| > 15 GeV (if OSSF); >= 1 b-jets; veto M_ll < 12 GeV (conversion)
        slide 17 - WZ:     OSSF pair present; |M_ll -m_Z|< 15 GeV; |M_3l -m_Z| > 15 GeV; 0 b-jets; E_T^miss > 50 GeV ; p_T > 25, 15, 10 GeV (l0,1,2)
 
-       E_T^Miss == puppimet_pt, M_T == mt_hnvis OR M_T == hnl_mt_0 + hnl_mt_1 + hnl_mt_2?
+       E_T^Miss == puppimet_pt, M_T == hnl_mt_0 
     '''
     mz = 91.18
 
-    CR_DY    = '  &&  abs(hnl_m_12 - 91.18) < 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj == 0  &&  puppimet_pt < 30  && hnl_mt_hnvis < 30' # (hnl_mt_0 + hnl_mt_1 + hnl_mt_2) < 30'
+    CR_DY    = '  &&  abs(hnl_m_12 - 91.18) < 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj == 0  &&  puppimet_pt < 30  &&  hnl_mt_0 < 30' # hnl_mt_hnvis < 30 # (hnl_mt_0 + hnl_mt_1 + hnl_mt_2) < 30'
     CR_ttbar = '  &&  abs(hnl_m_12 - 91.18) > 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj >= 1  &&  hnl_m_12 > 12'
     CR_WZ    = '  &&  abs(hnl_m_12 - 91.18) < 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj == 0  &&  puppimet_pt > 50  &&  l0_pt > 25  &&  l1_pt > 15  &&  l2_pt > 10'
 
-    prompt_e_loose = '  &&  l0_eid_mva_noniso_loose'
+    prompt_e_loose  = '  &&  l0_eid_mva_noniso_loose'
     prompt_e_medium = '  &&  l0_eid_cut_medium'
-    prompt_e_tight = '  &&  l0_eid_cut_tight'
+    prompt_e_tight  = '  &&  l0_eid_cut_tight'
     
-    prompt_mu_loose = '  &&  l0_eid_mva_noniso_loose'
+    prompt_mu_loose  = '  &&  l0_eid_mva_noniso_loose'
     prompt_mu_medium = '  &&  l0_eid_cut_medium'
-    prompt_mu_tight = '  &&  l0_eid_cut_tight'
+    prompt_mu_tight  = '  &&  l0_eid_cut_tight'
 
     if mode == 'e':
-        l0_loose = prompt_e_loose
+        l0_loose  = prompt_e_loose
         l0_medium = prompt_e_medium
-        l0_tight = prompt_e_tight
+        l0_tight  = prompt_e_tight
 
     if mode == 'm':
-        l0_loose = prompt_mu_loose
+        l0_loose  = prompt_mu_loose
         l0_medium = prompt_mu_medium
-        l0_tight = prompt_mu_tight
+        l0_tight  = prompt_mu_tight
 
     looser  = '  &&  l1_reliso05 < 0.15  &&  l2_reliso05 < 0.15  &&  l1_id_m  &&  l2_id_m'
     tighter = '  &&  l1_dz < 0.2  &&  l2_dz < 0.2  &&  l1_reliso05 < 0.15  &&  l2_reliso05 < 0.15  &&  l1_id_t  &&  l2_id_t'
 
-    cuts.append(Cut('CR_DY', inc_cut + l0_loose + looser + CR_DY))
-    cuts.append(Cut('CR_TTbar', inc_cut + l0_loose + looser + CR_ttbar))
-    cuts.append(Cut('CR_WZ', inc_cut + l0_loose + looser + CR_WZ))
+    noIDnorIso = '  &&  l1_dz < 0.2  &&  l2_dz < 0.2' 
+    IDmNoIso   = noIDnorIso + '  &&  l1_id_m  &&  l2_id_m'
+    IDmIso15   = IDmNoIso   + '  &&  l1_reliso05 < 0.15  &&  l2_reliso05 < 0.15'
+
+    cuts.append(Cut('CR_DY_noIDnorIso'   , inc_cut + l0_tight + noIDnorIso + CR_DY))
+    cuts.append(Cut('CR_TTbar_noIDnorIso', inc_cut + l0_tight + noIDnorIso + CR_ttbar))
+    cuts.append(Cut('CR_WZ_noIDnorIso'   , inc_cut + l0_tight + noIDnorIso + CR_WZ))
+
+    cuts.append(Cut('CR_DY_IDmNoIso'   , inc_cut + l0_tight + IDmNoIso + CR_DY))
+    cuts.append(Cut('CR_TTbar_IDmNoIso', inc_cut + l0_tight + IDmNoIso + CR_ttbar))
+    cuts.append(Cut('CR_WZ_IDmNoIso'   , inc_cut + l0_tight + IDmNoIso + CR_WZ))
+
+    cuts.append(Cut('CR_DY_IDmIso15'   , inc_cut + l0_tight + IDmIso15 + CR_DY))
+    cuts.append(Cut('CR_TTbar_IDmIso15', inc_cut + l0_tight + IDmIso15 + CR_ttbar))
+    cuts.append(Cut('CR_WZ_IDmIso15'   , inc_cut + l0_tight + IDmIso15 + CR_WZ))
+
+#    cuts.append(Cut('CR_DY', inc_cut + l0_loose + looser + CR_DY))
+#    cuts.append(Cut('CR_TTbar', inc_cut + l0_loose + looser + CR_ttbar))
+#    cuts.append(Cut('CR_WZ', inc_cut + l0_loose + looser + CR_WZ))
 
 #    cuts.append(Cut('looser', inc_cut + l0_loose + '  &&  l1_id_m & l2_id_m'))
 #    cuts.append(Cut('tighter_e_loose', inc_cut + l0_loose + tighter))
@@ -126,7 +143,7 @@ def makePlots(variables, cuts, total_weight, sample_dict, hist_dict, qcd_from_sa
             plot.Group('DY', ['DYJets_M5T50_e', 'DYJets_M50_x_e', 'DYJets_M50_e'])
             createDefaultGroups(plot)
             if make_plots:
-                HistDrawer.draw(plot, plot_dir='plots/'+cut.name)
+                HistDrawer.draw(plot, plot_dir = '/eos/user/v/vstampf/ntuples/plots/'+cut.name)#plot_dir='plots/'+cut.name)
 
     print '\nOptimisation results:'
     all_vals = ams_dict.items()
@@ -175,5 +192,5 @@ if __name__ == '__main__':
     sample_dict, hist_dict = createSamples(analysis_dir, total_weight, qcd_from_same_sign=False, w_qcd_mssm_method=False, r_qcd_os_ss=None)
     makePlots(variables, cuts, total_weight, sample_dict, hist_dict={}, qcd_from_same_sign=False, w_qcd_mssm_method=False, mt_cut='', friend_func=lambda f: f.replace('TESUp', 'TESUpMultiMVA'), dc_postfix='_CMS_scale_t_mt_13TeVUp', make_plots=True)
 
-
-
+    for i in cuts:
+        copyfile('plot_cfg_HNL.py', '/eos/user/v/vstampf/ntuples/plots/'+i.name+'/plot_cfg.py')

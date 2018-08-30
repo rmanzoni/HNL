@@ -274,16 +274,18 @@ hnl_vars = [
     VCfg(name='l0_dxy', binning={'nbinsx':100, 'xmin':-2. , 'xmax':2. }, unit='cm', xtitle='prompt electron dxy'),
     VCfg(name='l0_dz' , binning={'nbinsx':100, 'xmin':-3. , 'xmax':3. }, unit='cm', xtitle='prompt electron dz'),
     VCfg(name='l1_dxy', binning={'nbinsx':100, 'xmin':-4. , 'xmax':4. }, unit='cm', xtitle='1st muon dxy'),
+    VCfg(name='l1_dxy_coarse', drawname='l1_dxy', binning={'nbinsx':40, 'xmin':-1. , 'xmax':1. }, unit='cm', xtitle='1st muon dxy'),
     VCfg(name='l1_dz' , binning={'nbinsx':100, 'xmin':-20., 'xmax':20.}, unit='cm', xtitle='1st muon dz'),
     VCfg(name='l2_dxy', binning={'nbinsx':100, 'xmin':-4. , 'xmax':4. }, unit='cm', xtitle='2st muon dxy'),
+    VCfg(name='l2_dxy_coarse', drawname='l2_dxy', binning={'nbinsx':40, 'xmin':-1. , 'xmax':1. }, unit='cm', xtitle='2nd muon dxy'),
     VCfg(name='l2_dz' , binning={'nbinsx':100, 'xmin':-20., 'xmax':20.}, unit='cm', xtitle='2st muon dz'),
 
     VCfg(name='l0_reliso05', binning={'nbinsx':50, 'xmin':0., 'xmax':2}, unit=None, xtitle='prompt electron relative isolation cone 0.4'),
     VCfg(name='l1_reliso05', binning={'nbinsx':50, 'xmin':0., 'xmax':2}, unit=None, xtitle='1st muon relative isolation cone 0.4'),
     VCfg(name='l2_reliso05', binning={'nbinsx':50, 'xmin':0., 'xmax':2}, unit=None, xtitle='2nd muon relative isolation cone 0.4'),
 
-    VCfg(name='hnl_m_01', binning={'nbinsx':40, 'xmin':0   , 'xmax':200 }, unit='GeV', xtitle='mass(e,#mu_1)'),
-    VCfg(name='hnl_m_02', binning={'nbinsx':40, 'xmin':0   , 'xmax':200 }, unit='GeV', xtitle='mass(e,#mu_1)'),
+    VCfg(name='hnl_m_01', binning={'nbinsx':40, 'xmin':0   , 'xmax':200 }, unit='GeV', xtitle='mass(e,#mu_{1})'),
+    VCfg(name='hnl_m_02', binning={'nbinsx':40, 'xmin':0   , 'xmax':200 }, unit='GeV', xtitle='mass(e,#mu_{2})'),
 
     VCfg(name='hnl_m_12_wide', drawname='hnl_m_12', binning={'nbinsx':80, 'xmin':0   , 'xmax':200 }, unit='GeV', xtitle='dimuon mass'),
     VCfg(name='hnl_m_12_z'   , drawname='hnl_m_12', binning={'nbinsx':40, 'xmin':70  , 'xmax':110 }, unit='GeV', xtitle='dimuon mass'),
@@ -317,16 +319,21 @@ hnl_vars = [
     VCfg(name='nj' , binning={'nbinsx':12, 'xmin':-0.5, 'xmax':11.5}, unit=None, xtitle='N_{jets}'),
     VCfg(name='nbj', binning={'nbinsx':12, 'xmin':-0.5, 'xmax':11.5}, unit=None, xtitle='N_{b-jets}'),
 
+    VCfg(name='hnl_iso_rel', binning={'nbinsx':40, 'xmin':0., 'xmax':3.} , unit=None, xtitle='rel. dimuon isolation'),
+    VCfg(name='hnl_iso_abs', binning={'nbinsx':40, 'xmin':0., 'xmax':50.}, unit=None, xtitle='abs. dimuon isolation'),
+
 ]
 
 
 CR_vars = [
-#    VCfg(name='l0_jet_pt'      , binning={'nbinsx':16, 'xmin':0.  , 'xmax':200.}, unit='GeV', xtitle='p_{T}^{Cone} (leading)'),
-#    VCfg(name='l2_jet_pt'      , binning={'nbinsx':16, 'xmin':0.  , 'xmax':200.}, unit='GeV', xtitle='p_{T}^{Cone} (trailing)'),
-#    VCfg(name='hnl_m_12_wide', drawname='hnl_m_12', binning={'nbinsx':24, 'xmin':0   , 'xmax':150 }, unit='GeV', xtitle='dimuon mass'),
-#    VCfg(name='hnl_mt_0'       , binning={'nbinsx':16, 'xmin':0   , 'xmax':200 }, unit='GeV', xtitle='M_{T} (leading)'),
-    VCfg(name='hnl_w_vis_m', binning={'nbinsx':24, 'xmin':50   , 'xmax':300 }, unit='GeV', xtitle='3 lepton mass'),
+    VCfg(name='CR_l0_pt_cone' , drawname='l0_pt * (1 + l0_reliso05)'  , binning={'nbinsx':16, 'xmin':0.  , 'xmax':200.}, unit='GeV', xtitle='p_{T}^{Cone} (leading)'),
+    VCfg(name='CR_l2_pt_cone' , drawname='l2_pt * (1 + l2_reliso05)'  , binning={'nbinsx':16, 'xmin':0.  , 'xmax':200.}, unit='GeV', xtitle='p_{T}^{Cone} (trailing)'),
+    VCfg(name='CR_hnl_m_12'   , drawname='hnl_m_12'   , binning={'nbinsx':24, 'xmin':0   , 'xmax':150 }, unit='GeV', xtitle='dimuon mass'),
+    VCfg(name='CR_hnl_mt_0'   , drawname='hnl_mt_0'   , binning={'nbinsx':16, 'xmin':0   , 'xmax':200 }, unit='GeV', xtitle='M_{T} (leading)'),
+    VCfg(name='CR_hnl_w_vis_m', drawname='hnl_w_vis_m', binning={'nbinsx':24, 'xmin':50  , 'xmax':300 }, unit='GeV', xtitle='3 lepton mass'),
 ]
+
+#hnl_vars += CR_vars
 
 taumu_vars = generic_vars + muon_l1_vars + tau_l2_vars + tau_mu_special_vars
 

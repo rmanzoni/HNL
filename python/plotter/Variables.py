@@ -324,6 +324,14 @@ hnl_vars = [
 
 ]
 
+phi_vars = [
+    VCfg(name='hnl_dphi_1met'    , binning={'nbinsx':40, 'xmin':-pi , 'xmax':pi}, unit=None, xtitle='#Delta#phi (#mu_{1}, E_{T}^{miss})'),
+    VCfg(name='hnl_dphi_2met'    , binning={'nbinsx':40, 'xmin':-pi , 'xmax':pi}, unit=None, xtitle='#Delta#phi (#mu_{2}, E_{T}^{miss})'),
+    VCfg(name='hnl_dphi_01'      , binning={'nbinsx':40, 'xmin':-pi , 'xmax':pi}, unit=None, xtitle='#Delta#phi (e, #mu_{1})'),
+    VCfg(name='hnl_dphi_02'      , binning={'nbinsx':40, 'xmin':-pi , 'xmax':pi}, unit=None, xtitle='#Delta#phi (e, #mu_{2})'),
+    VCfg(name='hnl_dphi_12'      , binning={'nbinsx':40, 'xmin':-pi , 'xmax':pi}, unit=None, xtitle='#Delta#phi (#mu_{1}, #mu_{2})'),
+]
+
 
 CR_vars = [
     VCfg(name='CR_l0_pt_cone' , drawname='l0_pt * (1 + l0_reliso05)'  , binning={'nbinsx':16, 'xmin':0.  , 'xmax':200.}, unit='GeV', xtitle='p_{T}^{Cone} (leading)'),
@@ -333,7 +341,8 @@ CR_vars = [
     VCfg(name='CR_hnl_w_vis_m', drawname='hnl_w_vis_m', binning={'nbinsx':24, 'xmin':50  , 'xmax':300 }, unit='GeV', xtitle='3 lepton mass'),
 ]
 
-#hnl_vars += CR_vars
+#hnl_vars += CR_vars 
+#hnl_vars += phi_vars
 
 taumu_vars = generic_vars + muon_l1_vars + tau_l2_vars + tau_mu_special_vars
 

@@ -47,9 +47,9 @@ ZZTo4L_ext          .nGenEvents = 98009599
 #.sigma = 1.256 pb
 
 
-WJetsToLNu                      = creator.makeMyPrivateMCComponent('WJetsToLNu'                    , '/WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8/lshchuts-HNLSKIM2017_WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8-115d0bad8e8ff59118d83f903524e0b3/USER'                                  , 'PRIVATE', '*.root', 'phys03', xSec=6362., useAAA=True)
+WJetsToLNu                      = creator.makeMyPrivateMCComponent('WJetsToLNu'                    , '/WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8/lshchuts-HNLSKIM2017_WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8-115d0bad8e8ff59118d83f903524e0b3/USER'                                  , 'PRIVATE', '*.root', 'phys03', xSec=59850., useAAA=True)
 WJetsToLNu          .nGenEvents = 44652002 # check the production efficiency in Lesya's crab job
-#.sigma = (8580+11370)*0.1063*3 pb ==> xs W+ + xs W- * BR -->l nu *3  
+#.sigma = (8580+11370)*3 pb ==> xs W+ + xs W- * BR -->l nu *3  
 
 
 

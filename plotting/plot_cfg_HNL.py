@@ -92,12 +92,12 @@ def prepareCuts(mode):
 
 #### 30.8.
 ###  morning
-#    cuts.append(Cut('tight_noIDnorIso'     , inc_cut + l0_tight + noIDnorIso))
-#    cuts.append(Cut('CR_DYRic'             , CR_DYRic + looser))
-#    cuts.append(Cut('CR_DYNoM3l_noIDnorIso', inc_cut + l0_tight + CR_DYNoM3l + veto + noIDnorIso))
-#    cuts.append(Cut('CR_DYNoM3l_IDmNoIso'  , inc_cut + l0_tight + CR_DYNoM3l + veto + IDmNoIso))
-#    cuts.append(Cut('CR_DYNoM3l_IDmIso15'  , inc_cut + l0_tight + CR_DYNoM3l + veto + IDmIso15))
-#    cuts.append(Cut('NaiveSR'              , inc_cut + l0_tight + NaiveSR))
+    cuts.append(Cut('tight_noIDnorIso'     , inc_cut + l0_tight + noIDnorIso))
+    cuts.append(Cut('CR_DYRic'             , CR_DYRic + looser))
+    cuts.append(Cut('CR_DYNoM3l_noIDnorIso', inc_cut + l0_tight + CR_DYNoM3l + veto + noIDnorIso))
+    cuts.append(Cut('CR_DYNoM3l_IDmNoIso'  , inc_cut + l0_tight + CR_DYNoM3l + veto + IDmNoIso))
+    cuts.append(Cut('CR_DYNoM3l_IDmIso15'  , inc_cut + l0_tight + CR_DYNoM3l + veto + IDmIso15))
+    cuts.append(Cut('NaiveSR'              , inc_cut + l0_tight + NaiveSR))
 ###  afternoon
 #    cuts.append(Cut('CR_DYNoM3l_IDlNoIso'  , inc_cut + l0_tight + CR_DYNoM3l + veto + IDlNoIso))
 #    cuts.append(Cut('CR_DYNoM3l_IDlIso15'  , inc_cut + l0_tight + CR_DYNoM3l + veto + IDlIso15))
@@ -108,9 +108,9 @@ def prepareCuts(mode):
 #    cuts.append(Cut('CR_WZ_IDlNoIso'   , inc_cut + l0_tight + IDlNoIso + CR_WZ))
 #    cuts.append(Cut('CR_WZ_IDlIso15'   , inc_cut + l0_tight + IDlIso15 + CR_WZ))
 ###  night
-    cuts.append(Cut('CR_TTbarb1_noIDnorIso', inc_cut + l0_tight + noIDnorIso + CR_ttbarb1))
-    cuts.append(Cut('CR_TTbarb1_IDlNoIso'  , inc_cut + l0_tight + IDlNoIso   + CR_ttbarb1))
-    cuts.append(Cut('CR_TTbarb1_IDlIso15'  , inc_cut + l0_tight + IDlIso15   + CR_ttbarb1))
+#    cuts.append(Cut('CR_TTbarb1_noIDnorIso', inc_cut + l0_tight + noIDnorIso + CR_ttbarb1))
+#    cuts.append(Cut('CR_TTbarb1_IDlNoIso'  , inc_cut + l0_tight + IDlNoIso   + CR_ttbarb1))
+#    cuts.append(Cut('CR_TTbarb1_IDlIso15'  , inc_cut + l0_tight + IDlIso15   + CR_ttbarb1))
 
 ####  29.8.
 #    cuts.append(Cut('CR_DY_noIDnorIso'   , inc_cut + l0_tight + noIDnorIso + CR_DY + veto))
@@ -150,9 +150,9 @@ def createVariables():
     # Taken from Variables.py; can get subset with e.g. getVars(['mt', 'mvis'])
     # variables = taumu_vars
     # variables = getVars(['_norm_', 'mt', 'mvis', 'l1_pt', 'l2_pt', 'l1_eta', 'l2_eta', 'n_vertices', 'n_jets', 'n_bjets'])
-    variables = CR_vars
-    variables += phi_vars
-    variables += hnl_vars
+#    variables = CR_vars
+    variables = phi_vars
+#    variables += hnl_vars
 
     return variables
 

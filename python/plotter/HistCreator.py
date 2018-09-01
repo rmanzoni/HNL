@@ -62,6 +62,7 @@ def createHistograms(hist_cfg, all_stack=False, verbose=False, friend_func=None,
                     total_hist.Scale(cfg.total_scale)
                     # print 'Scaling total', hist_cfg.name, 'by', cfg.total_scale
         else:
+            print('building histo %s'%cfg.name)
             # It's a sample cfg
 
             # Now read the tree
@@ -142,10 +143,12 @@ def createHistograms(hist_cfg, all_stack=False, verbose=False, friend_func=None,
                     plot[cfg.name].Add(hist_to_add)
                 else:
                     plot_hist = plot.AddHistogram(cfg.name, hist, stack=stack)
+                    print('added histo %s'%vcfg.name)
 
                     if not cfg.is_data:
                         plot_hist.SetWeight(hist_cfg.lumi*cfg.xsec/cfg.sumweights)
 
+    set_trace()
     for plot in plots.itervalues():
         plot._ApplyPrefs()
         plot.Draw()
@@ -175,6 +178,7 @@ def createHistogram(hist_cfg, all_stack=False, verbose=False, friend_func=None):
             if cfg.total_scale is not None:
                 total_hist.Scale(cfg.total_scale)
         else:
+            print('building histo %s'%cfg.name)
             # It's a sample cfg
             hname = '_'.join([hist_cfg.name, hashlib.md5(hist_cfg.cut).hexdigest(), cfg.name, vcfg.name, cfg.dir_name])
             if any(str(b) == 'xmin' for b in vcfg.binning):
@@ -230,10 +234,12 @@ def createHistogram(hist_cfg, all_stack=False, verbose=False, friend_func=None):
                 plot[cfg.name].Add(hist_to_add)
             else:
                 plot_hist = plot.AddHistogram(cfg.name, hist, stack=stack)
+                print('added histo %s'%vcfg.name)
 
                 if not cfg.is_data:
                     plot_hist.SetWeight(hist_cfg.lumi*cfg.xsec/cfg.sumweights)
 
+    set_trace()
     plot._ApplyPrefs()
     return plot
 

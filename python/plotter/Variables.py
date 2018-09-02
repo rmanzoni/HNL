@@ -276,13 +276,13 @@ hnl_vars = [
     VCfg(name='l1_dxy', binning={'nbinsx':100, 'xmin':-4. , 'xmax':4. }, unit='cm', xtitle='1st muon dxy'),
     VCfg(name='l1_dxy_coarse', drawname='l1_dxy', binning={'nbinsx':40, 'xmin':-1. , 'xmax':1. }, unit='cm', xtitle='1st muon dxy'),
     VCfg(name='l1_dz' , binning={'nbinsx':100, 'xmin':-20., 'xmax':20.}, unit='cm', xtitle='1st muon dz'),
-    VCfg(name='l2_dxy', binning={'nbinsx':100, 'xmin':-4. , 'xmax':4. }, unit='cm', xtitle='2st muon dxy'),
+    VCfg(name='l2_dxy', binning={'nbinsx':100, 'xmin':-4. , 'xmax':4. }, unit='cm', xtitle='2nd muon dxy'),
     VCfg(name='l2_dxy_coarse', drawname='l2_dxy', binning={'nbinsx':40, 'xmin':-1. , 'xmax':1. }, unit='cm', xtitle='2nd muon dxy'),
-    VCfg(name='l2_dz' , binning={'nbinsx':100, 'xmin':-20., 'xmax':20.}, unit='cm', xtitle='2st muon dz'),
+    VCfg(name='l2_dz' , binning={'nbinsx':100, 'xmin':-20., 'xmax':20.}, unit='cm', xtitle='2nd muon dz'),
 
-    VCfg(name='l0_reliso05', binning={'nbinsx':50, 'xmin':0., 'xmax':2}, unit=None, xtitle='prompt electron relative isolation cone 0.4'),
-    VCfg(name='l1_reliso05', binning={'nbinsx':50, 'xmin':0., 'xmax':2}, unit=None, xtitle='1st muon relative isolation cone 0.4'),
-    VCfg(name='l2_reliso05', binning={'nbinsx':50, 'xmin':0., 'xmax':2}, unit=None, xtitle='2nd muon relative isolation cone 0.4'),
+    VCfg(name='l0_reliso05', binning={'nbinsx':20, 'xmin':0., 'xmax':0.5}, unit=None, xtitle='prompt electron relative isolation cone 0.4'),
+    VCfg(name='l1_reliso05', binning={'nbinsx':20, 'xmin':0., 'xmax':0.5}, unit=None, xtitle='1st muon relative isolation cone 0.4'),
+    VCfg(name='l2_reliso05', binning={'nbinsx':20, 'xmin':0., 'xmax':0.5}, unit=None, xtitle='2nd muon relative isolation cone 0.4'),
 
     VCfg(name='hnl_m_01', binning={'nbinsx':40, 'xmin':0   , 'xmax':200 }, unit='GeV', xtitle='mass(e,#mu_{1})'),
     VCfg(name='hnl_m_02', binning={'nbinsx':40, 'xmin':0   , 'xmax':200 }, unit='GeV', xtitle='mass(e,#mu_{2})'),

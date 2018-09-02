@@ -1,5 +1,5 @@
 import hashlib
-from multiprocessing import Pool
+from multiprocessing import Pool, Process
 #from multiprocessing.dummy import Pool
 
 from array import array
@@ -237,7 +237,7 @@ class CreateHists(object):
         
 #        set_trace()
         pool = Pool(processes=len(self.hist_cfg.cfgs))
-        print(pool, len(self.hist_cfg.cfgs))
+        print('number of processes for filling histos (ie. samples): %i'%len(self.hist_cfg.cfgs))
 
         result = pool.map(self.makealltheplots, self.hist_cfg.cfgs) # for no return 
 #        result = pool.apply_async(self.makealltheplots, self.hist_cfg.cfgs) # for no return 
@@ -245,7 +245,7 @@ class CreateHists(object):
 #        set_trace()
         for i, cfg in enumerate(self.hist_cfg.cfgs):
             stack = not cfg.is_data and not cfg.is_signal
-            print(cfg.name, stack)
+#            print(cfg.name, stack)
             for vcfg in self.vcfgs:
                 hist = result[i][vcfg.name].histos[0].obj # result[0]['CR_hnl_m_12'].histos[0]
 #                hist = hists[vcfg.name]
@@ -268,10 +268,23 @@ class CreateHists(object):
                         plot_hist.SetWeight(self.hist_cfg.lumi*cfg.xsec/cfg.sumweights)
 #                print(cfg.name, vcfg.name, len(plot.histos))
         print('initializing histos done, making stacks...')
-       
+
         for plot in self.plots.itervalues():
             plot._ApplyPrefs()
-            plot.Draw()
+
+        print('number of processes for drawing (ie. stacks to draw): %i'%len(self.plots))
+        procs = []
+        for i, plot in enumerate(self.plots.itervalues()):
+            proc = Process(target=plot.Draw, args=())
+            procs.append(proc)
+            proc.start()
+     
+        for proc in procs:
+            proc.join()       
+
+#        for plot in self.plots.itervalues():
+#            plot._ApplyPrefs()
+#            plot.Draw()
         return self.plots
 
     def makealltheplots(self, cfg):
@@ -301,7 +314,7 @@ class CreateHists(object):
                     total_hist.Scale(cfg.total_scale)
                     # print 'Scaling total', hist_cfg.name, 'by', cfg.total_scale
         else:
-            print('building histo %s'%cfg.name)
+            print('building histos for %s'%cfg.name)
             # It's a sample cfg
 
             # Now read the tree
@@ -385,10 +398,11 @@ class CreateHists(object):
                 else:
 #                    print(cfg.name, hist.GetEntries(), stack)
                     plot_hist = plot.AddHistogram(cfg.name, hist, stack=stack)
-                    print('added histo %s for %s'%(vcfg.name,cfg.name))
+#                    print('added histo %s for %s'%(vcfg.name,cfg.name))
 
                     if not cfg.is_data:
                         plot_hist.SetWeight(self.hist_cfg.lumi*cfg.xsec/cfg.sumweights)
+            print('added histos for %s'%cfg.name)
             PLOTS = self.plots
         return PLOTS
 

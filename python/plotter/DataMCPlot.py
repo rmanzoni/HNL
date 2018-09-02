@@ -439,8 +439,10 @@ class DataMCPlot(object):
                 hist.Draw('SAME HIST')
 
         if self.supportHist.weighted.GetMaximumBin() < self.supportHist.weighted.GetNbinsX()/2:
-            self.legendBorders = 0.62, 0.46, 0.88, 0.89
-            self.legendPos = 'right'
+#            self.legendBorders = 0.62, 0.46, 0.88, 0.89
+            self.legendBorders = 0.20, 0.78, 0.80, 0.88
+#            self.legendPos = 'right'
+            self.legendPos = 'top'
         
         self.DrawLegend(print_norm=print_norm)
         if TPad.Pad():

@@ -422,7 +422,7 @@ class DataMCPlot(object):
             if ymin is None:
                 ymin = 0.01
             if ymax is None:
-                ymax = mx*1.8
+                ymax = mx*2
                 centrality = self.supportHist.weighted.GetRMS()/(self.supportHist.weighted.GetXaxis().GetXmax() - self.supportHist.weighted.GetXaxis().GetXmin())
                 if centrality > 0.15:
                     ymax = mx*2.2
@@ -438,13 +438,15 @@ class DataMCPlot(object):
                 hist.Draw('SAME HIST')
 
         if self.supportHist.weighted.GetMaximumBin() < self.supportHist.weighted.GetNbinsX()/2:
-            self.legendBorders = 0.62, 0.46, 0.88, 0.89
-            self.legendPos = 'right'
+#            self.legendBorders = 0.62, 0.46, 0.88, 0.89
+            self.legendBorders = 0.20, 0.78, 0.80, 0.88
+#            self.legendPos = 'right'
+            self.legendPos = 'top'
         
         self.DrawLegend(print_norm=print_norm)
         if TPad.Pad():
             TPad.Pad().Update()
-        set_trace()
+#        set_trace()
 
     def DrawNormalizedStack(self, opt='',
                             xmin=None, xmax=None, ymin=0.001, ymax=None):

@@ -77,18 +77,20 @@ class HistDrawer:
         theStr = '{lumi:3.3} {unit}^{{-1}} ({energy:d} TeV)'.format(year=year, unit=unit, lumi=lumi, energy=energy)
         CMS_lumi(pad, theStr, iPosX=0)
 
-        lowY = 0.77
+        lowY = 0.78
 
         r = pad.GetRightMargin()
         l = pad.GetLeftMargin()
         posX = l + 0.045*(1-l-r)
         posXhigh = 0.25
 
-        if legend == 'left':
-            posX = 1. - r - 0.08
-            posXhigh = 1. - r - 0.02
+#        if legend == 'left':
+        posX = 1. - r - 0.09
+#            posX = 1. - l - 0.08
+        posXhigh = 1. - r - 0.03
+#            posXhigh = 1. - l - 0.02
 
-        plot.chan = TPaveText(posX, lowY, posXhigh, lowY+0.18, "NDC")
+        plot.chan = TPaveText(posX, lowY, posXhigh, lowY+0.15, "NDC")
         plot.chan.SetBorderSize(0)
         plot.chan.SetFillStyle(0)
         plot.chan.SetTextAlign(12)

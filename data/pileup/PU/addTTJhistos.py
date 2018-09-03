@@ -3,16 +3,14 @@ from pdb import set_trace
 
 f_out = rt.TFile('pileup_TTJets_total.root', 'recreate')
 
-h_out = rt.TH1F()
-col = []
+h_out = rt.TH1F('pileup_total', 'pileup_total', 200, 0, 200)
 
-for i in range(116):
+for i in range(231):
    f_in = rt.TFile('pileup_TTJets_amcat_batch_%i.root'%i)
    h_in = f_in.Get('pileup')
-   col.append(h_in)
+   h_out.Add(h_in)
    f_in.Close()
-
-h_out.Merge(col)
+   if i%10 == 0: print(i)
 
 f_out.cd()
 h_out.Write()

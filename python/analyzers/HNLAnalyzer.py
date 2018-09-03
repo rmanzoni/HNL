@@ -151,6 +151,13 @@ class HNLAnalyzer(Analyzer):
 
 
     def process(self, event):
+        # make PF candidates
+        try:
+            pfs = map(PhysicsObject, self.handles['pfcand'].product())
+#            set_trace()
+            return False
+        except: print(event.eventId, event.run, event.lumi); return False#; set_trace()
+
         self.readCollections(event.input)
         self.counters.counter('HNL').inc('all events')
 
@@ -201,13 +208,6 @@ class HNLAnalyzer(Analyzer):
 
         # make jet object
         jets = map(Jet, self.handles['jets'].product())        
-
-        # make PF candidates
-#        try:
-        pfs = map(PhysicsObject, self.handles['pfcand'].product())
-#            set_trace()
-#            return False
-#        except: set_trace()
 
         # assign to the leptons the primary vertex, will be needed to compute a few quantities
         pv = event.goodVertices[0]

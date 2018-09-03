@@ -2,9 +2,25 @@
 __pycache__/
 *.py[cod]
 *$py.class
+__init__.py
 
 # C extensions
 *.so
+
+# FOLDERS
+plotting/Plots/*
+
+# HEPPY
+tmp_heppy.py
+
+# AFS FILES?
+.__afs*
+
+# VIM SWAP FILES
+*.swp
+
+# ROOT FILES
+*.root
 
 # Distribution / packaging
 .Python

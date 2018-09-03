@@ -29,16 +29,9 @@ from CMGTools.HNL.analyzers.LeptonWeighter     import LeptonWeighter
 # from CMGTools.HNL.samples.localsignal import HN3L_M_2p5_V_0p0173205080757_e_onshell, HN3L_M_2p5_V_0p00707106781187_e_onshell
 # from CMGTools.HNL.samples.localsignal import TTJets_amcat as ttbar
 # from CMGTools.HNL.samples.samples_mc_2017 import DYJetsToLL_M50, hnl_bkg_essentials
-<<<<<<< HEAD
-# from CMGTools.HNL.samples.samples_mc_2017 import DYJetsToLL_M50, hnl_bkg_essentials
-from CMGTools.HNL.samples.samples_mc_2017_noskim import ST_t_channel_top_4f_inclusiveDecays as bkg
-# from CMGTools.HNL.samples.samples_mc_2017_noskim import DY3JetsToLL_M50_ext as bkg
-from CMGTools.HNL.samples.signal import all_signals_e
-=======
-# from CMGTools.HNL.samples.samples_mc_2017_noskim import DYJetsToLL_M5to50
-from CMGTools.HNL.samples.samples_mc_2017_noskim import DYJetsToLL_M50
+from CMGTools.HNL.samples.samples_mc_2017_noskim import DYJetsToLL_M5to50
+# from CMGTools.HNL.samples.samples_mc_2017_noskim import DYJetsToLL_M50
 # from CMGTools.HNL.samples.signal import all_signals_e
->>>>>>> vstampf/rm-94-patch-3
 
 ###################################################
 ###                   OPTIONS                   ###
@@ -46,7 +39,7 @@ from CMGTools.HNL.samples.samples_mc_2017_noskim import DYJetsToLL_M50
 # Get all heppy options; set via "-o production" or "-o production=True"
 # production = True run on batch, production = False (or unset) run locally
 
-production         = getHeppyOption('production' , True)
+production         = getHeppyOption('production' , False)
 # production         = getHeppyOption('production' , False)
 pick_events        = getHeppyOption('pick_events', False)
 
@@ -54,12 +47,7 @@ pick_events        = getHeppyOption('pick_events', False)
 ###               HANDLE SAMPLES                ###
 ###################################################
 #samples = hnl_bkg_essentials
-<<<<<<< HEAD
-# samples = all_signals_e
-samples = [bkg]
-=======
-samples = [DYJetsToLL_M50]
->>>>>>> vstampf/rm-94-patch-3
+samples = [DYJetsToLL_M5to50]
 auxsamples = [] #[ttbar, DYJetsToLL_M50]
 
 #samples = [comp for comp in samples if comp.name=='TTJets_amcat']
@@ -196,13 +184,13 @@ sequence = cfg.Sequence([
 #    skimAna,
     triggerAna,
     vertexAna,
-    pileUpAna,
+#    pileUpAna,
     genAna,
-    HNLGenTreeAnalyzer,
+#    HNLGenTreeAnalyzer,
     HNLAnalyzer,
-    eleWeighter,
-    jetAna,
-    HNLTreeProducer,
+#    eleWeighter,
+#    jetAna,
+#    HNLTreeProducer,
 ])
 
 ###################################################
@@ -210,19 +198,14 @@ sequence = cfg.Sequence([
 ###################################################
 if not production:
 #     comp                 = HN3L_M_2p5_V_0p0173205080757_e_onshell
-<<<<<<< HEAD
-#     comp                 = HN3L_M_2p5_V_0p00707106781187_e_onshell
-    # comp                 = all_signals_e[0]
-=======
 #    comp                 = HN3L_M_2p5_V_0p00707106781187_e_onshell
-    comp                 = DYJetsToLL_M50
->>>>>>> vstampf/rm-94-patch-3
+    comp                 = DYJetsToLL_M5to50
 #     comp                 = ttbar
-    comp                 = bkg
     selectedComponents   = [comp]
     comp.splitFactor     = 1
     comp.fineSplitFactor = 1
-    comp.files           = comp.files[:50]
+    comp.files           = ['root://cms-xrd-global.cern.ch//store/mc/RunIIFall17MiniAODv2/DYJetsToLL_M-5to50_TuneCP5_13TeV-madgraphMLM-pythia8/MINIAODSIM/PU2017_12Apr2018_94X_mc2017_realistic_v14-v2/60000/CEC615FD-9564-E811-B685-FA163E842C05.root',
+ 'root://cms-xrd-global.cern.ch//store/mc/RunIIFall17MiniAODv2/DYJetsToLL_M-5to50_TuneCP5_13TeV-madgraphMLM-pythia8/MINIAODSIM/PU2017_12Apr2018_94X_mc2017_realistic_v14-v2/60000/563A3365-B564-E811-88F9-FA163E015DED.root']
 
 # the following is declared in case this cfg is used in input to the
 # heppy.py script

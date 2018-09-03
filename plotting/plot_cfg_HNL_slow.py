@@ -6,19 +6,11 @@ from ROOT import gROOT as gr
 from shutil import copyfile
 from numpy import array
 
-from copy_reg import pickle       # to pickle methods for multiprocessing
-from types    import MethodType   # to pickle methods for multiprocessing
-
 from CMGTools.HNL.plotter.PlotConfigs import HistogramCfg, VariableCfg
-<<<<<<< HEAD
-# from CMGTools.HNL.plotter.categories_TauMu import cat_Inc
-from CMGTools.HNL.plotter.HistCreator import createHistograms, createTrees
-=======
 from CMGTools.HNL.plotter.categories_HNL import cat_Inc
-from CMGTools.HNL.plotter.HistCreator import CreateHists, createTrees
->>>>>>> vstampf/rm-94-patch-3
+from CMGTools.HNL.plotter.HistCreator import createHistograms, createTrees
 from CMGTools.HNL.plotter.HistDrawer import HistDrawer
-from CMGTools.HNL.plotter.Variables import hnl_vars, getVars
+from CMGTools.HNL.plotter.Variables import hnl_vars, getVars, CR_vars, phi_vars
 from CMGTools.HNL.samples.samples_mc_2017 import hnl_bkg
 from pdb import set_trace
 # from CMGTools.HNL.plotter.qcdEstimationMSSMltau import estimateQCDWMSSM, createQCDWHistograms
@@ -27,25 +19,7 @@ from CMGTools.HNL.plotter.defaultGroups import createDefaultGroups
 from CMGTools.HNL.plotter.Samples import createSampleLists
 from CMGTools.HNL.plotter.metrics import ams_hists
 
-def _pickle_method(method): 
-    func_name = method.im_func.__name__
-    obj = method.im_self
-    cls = method.im_class
-    return _unpickle_method, (func_name, obj, cls)
-
-def _unpickle_method(func_name, obj, cls):
-    for cls in cls.mro():
-        try:
-            func = cls.__dict__[func_name]
-        except KeyError:
-            pass
-        else:
-            break
-    return func.__get__(obj, cls)
-
-pickle(MethodType, _pickle_method, _unpickle_method)
-
-gr.SetBatch(True) # NEEDS TO BE SET FOR MULTIPROCESSING OF plot.Draw()
+gr.SetBatch(True)
 Cut = namedtuple('Cut', ['name', 'cut'])
 
 int_lumi = 41000.0 # pb #### FIXME 
@@ -53,30 +27,10 @@ int_lumi = 41000.0 # pb #### FIXME
 
 def prepareCuts(mode):
     cuts = []
-<<<<<<< HEAD
-    # inc_cut = '&&'.join([cat_Inc])
-    # inc_cut += '&& l2_decayModeFinding'
-
-<<<<<<< HEAD
-    cuts.append(Cut('inclusive', inc_cut + '&&  l1_q != l2_q  &&  l0_eid_mva_noniso_loose & l0_reliso05<0.15  &&  l1_id_m & l2_id_m'))
-=======
-    cuts.append(Cut('ttjetsloose', 'nbj>1'))
-#     cuts.append(Cut('zmmloose' , 'l1_pt>5  & l2_pt>5  & l1_q!=l2_q & l1_id_t & l2_id_t & l1_reliso05<0.2 & l2_reliso05<0.2 & l1_dz<0.2 & l2_dz<0.2 & l1_dxy<0.045 & l2_dxy<0.045 & nbj==0 & pass_e_veto & pass_m_veto'))
-#     cuts.append(Cut('zmmhighpt', 'l1_pt>15  & l2_pt>15  & l1_q!=l2_q & l1_id_t & l2_id_t & l1_reliso05<0.2 & l2_reliso05<0.2 & l1_dz<0.2 & l2_dz<0.2 & l1_dxy<0.045 & l2_dxy<0.045 & nbj==0 & pass_e_veto & pass_m_veto'))
-#     cuts.append(Cut('zmm'      , 'l1_pt>10 & l2_pt>10 & l1_q!=l2_q & !l0_eid_mva_iso_loose & l0_reliso05>0.15 & l1_id_t & l2_id_t & l1_reliso05<0.2 & l2_reliso05<0.2 & l1_dz<0.2 & l2_dz<0.2 & l1_dxy<0.045 & l2_dxy<0.045 & nbj==0 & pass_e_veto & pass_m_veto'))
-
-#     cuts.append(Cut('inclusive'    , 'l0_pt>30 & l1_pt>4 & l2_pt>4 & l1_q != l2_q && l0_eid_mva_iso_loose & l0_reliso05<0.15'))
-#     cuts.append(Cut('inclusive'    , 'l0_pt>30 & l1_pt>4 & l2_pt>4 & l1_q != l2_q && l0_eid_mva_iso_loose & l0_reliso05<0.15 & l1_id_m & l2_id_m & l1_reliso05<0.2 & l2_reliso05<0.2'))
-#     cuts.append(Cut('inc_nobj'     , 'l0_pt>30 & l1_pt>4 & l2_pt>4 & l1_q != l2_q && l0_eid_mva_iso_loose & l0_reliso05<0.15 & l1_id_m & l2_id_m & l1_reliso05<0.2 & l2_reliso05<0.2 & nbj==0'))
-#     cuts.append(Cut('inc_nobj_veto', 'l0_pt>30 & l1_pt>4 & l2_pt>4 & l1_q != l2_q && l0_eid_mva_iso_loose & l0_reliso05<0.15 & l1_id_m & l2_id_m & l1_reliso05<0.2 & l2_reliso05<0.2 & nbj==0 & pass_e_veto & pass_m_veto'))
-#     cuts.append(Cut('stringent'    , 'l0_pt>30 & l1_pt>4 & l2_pt>4 & sv_prob>0.1 & sv_cos>0.9 & hnl_2d_disp_sig>3 & abs(hnl_w_q)==1 & hnl_iso_rel<0.2 & hnl_hn_q==0 & hnl_pt_12>20 & l0_eid_mva_iso_loose & l1_is_oot==0 & l2_is_oot==0 & pass_e_veto & pass_m_veto & l1_id_l & l2_id_l & l0_reliso05<0.2 & nbj==0 & hnl_2d_disp>2'))
->>>>>>> rmanzoni/master
-=======
     inc_cut =   'l1_pt > 4  &&  l2_pt > 4  &&  l0_pt > 35' #'.join([cat_Inc])
     inc_cut += '  &&  l1_q != l2_q'
     inc_cut += '  &&  l0_reliso05 < 0.15'
     inc_cut += '  &&  abs(l0_dz) < 0.2'
-    inc_cut += '  &&  hnl_dr_01 > 0.05  &&  hnl_dr_02 > 0.05' # avoid ele mu mismatching
 
     ## RICCARDO
 #    cuts.append(Cut('ttjetsloose', 'nbj>1'))
@@ -100,16 +54,19 @@ def prepareCuts(mode):
     '''
     mz = 91.18; mw = 80.4
 
-    CR_DY      = '  &&  abs(hnl_m_12 - 91.18) < 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj == 0  &&  pfmet_pt < 30  &&  hnl_mt_0 < 30' 
-    CR_DYNoM3l = '  &&  abs(hnl_m_12 - 91.18) < 15  &&  nbj == 0  &&  pfmet_pt < 30  &&  hnl_mt_0 < 30' 
-    CR_DYRic   = 'abs(l0_dz) < 0.2  &&  l1_q != l2_q  &&  l1_pt > 15  &&  l2_pt > 10  &&  abs(hnl_m_12 - 91.18) < 15  &&  nbj == 0' 
-    CR_ttbar   = '  &&  abs(hnl_m_12 - 91.18) > 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj >= 1  &&  hnl_m_12 > 12'
-    CR_ttbarb0 = '  &&  abs(hnl_m_12 - 91.18) > 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj == 0  &&  hnl_m_12 > 12'
-    CR_ttbarb1 = '  &&  abs(hnl_m_12 - 91.18) > 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj <= 1  &&  hnl_m_12 > 12'
-    CR_ttbarb2 = '  &&  abs(hnl_m_12 - 91.18) > 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj >= 2  &&  hnl_m_12 > 12'
-    CR_WZ      = '  &&  abs(hnl_m_12 - 91.18) < 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj == 0  &&  pfmet_pt > 50  &&  l0_pt > 25  &&  l1_pt > 15  &&  l2_pt > 10'
-    NaiveSR    = '  &&  hnl_pt_12 > 15  &&  hnl_w_vis_m < 80.4  &&  abs(hnl_m_12 - 91.18) > 10  &&  hnl_iso_rel < 0.2  &&  hnl_2d_disp_sig > 4  &&  l1_id_tnv  &&  l2_id_tnv'
-    NaiveSRv2  = NaiveSR + '  &&  sv_cos > 0.99  &&  nbj == 0  &&  hnl_w_m > 50  &&  abs(hnl_dphi_hnvis0) > 2  &&  hnl_mt_0 < 60'
+    CR_DY          = '  &&  abs(hnl_m_12 - 91.18) < 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj == 0  &&  pfmet_pt < 30  &&  hnl_mt_0 < 30' 
+    CR_DYNoM3l     = '  &&  abs(hnl_m_12 - 91.18) < 15  &&  nbj == 0  &&  pfmet_pt < 30  &&  hnl_mt_0 < 30' 
+    CR_DYRic       = 'abs(l0_dz) < 0.2  &&  l1_q != l2_q  &&  l1_pt > 15  &&  l2_pt > 10  &&  abs(hnl_m_12 - 91.18) < 15  &&  nbj == 0' 
+    CR_ttbar       = '  &&  abs(hnl_m_12 - 91.18) > 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj >= 1  &&  hnl_m_12 > 12'
+    CR_ttbarb0     = '  &&  abs(hnl_m_12 - 91.18) > 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj == 0  &&  hnl_m_12 > 12'
+    CR_ttbarb0NoCV = '  &&  abs(hnl_m_12 - 91.18) > 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj == 0'
+    CR_ttbarb1     = '  &&  abs(hnl_m_12 - 91.18) > 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj <= 1  &&  hnl_m_12 > 12'
+    CR_ttbarb2     = '  &&  abs(hnl_m_12 - 91.18) > 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj >= 2  &&  hnl_m_12 > 12'
+    CR_WZ          = '  &&  abs(hnl_m_12 - 91.18) < 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj == 0  &&  pfmet_pt > 50  &&  l0_pt > 25  &&  l1_pt > 15  &&  l2_pt > 10'
+    NaiveSR        = '  &&  hnl_pt_12 > 15  &&  hnl_w_vis_m < 80.4  &&  abs(hnl_m_12 - 91.18) > 10  &&  hnl_iso_rel < 0.2  &&  hnl_2d_disp_sig > 4  &&  l1_id_tnv  &&  l2_id_tnv'
+    NaiveSRNoId    = '  &&  hnl_pt_12 > 15  &&  hnl_w_vis_m < 80.4  &&  abs(hnl_m_12 - 91.18) > 10  &&  hnl_iso_rel < 0.2  &&  hnl_2d_disp_sig > 4'
+    NaiveSRv2      = NaiveSR + '  &&  sv_cos > 0.99  &&  nbj == 0  &&  hnl_w_m > 50  &&  abs(hnl_dphi_hnvis0) > 2  &&  hnl_mt_0 < 60'
+    NaiveSRv2NoId  = NaiveSRNoId + '  &&  sv_cos > 0.99  &&  nbj == 0  &&  hnl_w_m > 50  &&  abs(hnl_dphi_hnvis0) > 2  &&  hnl_mt_0 < 60'
 
     prompt_e_loose  = '  &&  l0_eid_mva_noniso_loose'
     prompt_e_medium = '  &&  l0_eid_cut_medium'
@@ -138,44 +95,12 @@ def prepareCuts(mode):
         l0_loose  = prompt_mu_loose
         l0_medium = prompt_mu_medium
         l0_tight  = prompt_mu_tight
->>>>>>> vstampf/rm-94-patch-3
 
-#### 3.9.
-#    cuts.append(Cut('CR_TTbarb0v2', inc_cut + l0_tight + noIDnorIso + CR_ttbarb0))
-    cuts.append(Cut('TTbar_disp1' , inc_cut + l0_tight + CR_ttbar + '  &&  hnl_2d_disp > 1'))
-
-#### 2.9.
-#    cuts.append(Cut('CR_TTbarb1_noIDnorIsov2', inc_cut + l0_tight + noIDnorIso + CR_ttbarb1))
-#    cuts.append(Cut('CR_TTbarb1_IDlNoIsov2'  , inc_cut + l0_tight + IDlNoIso   + CR_ttbarb1))
-#    cuts.append(Cut('CR_TTbarb1_IDlIso15v2'  , inc_cut + l0_tight + IDlIso15   + CR_ttbarb1))
-#    cuts.append(Cut('CR_TTbarb2_noIDnorIsov2', inc_cut + l0_tight + noIDnorIso + CR_ttbarb2))
-#    cuts.append(Cut('CR_TTbarb2_IDlNoIsov2'  , inc_cut + l0_tight + IDlNoIso   + CR_ttbarb2))
-#    cuts.append(Cut('CR_TTbarb2_IDlIso15v2'  , inc_cut + l0_tight + IDlIso15   + CR_ttbarb2))
-# 
-#    cuts.append(Cut('CR_WZ_noIDnorIsov2'   , inc_cut + l0_tight + noIDnorIso + CR_WZ))
-#    cuts.append(Cut('CR_WZ_IDmNoIsov2'   , inc_cut + l0_tight + IDmNoIso + CR_WZ))
-#    cuts.append(Cut('CR_WZ_IDmIso15v2'   , inc_cut + l0_tight + IDmIso15 + CR_WZ))
-#    cuts.append(Cut('CR_WZ_IDlNoIsov2'   , inc_cut + l0_tight + IDlNoIso + CR_WZ))
-#    cuts.append(Cut('CR_WZ_IDlIso15v2'   , inc_cut + l0_tight + IDlIso15 + CR_WZ))
-
-#### 1.9.
-### testing multiprocessing
-#    cuts.append(Cut('test_multi_ttbar', inc_cut + l0_tight + noIDnorIso + CR_ttbarb0))
-#    cuts.append(Cut('test_multi', inc_cut + l0_tight + tighter))
-### doing things again with new hnl_dr_01>0.05 and hnl_dr_02>0.05 and updated binning for reliso (up to 0.5) 
-#    cuts.append(Cut('NaiveSRv3'          , inc_cut + l0_tight + NaiveSRv2))
-#    cuts.append(Cut('CR_DY_noIDnorIsov2'   , inc_cut + l0_tight + noIDnorIso + CR_DY + veto))
-#    cuts.append(Cut('CR_DY_IDmNoIsov2'   , inc_cut + l0_tight + IDmNoIso + CR_DY + veto))
-#    cuts.append(Cut('CR_DY_IDmIso15v2'   , inc_cut + l0_tight + IDmIso15 + CR_DY + veto))
-#    cuts.append(Cut('CR_DYNoM3l_IDlNoIsov2'  , inc_cut + l0_tight + CR_DYNoM3l + veto + IDlNoIso))
-#    cuts.append(Cut('CR_DYNoM3l_IDlIso15v2'  , inc_cut + l0_tight + CR_DYNoM3l + veto + IDlIso15))
-
-#    cuts.append(Cut('CR_TTbar_noIDnorIsov2', inc_cut + l0_tight + noIDnorIso + CR_ttbar))
-#    cuts.append(Cut('CR_TTbar_IDmNoIsov2', inc_cut + l0_tight + IDmNoIso + CR_ttbar))
-#    cuts.append(Cut('CR_TTbar_IDmIso15v2', inc_cut + l0_tight + IDmIso15 + CR_ttbar))
-
-#### 31.8.
+### 31.8.
 #    cuts.append(Cut('CR_TTbarb0_noIDnorIso', inc_cut + l0_tight + noIDnorIso + CR_ttbarb0))
+#    cuts.append(Cut('CR_TTbarb0NoCV_noIDnorIso', inc_cut + l0_tight + noIDnorIso + CR_ttbarb0NoCV))
+#    cuts.append(Cut('NaiveSRv2NoId'            , inc_cut + l0_tight + NaiveSRv2NoId))
+    cuts.append(Cut('test_multi', inc_cut + l0_tight + tighter))
 
 #### 30.8.
 ###  morning
@@ -237,8 +162,9 @@ def createVariables():
     # Taken from Variables.py; can get subset with e.g. getVars(['mt', 'mvis'])
     # variables = taumu_vars
     # variables = getVars(['_norm_', 'mt', 'mvis', 'l1_pt', 'l2_pt', 'l1_eta', 'l2_eta', 'n_vertices', 'n_jets', 'n_bjets'])
-#    variables = CR_vars
-    variables = hnl_vars
+    variables = CR_vars
+#    variables += phi_vars
+#    variables += hnl_vars
 
     return variables
 
@@ -249,30 +175,18 @@ def makePlots(variables, cuts, total_weight, sample_dict, hist_dict, qcd_from_sa
         cfg_main = HistogramCfg(name=cut.name, var=None, cfgs=sample_dict['all_samples'], cut=cut.cut, lumi=int_lumi, weight=total_weight)
     
         cfg_main.vars = variables
-        HISTS = CreateHists(cfg_main)
 
-<<<<<<< HEAD
         plots = createHistograms(cfg_main, verbose=False, friend_func=friend_func)
-=======
-        plots = HISTS.createHistograms(cfg_main, verbose=False, friend_func=friend_func)
->>>>>>> vstampf/rm-94-patch-3
         #plots.legendPos = 'right'
         for variable in variables:
         # for plot in plots.itervalues():
             plot = plots[variable.name]
             plot.Group('data_obs', ['data_2017B_e', 'data_2017C_e', 'data_2017D_e', 'data_2017E_e', 'data_2017F_e'])
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-            plot.Group('Diboson', ['WZTo3LNu_e', 'ZZTo4L_e'])
->>>>>>> rmanzoni/master
-=======
             plot.Group('single t', ['ST_tW_at_5f_incD_e', 'ST_tW_t_5f_incD_e'])
             plot.Group('Diboson', ['WZTo3LNu_e', 'ZZTo4L_e', 'WWTo2L2Nu_e'])
             plot.Group('Triboson', ['ZZZ_e', 'WWW_e', 'WGGJets_e'])
             plot.Group('ttV', ['TTZToLLNuNu_e', 'TTWJetsToLNu_e'])
             plot.Group('DY', ['DYJets_M5T50_e', 'DYJets_M50_x_e', 'DYJets_M50_e'])
->>>>>>> vstampf/rm-94-patch-3
             createDefaultGroups(plot)
             if make_plots:
                 HistDrawer.draw(plot, plot_dir = '/eos/user/v/vstampf/ntuples/plots/'+cut.name)#plot_dir='plots/'+cut.name)
@@ -295,13 +209,10 @@ def makePlots(variables, cuts, total_weight, sample_dict, hist_dict, qcd_from_sa
 
 if __name__ == '__main__':
         
-<<<<<<< HEAD
-=======
 
     mode = 'e' 
 #    mode = 'm'
 
->>>>>>> vstampf/rm-94-patch-3
     friend_func = None
     
     qcd_from_same_sign = True

@@ -117,7 +117,8 @@ def prepareCuts(mode):
 
 #### 3.9.
 #    cuts.append(Cut('CR_TTbarb0v2', inc_cut + l0_tight + noIDnorIso + CR_ttbarb0))
-    cuts.append(Cut('TTbar_disp1' , inc_cut + l0_tight + CR_ttbar + '  &&  hnl_2d_disp > 1'))
+    cuts.append(Cut('CR_TTbarb0v3', inc_cut + l0_tight + noIDnorIso + CR_ttbarb0))  # NEW SAMPLES
+#    cuts.append(Cut('TTbar_disp1' , inc_cut + l0_tight + CR_ttbar + '  &&  hnl_2d_disp > 1'))
 
 #### 2.9.
 #    cuts.append(Cut('CR_TTbarb1_noIDnorIsov2', inc_cut + l0_tight + noIDnorIso + CR_ttbarb1))
@@ -235,8 +236,9 @@ def makePlots(variables, cuts, total_weight, sample_dict, hist_dict, qcd_from_sa
             plot.Group('single t', ['ST_tW_at_5f_incD_e', 'ST_tW_t_5f_incD_e'])
             plot.Group('Diboson', ['WZTo3LNu_e', 'ZZTo4L_e', 'WWTo2L2Nu_e'])
             plot.Group('Triboson', ['ZZZ_e', 'WWW_e', 'WGGJets_e'])
-            plot.Group('ttV', ['TTZToLLNuNu_e', 'TTWJetsToLNu_e'])
-            plot.Group('DY', ['DYJets_M5T50_e', 'DYJets_M50_x_e', 'DYJets_M50_e'])
+            plot.Group('ttV', ['TTZToLLNuNu_M10_e', 'TTWJetsToLNu_e', 'TTZToLL_M1To10_e'])
+#            plot.Group('DY', ['DYJets_M5T50_e', 'DYJets_M50_x_e', 'DYJets_M50_e'])
+            plot.Group('DY', ['DYJets_M5T50_e', 'D2YJets_M50_x_e', 'D2YJets_M50_e', 'D3YJets_M50_x_e', 'D3YJets_M50_e', 'D1YJets_M50_e'])
             createDefaultGroups(plot)
             if make_plots:
                 HistDrawer.draw(plot, plot_dir = '/eos/user/v/vstampf/ntuples/plots/'+cut.name)#plot_dir='plots/'+cut.name)

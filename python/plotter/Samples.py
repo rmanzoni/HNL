@@ -16,7 +16,7 @@ from CMGTools.HNL.samples.samples_mc_2017 import TTJets_amcat, TTJets_mdgrph, DY
 from CMGTools.HNL.samples.signal import HN3L_M_3_V_0p00316227766017_e_onshell  as HN3L_M3_e #.ctau = 14.6 cm
 from CMGTools.HNL.samples.signal import HN3L_M_3_V_0p00316227766017_mu_onshell as HN3L_M3_m #.ctau = 14.6 cm
 from CMGTools.HNL.samples.signal import HN3L_M_2_V_0p01_e_onshell              as HN3L_M2_e #.ctau = 11.1 cm
-from CMGTools.HNL.samples.samples_mc_2017_noskim import DYJetsToLL_M5to50, DYJetsToLL_M50, ZZZ, WZZ, WWZ, WWW, WWTo2L2Nu, WGGJets, TTWJetsToLNu, TTZToLLNuNu, TTZToLL  
+from CMGTools.HNL.samples.samples_mc_2017_noskim import DYJetsToLL_M5to50, DYJetsToLL_M50, ZZZ, WZZ, WWZ, WWW, WWTo2L2Nu, WGGJets, TTWJetsToLNu, TTZToLLNuNu_M10, TTZToLL_M1To10
 from CMGTools.HNL.samples.samples_mc_2017_noskim import ST_s_channel_4f_leptonDecays as ST_sc_4f_lD 
 from CMGTools.HNL.samples.samples_mc_2017_noskim import ST_t_channel_antitop_4f_inclusiveDecays as ST_tc_at_4f_incD 
 from CMGTools.HNL.samples.samples_mc_2017_noskim import ST_t_channel_top_4f_inclusiveDecays as ST_tc_t_4f_incD
@@ -76,9 +76,9 @@ def createSampleLists(analysis_dir='/eos/user/v/vstampf/ntuples/',
         dataB = Single_mu_2017B; dataC = Single_mu_2017C; dataD = Single_mu_2017D; dataE = Single_mu_2017E; dataF = Single_mu_2017F; 
 
     samples_essential = [
-        SampleCfg(name='DYJets_M50_%s'%channel  , dir_name=DYJetsToLL_M50      .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=DYJetsToLL_M50     .xSection, sumweights=DYJetsToLL_M50     .nGenEvents),
+#        SampleCfg(name='DYJets_M50_%s'%channel  , dir_name=DYJetsToLL_M50      .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=DYJetsToLL_M50     .xSection, sumweights=DYJetsToLL_M50     .nGenEvents),
+#        SampleCfg(name='DYJets_M50_x_%s'%channel, dir_name=DYJetsToLL_M50_ext  .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=DYJetsToLL_M50_ext .xSection, sumweights=DYJetsToLL_M50_ext .nGenEvents),
         SampleCfg(name='DYJets_M5T50_%s'%channel, dir_name=DYJetsToLL_M5to50   .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=DYJetsToLL_M5to50  .xSection, sumweights=DYJetsToLL_M5to50  .nGenEvents),
-        SampleCfg(name='DYJets_M50_x_%s'%channel, dir_name=DYJetsToLL_M50_ext  .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=DYJetsToLL_M50_ext .xSection, sumweights=DYJetsToLL_M50_ext .nGenEvents),
         SampleCfg(name='TTJets_amc_%s'%channel  , dir_name=TTJets_amcat        .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=TTJets_amcat       .xSection, sumweights=TTJets_amcat       .nGenEvents),
         SampleCfg(name='WJetsToLNu_%s'%channel  , dir_name=WJetsToLNu          .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=WJetsToLNu         .xSection, sumweights=WJetsToLNu         .nGenEvents),        
         SampleCfg(name='ZZTo4L_%s'%channel      , dir_name=ZZTo4L              .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=ZZTo4L             .xSection, sumweights=ZZTo4L             .nGenEvents),
@@ -109,7 +109,11 @@ def createSampleLists(analysis_dir='/eos/user/v/vstampf/ntuples/',
     ]
 
     samples_additional = [
-
+        SampleCfg(name='DY1Jets_M50_%s'%channel  , dir_name=DY1JetsToLL_M50      .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=DY1JetsToLL_M50     .xSection, sumweights=DY1JetsToLL_M50     .nGenEvents),
+        SampleCfg(name='DY2Jets_M50_%s'%channel  , dir_name=DY2JetsToLL_M50      .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=DY2JetsToLL_M50     .xSection, sumweights=DY2JetsToLL_M50     .nGenEvents),
+        SampleCfg(name='DY2Jets_M50_x_%s'%channel, dir_name=DY2JetsToLL_M50_ext  .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=DY2JetsToLL_M50_ext .xSection, sumweights=DY2JetsToLL_M50_ext .nGenEvents),
+        SampleCfg(name='DY3Jets_M50_%s'%channel  , dir_name=DY3JetsToLL_M50      .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=DY3JetsToLL_M50     .xSection, sumweights=DY3JetsToLL_M50     .nGenEvents),
+        SampleCfg(name='DY3Jets_M50_x_%s'%channel, dir_name=DY3JetsToLL_M50_ext  .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=DY3JetsToLL_M50_ext .xSection, sumweights=DY3JetsToLL_M50_ext .nGenEvents),
 #        SampleCfg(name='ZZTo4L_ext'          , dir_name=ZZTo4L_ext          .name, ana_dir=analysis_dir, tree_prod_name=tree_prod_name,
 #                  xsec=ZZTo4L_ext         .xSection, sumweights=ZZTo4L_ext         .nGenEvents),
 
@@ -131,17 +135,17 @@ def createSampleLists(analysis_dir='/eos/user/v/vstampf/ntuples/',
 
     samples_rare = [
         SampleCfg(name='ZZZ_%s'%channel    , dir_name=ZZZ            .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=ZZZ           .xSection, sumweights=ZZZ           .nGenEvents),
-#        SampleCfg(name='WZZ_%s'%channel    , dir_name=WZZ            .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=WZZ           .xSection, sumweights=WZZ           .nGenEvents),
- #       SampleCfg(name='WWZ_%s'%channel    , dir_name=WWZ            .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=WWZ           .xSection, sumweights=WWZ           .nGenEvents),
+        SampleCfg(name='WZZ_%s'%channel    , dir_name=WZZ            .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=WZZ           .xSection, sumweights=WZZ           .nGenEvents),
+        SampleCfg(name='WWZ_%s'%channel    , dir_name=WWZ            .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=WWZ           .xSection, sumweights=WWZ           .nGenEvents),
         SampleCfg(name='WWW_%s'%channel    , dir_name=WWW            .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=WWW           .xSection, sumweights=WWW           .nGenEvents),
         SampleCfg(name='WWTo2L2Nu_%s'%channel    , dir_name=WWTo2L2Nu            .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=WWTo2L2Nu           .xSection, sumweights=WWTo2L2Nu           .nGenEvents),
         SampleCfg(name='WGGJets_%s'%channel    , dir_name=WGGJets            .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=WGGJets           .xSection, sumweights=WGGJets           .nGenEvents),
         SampleCfg(name='TTWJetsToLNu_%s'%channel    , dir_name=TTWJetsToLNu            .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=TTWJetsToLNu           .xSection, sumweights=TTWJetsToLNu           .nGenEvents),
-#        SampleCfg(name='TTZToLL_%s'%channel    , dir_name=TTZToLL            .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=TTZToLL           .xSection, sumweights=TTZToLL           .nGenEvents),
-        SampleCfg(name='TTZToLLNuNu_%s'%channel    , dir_name=TTZToLLNuNu            .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=TTZToLLNuNu           .xSection, sumweights=TTZToLLNuNu           .nGenEvents),
-#        SampleCfg(name='ST_sc_4f_lD_%s'%channel    , dir_name=ST_sc_4f_lD            .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=ST_sc_4f_lD           .xSection, sumweights=ST_sc_4f_lD           .nGenEvents),
-#        SampleCfg(name='ST_tc_at_4f_incD_%s'%channel    , dir_name=ST_tc_at_4f_incD            .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=ST_tc_at_4f_incD           .xSection, sumweights=ST_tc_at_4f_incD           .nGenEvents),
-#        SampleCfg(name='ST_tc_t_4f_incD_%s'%channel    , dir_name=ST_tc_t_4f_incD            .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=ST_tc_t_4f_incD           .xSection, sumweights=ST_tc_t_4f_incD           .nGenEvents),
+        SampleCfg(name='TTZToLLNuNu_M10_%s'%channel  , dir_name=TTZToLLNuNu_M10            .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=TTZToLLNuNu_M10           .xSection, sumweights=TTZToLLNuNu_M10           .nGenEvents),
+        SampleCfg(name='TTZToLL_M1To10_%s'%channel    , dir_name=TTZToLL_M1To10            .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=TTZToLL_M1To10           .xSection, sumweights=TTZToLL_M1To10           .nGenEvents),
+        SampleCfg(name='ST_sc_4f_lD_%s'%channel       , dir_name=ST_sc_4f_lD            .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=ST_sc_4f_lD           .xSection, sumweights=ST_sc_4f_lD           .nGenEvents),
+        SampleCfg(name='ST_tc_at_4f_incD_%s'%channel    , dir_name=ST_tc_at_4f_incD            .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=ST_tc_at_4f_incD           .xSection, sumweights=ST_tc_at_4f_incD           .nGenEvents),
+        SampleCfg(name='ST_tc_t_4f_incD_%s'%channel    , dir_name=ST_tc_t_4f_incD            .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=ST_tc_t_4f_incD           .xSection, sumweights=ST_tc_t_4f_incD           .nGenEvents),
         SampleCfg(name='ST_tW_at_5f_incD_%s'%channel    , dir_name=ST_tW_at_5f_incD            .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=ST_tW_at_5f_incD           .xSection, sumweights=ST_tW_at_5f_incD           .nGenEvents),
         SampleCfg(name='ST_tW_t_5f_incD_%s'%channel    , dir_name=ST_tW_t_5f_incD            .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=ST_tW_t_5f_incD           .xSection, sumweights=ST_tW_t_5f_incD           .nGenEvents),
     ]  

@@ -114,8 +114,8 @@ TTWJetsToLNu = creator.makeMCComponent(
 TTWJetsToLNu .nGenEvents = TTWJetsToLNu.dataset_entries 
 
 
-TTZToLLNuNu = creator.makeMCComponent(
-    name    = 'TTZToLLNuNu', 
+TTZToLLNuNu_M10 = creator.makeMCComponent(
+    name    = 'TTZToLLNuNu_M10', 
     dataset = '/TTZToLLNuNu_M-10_TuneCP5_13TeV-amcatnlo-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
     user    = 'CMS', 
     pattern = '.*root', 
@@ -123,11 +123,11 @@ TTZToLLNuNu = creator.makeMCComponent(
     useAAA  = True
 )
 
-TTZToLLNuNu .nGenEvents = TTZToLLNuNu.dataset_entries 
+TTZToLLNuNu_M10 .nGenEvents = TTZToLLNuNu_M10.dataset_entries 
 
 
-TTZToLL = creator.makeMCComponent(
-    name    = 'TTZToLL', 
+TTZToLL_M1To10 = creator.makeMCComponent(
+    name    = 'TTZToLL_M1To10', 
     dataset = '/TTZToLL_M-1to10_TuneCP5_13TeV-amcatnlo-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
     user    = 'CMS', 
     pattern = '.*root', 
@@ -135,7 +135,7 @@ TTZToLL = creator.makeMCComponent(
     useAAA  = True
 )
 
-TTZToLL .nGenEvents = TTZToLL.dataset_entries 
+TTZToLL_M1To10.nGenEvents = TTZToLL_M1To10.dataset_entries 
 
 
 ST_s_channel_4f_leptonDecays = creator.makeMCComponent(
@@ -213,8 +213,8 @@ WWW  .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileu
 WWTo2L2Nu  .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_WWTo2L2Nu.root' # derived manually 
 WGGJets    .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_WGGJets.root' # derived manually 
 TTWJetsToLNu  .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_TTWJetsToLNu.root' # derived manually 
-TTZToLLNuNu   .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_TTZToLLNuNu.root' # derived manually 
-TTZToLL       .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_TTZToLL.root' # derived manually 
+TTZToLLNuNu_M10   .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_TTZToLLNuNu.root' # derived manually 
+TTZToLL_M1To10     .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_TTZToLL.root' # derived manually 
 ST_s_channel_4f_leptonDecays             .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_ST_s_channel_4f_leptonDecays.root' # derived manually 
 ST_t_channel_antitop_4f_inclusiveDecays  .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_ST_t_channel_antitop_4f_inclusiveDecays.root' # derived manually 
 ST_t_channel_top_4f_inclusiveDecays      .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_ST_t_channel_top_4f_inclusiveDecays.root' # derived manually 
@@ -233,8 +233,8 @@ hnl_bkg_noskim = [
     WWTo2L2Nu, 
     WGGJets, 
     TTWJetsToLNu, 
-    TTZToLLNuNu, 
-    TTZToLL, 
+    TTZToLLNuNu_M10, 
+    TTZToLL_M1To10, 
     ST_s_channel_4f_leptonDecays, 
     ST_t_channel_antitop_4f_inclusiveDecays, 
     ST_t_channel_top_4f_inclusiveDecays, 

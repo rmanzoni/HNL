@@ -11,7 +11,7 @@ from types    import MethodType   # to pickle methods for multiprocessing
 
 from CMGTools.HNL.plotter.PlotConfigs import HistogramCfg, VariableCfg
 from CMGTools.HNL.plotter.categories_HNL import cat_Inc
-from CMGTools.HNL.plotter.HistCreatorMulti import CreateHists, createTrees
+from CMGTools.HNL.plotter.HistCreator import CreateHists, createTrees
 from CMGTools.HNL.plotter.HistDrawer import HistDrawer
 from CMGTools.HNL.plotter.Variables import hnl_vars, getVars
 from CMGTools.HNL.samples.samples_mc_2017 import hnl_bkg
@@ -115,25 +115,11 @@ def prepareCuts(mode):
         l0_medium = prompt_mu_medium
         l0_tight  = prompt_mu_tight
 
-#### 31.8.
-#    cuts.append(Cut('CR_TTbarb0_noIDnorIso', inc_cut + l0_tight + noIDnorIso + CR_ttbarb0))
+#### 3.9.
+#    cuts.append(Cut('CR_TTbarb0v2', inc_cut + l0_tight + noIDnorIso + CR_ttbarb0))
+    cuts.append(Cut('TTbar_disp1' , inc_cut + l0_tight + CR_ttbar + '  &&  hnl_2d_disp > 1'))
 
-#### 1.9.
-### testing multiprocessing
-#    cuts.append(Cut('CR_TTbarb0_noIDnorIso_test_multi', inc_cut + l0_tight + noIDnorIso + CR_ttbarb0))
-#    cuts.append(Cut('test_multi', inc_cut + l0_tight + tighter))
-### doing things again with new hnl_dr_01>0.05 and hnl_dr_02>0.05 and updated binning for reliso (up to 0.5) 
-#    cuts.append(Cut('NaiveSRv3'          , inc_cut + l0_tight + NaiveSRv2))
-#    cuts.append(Cut('CR_DY_noIDnorIsov2'   , inc_cut + l0_tight + noIDnorIso + CR_DY + veto))
-#    cuts.append(Cut('CR_DY_IDmNoIsov2'   , inc_cut + l0_tight + IDmNoIso + CR_DY + veto))
-#    cuts.append(Cut('CR_DY_IDmIso15v2'   , inc_cut + l0_tight + IDmIso15 + CR_DY + veto))
-#    cuts.append(Cut('CR_DYNoM3l_IDlNoIsov2'  , inc_cut + l0_tight + CR_DYNoM3l + veto + IDlNoIso))
-#    cuts.append(Cut('CR_DYNoM3l_IDlIso15v2'  , inc_cut + l0_tight + CR_DYNoM3l + veto + IDlIso15))
-
-#    cuts.append(Cut('CR_TTbar_noIDnorIsov2', inc_cut + l0_tight + noIDnorIso + CR_ttbar))
-#    cuts.append(Cut('CR_TTbar_IDmNoIsov2', inc_cut + l0_tight + IDmNoIso + CR_ttbar))
-#    cuts.append(Cut('CR_TTbar_IDmIso15v2', inc_cut + l0_tight + IDmIso15 + CR_ttbar))
-# 
+#### 2.9.
 #    cuts.append(Cut('CR_TTbarb1_noIDnorIsov2', inc_cut + l0_tight + noIDnorIso + CR_ttbarb1))
 #    cuts.append(Cut('CR_TTbarb1_IDlNoIsov2'  , inc_cut + l0_tight + IDlNoIso   + CR_ttbarb1))
 #    cuts.append(Cut('CR_TTbarb1_IDlIso15v2'  , inc_cut + l0_tight + IDlIso15   + CR_ttbarb1))
@@ -146,6 +132,25 @@ def prepareCuts(mode):
 #    cuts.append(Cut('CR_WZ_IDmIso15v2'   , inc_cut + l0_tight + IDmIso15 + CR_WZ))
 #    cuts.append(Cut('CR_WZ_IDlNoIsov2'   , inc_cut + l0_tight + IDlNoIso + CR_WZ))
 #    cuts.append(Cut('CR_WZ_IDlIso15v2'   , inc_cut + l0_tight + IDlIso15 + CR_WZ))
+
+#### 1.9.
+### testing multiprocessing
+#    cuts.append(Cut('test_multi_ttbar', inc_cut + l0_tight + noIDnorIso + CR_ttbarb0))
+#    cuts.append(Cut('test_multi', inc_cut + l0_tight + tighter))
+### doing things again with new hnl_dr_01>0.05 and hnl_dr_02>0.05 and updated binning for reliso (up to 0.5) 
+#    cuts.append(Cut('NaiveSRv3'          , inc_cut + l0_tight + NaiveSRv2))
+#    cuts.append(Cut('CR_DY_noIDnorIsov2'   , inc_cut + l0_tight + noIDnorIso + CR_DY + veto))
+#    cuts.append(Cut('CR_DY_IDmNoIsov2'   , inc_cut + l0_tight + IDmNoIso + CR_DY + veto))
+#    cuts.append(Cut('CR_DY_IDmIso15v2'   , inc_cut + l0_tight + IDmIso15 + CR_DY + veto))
+#    cuts.append(Cut('CR_DYNoM3l_IDlNoIsov2'  , inc_cut + l0_tight + CR_DYNoM3l + veto + IDlNoIso))
+#    cuts.append(Cut('CR_DYNoM3l_IDlIso15v2'  , inc_cut + l0_tight + CR_DYNoM3l + veto + IDlIso15))
+
+#    cuts.append(Cut('CR_TTbar_noIDnorIsov2', inc_cut + l0_tight + noIDnorIso + CR_ttbar))
+#    cuts.append(Cut('CR_TTbar_IDmNoIsov2', inc_cut + l0_tight + IDmNoIso + CR_ttbar))
+#    cuts.append(Cut('CR_TTbar_IDmIso15v2', inc_cut + l0_tight + IDmIso15 + CR_ttbar))
+
+#### 31.8.
+#    cuts.append(Cut('CR_TTbarb0_noIDnorIso', inc_cut + l0_tight + noIDnorIso + CR_ttbarb0))
 
 #### 30.8.
 ###  morning

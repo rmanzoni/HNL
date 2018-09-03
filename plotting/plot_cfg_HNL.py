@@ -25,7 +25,7 @@ int_lumi = 41000.0 # pb #### FIXME
 
 def prepareCuts(mode):
     cuts = []
-    inc_cut =   'l1_pt > 4  &&  l2_pt > 4' #'.join([cat_Inc])
+    inc_cut =  ' l1_pt > 4  &&  l2_pt > 4' #'.join([cat_Inc])
     inc_cut += '  &&  l1_q != l2_q'
     inc_cut += '  &&  l0_reliso05 < 0.15'
     inc_cut += '  &&  l0_dz < 0.2'

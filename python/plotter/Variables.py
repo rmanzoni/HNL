@@ -319,8 +319,14 @@ hnl_vars = [
 
 ]
 
+CR_vars = [
+#    VCfg(name='l0_jet_pt'      , binning={'nbinsx':16, 'xmin':0.  , 'xmax':200.}, unit='GeV', xtitle='p_{T}^{Cone} (leading)'),
+#    VCfg(name='l2_jet_pt'      , binning={'nbinsx':16, 'xmin':0.  , 'xmax':200.}, unit='GeV', xtitle='p_{T}^{Cone} (trailing)'),
+#    VCfg(name='hnl_m_12_wide', drawname='hnl_m_12', binning={'nbinsx':24, 'xmin':0   , 'xmax':150 }, unit='GeV', xtitle='dimuon mass'),
+#    VCfg(name='hnl_mt_0'       , binning={'nbinsx':16, 'xmin':0   , 'xmax':200 }, unit='GeV', xtitle='M_{T} (leading)'),
+    VCfg(name='hnl_w_vis_m', binning={'nbinsx':24, 'xmin':50   , 'xmax':300 }, unit='GeV', xtitle='3 lepton mass'),
+]
 
-taumu_vars = generic_vars + muon_l1_vars + tau_l2_vars + tau_mu_special_vars
 
 mumu_vars = generic_vars + muon_l1_vars + muon_l2_vars + mu_mu_special_vars + additional_tau_vars
 

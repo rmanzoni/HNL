@@ -76,16 +76,17 @@ def prepareCuts(mode):
     '''
     mz = 91.18; mw = 80.4
 
-    CR_DY      = '  &&  abs(hnl_m_12 - 91.18) < 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj == 0  &&  pfmet_pt < 30  &&  hnl_mt_0 < 30' 
-    CR_DYNoM3l = '  &&  abs(hnl_m_12 - 91.18) < 15  &&  nbj == 0  &&  pfmet_pt < 30  &&  hnl_mt_0 < 30' 
-    CR_DYRic   = 'abs(l0_dz) < 0.2  &&  l1_q != l2_q  &&  l1_pt > 15  &&  l2_pt > 10  &&  abs(hnl_m_12 - 91.18) < 15  &&  nbj == 0' 
-    CR_ttbar   = '  &&  abs(hnl_m_12 - 91.18) > 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj >= 1  &&  hnl_m_12 > 12'
-    CR_ttbarb0 = '  &&  abs(hnl_m_12 - 91.18) > 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj == 0  &&  hnl_m_12 > 12'
-    CR_ttbarb1 = '  &&  abs(hnl_m_12 - 91.18) > 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj <= 1  &&  hnl_m_12 > 12'
-    CR_ttbarb2 = '  &&  abs(hnl_m_12 - 91.18) > 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj >= 2  &&  hnl_m_12 > 12'
-    CR_WZ      = '  &&  abs(hnl_m_12 - 91.18) < 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj == 0  &&  pfmet_pt > 50  &&  l0_pt > 25  &&  l1_pt > 15  &&  l2_pt > 10'
-    NaiveSR    = '  &&  hnl_pt_12 > 15  &&  hnl_w_vis_m < 80.4  &&  abs(hnl_m_12 - 91.18) > 10  &&  hnl_iso_rel < 0.2  &&  hnl_2d_disp_sig > 4  &&  l1_id_tnv  &&  l2_id_tnv'
-    NaiveSRv2  = NaiveSR + '  &&  sv_cos > 0.99  &&  nbj == 0  &&  hnl_w_m > 50  &&  abs(hnl_dphi_hnvis0) > 2  &&  hnl_mt_0 < 60'
+    CR_DY          = '  &&  abs(hnl_m_12 - 91.18) < 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj == 0  &&  pfmet_pt < 30  &&  hnl_mt_0 < 30' 
+    CR_DYNoM3l     = '  &&  abs(hnl_m_12 - 91.18) < 15  &&  nbj == 0  &&  pfmet_pt < 30  &&  hnl_mt_0 < 30' 
+    CR_DYRic       = 'abs(l0_dz) < 0.2  &&  l1_q != l2_q  &&  l1_pt > 15  &&  l2_pt > 10  &&  abs(hnl_m_12 - 91.18) < 15  &&  nbj == 0' 
+    CR_ttbar       = '  &&  abs(hnl_m_12 - 91.18) > 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj >= 1  &&  hnl_m_12 > 12'
+    CR_ttbarb0NoCV = '  &&  abs(hnl_m_12 - 91.18) > 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj == 0'
+    CR_ttbarb0     = '  &&  abs(hnl_m_12 - 91.18) > 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj == 0  &&  hnl_m_12 > 12'
+    CR_ttbarb1     = '  &&  abs(hnl_m_12 - 91.18) > 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj <= 1  &&  hnl_m_12 > 12'
+    CR_ttbarb2     = '  &&  abs(hnl_m_12 - 91.18) > 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj >= 2  &&  hnl_m_12 > 12'
+    CR_WZ          = '  &&  abs(hnl_m_12 - 91.18) < 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj == 0  &&  pfmet_pt > 50  &&  l0_pt > 25  &&  l1_pt > 15  &&  l2_pt > 10'
+    NaiveSR        = '  &&  hnl_pt_12 > 15  &&  hnl_w_vis_m < 80.4  &&  abs(hnl_m_12 - 91.18) > 10  &&  hnl_iso_rel < 0.2  &&  hnl_2d_disp_sig > 4  &&  l1_id_tnv  &&  l2_id_tnv'
+    NaiveSRv2      = NaiveSR + '  &&  sv_cos > 0.99  &&  nbj == 0  &&  hnl_w_m > 50  &&  abs(hnl_dphi_hnvis0) > 2  &&  hnl_mt_0 < 60'
 
     prompt_e_loose  = '  &&  l0_eid_mva_noniso_loose'
     prompt_e_medium = '  &&  l0_eid_cut_medium'
@@ -117,8 +118,17 @@ def prepareCuts(mode):
 
 #### 3.9.
 #    cuts.append(Cut('CR_TTbarb0v2', inc_cut + l0_tight + noIDnorIso + CR_ttbarb0))
-    cuts.append(Cut('CR_TTbarb0v3', inc_cut + l0_tight + noIDnorIso + CR_ttbarb0))  # NEW SAMPLES
+#    cuts.append(Cut('CR_TTbarb0v3', inc_cut + l0_tight + noIDnorIso + CR_ttbarb0))  # NEW SAMPLES
+#    cuts.append(Cut('test_batch_multi_CR_TTbarb0v3', inc_cut + l0_tight + noIDnorIso + CR_ttbarb0))  # NEW SAMPLES
 #    cuts.append(Cut('TTbar_disp1' , inc_cut + l0_tight + CR_ttbar + '  &&  hnl_2d_disp > 1'))
+### evening ## NEW SAMPLES FOR DY
+    cuts.append(Cut('TTbar_disp1v2'          , inc_cut + l0_tight + CR_ttbar   + '  &&  hnl_2d_disp > 1')) # NEW SAMPLES
+#    cuts.append(Cut('CR_TTbar_noIDnorIsov3'  , inc_cut + l0_tight + noIDnorIso + CR_ttbar))
+#    cuts.append(Cut('CR_TTbarb0_noIDnorIsov2', inc_cut + l0_tight + noIDnorIso + CR_ttbarb0))
+#    cuts.append(Cut('CR_TTbarb0NoCVv2'       , inc_cut + l0_tight + noIDnorIso + CR_ttbarb0NoCV))
+#    cuts.append(Cut('CR_DY_noIDnorIsov2'     , inc_cut + l0_tight + noIDnorIso + CR_DY + veto))
+#    cuts.append(Cut('CR_DY_IDlNoIsov2'       , inc_cut + l0_tight + IDlNoIso   + CR_DY + veto))
+#    cuts.append(Cut('CR_DY_IDlIso15v2'       , inc_cut + l0_tight + IDlIso15   + CR_DY + veto))
 
 #### 2.9.
 #    cuts.append(Cut('CR_TTbarb1_noIDnorIsov2', inc_cut + l0_tight + noIDnorIso + CR_ttbarb1))
@@ -233,12 +243,12 @@ def makePlots(variables, cuts, total_weight, sample_dict, hist_dict, qcd_from_sa
         # for plot in plots.itervalues():
             plot = plots[variable.name]
             plot.Group('data_obs', ['data_2017B_e', 'data_2017C_e', 'data_2017D_e', 'data_2017E_e', 'data_2017F_e'])
-            plot.Group('single t', ['ST_tW_at_5f_incD_e', 'ST_tW_t_5f_incD_e'])
+            plot.Group('single t', ['ST_tW_at_5f_incD_e', 'ST_tW_t_5f_incD_e', 'ST_sc_4f_lD_e', 'ST_tc_at_4f_incD_e', 'ST_tc_t_4f_incD_e'])
             plot.Group('Diboson', ['WZTo3LNu_e', 'ZZTo4L_e', 'WWTo2L2Nu_e'])
-            plot.Group('Triboson', ['ZZZ_e', 'WWW_e', 'WGGJets_e'])
+            plot.Group('Triboson', ['ZZZ_e', 'WWW_e', 'WGGJets_e', 'WZZ_e', 'WWZ_e'])
             plot.Group('ttV', ['TTZToLLNuNu_M10_e', 'TTWJetsToLNu_e', 'TTZToLL_M1To10_e'])
 #            plot.Group('DY', ['DYJets_M5T50_e', 'DYJets_M50_x_e', 'DYJets_M50_e'])
-            plot.Group('DY', ['DYJets_M5T50_e', 'D2YJets_M50_x_e', 'D2YJets_M50_e', 'D3YJets_M50_x_e', 'D3YJets_M50_e', 'D1YJets_M50_e'])
+            plot.Group('DY', ['DYJets_M5T50_e', 'DY2Jets_M50_x_e', 'DY2Jets_M50_e', 'DY3Jets_M50_x_e', 'DY3Jets_M50_e', 'DY1Jets_M50_e'])
             createDefaultGroups(plot)
             if make_plots:
                 HistDrawer.draw(plot, plot_dir = '/eos/user/v/vstampf/ntuples/plots/'+cut.name)#plot_dir='plots/'+cut.name)

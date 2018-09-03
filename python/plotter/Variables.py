@@ -319,6 +319,7 @@ hnl_vars = [
 
     VCfg(name='hnl_w_vis_m', binning={'nbinsx':40, 'xmin':0   , 'xmax':250 }, unit='GeV', xtitle='3 lepton mass'),
     VCfg(name='hnl_2d_disp', binning={'nbinsx':40, 'xmin':0   , 'xmax':100 }, unit='cm' , xtitle='2D displacement'),
+    VCfg(name'hnl_2d_small_disp', drawname='hnl_2d_disp', binning={'nbinsx':20, 'xmin':0   , 'xmax':40 }, unit='cm' , xtitle='2D displacement'),
     VCfg(name='hnl_3d_disp', binning={'nbinsx':40, 'xmin':0   , 'xmax':200 }, unit='cm' , xtitle='3D displacement'),
 
     VCfg(name='pfmet_phi' , binning={'nbinsx':40, 'xmin':-3.141593, 'xmax':3.141593}, unit=None, xtitle='E_{T}^{miss} #Phi (PF)'),

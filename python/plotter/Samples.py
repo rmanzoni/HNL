@@ -16,7 +16,8 @@ from CMGTools.HNL.samples.samples_mc_2017 import TTJets_amcat, TTJets_mdgrph, DY
 from CMGTools.HNL.samples.signal import HN3L_M_3_V_0p00316227766017_e_onshell  as HN3L_M3_e #.ctau = 14.6 cm
 from CMGTools.HNL.samples.signal import HN3L_M_3_V_0p00316227766017_mu_onshell as HN3L_M3_m #.ctau = 14.6 cm
 from CMGTools.HNL.samples.signal import HN3L_M_2_V_0p01_e_onshell              as HN3L_M2_e #.ctau = 11.1 cm
-from CMGTools.HNL.samples.samples_mc_2017_noskim import DYJetsToLL_M5to50, DYJetsToLL_M50, ZZZ, WZZ, WWZ, WWW, WWTo2L2Nu, WGGJets, TTWJetsToLNu, TTZToLLNuNu_M10, TTZToLL_M1To10
+from CMGTools.HNL.samples.samples_mc_2017_noskim import DYJetsToLL_M5to50, DYJetsToLL_M50, DY1JetsToLL_M50, DY2JetsToLL_M50, DY2JetsToLL_M50_ext, DY3JetsToLL_M50, DY3JetsToLL_M50_ext
+from CMGTools.HNL.samples.samples_mc_2017_noskim import ZZZ, WZZ, WWZ, WWW, WWTo2L2Nu, WGGJets, TTWJetsToLNu, TTZToLLNuNu_M10, TTZToLL_M1To10
 from CMGTools.HNL.samples.samples_mc_2017_noskim import ST_s_channel_4f_leptonDecays as ST_sc_4f_lD 
 from CMGTools.HNL.samples.samples_mc_2017_noskim import ST_t_channel_antitop_4f_inclusiveDecays as ST_tc_at_4f_incD 
 from CMGTools.HNL.samples.samples_mc_2017_noskim import ST_t_channel_top_4f_inclusiveDecays as ST_tc_t_4f_incD

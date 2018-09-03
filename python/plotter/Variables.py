@@ -257,6 +257,12 @@ additional_extra_tau_vars = [
 ]
 
 hnl_vars = [
+    VCfg(name='CR_l0_pt_cone' , drawname='l0_pt * (1 + l0_reliso05)'  , binning={'nbinsx':16, 'xmin':0.  , 'xmax':200.}, unit='GeV', xtitle='p_{T}^{Cone} (leading)'),
+    VCfg(name='CR_l2_pt_cone' , drawname='l2_pt * (1 + l2_reliso05)'  , binning={'nbinsx':16, 'xmin':0.  , 'xmax':200.}, unit='GeV', xtitle='p_{T}^{Cone} (trailing)'),
+    VCfg(name='CR_hnl_m_12'   , drawname='hnl_m_12'   , binning={'nbinsx':24, 'xmin':0   , 'xmax':150 }, unit='GeV', xtitle='dimuon mass'),
+    VCfg(name='CR_hnl_mt_0'   , drawname='hnl_mt_0'   , binning={'nbinsx':16, 'xmin':0   , 'xmax':200 }, unit='GeV', xtitle='M_{T} (leading)'),
+    VCfg(name='CR_hnl_w_vis_m', drawname='hnl_w_vis_m', binning={'nbinsx':24, 'xmin':50  , 'xmax':300 }, unit='GeV', xtitle='3 lepton mass'),
+
     VCfg(name='_norm_'     , drawname='1.', binning={'nbinsx':5, 'xmin':-1.5, 'xmax':3.5}, unit='', xtitle='Normalisation'),
 
     VCfg(name='n_vtx', binning={'nbinsx':101, 'xmin':-0.5, 'xmax':100.5}, unit=None, xtitle='N_{vertices}'),
@@ -300,8 +306,15 @@ hnl_vars = [
     VCfg(name='hnl_dr_02'        , binning={'nbinsx':40, 'xmin':0   , 'xmax':6 }, unit=None, xtitle='#DeltaR (e, #mu_{2})'),
     VCfg(name='hnl_dr_12'        , binning={'nbinsx':40, 'xmin':0   , 'xmax':6 }, unit=None, xtitle='#DeltaR (#mu_{1}, #mu_{2})'),
     VCfg(name='hnl_dr_hnvis0'    , binning={'nbinsx':40, 'xmin':0   , 'xmax':6 }, unit=None, xtitle='#DeltaR (dimuon, e)'),
-    VCfg(name='hnl_dphi_hnvismet', binning={'nbinsx':40, 'xmin':-pi , 'xmax':pi}, unit=None, xtitle='#Delta#phi (dimuon, E_{T}^{miss})'),
+
     VCfg(name='hnl_dphi_0met'    , binning={'nbinsx':40, 'xmin':-pi , 'xmax':pi}, unit=None, xtitle='#Delta#phi (e, E_{T}^{miss})'),
+    VCfg(name='hnl_dphi_1met'    , binning={'nbinsx':40, 'xmin':-pi , 'xmax':pi}, unit=None, xtitle='#Delta#phi (#mu_{1}, E_{T}^{miss})'),
+    VCfg(name='hnl_dphi_2met'    , binning={'nbinsx':40, 'xmin':-pi , 'xmax':pi}, unit=None, xtitle='#Delta#phi (#mu_{2}, E_{T}^{miss})'),
+    VCfg(name='hnl_dphi_hnvismet', binning={'nbinsx':40, 'xmin':-pi , 'xmax':pi}, unit=None, xtitle='#Delta#phi (dimuon, E_{T}^{miss})'),
+
+    VCfg(name='hnl_dphi_01'      , binning={'nbinsx':40, 'xmin':-pi , 'xmax':pi}, unit=None, xtitle='#Delta#phi (e, #mu_{1})'),
+    VCfg(name='hnl_dphi_02'      , binning={'nbinsx':40, 'xmin':-pi , 'xmax':pi}, unit=None, xtitle='#Delta#phi (e, #mu_{2})'),
+    VCfg(name='hnl_dphi_12'      , binning={'nbinsx':40, 'xmin':-pi , 'xmax':pi}, unit=None, xtitle='#Delta#phi (#mu_{1}, #mu_{2})'),
     VCfg(name='hnl_dphi_hnvis0'  , binning={'nbinsx':40, 'xmin':-pi , 'xmax':pi}, unit=None, xtitle='#Delta#phi (dimuon, e)'),
 
     VCfg(name='hnl_w_vis_m', binning={'nbinsx':40, 'xmin':0   , 'xmax':250 }, unit='GeV', xtitle='3 lepton mass'),
@@ -324,25 +337,6 @@ hnl_vars = [
 
 ]
 
-phi_vars = [
-    VCfg(name='hnl_dphi_1met'    , binning={'nbinsx':40, 'xmin':-pi , 'xmax':pi}, unit=None, xtitle='#Delta#phi (#mu_{1}, E_{T}^{miss})'),
-    VCfg(name='hnl_dphi_2met'    , binning={'nbinsx':40, 'xmin':-pi , 'xmax':pi}, unit=None, xtitle='#Delta#phi (#mu_{2}, E_{T}^{miss})'),
-    VCfg(name='hnl_dphi_01'      , binning={'nbinsx':40, 'xmin':-pi , 'xmax':pi}, unit=None, xtitle='#Delta#phi (e, #mu_{1})'),
-    VCfg(name='hnl_dphi_02'      , binning={'nbinsx':40, 'xmin':-pi , 'xmax':pi}, unit=None, xtitle='#Delta#phi (e, #mu_{2})'),
-    VCfg(name='hnl_dphi_12'      , binning={'nbinsx':40, 'xmin':-pi , 'xmax':pi}, unit=None, xtitle='#Delta#phi (#mu_{1}, #mu_{2})'),
-]
-
-
-CR_vars = [
-    VCfg(name='CR_l0_pt_cone' , drawname='l0_pt * (1 + l0_reliso05)'  , binning={'nbinsx':16, 'xmin':0.  , 'xmax':200.}, unit='GeV', xtitle='p_{T}^{Cone} (leading)'),
-    VCfg(name='CR_l2_pt_cone' , drawname='l2_pt * (1 + l2_reliso05)'  , binning={'nbinsx':16, 'xmin':0.  , 'xmax':200.}, unit='GeV', xtitle='p_{T}^{Cone} (trailing)'),
-    VCfg(name='CR_hnl_m_12'   , drawname='hnl_m_12'   , binning={'nbinsx':24, 'xmin':0   , 'xmax':150 }, unit='GeV', xtitle='dimuon mass'),
-    VCfg(name='CR_hnl_mt_0'   , drawname='hnl_mt_0'   , binning={'nbinsx':16, 'xmin':0   , 'xmax':200 }, unit='GeV', xtitle='M_{T} (leading)'),
-    VCfg(name='CR_hnl_w_vis_m', drawname='hnl_w_vis_m', binning={'nbinsx':24, 'xmin':50  , 'xmax':300 }, unit='GeV', xtitle='3 lepton mass'),
-]
-
-#hnl_vars += CR_vars 
-#hnl_vars += phi_vars
 
 taumu_vars = generic_vars + muon_l1_vars + tau_l2_vars + tau_mu_special_vars
 

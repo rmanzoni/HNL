@@ -9,11 +9,11 @@ from numpy import array
 from copy_reg import pickle       # to pickle methods for multiprocessing
 from types    import MethodType   # to pickle methods for multiprocessing
 
-from CMGTools.HNL.plotter.PlotConfigs import HistogramCfg, VariableCfg
-from CMGTools.HNL.plotter.categories_HNL import cat_Inc
-from CMGTools.HNL.plotter.HistCreatorMulti import CreateHists, createTrees
-from CMGTools.HNL.plotter.HistDrawer import HistDrawer
-from CMGTools.HNL.plotter.Variables import hnl_vars, getVars
+from CMGTools.HNL.plotter.PlotConfigs     import HistogramCfg, VariableCfg
+from CMGTools.HNL.plotter.categories_HNL  import cat_Inc
+from CMGTools.HNL.plotter.HistCreator     import CreateHists, createTrees
+from CMGTools.HNL.plotter.HistDrawer      import HistDrawer
+from CMGTools.HNL.plotter.Variables       import hnl_vars, getVars
 from CMGTools.HNL.samples.samples_mc_2017 import hnl_bkg
 from pdb import set_trace
 # from CMGTools.HNL.plotter.qcdEstimationMSSMltau import estimateQCDWMSSM, createQCDWHistograms
@@ -41,6 +41,7 @@ def _unpickle_method(func_name, obj, cls):
 pickle(MethodType, _pickle_method, _unpickle_method)
 
 gr.SetBatch(True) # NEEDS TO BE SET FOR MULTIPROCESSING OF plot.Draw()
+
 Cut = namedtuple('Cut', ['name', 'cut'])
 
 int_lumi = 41000.0 # pb #### FIXME 
@@ -120,7 +121,7 @@ def prepareCuts(mode):
 
 #### 1.9.
 ### testing multiprocessing
-#    cuts.append(Cut('CR_TTbarb0_noIDnorIso_test_multi', inc_cut + l0_tight + noIDnorIso + CR_ttbarb0))
+    cuts.append(Cut('CR_TTbarb0_noIDnorIso_test_multi', inc_cut + l0_tight + noIDnorIso + CR_ttbarb0))
 #    cuts.append(Cut('test_multi', inc_cut + l0_tight + tighter))
 ### doing things again with new hnl_dr_01>0.05 and hnl_dr_02>0.05 and updated binning for reliso (up to 0.5) 
 #    cuts.append(Cut('NaiveSRv3'          , inc_cut + l0_tight + NaiveSRv2))
@@ -194,21 +195,25 @@ def prepareCuts(mode):
     return cuts
 
 def createSamples(analysis_dir, total_weight, qcd_from_same_sign, w_qcd_mssm_method, r_qcd_os_ss):
-    hist_dict = {}
+    hist_dict   = {}
     sample_dict = {}
-#    set_trace()
     samples_mc, samples_data, samples, all_samples, sampleDict = createSampleLists(analysis_dir=analysis_dir)
 
     sample_dict['all_samples'] = all_samples
 
     return sample_dict, hist_dict
 
-def createVariables():
+def createVariables(rebin=None):
     # Taken from Variables.py; can get subset with e.g. getVars(['mt', 'mvis'])
     # variables = taumu_vars
     # variables = getVars(['_norm_', 'mt', 'mvis', 'l1_pt', 'l2_pt', 'l1_eta', 'l2_eta', 'n_vertices', 'n_jets', 'n_bjets'])
-#    variables = CR_vars
+
     variables = hnl_vars
+
+    if rebin>0:
+        for ivar in hnl_vars:
+            if ivar.name in ['_norm_', 'n_vtx']: continue
+            ivar.binning['nbinsx'] = int(ivar.binning['nbinsx']/rebin)
 
     return variables
 
@@ -226,16 +231,16 @@ def makePlots(variables, cuts, total_weight, sample_dict, hist_dict, qcd_from_sa
         for variable in variables:
         # for plot in plots.itervalues():
             plot = plots[variable.name]
-            plot.Group('data_obs', ['data_2017B_e', 'data_2017C_e', 'data_2017D_e', 'data_2017E_e', 'data_2017F_e'])
-            plot.Group('single t', ['ST_tW_at_5f_incD_e', 'ST_tW_t_5f_incD_e'])
-            plot.Group('Diboson', ['WZTo3LNu_e', 'ZZTo4L_e', 'WWTo2L2Nu_e'])
-            plot.Group('Triboson', ['ZZZ_e', 'WWW_e', 'WGGJets_e'])
-            plot.Group('ttV', ['TTZToLLNuNu_e', 'TTWJetsToLNu_e'])
-            plot.Group('DY', ['DYJets_M5T50_e', 'DYJets_M50_x_e', 'DYJets_M50_e'])
+#             plot.Group('data_obs', ['data_2017B_e', 'data_2017C_e', 'data_2017D_e', 'data_2017E_e', 'data_2017F_e'])
+#             plot.Group('single t', ['ST_tW_at_5f_incD_e', 'ST_tW_t_5f_incD_e'])
+#             plot.Group('Diboson' , ['WZTo3LNu_e', 'ZZTo4L_e', 'WWTo2L2Nu_e'])
+#             plot.Group('Triboson', ['ZZZ_e', 'WWW_e', 'WGGJets_e'])
+#             plot.Group('ttV'     , ['TTZToLLNuNu_e', 'TTWJetsToLNu_e'])
+#             plot.Group('DY'      , ['DYJets_M5T50_e', 'DYJets_M50_x_e', 'DYJets_M50_e'])
             createDefaultGroups(plot)
             if make_plots:
-                HistDrawer.draw(plot, plot_dir = '/eos/user/v/vstampf/ntuples/plots/'+cut.name)#plot_dir='plots/'+cut.name)
-
+                HistDrawer.draw(plot, plot_dir = '/eos/user/m/manzoni/HNL/plots/'+cut.name)#plot_dir='plots/'+cut.name)
+    
     print '\nOptimisation results:'
     all_vals = ams_dict.items()
     for sample_name in sample_names:
@@ -271,8 +276,6 @@ if __name__ == '__main__':
     analysis_dir = '/eos/user/v/vstampf/ntuples/'#bkg_mc_prompt_e/' # input
 
     total_weight = 'weight'
-# FIXME fix this 
-#    total_weight = 'weight * (1. - 0.0772790*(l2_gen_match == 5 && l2_decayMode==0) - 0.138582*(l2_gen_match == 5 && l2_decayMode==1) - 0.220793*(l2_gen_match == 5 && l2_decayMode==10) )' # Tau ID eff scale factor
 
     print total_weight
 
@@ -281,7 +284,20 @@ if __name__ == '__main__':
     variables = createVariables()
 
     sample_dict, hist_dict = createSamples(analysis_dir, total_weight, qcd_from_same_sign=False, w_qcd_mssm_method=False, r_qcd_os_ss=None)
-    makePlots(variables, cuts, total_weight, sample_dict, hist_dict={}, qcd_from_same_sign=False, w_qcd_mssm_method=False, mt_cut='', friend_func=lambda f: f.replace('TESUp', 'TESUpMultiMVA'), dc_postfix='_CMS_scale_t_mt_13TeVUp', make_plots=True)
-
-    for i in cuts:
-        copyfile('plot_cfg_HNL.py', '/eos/user/v/vstampf/ntuples/plots/'+i.name+'/plot_cfg.py')
+    
+    makePlots(
+        variables, 
+        cuts, 
+        total_weight, 
+        sample_dict, 
+        hist_dict={}, 
+        qcd_from_same_sign=False, 
+        w_qcd_mssm_method=False, 
+        mt_cut='', 
+        friend_func=lambda f: f.replace('TESUp', 'TESUpMultiMVA'), 
+        dc_postfix='_CMS_scale_t_mt_13TeVUp', 
+        make_plots=True
+    )
+# 
+#     for i in cuts:
+#         copyfile('plot_cfg_HNL.py', '/eos/user/v/vstampf/ntuples/plots/'+i.name+'/plot_cfg.py')

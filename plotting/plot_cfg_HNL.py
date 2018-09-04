@@ -13,7 +13,7 @@ from CMGTools.HNL.plotter.PlotConfigs import HistogramCfg, VariableCfg
 from CMGTools.HNL.plotter.categories_HNL import cat_Inc
 from CMGTools.HNL.plotter.HistCreator import CreateHists, createTrees
 from CMGTools.HNL.plotter.HistDrawer import HistDrawer
-from CMGTools.HNL.plotter.Variables import hnl_vars, getVars
+from CMGTools.HNL.plotter.Variables import hnl_vars, test, getVars
 from CMGTools.HNL.samples.samples_mc_2017 import hnl_bkg
 from pdb import set_trace
 # from CMGTools.HNL.plotter.qcdEstimationMSSMltau import estimateQCDWMSSM, createQCDWHistograms
@@ -86,7 +86,9 @@ def prepareCuts(mode):
     CR_ttbarb2     = '  &&  abs(hnl_m_12 - 91.18) > 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj >= 2  &&  hnl_m_12 > 12'
     CR_WZ          = '  &&  abs(hnl_m_12 - 91.18) < 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj == 0  &&  pfmet_pt > 50  &&  l0_pt > 25  &&  l1_pt > 15  &&  l2_pt > 10'
     NaiveSR        = '  &&  hnl_pt_12 > 15  &&  hnl_w_vis_m < 80.4  &&  abs(hnl_m_12 - 91.18) > 10  &&  hnl_iso_rel < 0.2  &&  hnl_2d_disp_sig > 4  &&  l1_id_tnv  &&  l2_id_tnv'
-    NaiveSRv2      = NaiveSR + '  &&  sv_cos > 0.99  &&  nbj == 0  &&  hnl_w_m > 50  &&  abs(hnl_dphi_hnvis0) > 2  &&  hnl_mt_0 < 60'
+    NaiveSRNoId    = '  &&  hnl_pt_12 > 15  &&  hnl_w_vis_m < 80.4  &&  abs(hnl_m_12 - 91.18) > 10  &&  hnl_iso_rel < 0.2  &&  hnl_2d_disp_sig > 4'
+    NaiveSRv2      = NaiveSR     + '  &&  sv_cos > 0.99  &&  nbj == 0  &&  hnl_w_m > 50  &&  abs(hnl_dphi_hnvis0) > 2  &&  hnl_mt_0 < 60'
+    NaiveSRv2NoId  = NaiveSRNoId + '  &&  sv_cos > 0.99  &&  nbj == 0  &&  hnl_w_m > 50  &&  abs(hnl_dphi_hnvis0) > 2  &&  hnl_mt_0 < 60'
 
     prompt_e_loose  = '  &&  l0_eid_mva_noniso_loose'
     prompt_e_medium = '  &&  l0_eid_cut_medium'
@@ -106,6 +108,12 @@ def prepareCuts(mode):
     IDlIso15   = IDlNoIso   + '  &&  l1_reliso05 < 0.15  &&  l2_reliso05 < 0.15'
     IDmIso15   = IDmNoIso   + '  &&  l1_reliso05 < 0.15  &&  l2_reliso05 < 0.15'
 
+    d1noIDnorIso = '  &&  hnl_2d_disp > 1' 
+    d1IDlNoIso   = d1noIDnorIso + '  &&  l1_id_l  &&  l2_id_l'                        
+    d1IDmNoIso   = d1noIDnorIso + '  &&  l1_id_m  &&  l2_id_m'
+    d1IDlIso15   = d1IDlNoIso   + '  &&  l1_reliso05 < 0.15  &&  l2_reliso05 < 0.15'
+    d1IDmIso15   = d1IDmNoIso   + '  &&  l1_reliso05 < 0.15  &&  l2_reliso05 < 0.15'
+
     if mode == 'e':
         l0_loose  = prompt_e_loose
         l0_medium = prompt_e_medium
@@ -116,19 +124,27 @@ def prepareCuts(mode):
         l0_medium = prompt_mu_medium
         l0_tight  = prompt_mu_tight
 
+#### 4.9.
+#    cuts.append(Cut('CR_TTbar_d1noIDnorIso'    , inc_cut + l0_tight + d1noIDnorIso + CR_ttbar))
+    cuts.append(Cut('CR_TTbar_d1IDmNoIso'      , inc_cut + l0_tight + d1IDmNoIso   + CR_ttbar))
+#    cuts.append(Cut('CR_TTbarb0_d1noIDnorIso'  , inc_cut + l0_tight + d1noIDnorIso + CR_ttbarb0))
+#    cuts.append(Cut('CR_WZ_d1IDmIso15'         , inc_cut + l0_tight + d1IDmIso15   + CR_WZ))
+#    cuts.append(Cut('NaiveSRNoIdv2'            , inc_cut + l0_tight + NaiveSRNoId))
+#    cuts.append(Cut('NaiveSRv2NoIdv2'            , inc_cut + l0_tight + NaiveSRv2NoId))
+
 #### 3.9.
 #    cuts.append(Cut('CR_TTbarb0v2', inc_cut + l0_tight + noIDnorIso + CR_ttbarb0))
 #    cuts.append(Cut('CR_TTbarb0v3', inc_cut + l0_tight + noIDnorIso + CR_ttbarb0))  # NEW SAMPLES
 #    cuts.append(Cut('test_batch_multi_CR_TTbarb0v3', inc_cut + l0_tight + noIDnorIso + CR_ttbarb0))  # NEW SAMPLES
 #    cuts.append(Cut('TTbar_disp1' , inc_cut + l0_tight + CR_ttbar + '  &&  hnl_2d_disp > 1'))
 ### evening ## NEW SAMPLES FOR DY
-    cuts.append(Cut('TTbar_disp1v2'          , inc_cut + l0_tight + CR_ttbar   + '  &&  hnl_2d_disp > 1')) # NEW SAMPLES
+#    cuts.append(Cut('TTbar_disp1v2'          , inc_cut + l0_tight + CR_ttbar   + '  &&  hnl_2d_disp > 1')) # NEW SAMPLES
 #    cuts.append(Cut('CR_TTbar_noIDnorIsov3'  , inc_cut + l0_tight + noIDnorIso + CR_ttbar))
 #    cuts.append(Cut('CR_TTbarb0_noIDnorIsov2', inc_cut + l0_tight + noIDnorIso + CR_ttbarb0))
 #    cuts.append(Cut('CR_TTbarb0NoCVv2'       , inc_cut + l0_tight + noIDnorIso + CR_ttbarb0NoCV))
 #    cuts.append(Cut('CR_DY_noIDnorIsov2'     , inc_cut + l0_tight + noIDnorIso + CR_DY + veto))
 #    cuts.append(Cut('CR_DY_IDlNoIsov2'       , inc_cut + l0_tight + IDlNoIso   + CR_DY + veto))
-#    cuts.append(Cut('CR_DY_IDlIso15v2'       , inc_cut + l0_tight + IDlIso15   + CR_DY + veto))
+#    cuts.append(Cut('CR_DY_IDlIso15_noIDnorIsov2'       , inc_cut + l0_tight + IDlIso15   + CR_DY + veto))
 
 #### 2.9.
 #    cuts.append(Cut('CR_TTbarb1_noIDnorIsov2', inc_cut + l0_tight + noIDnorIso + CR_ttbarb1))
@@ -162,6 +178,9 @@ def prepareCuts(mode):
 
 #### 31.8.
 #    cuts.append(Cut('CR_TTbarb0_noIDnorIso', inc_cut + l0_tight + noIDnorIso + CR_ttbarb0))
+#    cuts.append(Cut('CR_TTbarb0NoCV_noIDnorIso', inc_cut + l0_tight + noIDnorIso + CR_ttbarb0NoCV))
+#    cuts.append(Cut('NaiveSRNoId'            , inc_cut + l0_tight + NaiveSRNoId))
+#    cuts.append(Cut('test_multi', inc_cut + l0_tight + tighter))
 
 #### 30.8.
 ###  morning
@@ -219,12 +238,18 @@ def createSamples(analysis_dir, total_weight, qcd_from_same_sign, w_qcd_mssm_met
 
     return sample_dict, hist_dict
 
-def createVariables():
+def createVariables(rebin=None):
     # Taken from Variables.py; can get subset with e.g. getVars(['mt', 'mvis'])
     # variables = taumu_vars
     # variables = getVars(['_norm_', 'mt', 'mvis', 'l1_pt', 'l2_pt', 'l1_eta', 'l2_eta', 'n_vertices', 'n_jets', 'n_bjets'])
 #    variables = CR_vars
+#    variables = test
+    DoNotRebin = ['_norm_', 'n_vtx', 'nj', 'nbj', 'n_vtx']
     variables = hnl_vars
+    if rebin>0:
+        for ivar in hnl_vars:
+            if ivar.name in DoNotRebin: continue
+            ivar.binning['nbinsx'] = int(ivar.binning['nbinsx']/rebin)
 
     return variables
 
@@ -295,7 +320,7 @@ if __name__ == '__main__':
 
     cuts = prepareCuts(mode)
 
-    variables = createVariables()
+    variables = createVariables(2.5)
 
     sample_dict, hist_dict = createSamples(analysis_dir, total_weight, qcd_from_same_sign=False, w_qcd_mssm_method=False, r_qcd_os_ss=None)
     makePlots(variables, cuts, total_weight, sample_dict, hist_dict={}, qcd_from_same_sign=False, w_qcd_mssm_method=False, mt_cut='', friend_func=lambda f: f.replace('TESUp', 'TESUpMultiMVA'), dc_postfix='_CMS_scale_t_mt_13TeVUp', make_plots=True)

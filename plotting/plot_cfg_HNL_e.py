@@ -10,13 +10,8 @@ from copy_reg import pickle       # to pickle methods for multiprocessing
 from types    import MethodType   # to pickle methods for multiprocessing
 
 from CMGTools.HNL.plotter.PlotConfigs import HistogramCfg, VariableCfg
-<<<<<<< HEAD
-# from CMGTools.HNL.plotter.categories_TauMu import cat_Inc
-from CMGTools.HNL.plotter.HistCreator import createHistograms, createTrees
-=======
 from CMGTools.HNL.plotter.categories_HNL import cat_Inc
 from CMGTools.HNL.plotter.HistCreator import CreateHists, createTrees
->>>>>>> vstampf/rm-94-patch-3
 from CMGTools.HNL.plotter.HistDrawer import HistDrawer
 from CMGTools.HNL.plotter.Variables import hnl_vars, getVars
 from CMGTools.HNL.samples.samples_mc_2017 import hnl_bkg
@@ -26,6 +21,8 @@ from CMGTools.HNL.plotter.defaultGroups import createDefaultGroups
 
 from CMGTools.HNL.plotter.Samples import createSampleLists
 from CMGTools.HNL.plotter.metrics import ams_hists
+
+plotDir = '/eos/user/d/dezhu/HNL/ntuples/'
 
 def _pickle_method(method): 
     func_name = method.im_func.__name__
@@ -53,25 +50,6 @@ int_lumi = 41000.0 # pb #### FIXME
 
 def prepareCuts(mode):
     cuts = []
-<<<<<<< HEAD
-    # inc_cut = '&&'.join([cat_Inc])
-    # inc_cut += '&& l2_decayModeFinding'
-
-<<<<<<< HEAD
-    cuts.append(Cut('inclusive', inc_cut + '&&  l1_q != l2_q  &&  l0_eid_mva_noniso_loose & l0_reliso05<0.15  &&  l1_id_m & l2_id_m'))
-=======
-    cuts.append(Cut('ttjetsloose', 'nbj>1'))
-#     cuts.append(Cut('zmmloose' , 'l1_pt>5  & l2_pt>5  & l1_q!=l2_q & l1_id_t & l2_id_t & l1_reliso05<0.2 & l2_reliso05<0.2 & l1_dz<0.2 & l2_dz<0.2 & l1_dxy<0.045 & l2_dxy<0.045 & nbj==0 & pass_e_veto & pass_m_veto'))
-#     cuts.append(Cut('zmmhighpt', 'l1_pt>15  & l2_pt>15  & l1_q!=l2_q & l1_id_t & l2_id_t & l1_reliso05<0.2 & l2_reliso05<0.2 & l1_dz<0.2 & l2_dz<0.2 & l1_dxy<0.045 & l2_dxy<0.045 & nbj==0 & pass_e_veto & pass_m_veto'))
-#     cuts.append(Cut('zmm'      , 'l1_pt>10 & l2_pt>10 & l1_q!=l2_q & !l0_eid_mva_iso_loose & l0_reliso05>0.15 & l1_id_t & l2_id_t & l1_reliso05<0.2 & l2_reliso05<0.2 & l1_dz<0.2 & l2_dz<0.2 & l1_dxy<0.045 & l2_dxy<0.045 & nbj==0 & pass_e_veto & pass_m_veto'))
-
-#     cuts.append(Cut('inclusive'    , 'l0_pt>30 & l1_pt>4 & l2_pt>4 & l1_q != l2_q && l0_eid_mva_iso_loose & l0_reliso05<0.15'))
-#     cuts.append(Cut('inclusive'    , 'l0_pt>30 & l1_pt>4 & l2_pt>4 & l1_q != l2_q && l0_eid_mva_iso_loose & l0_reliso05<0.15 & l1_id_m & l2_id_m & l1_reliso05<0.2 & l2_reliso05<0.2'))
-#     cuts.append(Cut('inc_nobj'     , 'l0_pt>30 & l1_pt>4 & l2_pt>4 & l1_q != l2_q && l0_eid_mva_iso_loose & l0_reliso05<0.15 & l1_id_m & l2_id_m & l1_reliso05<0.2 & l2_reliso05<0.2 & nbj==0'))
-#     cuts.append(Cut('inc_nobj_veto', 'l0_pt>30 & l1_pt>4 & l2_pt>4 & l1_q != l2_q && l0_eid_mva_iso_loose & l0_reliso05<0.15 & l1_id_m & l2_id_m & l1_reliso05<0.2 & l2_reliso05<0.2 & nbj==0 & pass_e_veto & pass_m_veto'))
-#     cuts.append(Cut('stringent'    , 'l0_pt>30 & l1_pt>4 & l2_pt>4 & sv_prob>0.1 & sv_cos>0.9 & hnl_2d_disp_sig>3 & abs(hnl_w_q)==1 & hnl_iso_rel<0.2 & hnl_hn_q==0 & hnl_pt_12>20 & l0_eid_mva_iso_loose & l1_is_oot==0 & l2_is_oot==0 & pass_e_veto & pass_m_veto & l1_id_l & l2_id_l & l0_reliso05<0.2 & nbj==0 & hnl_2d_disp>2'))
->>>>>>> rmanzoni/master
-=======
     inc_cut =   'l1_pt > 4  &&  l2_pt > 4  &&  l0_pt > 35' #'.join([cat_Inc])
     inc_cut += '  &&  l1_q != l2_q'
     inc_cut += '  &&  l0_reliso05 < 0.15'
@@ -95,7 +73,6 @@ def prepareCuts(mode):
     '''slide 14 - DY:     OSSF pair present; |M_ll - m_Z| < 15 GeV; |M_3l - m_Z| > 15 GeV; 0 b-jets; E_T^miss < 30GeV; M_T < 30GeV
        slide 15 - ttbar:  |M_ll - m_Z| > 15 GeV (if OSSF); |M_3l - m_Z| > 15 GeV (if OSSF); >= 1 b-jets; veto M_ll < 12 GeV (conversion)
        slide 17 - WZ:     OSSF pair present; |M_ll -m_Z|< 15 GeV; |M_3l -m_Z| > 15 GeV; 0 b-jets; E_T^miss > 50 GeV ; p_T > 25, 15, 10 GeV (l0,1,2)
-
        E_T^Miss == pfmet_pt, M_T == hnl_mt_0 
     '''
     mz = 91.18; mw = 80.4
@@ -138,7 +115,6 @@ def prepareCuts(mode):
         l0_loose  = prompt_mu_loose
         l0_medium = prompt_mu_medium
         l0_tight  = prompt_mu_tight
->>>>>>> vstampf/rm-94-patch-3
 
 #### 3.9.
 #    cuts.append(Cut('CR_TTbarb0v2', inc_cut + l0_tight + noIDnorIso + CR_ttbarb0))
@@ -251,31 +227,20 @@ def makePlots(variables, cuts, total_weight, sample_dict, hist_dict, qcd_from_sa
         cfg_main.vars = variables
         HISTS = CreateHists(cfg_main)
 
-<<<<<<< HEAD
-        plots = createHistograms(cfg_main, verbose=False, friend_func=friend_func)
-=======
         plots = HISTS.createHistograms(cfg_main, verbose=False, friend_func=friend_func)
->>>>>>> vstampf/rm-94-patch-3
         #plots.legendPos = 'right'
         for variable in variables:
         # for plot in plots.itervalues():
             plot = plots[variable.name]
             plot.Group('data_obs', ['data_2017B_e', 'data_2017C_e', 'data_2017D_e', 'data_2017E_e', 'data_2017F_e'])
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-            plot.Group('Diboson', ['WZTo3LNu_e', 'ZZTo4L_e'])
->>>>>>> rmanzoni/master
-=======
             plot.Group('single t', ['ST_tW_at_5f_incD_e', 'ST_tW_t_5f_incD_e'])
             plot.Group('Diboson', ['WZTo3LNu_e', 'ZZTo4L_e', 'WWTo2L2Nu_e'])
             plot.Group('Triboson', ['ZZZ_e', 'WWW_e', 'WGGJets_e'])
             plot.Group('ttV', ['TTZToLLNuNu_e', 'TTWJetsToLNu_e'])
             plot.Group('DY', ['DYJets_M5T50_e', 'DYJets_M50_x_e', 'DYJets_M50_e'])
->>>>>>> vstampf/rm-94-patch-3
             createDefaultGroups(plot)
             if make_plots:
-                HistDrawer.draw(plot, plot_dir = '/eos/user/v/vstampf/ntuples/plots/'+cut.name)#plot_dir='plots/'+cut.name)
+                HistDrawer.draw(plot, plot_dir = plotDir+cut.name)#plot_dir='plots/'+cut.name)
 
     print '\nOptimisation results:'
     all_vals = ams_dict.items()
@@ -295,13 +260,10 @@ def makePlots(variables, cuts, total_weight, sample_dict, hist_dict, qcd_from_sa
 
 if __name__ == '__main__':
         
-<<<<<<< HEAD
-=======
 
     mode = 'e' 
 #    mode = 'm'
 
->>>>>>> vstampf/rm-94-patch-3
     friend_func = None
     
     qcd_from_same_sign = True
@@ -328,4 +290,4 @@ if __name__ == '__main__':
     makePlots(variables, cuts, total_weight, sample_dict, hist_dict={}, qcd_from_same_sign=False, w_qcd_mssm_method=False, mt_cut='', friend_func=lambda f: f.replace('TESUp', 'TESUpMultiMVA'), dc_postfix='_CMS_scale_t_mt_13TeVUp', make_plots=True)
 
     for i in cuts:
-        copyfile('plot_cfg_HNL.py', '/eos/user/v/vstampf/ntuples/plots/'+i.name+'/plot_cfg.py')
+        copyfile('plot_cfg_HNL.py', plotDir+i.name+'/plot_cfg.py')

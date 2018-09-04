@@ -13,7 +13,7 @@ from CMGTools.HNL.plotter.PlotConfigs import HistogramCfg, VariableCfg
 from CMGTools.HNL.plotter.categories_HNL import cat_Inc
 from CMGTools.HNL.plotter.HistCreator import CreateHists, createTrees
 from CMGTools.HNL.plotter.HistDrawer import HistDrawer
-from CMGTools.HNL.plotter.Variables import hnl_vars, getVars
+from CMGTools.HNL.plotter.Variables import hnl_vars, getVars, test_vars
 from CMGTools.HNL.samples.samples_mc_2017 import hnl_bkg
 from pdb import set_trace
 # from CMGTools.HNL.plotter.qcdEstimationMSSMltau import estimateQCDWMSSM, createQCDWHistograms
@@ -22,7 +22,13 @@ from CMGTools.HNL.plotter.defaultGroups import createDefaultGroups
 from CMGTools.HNL.plotter.Samples import createSampleLists
 from CMGTools.HNL.plotter.metrics import ams_hists
 
-plotDir = '/eos/user/d/dezhu/HNL/ntuples/'
+######################
+# Basic configurations
+######################
+plotDir = '/eos/user/d/dezhu/HNL/plots/prompt_mu'
+# mode = 'e' 
+mode = 'm'
+
 
 def _pickle_method(method): 
     func_name = method.im_func.__name__
@@ -214,7 +220,8 @@ def createVariables():
     # variables = taumu_vars
     # variables = getVars(['_norm_', 'mt', 'mvis', 'l1_pt', 'l2_pt', 'l1_eta', 'l2_eta', 'n_vertices', 'n_jets', 'n_bjets'])
 #    variables = CR_vars
-    variables = hnl_vars
+    # variables = hnl_vars
+    variables = test_vars
 
     return variables
 
@@ -261,7 +268,7 @@ def makePlots(variables, cuts, total_weight, sample_dict, hist_dict, qcd_from_sa
 if __name__ == '__main__':
         
 
-    mode = 'e' 
+    # mode = 'e' 
 #    mode = 'm'
 
     friend_func = None
@@ -290,4 +297,4 @@ if __name__ == '__main__':
     makePlots(variables, cuts, total_weight, sample_dict, hist_dict={}, qcd_from_same_sign=False, w_qcd_mssm_method=False, mt_cut='', friend_func=lambda f: f.replace('TESUp', 'TESUpMultiMVA'), dc_postfix='_CMS_scale_t_mt_13TeVUp', make_plots=True)
 
     for i in cuts:
-        copyfile('plot_cfg_HNL.py', plotDir+i.name+'/plot_cfg.py')
+        copyfile('plot_cfg_HNL_mu.py', plotDir+i.name+'/plot_cfg.py')

@@ -337,6 +337,11 @@ hnl_vars = [
 
 ]
 
+test_vars = [
+    VCfg(name='hnl_m_01', binning={'nbinsx':40, 'xmin':0   , 'xmax':200 }, unit='GeV', xtitle='mass(e,#mu_{1})'),
+    # VCfg(name='hnl_m_02', binning={'nbinsx':40, 'xmin':0   , 'xmax':200 }, unit='GeV', xtitle='mass(e,#mu_{2})'),
+]
+
 
 taumu_vars = generic_vars + muon_l1_vars + tau_l2_vars + tau_mu_special_vars
 
@@ -347,6 +352,8 @@ emu_vars = generic_vars +electron_l1_vars + muon_l2_vars + mu_mu_special_vars + 
 tautau_vars = generic_vars + tau_l1_vars + tau_l2_vars + tau_tau_special_vars
 
 all_vars = generic_vars + muon_l1_vars + muon_l2_vars + tau_l2_vars + additional_tau_vars + tau_tau_special_vars + tau_mu_special_vars # + additional_tau_vars 
+
+test_vars = test_vars
 
 
 dict_all_vars = {}

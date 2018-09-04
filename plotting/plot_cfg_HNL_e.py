@@ -290,4 +290,4 @@ if __name__ == '__main__':
     makePlots(variables, cuts, total_weight, sample_dict, hist_dict={}, qcd_from_same_sign=False, w_qcd_mssm_method=False, mt_cut='', friend_func=lambda f: f.replace('TESUp', 'TESUpMultiMVA'), dc_postfix='_CMS_scale_t_mt_13TeVUp', make_plots=True)
 
     for i in cuts:
-        copyfile('plot_cfg_HNL.py', plotDir+i.name+'/plot_cfg.py')
+        copyfile('plot_cfg_HNL_e.py', plotDir+i.name+'/plot_cfg.py')

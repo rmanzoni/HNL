@@ -312,7 +312,7 @@ if __name__ == '__main__':
 
     analysis_dir = '/eos/user/v/vstampf/ntuples/'#bkg_mc_prompt_e/' # input
 
-    total_weight = 'weight'
+    total_weight = 'weight * lhe_weight'
 # FIXME fix this 
 #    total_weight = 'weight * (1. - 0.0772790*(l2_gen_match == 5 && l2_decayMode==0) - 0.138582*(l2_gen_match == 5 && l2_decayMode==1) - 0.220793*(l2_gen_match == 5 && l2_decayMode==10) )' # Tau ID eff scale factor
 

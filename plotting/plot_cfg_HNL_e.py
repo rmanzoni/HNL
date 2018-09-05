@@ -22,6 +22,8 @@ from CMGTools.HNL.plotter.defaultGroups import createDefaultGroups
 from CMGTools.HNL.plotter.Samples import createSampleLists
 from CMGTools.HNL.plotter.metrics import ams_hists
 
+plotDir = '/eos/user/v/vstampf/ntuples/plots/prompt_e/'
+
 def _pickle_method(method): 
     func_name = method.im_func.__name__
     obj = method.im_self
@@ -125,10 +127,10 @@ def prepareCuts(mode):
         l0_tight  = prompt_mu_tight
 
 #### 5.9.     ## incl proper LHE weighting
-#    cuts.append(Cut('CR_TTbar_d0p5noIDnorIso'    , inc_cut + l0_tight + d0p5noIDnorIso + CR_ttbar))
+    cuts.append(Cut('CR_TTbar_d0p5noIDnorIso'    , inc_cut + l0_tight + d0p5noIDnorIso + CR_ttbar))
 #    cuts.append(Cut('CR_TTbar_d0p5IDmNoIso'      , inc_cut + l0_tight + d0p5IDmNoIso   + CR_ttbar))
 #    cuts.append(Cut('CR_TTbarb0_d0p5noIDnorIso'  , inc_cut + l0_tight + d0p5noIDnorIso + CR_ttbarb0))
-    cuts.append(Cut('CR_WZ_d0p5IDmIso15'         , inc_cut + l0_tight + d0p5IDmIso15   + CR_WZ))
+#    cuts.append(Cut('CR_WZ_d0p5IDmIso15'         , inc_cut + l0_tight + d0p5IDmIso15   + CR_WZ))
 
 #### 4.9.
 #    cuts.append(Cut('CR_TTbar_d1noIDnorIso'    , inc_cut + l0_tight + d1noIDnorIso + CR_ttbar))
@@ -319,8 +321,6 @@ if __name__ == '__main__':
     analysis_dir = '/eos/user/v/vstampf/ntuples/'#bkg_mc_prompt_e/' # input
 
     total_weight = 'weight * lhe_weight'
-# FIXME fix this 
-#    total_weight = 'weight * (1. - 0.0772790*(l2_gen_match == 5 && l2_decayMode==0) - 0.138582*(l2_gen_match == 5 && l2_decayMode==1) - 0.220793*(l2_gen_match == 5 && l2_decayMode==10) )' # Tau ID eff scale factor
 
     print total_weight
 
@@ -329,7 +329,19 @@ if __name__ == '__main__':
     variables = createVariables(2.5)
 
     sample_dict, hist_dict = createSamples(analysis_dir, total_weight, qcd_from_same_sign=False, w_qcd_mssm_method=False, r_qcd_os_ss=None)
-    makePlots(variables, cuts, total_weight, sample_dict, hist_dict={}, qcd_from_same_sign=False, w_qcd_mssm_method=False, mt_cut='', friend_func=lambda f: f.replace('TESUp', 'TESUpMultiMVA'), dc_postfix='_CMS_scale_t_mt_13TeVUp', make_plots=True)
+    makePlots(
+        variables, 
+        cuts, 
+        total_weight, 
+        sample_dict, 
+        hist_dict={}, 
+        qcd_from_same_sign=False, 
+        w_qcd_mssm_method=False, 
+        mt_cut='', 
+        friend_func=lambda f: f.replace('TESUp', 'TESUpMultiMVA'), 
+        dc_postfix='_CMS_scale_t_mt_13TeVUp', 
+        make_plots=True
+    )
 
     for i in cuts:
-        copyfile('plot_cfg_HNL.py', '/eos/user/v/vstampf/ntuples/plots/'+i.name+'/plot_cfg.py')
+        copyfile('plot_cfg_HNL_e.py', plotDir+i.name+'/plot_cfg.py')

@@ -221,10 +221,9 @@ def createSamples(analysis_dir, total_weight, qcd_from_same_sign, w_qcd_mssm_met
     hist_dict = {}
     sample_dict = {}
 #    set_trace()
-    samples_mc, samples_data, samples, all_samples, sampleDict, samples_essential = createSampleLists(analysis_dir=analysis_dir, channel = mode)
+    samples_mc, samples_data, samples, all_samples, sampleDict = createSampleLists(analysis_dir=analysis_dir, channel = mode)
     
     sample_dict['all_samples'] = all_samples
-    sample_dict['samples_essential'] = samples_essential
 
     return sample_dict, hist_dict
 
@@ -254,12 +253,13 @@ def makePlots(variables, cuts, total_weight, sample_dict, hist_dict, qcd_from_sa
         # for plot in plots.itervalues():
             plot = plots[variable.name]
             # plot.Group('data_obs', ['data_2017B_e', 'data_2017C_e', 'data_2017D_e', 'data_2017E_e', 'data_2017F_e'])
-            plot.Group('data_obs', ['data_2017B_m', 'data_2017C_m', 'data_2017D_m', 'data_2017E_m', 'data_2017F_m'])
-            plot.Group('single t', ['ST_tW_at_5f_incD_m', 'ST_tW_t_5f_incD_m'])
-            plot.Group('Diboson', ['WZTo3LNu_m', 'ZZTo4L_m', 'WWTo2L2Nu_m'])
-            plot.Group('Triboson', ['ZZZ_m', 'WWW_m', 'WGGJets_m'])
-            plot.Group('ttV', ['TTZToLLNuNu_m', 'TTWJetsToLNu_m'])
-            plot.Group('DY', ['DYJets_M5T50_m', 'DYJets_M50_x_m', 'DYJets_M50_m'])
+            plot.Group('data_obs', ['data_2017B', 'data_2017C', 'data_2017D', 'data_2017E', 'data_2017F'])
+            plot.Group('single t', ['ST_tW_at_5f_incD', 'ST_tW_t_5f_incD'])
+            plot.Group('Diboson', ['WZTo3LNu', 'ZZTo4L', 'WWTo2L2Nu'])
+            plot.Group('Triboson', ['ZZZ', 'WWW', 'WGGJets'])
+            plot.Group('ttV', ['TTZToLLNuNu', 'TTWJetsToLNu'])
+            # plot.Group('DY', ['DYJets_M5T50', 'DYJets_M50_x', 'DYJets_M50'])
+            plot.Group('DY', ['DYJetsToLL_M5to50', 'DYJets_ext'])
             createDefaultGroups(plot)
             if make_plots:
                 HistDrawer.draw(plot,channel = channel_name, plot_dir = plotDir+cut.name)#plot_dir='plots/'+cut.name)

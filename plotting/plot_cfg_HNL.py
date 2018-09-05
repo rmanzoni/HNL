@@ -108,11 +108,11 @@ def prepareCuts(mode):
     IDlIso15   = IDlNoIso   + '  &&  l1_reliso05 < 0.15  &&  l2_reliso05 < 0.15'
     IDmIso15   = IDmNoIso   + '  &&  l1_reliso05 < 0.15  &&  l2_reliso05 < 0.15'
 
-    d1noIDnorIso = '  &&  hnl_2d_disp > 1' 
-    d1IDlNoIso   = d1noIDnorIso + '  &&  l1_id_l  &&  l2_id_l'                        
-    d1IDmNoIso   = d1noIDnorIso + '  &&  l1_id_m  &&  l2_id_m'
-    d1IDlIso15   = d1IDlNoIso   + '  &&  l1_reliso05 < 0.15  &&  l2_reliso05 < 0.15'
-    d1IDmIso15   = d1IDmNoIso   + '  &&  l1_reliso05 < 0.15  &&  l2_reliso05 < 0.15'
+    d0p5noIDnorIso = '  &&  hnl_2d_disp > 0.5' 
+    d0p5IDlNoIso   = d0p5noIDnorIso + '  &&  l1_id_l  &&  l2_id_l'                        
+    d0p5IDmNoIso   = d0p5noIDnorIso + '  &&  l1_id_m  &&  l2_id_m'
+    d0p5IDlIso15   = d0p5IDlNoIso   + '  &&  l1_reliso05 < 0.15  &&  l2_reliso05 < 0.15'
+    d0p5IDmIso15   = d0p5IDmNoIso   + '  &&  l1_reliso05 < 0.15  &&  l2_reliso05 < 0.15'
 
     if mode == 'e':
         l0_loose  = prompt_e_loose
@@ -124,13 +124,19 @@ def prepareCuts(mode):
         l0_medium = prompt_mu_medium
         l0_tight  = prompt_mu_tight
 
+#### 5.9.     ## incl proper LHE weighting
+#    cuts.append(Cut('CR_TTbar_d0p5noIDnorIso'    , inc_cut + l0_tight + d0p5noIDnorIso + CR_ttbar))
+#    cuts.append(Cut('CR_TTbar_d0p5IDmNoIso'      , inc_cut + l0_tight + d0p5IDmNoIso   + CR_ttbar))
+#    cuts.append(Cut('CR_TTbarb0_d0p5noIDnorIso'  , inc_cut + l0_tight + d0p5noIDnorIso + CR_ttbarb0))
+    cuts.append(Cut('CR_WZ_d0p5IDmIso15'         , inc_cut + l0_tight + d0p5IDmIso15   + CR_WZ))
+
 #### 4.9.
 #    cuts.append(Cut('CR_TTbar_d1noIDnorIso'    , inc_cut + l0_tight + d1noIDnorIso + CR_ttbar))
 #    cuts.append(Cut('CR_TTbar_d1IDmNoIso'      , inc_cut + l0_tight + d1IDmNoIso   + CR_ttbar))
-    cuts.append(Cut('CR_TTbarb0_d1noIDnorIso'  , inc_cut + l0_tight + d1noIDnorIso + CR_ttbarb0))
+#    cuts.append(Cut('CR_TTbarb0_d1noIDnorIso'  , inc_cut + l0_tight + d1noIDnorIso + CR_ttbarb0))
 #    cuts.append(Cut('CR_WZ_d1IDmIso15'         , inc_cut + l0_tight + d1IDmIso15   + CR_WZ))
 #    cuts.append(Cut('NaiveSRNoIdv2'            , inc_cut + l0_tight + NaiveSRNoId))
-#    cuts.append(Cut('NaiveSRv2NoIdv2'            , inc_cut + l0_tight + NaiveSRv2NoId))
+#    cuts.append(Cut('NaiveSRv2NoIdv2'          , inc_cut + l0_tight + NaiveSRv2NoId))
 
 #### 3.9.
 #    cuts.append(Cut('CR_TTbarb0v2', inc_cut + l0_tight + noIDnorIso + CR_ttbarb0))
@@ -267,13 +273,13 @@ def makePlots(variables, cuts, total_weight, sample_dict, hist_dict, qcd_from_sa
         for variable in variables:
         # for plot in plots.itervalues():
             plot = plots[variable.name]
-            plot.Group('data_obs', ['data_2017B_e', 'data_2017C_e', 'data_2017D_e', 'data_2017E_e', 'data_2017F_e'])
-            plot.Group('single t', ['ST_tW_at_5f_incD_e', 'ST_tW_t_5f_incD_e', 'ST_sc_4f_lD_e', 'ST_tc_at_4f_incD_e', 'ST_tc_t_4f_incD_e'])
-            plot.Group('Diboson', ['WZTo3LNu_e', 'ZZTo4L_e', 'WWTo2L2Nu_e'])
-            plot.Group('Triboson', ['ZZZ_e', 'WWW_e', 'WGGJets_e', 'WZZ_e', 'WWZ_e'])
-            plot.Group('ttV', ['TTZToLLNuNu_M10_e', 'TTWJetsToLNu_e', 'TTZToLL_M1To10_e'])
-#            plot.Group('DY', ['DYJets_M5T50_e', 'DYJets_M50_x_e', 'DYJets_M50_e'])
-            plot.Group('DY', ['DYJets_M5T50_e', 'DY2Jets_M50_x_e', 'DY2Jets_M50_e', 'DY3Jets_M50_x_e', 'DY3Jets_M50_e', 'DY1Jets_M50_e'])
+            plot.Group('data_obs', ['data_2017B', 'data_2017C', 'data_2017D', 'data_2017E', 'data_2017F'])
+            plot.Group('single t', ['ST_tW_inc', 'STbar_tW_inc', 'ST_sch_lep', 'STbar_tch_inc', 'ST_tch_inc'])
+            plot.Group('Diboson', ['WZTo3LNu', 'ZZTo4L', 'WWTo2L2Nu'])
+            plot.Group('Triboson', ['ZZZ', 'WWW', 'WGGJets', 'WZZ', 'WWZ'])
+            plot.Group('ttV', ['TTZToLL_M10', 'TTWJetsToLNu', 'TTZToLL_M1to10'])
+#            plot.Group('DY', ['DYJets_M5T50', 'DYJets_M50_x', 'DYJets_M50'])
+            plot.Group('DY', ['DYJetsToLL_M5to50', 'DY2Jets_M50_ext', 'DY2Jets_M50', 'DY3Jets_M50_ext', 'DY3Jets_M50', 'DY1Jets_M50'])
             createDefaultGroups(plot)
             if make_plots:
                 HistDrawer.draw(plot, plot_dir = '/eos/user/v/vstampf/ntuples/plots/'+cut.name)#plot_dir='plots/'+cut.name)

@@ -92,8 +92,8 @@ TTWJetsToLNu = creator.makeMCComponent(
 TTWJetsToLNu .nGenEvents = TTWJetsToLNu.dataset_entries 
 
 
-TTZToLLNuNu_M10 = creator.makeMCComponent(
-    name    = 'TTZToLLNuNu_M10', 
+TTZToLL_M10 = creator.makeMCComponent(
+    name    = 'TTZToLL_M10', 
     dataset = '/TTZToLLNuNu_M-10_TuneCP5_13TeV-amcatnlo-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
     user    = 'CMS', 
     pattern = '.*root', 
@@ -101,11 +101,11 @@ TTZToLLNuNu_M10 = creator.makeMCComponent(
     useAAA  = True
 )
 
-TTZToLLNuNu_M10 .nGenEvents = TTZToLLNuNu_M10.dataset_entries 
+TTZToLL_M10 .nGenEvents = TTZToLL_M10.dataset_entries 
 
 
-TTZToLL_M1To10 = creator.makeMCComponent(
-    name    = 'TTZToLL_M1To10', 
+TTZToLL_M1to10 = creator.makeMCComponent(
+    name    = 'TTZToLL_M1to10', 
     dataset = '/TTZToLL_M-1to10_TuneCP5_13TeV-amcatnlo-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
     user    = 'CMS', 
     pattern = '.*root', 
@@ -113,11 +113,11 @@ TTZToLL_M1To10 = creator.makeMCComponent(
     useAAA  = True
 )
 
-TTZToLL_M1To10 .nGenEvents = TTZToLL_M1To10.dataset_entries 
+TTZToLL_M1to10 .nGenEvents = TTZToLL_M1to10.dataset_entries 
 
 
-ST_s_channel_4f_leptonDecays = creator.makeMCComponent(
-    name    = 'ST_s_channel_4f_leptonDecays', 
+ST_sch_lep = creator.makeMCComponent(
+    name    = 'ST_sch_lep', 
     dataset = '/ST_s-channel_4f_leptonDecays_TuneCP5_13TeV-amcatnlo-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
     user    = 'CMS', 
     pattern = '.*root', 
@@ -125,11 +125,11 @@ ST_s_channel_4f_leptonDecays = creator.makeMCComponent(
     useAAA  = True
 )
 
-ST_s_channel_4f_leptonDecays .nGenEvents = ST_s_channel_4f_leptonDecays.dataset_entries 
+ST_sch_lep .nGenEvents = ST_sch_lep.dataset_entries 
 
 
-ST_t_channel_antitop_4f_inclusiveDecays = creator.makeMCComponent(
-    name    = 'ST_t_channel_antitop_4f_inclusiveDecays', 
+STbar_tch_inc = creator.makeMCComponent(
+    name    = 'STbar_tch_inc', 
     dataset = '/ST_t-channel_antitop_4f_inclusiveDecays_TuneCP5_13TeV-powhegV2-madspin-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
     user    = 'CMS', 
     pattern = '.*root', 
@@ -137,11 +137,11 @@ ST_t_channel_antitop_4f_inclusiveDecays = creator.makeMCComponent(
     useAAA  = True
 )
 
-ST_t_channel_antitop_4f_inclusiveDecays .nGenEvents = ST_t_channel_antitop_4f_inclusiveDecays .dataset_entries 
+STbar_tch_inc .nGenEvents = STbar_tch_inc .dataset_entries 
 
 
-ST_t_channel_top_4f_inclusiveDecays = creator.makeMCComponent(
-    name    = 'ST_t_channel_top_4f_inclusiveDecays', 
+ST_tch_inc = creator.makeMCComponent(
+    name    = 'ST_tch_inc', 
     dataset = '/ST_t-channel_top_4f_inclusiveDecays_TuneCP5_13TeV-powhegV2-madspin-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_new_pmx_94X_mc2017_realistic_v14-v1/MINIAODSIM',
     user    = 'CMS', 
     pattern = '.*root', 
@@ -149,11 +149,11 @@ ST_t_channel_top_4f_inclusiveDecays = creator.makeMCComponent(
     useAAA  = True
 )
 
-ST_t_channel_top_4f_inclusiveDecays .nGenEvents = ST_t_channel_top_4f_inclusiveDecays.dataset_entries 
+ST_tch_inc .nGenEvents = ST_tch_inc.dataset_entries 
 
 
-ST_tW_antitop_5f_inclusiveDecays = creator.makeMCComponent(
-    name    = 'ST_tW_antitop_5f_inclusiveDecays', 
+STbar_tW_inc = creator.makeMCComponent(
+    name    = 'STbar_tW_inc', 
     dataset = '/ST_tW_antitop_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
     user    = 'CMS', 
     pattern = '.*root', 
@@ -161,11 +161,11 @@ ST_tW_antitop_5f_inclusiveDecays = creator.makeMCComponent(
     useAAA  = True
 )
 
-ST_tW_antitop_5f_inclusiveDecays .nGenEvents = ST_tW_antitop_5f_inclusiveDecays.dataset_entries 
+STbar_tW_inc .nGenEvents = STbar_tW_inc.dataset_entries 
 
 
-ST_tW_top_5f_inclusiveDecays = creator.makeMCComponent(
-    name    = 'ST_tW_top_5f_inclusiveDecays', 
+ST_tW_inc = creator.makeMCComponent(
+    name    = 'ST_tW_inc', 
     dataset = '/ST_tW_top_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
     user    = 'CMS', 
     pattern = '.*root', 
@@ -173,7 +173,8 @@ ST_tW_top_5f_inclusiveDecays = creator.makeMCComponent(
     useAAA  = True
 )
 
-ST_tW_top_5f_inclusiveDecays .nGenEvents = ST_tW_top_5f_inclusiveDecays.dataset_entries 
+ST_tW_inc .nGenEvents = ST_tW_inc.dataset_entries 
+
 
 DYJetsToLL_M5to50 = creator.makeMCComponent(
     name    = 'DYJetsToLL_M5to50',
@@ -256,13 +257,13 @@ WWW                                       .puFileMC = os.environ['CMSSW_BASE'] +
 WWTo2L2Nu                                 .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_WWTo2L2Nu.root' # derived manually 
 WGGJets                                   .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_WGGJets.root' # derived manually 
 TTWJetsToLNu                              .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_TTWJetsToLNu.root' # derived manually 
-TTZToLLNuNu_M10                           .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_TTZToLLNuNu_M10.root' # derived manually 
-TTZToLL_M1To10                            .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_TTZToLL_M1To10.root' # derived manually 
-ST_s_channel_4f_leptonDecays              .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_ST_s-channel_4f_leptonDecays.root' # derived manually 
-ST_t_channel_antitop_4f_inclusiveDecays   .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_ST_t-channel_antitop_4f_inclusiveDecays.root' # derived manually 
-ST_t_channel_top_4f_inclusiveDecays       .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_ST_t-channel_top_4f_inclusiveDecays.root' # derived manually 
-ST_tW_antitop_5f_inclusiveDecays          .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_ST_tW_antitop_5f_inclusiveDecays.root' # derived manually 
-ST_tW_top_5f_inclusiveDecays              .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_ST_tW_top_5f_inclusiveDecays.root' # derived manually 
+TTZToLL_M10                           .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_TTZToLL_M10.root' # derived manually 
+TTZToLL_M1to10                            .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_TTZToLL_M1to10.root' # derived manually 
+ST_sch_lep              .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_ST_s-channel_4f_leptonDecays.root' # derived manually 
+STbar_tch_inc   .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_ST_t-channel_antitop_4f_inclusiveDecays.root' # derived manually 
+ST_tch_inc       .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_ST_t-channel_top_4f_inclusiveDecays.root' # derived manually 
+STbar_tW_inc          .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_STbar_tW_inc.root' # derived manually 
+ST_tW_inc              .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_ST_tW_inc.root' # derived manually 
 DYJetsToLL_M5to50                         .puFileMC= os.environ['CMSSW_BASE']  + '/src/CMGTools/HNL/data/pileup/pileup_DYJetsToLL_M5to50.root' 
 DYJetsToLL_M50                            .puFileMC= os.environ['CMSSW_BASE']  + '/src/CMGTools/HNL/data/pileup/pileup_DYJetsToLL_M50.root' 
 DY1JetsToLL_M50                           .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_DY1JetsToLL_M50.root' # derived manually   
@@ -283,13 +284,13 @@ hnl_bkg_noskim = [
     WWTo2L2Nu, 
     WGGJets, 
     TTWJetsToLNu, 
-    TTZToLLNuNu_M10, 
-    TTZToLL_M1To10, 
-    ST_s_channel_4f_leptonDecays, 
-    ST_t_channel_antitop_4f_inclusiveDecays, 
-    ST_t_channel_top_4f_inclusiveDecays, 
-    ST_tW_antitop_5f_inclusiveDecays, 
-    ST_tW_top_5f_inclusiveDecays, 
+    TTZToLL_M10, 
+    TTZToLL_M1to10, 
+    ST_sch_lep, 
+    STbar_tch_inc, 
+    ST_tch_inc, 
+    STbar_tW_inc, 
+    ST_tW_inc, 
     DYJetsToLL_M5to50,
     DYJetsToLL_M50,
     DY1JetsToLL_M50,     

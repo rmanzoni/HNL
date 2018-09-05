@@ -3,6 +3,7 @@ import pickle
 
 import ROOT
 from ROOT import gSystem, gROOT
+from collections import OrderedDict
 
 from pdb import set_trace
 
@@ -144,6 +145,41 @@ def createSampleLists(analysis_dir='/eos/user/v/vstampf/ntuples/',
        'W4JetsToLNu'        ,
        'WLLJJ_WToLNu_EWK'   ,
     ]
+
+    # RM hand made patch!
+    initial_weights = OrderedDict()
+    initial_weights['HN3L_M3'            ] = 1.
+    initial_weights['DYJetsToLL_M5to50'  ] = 0.9992
+    initial_weights['DYJets'             ] = 0.6777
+    initial_weights['DYJets_ext'         ] = 0.6777
+    initial_weights['TTJets_amc'         ] = 0.3733
+    initial_weights['WJetsToLNu'         ] = 0.9992
+    initial_weights['ZZTo4L'             ] = 0.9899
+    initial_weights['WZTo3LNu'           ] = 0.6268
+    initial_weights['WWTo2L2Nu'          ] = 0.9959
+    initial_weights['ZZZ'                ] = 0.8541
+    initial_weights['WZZ'                ] = 0.8786
+    initial_weights['WWZ'                ] = 0.8865
+    initial_weights['WWW'                ] = 0.8770
+    initial_weights['WGGJets'            ] = 0.9988
+    initial_weights['TTWJetsToLNu'       ] = 0.5438
+    initial_weights['TTZToLL_M10'        ] = 0.4721 
+    initial_weights['TTZToLL_M1to10'     ] = 0.5248
+    initial_weights['ST_sch_lep'         ] = 0.6240
+    initial_weights['STbar_tch_inc'      ] = 1.
+    initial_weights['ST_tch_inc'         ] = 1.
+    initial_weights['STbar_tW_inc'       ] = 0.9924
+    initial_weights['ST_tW_inc'          ] = 0.9923
+    initial_weights['ZZTo4L_ext'         ] = 0.9899
+    initial_weights['WW_DoubleScattering'] = 1.0000
+    initial_weights['W3JetsToLNu'        ] = 0.9984
+    initial_weights['W4JetsToLNu'        ] = 0.9973
+    initial_weights['WLLJJ_WToLNu_EWK'   ] = 0.9928
+
+    for sample in samples_mc:
+#         print 'A: Set sum weights for sample', sample.name, 'to', sample.sumweights        
+        sample.sumweights *= initial_weights[sample.name]
+#         print 'B: Set sum weights for sample', sample.name, 'to', sample.sumweights
 
     for sample in samples_mc:
         if sample.name not in weighted_list:

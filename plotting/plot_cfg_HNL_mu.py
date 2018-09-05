@@ -25,9 +25,14 @@ from CMGTools.HNL.plotter.metrics import ams_hists
 ######################
 # Basic configurations
 ######################
-plotDir = '/eos/user/d/dezhu/HNL/plots/prompt_mu'
+plotDir = '/eos/user/d/dezhu/HNL/plots/prompt_mu/'
 # mode = 'e' 
 mode = 'm'
+
+if mode == 'e':
+    channel_name = '#mu#mu'
+if mode == 'm':
+    channel_name = '#mu#mu#mu'
 
 
 def _pickle_method(method): 
@@ -98,9 +103,9 @@ def prepareCuts(mode):
     prompt_e_medium = '  &&  l0_eid_cut_medium'
     prompt_e_tight  = '  &&  l0_eid_cut_tight'
     
-    prompt_mu_loose  = '  &&  l0_eid_mva_noniso_loose'
-    prompt_mu_medium = '  &&  l0_eid_cut_medium'
-    prompt_mu_tight  = '  &&  l0_eid_cut_tight'
+    prompt_mu_loose  = '  &&  l0_id_l'
+    prompt_mu_medium = '  &&  l0_id_m'
+    prompt_mu_tight  = '  &&  l0_id_t'
 
     looser  = '  &&  l1_reliso05 < 0.15  &&  l2_reliso05 < 0.15  &&  l1_id_m  &&  l2_id_m'
     tighter = '  &&  abs(l1_dz) < 0.2  &&  abs(l2_dz) < 0.2  &&  l1_reliso05 < 0.15  &&  l2_reliso05 < 0.15  &&  l1_id_t  &&  l2_id_t'
@@ -111,6 +116,8 @@ def prepareCuts(mode):
     IDmNoIso   = noIDnorIso + '  &&  l1_id_m  &&  l2_id_m'
     IDlIso15   = IDlNoIso   + '  &&  l1_reliso05 < 0.15  &&  l2_reliso05 < 0.15'
     IDmIso15   = IDmNoIso   + '  &&  l1_reliso05 < 0.15  &&  l2_reliso05 < 0.15'
+
+    disp1      = '  &&  hnl_2d_disp > 1'
 
     if mode == 'e':
         l0_loose  = prompt_e_loose
@@ -124,7 +131,7 @@ def prepareCuts(mode):
 
 #### 3.9.
 #    cuts.append(Cut('CR_TTbarb0v2', inc_cut + l0_tight + noIDnorIso + CR_ttbarb0))
-    cuts.append(Cut('TTbar_disp1' , inc_cut + l0_tight + CR_ttbar + '  &&  hnl_2d_disp > 1'))
+    # cuts.append(Cut('TTbar_disp1' , inc_cut + l0_tight + CR_ttbar + '  &&  hnl_2d_disp > 1'))
 
 #### 2.9.
 #    cuts.append(Cut('CR_TTbarb1_noIDnorIsov2', inc_cut + l0_tight + noIDnorIso + CR_ttbarb1))
@@ -203,15 +210,21 @@ def prepareCuts(mode):
 #    cuts.append(Cut('tighter_e_loose', inc_cut + l0_loose + tighter))
 #    cuts.append(Cut('tighter_e_medium', inc_cut + l0_medium' + tighter))
 #    cuts.append(Cut('tighter_e_tight', inc_cut + l0_tight + tighter))
+
+
+#### 24.8.
+    cuts.append(Cut('CR_DY_l0tight_IDmNoIso', inc_cut + l0_tight + IDmNoIso + CR_DYNoM3l))
+
     return cuts
 
 def createSamples(analysis_dir, total_weight, qcd_from_same_sign, w_qcd_mssm_method, r_qcd_os_ss):
     hist_dict = {}
     sample_dict = {}
 #    set_trace()
-    samples_mc, samples_data, samples, all_samples, sampleDict = createSampleLists(analysis_dir=analysis_dir)
-
+    samples_mc, samples_data, samples, all_samples, sampleDict, samples_essential = createSampleLists(analysis_dir=analysis_dir, channel = mode)
+    
     sample_dict['all_samples'] = all_samples
+    sample_dict['samples_essential'] = samples_essential
 
     return sample_dict, hist_dict
 
@@ -230,6 +243,7 @@ def makePlots(variables, cuts, total_weight, sample_dict, hist_dict, qcd_from_sa
     sample_names = set()
     for cut in cuts:
         cfg_main = HistogramCfg(name=cut.name, var=None, cfgs=sample_dict['all_samples'], cut=cut.cut, lumi=int_lumi, weight=total_weight)
+        # cfg_main = HistogramCfg(name=cut.name, var=None, cfgs=sample_dict['samples_essential'], cut=cut.cut, lumi=int_lumi, weight=total_weight)
     
         cfg_main.vars = variables
         HISTS = CreateHists(cfg_main)
@@ -239,15 +253,16 @@ def makePlots(variables, cuts, total_weight, sample_dict, hist_dict, qcd_from_sa
         for variable in variables:
         # for plot in plots.itervalues():
             plot = plots[variable.name]
-            plot.Group('data_obs', ['data_2017B_e', 'data_2017C_e', 'data_2017D_e', 'data_2017E_e', 'data_2017F_e'])
-            plot.Group('single t', ['ST_tW_at_5f_incD_e', 'ST_tW_t_5f_incD_e'])
-            plot.Group('Diboson', ['WZTo3LNu_e', 'ZZTo4L_e', 'WWTo2L2Nu_e'])
-            plot.Group('Triboson', ['ZZZ_e', 'WWW_e', 'WGGJets_e'])
-            plot.Group('ttV', ['TTZToLLNuNu_e', 'TTWJetsToLNu_e'])
-            plot.Group('DY', ['DYJets_M5T50_e', 'DYJets_M50_x_e', 'DYJets_M50_e'])
+            # plot.Group('data_obs', ['data_2017B_e', 'data_2017C_e', 'data_2017D_e', 'data_2017E_e', 'data_2017F_e'])
+            plot.Group('data_obs', ['data_2017B_m', 'data_2017C_m', 'data_2017D_m', 'data_2017E_m', 'data_2017F_m'])
+            plot.Group('single t', ['ST_tW_at_5f_incD_m', 'ST_tW_t_5f_incD_m'])
+            plot.Group('Diboson', ['WZTo3LNu_m', 'ZZTo4L_m', 'WWTo2L2Nu_m'])
+            plot.Group('Triboson', ['ZZZ_m', 'WWW_m', 'WGGJets_m'])
+            plot.Group('ttV', ['TTZToLLNuNu_m', 'TTWJetsToLNu_m'])
+            plot.Group('DY', ['DYJets_M5T50_m', 'DYJets_M50_x_m', 'DYJets_M50_m'])
             createDefaultGroups(plot)
             if make_plots:
-                HistDrawer.draw(plot, plot_dir = plotDir+cut.name)#plot_dir='plots/'+cut.name)
+                HistDrawer.draw(plot,channel = channel_name, plot_dir = plotDir+cut.name)#plot_dir='plots/'+cut.name)
 
     print '\nOptimisation results:'
     all_vals = ams_dict.items()

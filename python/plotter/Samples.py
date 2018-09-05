@@ -76,7 +76,7 @@ def createSampleLists(analysis_dir='/eos/user/v/vstampf/ntuples/',
         dataB = Single_mu_2017B; dataC = Single_mu_2017C; dataD = Single_mu_2017D; dataE = Single_mu_2017E; dataF = Single_mu_2017F; 
 
     samples_essential = [
-        SampleCfg(name='DYJets_M50_%s'%channel  , dir_name=DYJetsToLL_M50      .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=DYJetsToLL_M50     .xSection, sumweights=DYJetsToLL_M50     .nGenEvents),
+        # SampleCfg(name='DYJets_M50_%s'%channel  , dir_name=DYJetsToLL_M50      .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=DYJetsToLL_M50     .xSection, sumweights=DYJetsToLL_M50     .nGenEvents), #preliminary taken out due to an accidental delete of the chunks
         SampleCfg(name='DYJets_M5T50_%s'%channel, dir_name=DYJetsToLL_M5to50   .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=DYJetsToLL_M5to50  .xSection, sumweights=DYJetsToLL_M5to50  .nGenEvents),
         SampleCfg(name='DYJets_M50_x_%s'%channel, dir_name=DYJetsToLL_M50_ext  .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=DYJetsToLL_M50_ext .xSection, sumweights=DYJetsToLL_M50_ext .nGenEvents),
         SampleCfg(name='TTJets_amc_%s'%channel  , dir_name=TTJets_amcat        .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=TTJets_amcat       .xSection, sumweights=TTJets_amcat       .nGenEvents),
@@ -150,7 +150,12 @@ def createSampleLists(analysis_dir='/eos/user/v/vstampf/ntuples/',
 
     samples_mc = samples_essential + samples_additional 
     samples = samples_essential + samples_additional + samples_data
+
+    if channel == 'm':
+        samples_mc = samples_essential 
+
     all_samples = samples_mc + samples_data
+    
 
     weighted_list = []
 
@@ -168,7 +173,7 @@ def createSampleLists(analysis_dir='/eos/user/v/vstampf/ntuples/',
         if sample.is_signal:
             sample.scale = sample.scale * signal_scale
 
-    return samples_mc, samples_data, samples, all_samples, sampleDict
+    return samples_mc, samples_data, samples, all_samples, sampleDict, samples_essential 
 
 def setSumWeights(sample, weight_dir='MCWeighter'):
     if isinstance(sample, HistogramCfg) or sample.is_data:

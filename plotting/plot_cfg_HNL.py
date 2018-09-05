@@ -126,8 +126,8 @@ def prepareCuts(mode):
 
 #### 4.9.
 #    cuts.append(Cut('CR_TTbar_d1noIDnorIso'    , inc_cut + l0_tight + d1noIDnorIso + CR_ttbar))
-    cuts.append(Cut('CR_TTbar_d1IDmNoIso'      , inc_cut + l0_tight + d1IDmNoIso   + CR_ttbar))
-#    cuts.append(Cut('CR_TTbarb0_d1noIDnorIso'  , inc_cut + l0_tight + d1noIDnorIso + CR_ttbarb0))
+#    cuts.append(Cut('CR_TTbar_d1IDmNoIso'      , inc_cut + l0_tight + d1IDmNoIso   + CR_ttbar))
+    cuts.append(Cut('CR_TTbarb0_d1noIDnorIso'  , inc_cut + l0_tight + d1noIDnorIso + CR_ttbarb0))
 #    cuts.append(Cut('CR_WZ_d1IDmIso15'         , inc_cut + l0_tight + d1IDmIso15   + CR_WZ))
 #    cuts.append(Cut('NaiveSRNoIdv2'            , inc_cut + l0_tight + NaiveSRNoId))
 #    cuts.append(Cut('NaiveSRv2NoIdv2'            , inc_cut + l0_tight + NaiveSRv2NoId))

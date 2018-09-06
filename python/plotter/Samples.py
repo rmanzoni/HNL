@@ -49,7 +49,7 @@ w_exps = []
 
 def createSampleLists(analysis_dir='/eos/user/v/vstampf/ntuples/', 
                       channel='e',
-                      signal_scale=200.,
+                      signal_scale=200,
                       no_data=False,
                       tree_prod_name='HNLTreeProducer'): 
     
@@ -65,8 +65,8 @@ def createSampleLists(analysis_dir='/eos/user/v/vstampf/ntuples/',
 
     samples_essential = [
         SampleCfg(name='DYJetsToLL_M5to50', dir_name=DYJetsToLL_M5to50 .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=DYJetsToLL_M5to50 .xSection, sumweights=DYJetsToLL_M5to50 .nGenEvents),
-#        SampleCfg(name='DYJets'           , dir_name=DYJetsToLL_M50    .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=DYJetsToLL_M50    .xSection, sumweights=DYJetsToLL_M50    .nGenEvents),
-#        SampleCfg(name='DYJets_ext'       , dir_name=DYJetsToLL_M50_ext.name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=DYJetsToLL_M50_ext.xSection, sumweights=DYJetsToLL_M50_ext.nGenEvents),
+        SampleCfg(name='DYJets'           , dir_name=DYJetsToLL_M50    .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=DYJetsToLL_M50    .xSection, sumweights=DYJetsToLL_M50    .nGenEvents),
+        SampleCfg(name='DYJets_ext'       , dir_name=DYJetsToLL_M50_ext.name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=DYJetsToLL_M50_ext.xSection, sumweights=DYJetsToLL_M50_ext.nGenEvents),
         SampleCfg(name='TTJets_amc'       , dir_name=TTJets_amcat      .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=TTJets_amcat      .xSection, sumweights=TTJets_amcat      .nGenEvents),
         SampleCfg(name='WJetsToLNu'       , dir_name=WJetsToLNu        .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=WJetsToLNu        .xSection, sumweights=WJetsToLNu        .nGenEvents),        
         SampleCfg(name='ZZTo4L'           , dir_name=ZZTo4L            .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=ZZTo4L            .xSection, sumweights=ZZTo4L            .nGenEvents),
@@ -89,11 +89,11 @@ def createSampleLists(analysis_dir='/eos/user/v/vstampf/ntuples/',
     ]
 
     samples_additional = [
-        SampleCfg(name='DY1Jets_M50'        , dir_name=DY1JetsToLL_M50      .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=DY1JetsToLL_M50     .xSection, sumweights=DY1JetsToLL_M50     .nGenEvents),
-        SampleCfg(name='DY2Jets_M50'        , dir_name=DY2JetsToLL_M50      .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=DY2JetsToLL_M50     .xSection, sumweights=DY2JetsToLL_M50     .nGenEvents),
-        SampleCfg(name='DY2Jets_M50_ext'    , dir_name=DY2JetsToLL_M50_ext  .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=DY2JetsToLL_M50_ext .xSection, sumweights=DY2JetsToLL_M50_ext .nGenEvents),
-        SampleCfg(name='DY3Jets_M50'        , dir_name=DY3JetsToLL_M50      .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=DY3JetsToLL_M50     .xSection, sumweights=DY3JetsToLL_M50     .nGenEvents),
-        SampleCfg(name='DY3Jets_M50_ext'    , dir_name=DY3JetsToLL_M50_ext  .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=DY3JetsToLL_M50_ext .xSection, sumweights=DY3JetsToLL_M50_ext .nGenEvents),
+#        SampleCfg(name='DY1Jets_M50'        , dir_name=DY1JetsToLL_M50      .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=DY1JetsToLL_M50     .xSection, sumweights=DY1JetsToLL_M50     .nGenEvents),
+#        SampleCfg(name='DY2Jets_M50'        , dir_name=DY2JetsToLL_M50      .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=DY2JetsToLL_M50     .xSection, sumweights=DY2JetsToLL_M50     .nGenEvents),
+#        SampleCfg(name='DY2Jets_M50_ext'    , dir_name=DY2JetsToLL_M50_ext  .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=DY2JetsToLL_M50_ext .xSection, sumweights=DY2JetsToLL_M50_ext .nGenEvents),
+#        SampleCfg(name='DY3Jets_M50'        , dir_name=DY3JetsToLL_M50      .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=DY3JetsToLL_M50     .xSection, sumweights=DY3JetsToLL_M50     .nGenEvents),
+#        SampleCfg(name='DY3Jets_M50_ext'    , dir_name=DY3JetsToLL_M50_ext  .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=DY3JetsToLL_M50_ext .xSection, sumweights=DY3JetsToLL_M50_ext .nGenEvents),
         SampleCfg(name='ZZZ'                , dir_name=ZZZ                .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=ZZZ                .xSection, sumweights=ZZZ                .nGenEvents),
         SampleCfg(name='WZZ'                , dir_name=WZZ                .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=WZZ                .xSection, sumweights=WZZ                .nGenEvents),
         SampleCfg(name='WWZ'                , dir_name=WWZ                .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=WWZ                .xSection, sumweights=WWZ                .nGenEvents),
@@ -115,8 +115,8 @@ def createSampleLists(analysis_dir='/eos/user/v/vstampf/ntuples/',
     ]
 
     samples_mc  = samples_essential + samples_additional 
-    samples     = samples_essential + samples_additional + samples_data
-    all_samples = samples_mc + samples_data
+    samples     = samples_essential + samples_additional #+ samples_data
+    all_samples = samples_mc #+ samples_data
 
     # RM: this is needed to retrieve the sum of weights *before* any selection
     # FIXME! on hold now until SkimAnalyzerCount is fixed. Otherwise the code runs.
@@ -125,8 +125,8 @@ def createSampleLists(analysis_dir='/eos/user/v/vstampf/ntuples/',
     weighted_list = [
        'HN3L_M3'            ,
        'DYJetsToLL_M5to50'  ,
-#       'DYJets'             ,
-#       'DYJets_ext'         ,
+       'DYJets'             ,
+       'DYJets_ext'         ,
        'DY1Jets_M50'        ,
        'DY2Jets_M50'        ,
        'DY2Jets_M50_ext'    ,
@@ -161,8 +161,8 @@ def createSampleLists(analysis_dir='/eos/user/v/vstampf/ntuples/',
     initial_weights = OrderedDict()
     initial_weights['HN3L_M3'            ] = 1.
     initial_weights['DYJetsToLL_M5to50'  ] = 0.9992
-#    initial_weights['DYJets'             ] = 0.6777
-#    initial_weights['DYJets_ext'         ] = 0.6777
+    initial_weights['DYJets'             ] = 0.6777
+    initial_weights['DYJets_ext'         ] = 0.6777
     initial_weights['DY1Jets_M50'        ] = 0.9992
     initial_weights['DY2Jets_M50'        ] = 0.9989
     initial_weights['DY2Jets_M50_ext'    ] = 0.9990

@@ -82,7 +82,10 @@ def prepareCuts(mode):
     CR_DYNoM3l     = '  &&  abs(hnl_m_12 - 91.18) < 15  &&  nbj == 0  &&  pfmet_pt < 30  &&  hnl_mt_0 < 30' 
     CR_DYRic       = 'abs(l0_dz) < 0.2  &&  l1_q != l2_q  &&  l1_pt > 15  &&  l2_pt > 10  &&  abs(hnl_m_12 - 91.18) < 15  &&  nbj == 0' 
     CR_ttbar       = '  &&  abs(hnl_m_12 - 91.18) > 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj >= 1  &&  hnl_m_12 > 12'
+    CR_ttbarNoCV   = '  &&  abs(hnl_m_12 - 91.18) > 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj >= 1'
     CR_ttbarb0NoCV = '  &&  abs(hnl_m_12 - 91.18) > 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj == 0'
+    CR_jpsi        = '  &&  abs(hnl_m_12 - 91.18) > 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj >= 1'
+    CR_jpsiv2      = '  &&  abs(hnl_m_12 - 91.18) > 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj >= 1  &&  abs(hnl_m_12 - 3.09) < 0.2'
     CR_ttbarb0     = '  &&  abs(hnl_m_12 - 91.18) > 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj == 0  &&  hnl_m_12 > 12'
     CR_ttbarb1     = '  &&  abs(hnl_m_12 - 91.18) > 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj <= 1  &&  hnl_m_12 > 12'
     CR_ttbarb2     = '  &&  abs(hnl_m_12 - 91.18) > 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj >= 2  &&  hnl_m_12 > 12'
@@ -125,12 +128,40 @@ def prepareCuts(mode):
         l0_loose  = prompt_mu_loose
         l0_medium = prompt_mu_medium
         l0_tight  = prompt_mu_tight
+#### 6.9.
+#    cuts.append(Cut('CR_TTbarNoCV_d0p5IDmNoIso'   , inc_cut + l0_tight + d0p5IDmNoIso + CR_ttbarNoCV))
+#    cuts.append(Cut('CR_TTbar_d0p5IDmNoIso_dxyz'   , inc_cut + l0_tight + d0p5IDmNoIso + noIDnorIso + CR_ttbar))
+#    cuts.append(Cut('CR_JPsi_d0p5IDmNoIsov'           , inc_cut + l0_tight + d0p5IDmNoIso   + CR_jpsiv2))   
+#    cuts.append(Cut('CR_JPsi_IDmNoIsov2'           , inc_cut + l0_tight + IDmNoIso   + CR_jpsiv2))  # adding smaller2ddisp 
+#    cuts.append(Cut('NaiveSRv6'          , inc_cut + l0_tight + NaiveSRv2 + '  &&  sv_prob>0.05'))     ### DO THIS WITHOUT DATA! ## SETTING NORM TO 0.5 
+    cuts.append(Cut('NaiveSRv7'          , inc_cut + l0_tight + NaiveSRv2 + '  &&  sv_prob>0.05'))     ### DO THIS WITHOUT DATA! ## SETTING NORM TO 200 
 
 #### 5.9.     ## incl proper LHE weighting
-    cuts.append(Cut('CR_TTbar_d0p5noIDnorIso'    , inc_cut + l0_tight + d0p5noIDnorIso + CR_ttbar))
+###  morning
+#    cuts.append(Cut('CR_TTbar_d0p5noIDnorIso'    , inc_cut + l0_tight + d0p5noIDnorIso + CR_ttbar))
 #    cuts.append(Cut('CR_TTbar_d0p5IDmNoIso'      , inc_cut + l0_tight + d0p5IDmNoIso   + CR_ttbar))
 #    cuts.append(Cut('CR_TTbarb0_d0p5noIDnorIso'  , inc_cut + l0_tight + d0p5noIDnorIso + CR_ttbarb0))
 #    cuts.append(Cut('CR_WZ_d0p5IDmIso15'         , inc_cut + l0_tight + d0p5IDmIso15   + CR_WZ))
+###  afternoon  # CHECK IF PLOTS FROM LAST WEEK STILL MAKE SENSE WITH PROPER WEIGHTING
+#    cuts.append(Cut('CR_TTbar_noIDnorIsov4'    , inc_cut + l0_tight + noIDnorIso + CR_ttbar))
+#    cuts.append(Cut('CR_TTbar_IDmNoIsov3'      , inc_cut + l0_tight + IDmNoIso   + CR_ttbar))
+#    cuts.append(Cut('CR_TTbarb0_noIDnorIsov3'  , inc_cut + l0_tight + noIDnorIso + CR_ttbarb0))
+#    cuts.append(Cut('CR_WZ_IDmIso15v3'         , inc_cut + l0_tight + IDmIso15   + CR_WZ))
+#    cuts.append(Cut('CR_DY_noIDnorIsov3'     , inc_cut + l0_tight + noIDnorIso + CR_DY + veto))
+#    cuts.append(Cut('CR_DY_IDlNoIsov3'       , inc_cut + l0_tight + IDlNoIso   + CR_DY + veto))
+#    cuts.append(Cut('CR_DY_IDlIso15v3'       , inc_cut + l0_tight + IDlIso15   + CR_DY + veto))
+#    cuts.append(Cut('CR_WZ_IDmNoIsov3'         , inc_cut + l0_tight + IDmNoIso   + CR_WZ))
+#    cuts.append(Cut('CR_WZ_IDlNoIsov3'         , inc_cut + l0_tight + IDlNoIso   + CR_WZ))
+#    cuts.append(Cut('NaiveSRv4'          , inc_cut + l0_tight + NaiveSRv2))     ### DO THIS WITHOUT DATA!
+### evening REVERT BACK TO INCL DY 
+#    cuts.append(Cut('CR_WZ_IDmIso15v4'          , inc_cut + l0_tight + IDmIso15       + CR_WZ))
+#    cuts.append(Cut('CR_TTbar_d0p5IDmNoIsov2'   , inc_cut + l0_tight + d0p5IDmNoIso   + CR_ttbar))
+#    cuts.append(Cut('NaiveSRv5'          , inc_cut + l0_tight + NaiveSRv2))     ### DO THIS WITHOUT DATA! 
+#    cuts.append(Cut('CR_JPsi_noIDnorIso'          , inc_cut + l0_tight + noIDnorIso + CR_jpsi))   
+#    cuts.append(Cut('CR_JPsi_IDmNoIso'            , inc_cut + l0_tight + IDmNoIso   + CR_jpsi))   
+#    cuts.append(Cut('CR_JPsi_IDmIso15'            , inc_cut + l0_tight + IDmIso15   + CR_jpsi))   
+#    cuts.append(Cut('CR_JPsi_IDmNoIsov2'           , inc_cut + l0_tight + IDmNoIso   + CR_jpsiv2))   
+#    cuts.append(Cut('CR_JPsi_IDlNoIso'             , inc_cut + l0_tight + IDlNoIso   + CR_jpsiv2))   
 
 #### 4.9.
 #    cuts.append(Cut('CR_TTbar_d1noIDnorIso'    , inc_cut + l0_tight + d1noIDnorIso + CR_ttbar))
@@ -152,7 +183,7 @@ def prepareCuts(mode):
 #    cuts.append(Cut('CR_TTbarb0NoCVv2'       , inc_cut + l0_tight + noIDnorIso + CR_ttbarb0NoCV))
 #    cuts.append(Cut('CR_DY_noIDnorIsov2'     , inc_cut + l0_tight + noIDnorIso + CR_DY + veto))
 #    cuts.append(Cut('CR_DY_IDlNoIsov2'       , inc_cut + l0_tight + IDlNoIso   + CR_DY + veto))
-#    cuts.append(Cut('CR_DY_IDlIso15_noIDnorIsov2'       , inc_cut + l0_tight + IDlIso15   + CR_DY + veto))
+#    cuts.append(Cut('CR_DY_IDlIso15v2'       , inc_cut + l0_tight + IDlIso15   + CR_DY + veto))
 
 #### 2.9.
 #    cuts.append(Cut('CR_TTbarb1_noIDnorIsov2', inc_cut + l0_tight + noIDnorIso + CR_ttbarb1))
@@ -172,7 +203,7 @@ def prepareCuts(mode):
 ### testing multiprocessing
 #    cuts.append(Cut('test_multi_ttbar', inc_cut + l0_tight + noIDnorIso + CR_ttbarb0))
 #    cuts.append(Cut('test_multi', inc_cut + l0_tight + tighter))
-### doing things again with new hnl_dr_01>0.05 and hnl_dr_02>0.05 and updated binning for reliso (up to 0.5) 
+###                            ## NEW hnl_dr_01>0.05 AND hnl_dr_02>0.05 AND UPDATED BINNING FOR reliso (UP TO 0.5) 
 #    cuts.append(Cut('NaiveSRv3'          , inc_cut + l0_tight + NaiveSRv2))
 #    cuts.append(Cut('CR_DY_noIDnorIsov2'   , inc_cut + l0_tight + noIDnorIso + CR_DY + veto))
 #    cuts.append(Cut('CR_DY_IDmNoIsov2'   , inc_cut + l0_tight + IDmNoIso + CR_DY + veto))
@@ -252,7 +283,7 @@ def createVariables(rebin=None):
     # variables = getVars(['_norm_', 'mt', 'mvis', 'l1_pt', 'l2_pt', 'l1_eta', 'l2_eta', 'n_vertices', 'n_jets', 'n_bjets'])
 #    variables = CR_vars
 #    variables = test
-    DoNotRebin = ['_norm_', 'n_vtx', 'nj', 'nbj', 'n_vtx']
+    DoNotRebin = ['_norm_', 'n_vtx', 'nj', 'nbj',] 
     variables = hnl_vars
     if rebin>0:
         for ivar in hnl_vars:
@@ -275,16 +306,16 @@ def makePlots(variables, cuts, total_weight, sample_dict, hist_dict, qcd_from_sa
         for variable in variables:
         # for plot in plots.itervalues():
             plot = plots[variable.name]
-            plot.Group('data_obs', ['data_2017B', 'data_2017C', 'data_2017D', 'data_2017E', 'data_2017F'])
+#            plot.Group('data_obs', ['data_2017B', 'data_2017C', 'data_2017D', 'data_2017E', 'data_2017F'])
             plot.Group('single t', ['ST_tW_inc', 'STbar_tW_inc', 'ST_sch_lep', 'STbar_tch_inc', 'ST_tch_inc'])
             plot.Group('Diboson', ['WZTo3LNu', 'ZZTo4L', 'WWTo2L2Nu'])
             plot.Group('Triboson', ['ZZZ', 'WWW', 'WGGJets', 'WZZ', 'WWZ'])
             plot.Group('ttV', ['TTZToLL_M10', 'TTWJetsToLNu', 'TTZToLL_M1to10'])
-#            plot.Group('DY', ['DYJets_M5T50', 'DYJets_M50_x', 'DYJets_M50'])
-            plot.Group('DY', ['DYJetsToLL_M5to50', 'DY2Jets_M50_ext', 'DY2Jets_M50', 'DY3Jets_M50_ext', 'DY3Jets_M50', 'DY1Jets_M50'])
+            plot.Group('DY', ['DYJetsToLL_M5to50', 'DYJets_ext', 'DYJets'])
+#            plot.Group('DY', ['DYJetsToLL_M5to50', 'DY2Jets_M50_ext', 'DY2Jets_M50', 'DY3Jets_M50_ext', 'DY3Jets_M50', 'DY1Jets_M50'])
             createDefaultGroups(plot)
             if make_plots:
-                HistDrawer.draw(plot, plot_dir = '/eos/user/v/vstampf/ntuples/plots/'+cut.name)#plot_dir='plots/'+cut.name)
+                HistDrawer.draw(plot, plot_dir = plotDir+cut.name)
 
     print '\nOptimisation results:'
     all_vals = ams_dict.items()
@@ -306,7 +337,6 @@ if __name__ == '__main__':
         
 
     mode = 'e' 
-#    mode = 'm'
 
     friend_func = None
     
@@ -318,7 +348,7 @@ if __name__ == '__main__':
     add_ttbar_sys = False
     add_tes_sys = False
 
-    analysis_dir = '/eos/user/v/vstampf/ntuples/'#bkg_mc_prompt_e/' # input
+    analysis_dir = '/eos/user/v/vstampf/ntuples/'
 
     total_weight = 'weight * lhe_weight'
 

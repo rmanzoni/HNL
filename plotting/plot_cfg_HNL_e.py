@@ -134,7 +134,9 @@ def prepareCuts(mode):
 #    cuts.append(Cut('CR_JPsi_d0p5IDmNoIsov'           , inc_cut + l0_tight + d0p5IDmNoIso   + CR_jpsiv2))   
 #    cuts.append(Cut('CR_JPsi_IDmNoIsov2'           , inc_cut + l0_tight + IDmNoIso   + CR_jpsiv2))  # adding smaller2ddisp 
 #    cuts.append(Cut('NaiveSRv6'          , inc_cut + l0_tight + NaiveSRv2 + '  &&  sv_prob>0.05'))     ### DO THIS WITHOUT DATA! ## SETTING NORM TO 0.5 
-    cuts.append(Cut('NaiveSRv7'          , inc_cut + l0_tight + NaiveSRv2 + '  &&  sv_prob>0.05'))     ### DO THIS WITHOUT DATA! ## SETTING NORM TO 200 
+#    cuts.append(Cut('NaiveSRv7'          , inc_cut + l0_tight + NaiveSRv2 + '  &&  sv_prob>0.05'))     ### DO THIS WITHOUT DATA! ## SETTING NORM TO 200
+#    cuts.append(Cut('NaiveSRv8'          , inc_cut + l0_tight + NaiveSRv2 + '  &&  sv_prob>0.05'))     ### DO THIS WITHOUT DATA! ## SETTING NORM TO 200 # REMOVING SINGAL SCALE^2
+    cuts.append(Cut('NaiveSRv9'          , inc_cut + l0_tight + NaiveSRv2 + '  &&  sv_prob>0.05  &&  hnl_2d_disp_sig > 50'))     ### DO THIS WITHOUT DATA! 
 
 #### 5.9.     ## incl proper LHE weighting
 ###  morning

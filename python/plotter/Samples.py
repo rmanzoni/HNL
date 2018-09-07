@@ -115,8 +115,8 @@ def createSampleLists(analysis_dir='/eos/user/v/vstampf/ntuples/',
     ]
 
     samples_mc  = samples_essential + samples_additional 
-    samples     = samples_essential + samples_additional #+ samples_data
-    all_samples = samples_mc #+ samples_data
+    samples     = samples_essential + samples_additional + samples_data
+    all_samples = samples_mc + samples_data
 
     # RM: this is needed to retrieve the sum of weights *before* any selection
     # FIXME! on hold now until SkimAnalyzerCount is fixed. Otherwise the code runs.
@@ -208,9 +208,9 @@ def createSampleLists(analysis_dir='/eos/user/v/vstampf/ntuples/',
     for s in all_samples:
         sampleDict[s.name] = s
 
-    for sample in all_samples:
-        if sample.is_signal:
-            sample.scale = sample.scale * signal_scale
+#    for sample in all_samples:
+#        if sample.is_signal:
+#            sample.scale = sample.scale * signal_scale
 
     return samples_mc, samples_data, samples, all_samples, sampleDict
 

@@ -76,6 +76,7 @@ hnl_vars = [
     VCfg(name='sv_prob'        , binning={'nbinsx':40 , 'xmin':0   , 'xmax':1   }, unit=None, xtitle='SV probability'),
     VCfg(name='sv_cos'         , binning={'nbinsx':40 , 'xmin':-1  , 'xmax':1   }, unit=None, xtitle='SV cos'),
     VCfg(name='hnl_2d_disp_sig', binning={'nbinsx':40 , 'xmin':0   , 'xmax':20  }, unit=None, xtitle='SV L/#sigma'),
+    VCfg(name='hnl_2d_disp_sig_large', drawname='hnl_2d_disp_sig', binning={'nbinsx':40 , 'xmin':50   , 'xmax':1000  }, unit=None, xtitle='SV L/#sigma'),
     VCfg(name='hnl_2d_disp_sig_extended', drawname='hnl_2d_disp_sig', binning={'nbinsx':100 , 'xmin':0   , 'xmax':1000  }, unit=None, xtitle='SV L/#sigma'),
 
     VCfg(name='nj' , binning={'nbinsx':12, 'xmin':-0.5, 'xmax':11.5}, unit=None, xtitle='N_{jets}'),

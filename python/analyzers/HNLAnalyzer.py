@@ -420,7 +420,7 @@ class HNLAnalyzer(Analyzer):
 
         chisopfs = [ipf for ipf in chargedpfs if deltaR(ipf, event.the_3lep_cand.hnP4())<0.5]
 
-        event.the_3lep_cand.abs_ch_iso = sum([ipf.pt() for ipf in chisopfs])
+        event.the_3lep_cand.abs_ch_iso = sum([ipf.pt() for ipf in chisopfs]) #FIXME MAYBE WE WANNA CHANGE HERE TO E INSTEAD OF pT
         event.the_3lep_cand.rel_ch_iso = event.the_3lep_cand.abs_ch_iso/event.the_3lep_cand.hnP4().pt()
 
         return True

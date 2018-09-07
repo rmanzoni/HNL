@@ -25,7 +25,7 @@ from CMGTools.HNL.plotter.metrics import ams_hists
 ######################
 # Basic configurations
 ######################
-plotDir = '/eos/user/v/vstampf/ntuples/plots/prompt_mu/'
+plotDir = '/eos/user/d/dezhu/HNL/plots/prompt_mu/'
 # mode = 'e' 
 mode = 'm'
 
@@ -129,7 +129,90 @@ def prepareCuts(mode):
         l0_medium = prompt_mu_medium
         l0_tight  = prompt_mu_tight
 
-#### 5.9.
+#### 3.9.
+#    cuts.append(Cut('CR_TTbarb0v2', inc_cut + l0_tight + noIDnorIso + CR_ttbarb0))
+    # cuts.append(Cut('TTbar_disp1' , inc_cut + l0_tight + CR_ttbar + '  &&  hnl_2d_disp > 1'))
+
+#### 2.9.
+#    cuts.append(Cut('CR_TTbarb1_noIDnorIsov2', inc_cut + l0_tight + noIDnorIso + CR_ttbarb1))
+#    cuts.append(Cut('CR_TTbarb1_IDlNoIsov2'  , inc_cut + l0_tight + IDlNoIso   + CR_ttbarb1))
+#    cuts.append(Cut('CR_TTbarb1_IDlIso15v2'  , inc_cut + l0_tight + IDlIso15   + CR_ttbarb1))
+#    cuts.append(Cut('CR_TTbarb2_noIDnorIsov2', inc_cut + l0_tight + noIDnorIso + CR_ttbarb2))
+#    cuts.append(Cut('CR_TTbarb2_IDlNoIsov2'  , inc_cut + l0_tight + IDlNoIso   + CR_ttbarb2))
+#    cuts.append(Cut('CR_TTbarb2_IDlIso15v2'  , inc_cut + l0_tight + IDlIso15   + CR_ttbarb2))
+# 
+#    cuts.append(Cut('CR_WZ_noIDnorIsov2'   , inc_cut + l0_tight + noIDnorIso + CR_WZ))
+#    cuts.append(Cut('CR_WZ_IDmNoIsov2'   , inc_cut + l0_tight + IDmNoIso + CR_WZ))
+#    cuts.append(Cut('CR_WZ_IDmIso15v2'   , inc_cut + l0_tight + IDmIso15 + CR_WZ))
+#    cuts.append(Cut('CR_WZ_IDlNoIsov2'   , inc_cut + l0_tight + IDlNoIso + CR_WZ))
+#    cuts.append(Cut('CR_WZ_IDlIso15v2'   , inc_cut + l0_tight + IDlIso15 + CR_WZ))
+
+#### 1.9.
+### testing multiprocessing
+#    cuts.append(Cut('test_multi_ttbar', inc_cut + l0_tight + noIDnorIso + CR_ttbarb0))
+#    cuts.append(Cut('test_multi', inc_cut + l0_tight + tighter))
+### doing things again with new hnl_dr_01>0.05 and hnl_dr_02>0.05 and updated binning for reliso (up to 0.5) 
+#    cuts.append(Cut('NaiveSRv3'          , inc_cut + l0_tight + NaiveSRv2))
+#    cuts.append(Cut('CR_DY_noIDnorIsov2'   , inc_cut + l0_tight + noIDnorIso + CR_DY + veto))
+#    cuts.append(Cut('CR_DY_IDmNoIsov2'   , inc_cut + l0_tight + IDmNoIso + CR_DY + veto))
+#    cuts.append(Cut('CR_DY_IDmIso15v2'   , inc_cut + l0_tight + IDmIso15 + CR_DY + veto))
+#    cuts.append(Cut('CR_DYNoM3l_IDlNoIsov2'  , inc_cut + l0_tight + CR_DYNoM3l + veto + IDlNoIso))
+#    cuts.append(Cut('CR_DYNoM3l_IDlIso15v2'  , inc_cut + l0_tight + CR_DYNoM3l + veto + IDlIso15))
+
+#    cuts.append(Cut('CR_TTbar_noIDnorIsov2', inc_cut + l0_tight + noIDnorIso + CR_ttbar))
+#    cuts.append(Cut('CR_TTbar_IDmNoIsov2', inc_cut + l0_tight + IDmNoIso + CR_ttbar))
+#    cuts.append(Cut('CR_TTbar_IDmIso15v2', inc_cut + l0_tight + IDmIso15 + CR_ttbar))
+
+#### 31.8.
+#    cuts.append(Cut('CR_TTbarb0_noIDnorIso', inc_cut + l0_tight + noIDnorIso + CR_ttbarb0))
+
+#### 30.8.
+###  morning
+#    cuts.append(Cut('tight_noIDnorIso'     , inc_cut + l0_tight + noIDnorIso))
+#    cuts.append(Cut('CR_DYRic'             , CR_DYRic + looser))
+#    cuts.append(Cut('CR_DYNoM3l_noIDnorIso', inc_cut + l0_tight + CR_DYNoM3l + veto + noIDnorIso))
+#    cuts.append(Cut('CR_DYNoM3l_IDmNoIso'  , inc_cut + l0_tight + CR_DYNoM3l + veto + IDmNoIso))
+#    cuts.append(Cut('CR_DYNoM3l_IDmIso15'  , inc_cut + l0_tight + CR_DYNoM3l + veto + IDmIso15))
+#    cuts.append(Cut('NaiveSR'              , inc_cut + l0_tight + NaiveSR))
+###  afternoon
+#    cuts.append(Cut('CR_DYNoM3l_IDlNoIso'  , inc_cut + l0_tight + CR_DYNoM3l + veto + IDlNoIso))
+#    cuts.append(Cut('CR_DYNoM3l_IDlIso15'  , inc_cut + l0_tight + CR_DYNoM3l + veto + IDlIso15))
+#    cuts.append(Cut('CR_TTbarb2_noIDnorIso', inc_cut + l0_tight + noIDnorIso + CR_ttbarb2))
+#    cuts.append(Cut('CR_TTbarb2_IDlNoIso'  , inc_cut + l0_tight + IDlNoIso   + CR_ttbarb2))
+#    cuts.append(Cut('CR_TTbarb2_IDlIso15'  , inc_cut + l0_tight + IDlIso15   + CR_ttbarb2))
+#    cuts.append(Cut('NaiveSRv2'            , inc_cut + l0_tight + NaiveSRv2))
+#    cuts.append(Cut('CR_WZ_IDlNoIso'   , inc_cut + l0_tight + IDlNoIso + CR_WZ))
+#    cuts.append(Cut('CR_WZ_IDlIso15'   , inc_cut + l0_tight + IDlIso15 + CR_WZ))
+###  night
+#    cuts.append(Cut('CR_TTbarb1_noIDnorIso', inc_cut + l0_tight + noIDnorIso + CR_ttbarb1))
+#    cuts.append(Cut('CR_TTbarb1_IDlNoIso'  , inc_cut + l0_tight + IDlNoIso   + CR_ttbarb1))
+#    cuts.append(Cut('CR_TTbarb1_IDlIso15'  , inc_cut + l0_tight + IDlIso15   + CR_ttbarb1))
+
+####  29.8.
+#    cuts.append(Cut('CR_DY_noIDnorIso'   , inc_cut + l0_tight + noIDnorIso + CR_DY + veto))
+#    cuts.append(Cut('CR_TTbar_noIDnorIso', inc_cut + l0_tight + noIDnorIso + CR_ttbar))
+#    cuts.append(Cut('CR_WZ_noIDnorIso'   , inc_cut + l0_tight + noIDnorIso + CR_WZ))
+
+#    cuts.append(Cut('CR_DY_IDmNoIso'   , inc_cut + l0_tight + IDmNoIso + CR_DY + veto))
+#    cuts.append(Cut('CR_TTbar_IDmNoIso', inc_cut + l0_tight + IDmNoIso + CR_ttbar))
+#    cuts.append(Cut('CR_WZ_IDmNoIso'   , inc_cut + l0_tight + IDmNoIso + CR_WZ))
+
+#    cuts.append(Cut('CR_DY_IDmIso15'   , inc_cut + l0_tight + IDmIso15 + CR_DY + veto))
+#    cuts.append(Cut('CR_TTbar_IDmIso15', inc_cut + l0_tight + IDmIso15 + CR_ttbar))
+#    cuts.append(Cut('CR_WZ_IDmIso15'   , inc_cut + l0_tight + IDmIso15 + CR_WZ))
+
+#    cuts.append(Cut('CR_DY', inc_cut + l0_loose + looser + CR_DY))
+#    cuts.append(Cut('CR_TTbar', inc_cut + l0_loose + looser + CR_ttbar))
+#    cuts.append(Cut('CR_WZ', inc_cut + l0_loose + looser + CR_WZ))
+ 
+#### 24.8.
+#    cuts.append(Cut('looser', inc_cut + l0_loose + '  &&  l1_id_m & l2_id_m'))
+#    cuts.append(Cut('tighter_e_loose', inc_cut + l0_loose + tighter))
+#    cuts.append(Cut('tighter_e_medium', inc_cut + l0_medium' + tighter))
+#    cuts.append(Cut('tighter_e_tight', inc_cut + l0_tight + tighter))
+
+
+#### 24.8.
     cuts.append(Cut('CR_DY_l0tight_IDmNoIso', inc_cut + l0_tight + IDmNoIso + CR_DYNoM3l))
 
     return cuts
@@ -138,7 +221,7 @@ def createSamples(analysis_dir, total_weight, qcd_from_same_sign, w_qcd_mssm_met
     hist_dict = {}
     sample_dict = {}
 #    set_trace()
-    samples_mc, samples_data, samples, all_samples, sampleDict, samples_essential = createSampleLists(analysis_dir=analysis_dir, channel = mode)
+    samples_mc, samples_data, samples, all_samples, sampleDict = createSampleLists(analysis_dir=analysis_dir, channel = mode)
     
     sample_dict['all_samples'] = all_samples
     sample_dict['samples_essential'] = samples_essential
@@ -171,12 +254,13 @@ def makePlots(variables, cuts, total_weight, sample_dict, hist_dict, qcd_from_sa
         # for plot in plots.itervalues():
             plot = plots[variable.name]
             # plot.Group('data_obs', ['data_2017B_e', 'data_2017C_e', 'data_2017D_e', 'data_2017E_e', 'data_2017F_e'])
-            plot.Group('data_obs', ['data_2017B_m', 'data_2017C_m', 'data_2017D_m', 'data_2017E_m', 'data_2017F_m'])
-            plot.Group('single t', ['ST_tW_at_5f_incD_m', 'ST_tW_t_5f_incD_m'])
-            plot.Group('Diboson', ['WZTo3LNu_m', 'ZZTo4L_m', 'WWTo2L2Nu_m'])
-            plot.Group('Triboson', ['ZZZ_m', 'WWW_m', 'WGGJets_m'])
-            plot.Group('ttV', ['TTZToLLNuNu_m', 'TTWJetsToLNu_m'])
-            plot.Group('DY', ['DYJets_M5T50_m', 'DYJets_M50_x_m', 'DYJets_M50_m'])
+            plot.Group('data_obs', ['data_2017B', 'data_2017C', 'data_2017D', 'data_2017E', 'data_2017F'])
+            plot.Group('single t', ['ST_tW_at_5f_incD', 'ST_tW_t_5f_incD'])
+            plot.Group('Diboson', ['WZTo3LNu', 'ZZTo4L', 'WWTo2L2Nu'])
+            plot.Group('Triboson', ['ZZZ', 'WWW', 'WGGJets'])
+            plot.Group('ttV', ['TTZToLLNuNu', 'TTWJetsToLNu'])
+            # plot.Group('DY', ['DYJets_M5T50', 'DYJets_M50_x', 'DYJets_M50'])
+            plot.Group('DY', ['DYJetsToLL_M5to50', 'DYJets_ext'])
             createDefaultGroups(plot)
             if make_plots:
                 HistDrawer.draw(plot,channel = channel_name, plot_dir = plotDir+cut.name)#plot_dir='plots/'+cut.name)

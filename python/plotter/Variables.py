@@ -340,6 +340,7 @@ hnl_vars = [
 test_vars = [
     VCfg(name='hnl_m_01', binning={'nbinsx':40, 'xmin':0   , 'xmax':200 }, unit='GeV', xtitle='mass(l0,l1)'),
     VCfg(name='hnl_m_02', binning={'nbinsx':40, 'xmin':0   , 'xmax':200 }, unit='GeV', xtitle='mass(l0,l2)'),
+    VCfg(name='l2_eta'     , binning={'nbinsx':20, 'xmin':-2.5, 'xmax':2.5 }, unit=None , xtitle='l2 #eta'),
 ]
 
 

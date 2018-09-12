@@ -27,9 +27,9 @@ from CMGTools.HNL.analyzers.LeptonWeighter     import LeptonWeighter
 
 # import samples, signal
 # from CMGTools.HNL.samples.localsignal import TTJets_amcat as ttbar
-# from CMGTools.HNL.samples.samples_mc_2017 import DYJetsToLL_M50, hnl_bkg_essentials
+from CMGTools.HNL.samples.samples_mc_2017 import DYJetsToLL_M50, hnl_bkg_essentials, hnl_bkg
 from CMGTools.HNL.samples.signal import all_signals_mu
-# from CMGTools.HNL.samples.samples_mc_2017_noskim import DYJetsToLL_M5to50
+from CMGTools.HNL.samples.samples_mc_2017_noskim import DYJetsToLL_M5to50, hnl_bkg_noskim
 
 
 ###################################################
@@ -38,8 +38,8 @@ from CMGTools.HNL.samples.signal import all_signals_mu
 # Get all heppy options; set via "-o production" or "-o production=True"
 # production = True run on batch, production = False (or unset) run locally
 
-production         = getHeppyOption('production' , True)
-# production         = getHeppyOption('production' , False)
+# production         = getHeppyOption('production' , True)
+production         = getHeppyOption('production' , False)
 pick_events        = getHeppyOption('pick_events', False)
 
 ###################################################
@@ -47,7 +47,8 @@ pick_events        = getHeppyOption('pick_events', False)
 ###################################################
 # samples = hnl_bkg_essentials
 # samples = [DYJetsToLL_M5to50]
-samples = all_signals_mu
+# samples = all_signals_mu
+samples = hnl_bkg + hnl_bkg_noskim
 auxsamples = []#[ttbar, DYJetsToLL_M50]
 
 # samples = [comp for comp in samples if comp.name=='TTJets_amcat']
@@ -201,8 +202,9 @@ sequence = cfg.Sequence([
 ###################################################
 if not production:
 #     comp                 = ttbar
-#    comp                 = DYJetsToLL_M5to50
-    comp                 = all_signals_mu[0]
+    comp                 = DYJetsToLL_M5to50
+    # comp                 = all_signals_mu[0]
+    # comp                 = samples
     selectedComponents   = [comp]
     comp.splitFactor     = 1
     comp.fineSplitFactor = 1

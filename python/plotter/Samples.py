@@ -57,7 +57,8 @@ def createSampleLists(analysis_dir='/eos/user/v/vstampf/ntuples/',
                       tree_prod_name='HNLTreeProducer'): 
     
     if channel == 'e':
-        data_dir = '/eos/user/m/manzoni/HNL/singleele_e_23_08_2018/'
+#        data_dir = '/eos/user/m/manzoni/HNL/singleele_e_23_08_2018/'              # first version
+        data_dir = '/eos/user/v/vstampf/ntuples/data_2017_e_noskim/partial_hadd/'  # 9/13 production including met filters and masses between vetoing leps and 3l
         bkg_dir = 'bkg_mc_e/'
         sig_dir = 'sig_mc_e/ntuples/'
         dataB = Single_ele_2017B; dataC = Single_ele_2017C; dataD = Single_ele_2017D; dataE = Single_ele_2017E; dataF = Single_ele_2017F; 

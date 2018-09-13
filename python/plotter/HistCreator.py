@@ -1,6 +1,6 @@
 import hashlib
 from multiprocessing import Pool, Process, cpu_count
-#from multiprocessing.dummy import Pool
+#from multiprocessing.dummy import Pool, Process, cpu_count
 
 from array import array
 
@@ -329,15 +329,15 @@ class CreateHists(object):
 
             # attach the trees to the first DataMCPlot
             plot = self.plots[self.vcfgs[0].name]
-#            set_trace()
             ttree = plot.readTree(file_name, cfg.tree_name, verbose=verbose, friend_func=friend_func)
 
             norm_cut = self.hist_cfg.cut
             shape_cut = self.hist_cfg.cut
 
             if cfg.norm_cut:
-                norm_cut = cfg.norm_cut
-
+#                norm_cut = cfg.norm_cut
+                norm_cut += cfg.norm_cut  # to add met filters for data
+            print('sample = %s, cuts = %s'%(cfg.name, norm_cut))
             if cfg.shape_cut:
                 shape_cut = cfg.shape_cut
 

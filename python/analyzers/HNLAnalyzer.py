@@ -155,8 +155,8 @@ class HNLAnalyzer(Analyzer):
         try:
             pfs = map(PhysicsObject, self.handles['pfcand'].product())
 #            set_trace()
-            return False
-        except: print(event.eventId, event.run, event.lumi); return False#; set_trace()
+#            return False
+        except: print(event.eventId, event.run, event.lumi)#; return False#; set_trace()
 
         self.readCollections(event.input)
         self.counters.counter('HNL').inc('all events')
@@ -408,8 +408,11 @@ class HNLAnalyzer(Analyzer):
         ########################################################################################
         # Extra prompt and isolated lepton veto
         ########################################################################################        
-        event.veto_eles = [ele for ele in event.selMuons     if ele.physObj not in [event.the_3lep_cand.l0().physObj, event.the_3lep_cand.l1().physObj, event.the_3lep_cand.l2().physObj] ]
-        event.veto_mus  = [mu  for mu  in event.selElectrons if mu .physObj not in [event.the_3lep_cand.l0().physObj, event.the_3lep_cand.l1().physObj, event.the_3lep_cand.l2().physObj] ]
+        event.veto_mus   = [ele for ele in event.selMuons     if ele.physObj not in [event.the_3lep_cand.l0().physObj, event.the_3lep_cand.l1().physObj, event.the_3lep_cand.l2().physObj] ]
+        event.veto_eles  = [mu  for mu  in event.selElectrons if mu .physObj not in [event.the_3lep_cand.l0().physObj, event.the_3lep_cand.l1().physObj, event.the_3lep_cand.l2().physObj] ]
+
+        if len(event.veto_eles): event.veto_save_ele = sorted([ele for ele in event.veto_eles], key = lambda x : x.pt, reverse = True)[0] 
+        if len(event.veto_mus ): event.veto_save_mu  = sorted([mu  for mu  in event.veto_mus ], key = lambda x : x.pt, reverse = True)[0] 
 
         ########################################################################################
         # charged PF isolation

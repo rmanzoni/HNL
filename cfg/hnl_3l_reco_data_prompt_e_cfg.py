@@ -20,8 +20,9 @@ from CMGTools.HNL.analyzers.HNLAnalyzer     import HNLAnalyzer
 from CMGTools.HNL.analyzers.HNLTreeProducer import HNLTreeProducer
 from CMGTools.HNL.analyzers.TriggerAnalyzer import TriggerAnalyzer
 from CMGTools.HNL.analyzers.JetAnalyzer     import JetAnalyzer
+from CMGTools.HNL.analyzers.METFilter       import METFilter
 
-from CMGTools.HNL.samples.samples_data_2017_noskim import Single_ele_2017, Single_ele_2017B
+from CMGTools.HNL.samples.samples_data_2017_noskim import Single_ele_2017, Single_ele_2017B, Single_ele_2017C, Single_ele_2017D, Single_ele_2017E, Single_ele_2017F
 
 ###################################################
 ###                   OPTIONS                   ###
@@ -37,7 +38,7 @@ pick_events        = getHeppyOption('pick_events', False)
 ###               HANDLE SAMPLES                ###
 ###################################################
 # samples = [Single_ele_2017B]
-samples = Single_ele_2017
+samples = [Single_ele_2017C]#, Single_ele_2017E, Single_ele_2017F]
 
 for sample in samples:
     sample.triggers  = ['HLT_Ele27_WPTight_Gsf_v%d'          %i for i in range(1, 15)] #electron trigger
@@ -114,6 +115,23 @@ HNLTreeProducer = cfg.Analyzer(
     promptLepType='ele',
 )
 
+metFilter = cfg.Analyzer(
+    METFilter,
+    name='METFilter',
+    processName='RECO',
+    triggers=[
+        'Flag_goodVertices',
+        'Flag_globalSuperTightHalo2016Filter',
+        'Flag_HBHENoiseFilter',
+        'Flag_HBHENoiseIsoFilter',
+        'Flag_EcalDeadCellTriggerPrimitiveFilter',
+        'Flag_BadPFMuonFilter',
+        'Flag_BadChargedCandidateFilter',
+        'Flag_eeBadScFilter',
+        'Flag_ecalBadCalibFilter',
+    ]
+)
+
 # see SM HTT TWiki
 # https://twiki.cern.ch/twiki/bin/viewauth/CMS/SMTauTau2016#Jet_Energy_Corrections
 jetAna = cfg.Analyzer(
@@ -145,6 +163,7 @@ sequence = cfg.Sequence([
     pileUpAna,
     HNLAnalyzer,
     jetAna,
+    metFilter,
     HNLTreeProducer,
 ])
 

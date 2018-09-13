@@ -56,6 +56,10 @@ def prepareCuts(mode):
     inc_cut += '  &&  abs(l0_dz) < 0.2'
     inc_cut += '  &&  hnl_dr_01 > 0.05  &&  hnl_dr_02 > 0.05' # avoid ele mu mismatching
 
+    inc_cut_relxd =   'l1_pt > 4  &&  l2_pt > 4  &&  l0_pt > 35' #'.join([cat_Inc])
+    inc_cut_relxd += '  &&  abs(l0_dz) < 0.2'
+    inc_cut_relxd += '  &&  hnl_dr_01 > 0.05  &&  hnl_dr_02 > 0.05' # avoid ele mu mismatching
+
     ## RICCARDO
 #    cuts.append(Cut('ttjetsloose', 'nbj>1'))
 #     cuts.append(Cut('zmmloose' , 'l1_pt>5  & l2_pt>5  & l1_q!=l2_q & l1_id_t & l2_id_t & l1_reliso05<0.2 & l2_reliso05<0.2 & abs(l1_dz)<0.2 & abs(l2_dz)<0.2 & abs(l1_dxy)<0.045 & abs(l2_dxy)<0.045 & nbj==0 & pass_e_veto & pass_m_veto'))
@@ -78,6 +82,10 @@ def prepareCuts(mode):
     '''
     mz = 91.18; mw = 80.4
 
+    ZVeto12    = '  &&  abs(hnl_m_12 - 91.18) > 15'
+    ZVeto01    = '  &&  abs(hnl_m_01 - 91.18) > 15'
+    ZVeto02    = '  &&  abs(hnl_m_02 - 91.18) > 15'
+
     CR_DY          = '  &&  abs(hnl_m_12 - 91.18) < 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj == 0  &&  pfmet_pt < 30  &&  hnl_mt_0 < 30' 
     CR_DYNoM3l     = '  &&  abs(hnl_m_12 - 91.18) < 15  &&  nbj == 0  &&  pfmet_pt < 30  &&  hnl_mt_0 < 30' 
     CR_DYRic       = 'abs(l0_dz) < 0.2  &&  l1_q != l2_q  &&  l1_pt > 15  &&  l2_pt > 10  &&  abs(hnl_m_12 - 91.18) < 15  &&  nbj == 0' 
@@ -90,6 +98,7 @@ def prepareCuts(mode):
     CR_ttbarb1     = '  &&  abs(hnl_m_12 - 91.18) > 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj <= 1  &&  hnl_m_12 > 12'
     CR_ttbarb2     = '  &&  abs(hnl_m_12 - 91.18) > 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj >= 2  &&  hnl_m_12 > 12'
     CR_WZ          = '  &&  abs(hnl_m_12 - 91.18) < 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj == 0  &&  pfmet_pt > 50  &&  l0_pt > 25  &&  l1_pt > 15  &&  l2_pt > 10'
+    CR_WJets       = '  &&  abs(hnl_m_12 - 91.18) > 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj == 0  &&  pfmet_pt > 50  &&  hnl_mt_0 > 30  &&  hnl_m_12 > 4'
     NaiveSR        = '  &&  hnl_pt_12 > 15  &&  hnl_w_vis_m < 80.4  &&  abs(hnl_m_12 - 91.18) > 10  &&  hnl_iso_rel < 0.2  &&  hnl_2d_disp_sig > 4  &&  l1_id_tnv  &&  l2_id_tnv'
     NaiveSRNoId    = '  &&  hnl_pt_12 > 15  &&  hnl_w_vis_m < 80.4  &&  abs(hnl_m_12 - 91.18) > 10  &&  hnl_iso_rel < 0.2  &&  hnl_2d_disp_sig > 4'
     NaiveSRv2      = NaiveSR     + '  &&  sv_cos > 0.99  &&  nbj == 0  &&  hnl_w_m > 50  &&  abs(hnl_dphi_hnvis0) > 2  &&  hnl_mt_0 < 60'
@@ -128,15 +137,21 @@ def prepareCuts(mode):
         l0_loose  = prompt_mu_loose
         l0_medium = prompt_mu_medium
         l0_tight  = prompt_mu_tight
+
+#### 10.9.
+    cuts.append(Cut('CR_WJets_noIDnorIso'       , inc_cut_relxd + l0_tight + noIDnorIso  + CR_WJets + '  &&  hnl_dr_12 < 0.4  &&  hnl_dr_hnvis0 > 1'))
+#    cuts.append(Cut('CR_WJets_IDlNoIso'         , inc_cut_relxd + l0_tight + IDlNoIso    + CR_WJets + '  &&  hnl_dr_12 < 0.4  &&  hnl_dr_hnvis0 > 1'))
+#    cuts.append(Cut('CR_WJets_IDlIso15'         , inc_cut_relxd + l0_tight + IDlIso15    + CR_WJets + '  &&  hnl_dr_12 < 0.4  &&  hnl_dr_hnvis0 > 1'))
+
 #### 6.9.
-#    cuts.append(Cut('CR_TTbarNoCV_d0p5IDmNoIso'   , inc_cut + l0_tight + d0p5IDmNoIso + CR_ttbarNoCV))
+#    cuts.append(Cut('CR_TTbarNoCV_d0p5IDmNoIso'    , inc_cut + l0_tight + d0p5IDmNoIso + CR_ttbarNoCV))
 #    cuts.append(Cut('CR_TTbar_d0p5IDmNoIso_dxyz'   , inc_cut + l0_tight + d0p5IDmNoIso + noIDnorIso + CR_ttbar))
-#    cuts.append(Cut('CR_JPsi_d0p5IDmNoIsov'           , inc_cut + l0_tight + d0p5IDmNoIso   + CR_jpsiv2))   
+#    cuts.append(Cut('CR_JPsi_d0p5IDmNoIsov'        , inc_cut + l0_tight + d0p5IDmNoIso   + CR_jpsiv2))   
 #    cuts.append(Cut('CR_JPsi_IDmNoIsov2'           , inc_cut + l0_tight + IDmNoIso   + CR_jpsiv2))  # adding smaller2ddisp 
 #    cuts.append(Cut('NaiveSRv6'          , inc_cut + l0_tight + NaiveSRv2 + '  &&  sv_prob>0.05'))     ### DO THIS WITHOUT DATA! ## SETTING NORM TO 0.5 
 #    cuts.append(Cut('NaiveSRv7'          , inc_cut + l0_tight + NaiveSRv2 + '  &&  sv_prob>0.05'))     ### DO THIS WITHOUT DATA! ## SETTING NORM TO 200
 #    cuts.append(Cut('NaiveSRv8'          , inc_cut + l0_tight + NaiveSRv2 + '  &&  sv_prob>0.05'))     ### DO THIS WITHOUT DATA! ## SETTING NORM TO 200 # REMOVING SINGAL SCALE^2
-    cuts.append(Cut('NaiveSRv9'          , inc_cut + l0_tight + NaiveSRv2 + '  &&  sv_prob>0.05  &&  hnl_2d_disp_sig > 50'))     ### DO THIS WITHOUT DATA! 
+#    cuts.append(Cut('NaiveSRv9'          , inc_cut + l0_tight + NaiveSRv2 + '  &&  sv_prob>0.05  &&  hnl_2d_disp_sig > 50'))     ### DO THIS WITHOUT DATA! 
 
 #### 5.9.     ## incl proper LHE weighting
 ###  morning
@@ -308,7 +323,7 @@ def makePlots(variables, cuts, total_weight, sample_dict, hist_dict, qcd_from_sa
         for variable in variables:
         # for plot in plots.itervalues():
             plot = plots[variable.name]
-#            plot.Group('data_obs', ['data_2017B', 'data_2017C', 'data_2017D', 'data_2017E', 'data_2017F'])
+            plot.Group('data_obs', ['data_2017B', 'data_2017C', 'data_2017D', 'data_2017E', 'data_2017F'])
             plot.Group('single t', ['ST_tW_inc', 'STbar_tW_inc', 'ST_sch_lep', 'STbar_tch_inc', 'ST_tch_inc'])
             plot.Group('Diboson', ['WZTo3LNu', 'ZZTo4L', 'WWTo2L2Nu'])
             plot.Group('Triboson', ['ZZZ', 'WWW', 'WGGJets', 'WZZ', 'WWZ'])

@@ -228,16 +228,23 @@ all_signals = [
     HN3L_M_8_V_0p00282842712475_e_onshell,
     HN3L_M_8_V_0p00282842712475_mu_onshell,
     HN3L_M_8_V_0p00282842712475_tau_onshell,
+
     HN3L_M_8_V_0p00316227766017_e_onshell,
     HN3L_M_8_V_0p00316227766017_mu_onshell,
     HN3L_M_8_V_0p00316227766017_tau_onshell,
+
     HN3L_M_8_V_0p004472135955_e_onshell,
     HN3L_M_8_V_0p004472135955_mu_onshell,
     HN3L_M_8_V_0p004472135955_tau_onshell,
+
     HN3L_M_8_V_0p00547722557505_e_onshell,
     HN3L_M_8_V_0p00547722557505_mu_onshell,
     HN3L_M_8_V_0p00547722557505_tau_onshell,
 ]
+
+signals_e = [sig for sig in all_signals if '_e_' in sig.name]
+signals_mu = [sig for sig in all_signals if '_mu_' in sig.name]
+signals_tau = [sig for sig in all_signals if '_tau_' in sig.name]
 
 HN3L_M_2_V_0p022360679775_e_onshell.files = [
     'root://cms-xrd-global.cern.ch//store/user/tomc/heavyNeutrinoMiniAOD/Moriond17_aug2018/displaced/HeavyNeutrino_trilepton_M-2_V-0.022360679775_e_massiveAndCKM_LO/heavyNeutrino_1.root',

@@ -15,9 +15,10 @@ from CMGTools.HNL.samples.samples_mc_2017_noskim   import DYJetsToLL_M5to50, DYJ
 from CMGTools.HNL.samples.samples_mc_2017_noskim   import ZZZ, WZZ, WWZ, WWW, WWTo2L2Nu, WGGJets, TTWJetsToLNu, TTZToLL_M10, TTZToLL_M1to10, ST_sch_lep, STbar_tch_inc, ST_tch_inc, STbar_tW_inc, ST_tW_inc
 from CMGTools.HNL.samples.samples_data_2017_noskim import Single_ele_2017B, Single_ele_2017C, Single_ele_2017D, Single_ele_2017E, Single_ele_2017F
 from CMGTools.HNL.samples.samples_data_2017_noskim import Single_mu_2017B,  Single_mu_2017C,  Single_mu_2017D,  Single_mu_2017E,  Single_mu_2017F
-from CMGTools.HNL.samples.signal                   import HN3L_M_3_V_0p00316227766017_e_onshell  as HN3L_M3_e #.ctau = 14.6 cm
-from CMGTools.HNL.samples.signal                   import HN3L_M_3_V_0p00316227766017_mu_onshell as HN3L_M3_m #.ctau = 14.6 cm
-from CMGTools.HNL.samples.signal                   import HN3L_M_2_V_0p01_e_onshell              as HN3L_M2_e #.ctau = 11.1 cm
+#from CMGTools.HNL.samples.signal                   import HN3L_M_3_V_0p00316227766017_e_onshell  as HN3L_M3_e #.ctau = 14.6 cm
+#from CMGTools.HNL.samples.signal                   import HN3L_M_3_V_0p00316227766017_mu_onshell as HN3L_M3_m #.ctau = 14.6 cm
+#from CMGTools.HNL.samples.signal                   import HN3L_M_2_V_0p01_e_onshell              as HN3L_M2_e #.ctau = 11.1 cm
+#FIXME UPDATE SAMPLES TO NEW VERSION
 
 if "/sDYReweighting_cc.so" not in gSystem.GetLibraries(): 
     gROOT.ProcessLine(".L %s/src/CMGTools/HNL/python/plotter/DYReweighting.cc+" % os.environ['CMSSW_BASE']);
@@ -80,10 +81,10 @@ def createSampleLists(analysis_dir='/eos/user/v/vstampf/ntuples/',
     ]
 
     samples_signal_e = [
-        SampleCfg(name='HN3L_M3' , dir_name=HN3L_M3_e.name, ana_dir=analysis_dir+sig_dir, tree_prod_name=tree_prod_name, xsec=signal_scale, sumweights=HN3L_M3_e.nGenEvents, is_signal=True)
+#        SampleCfg(name='HN3L_M3' , dir_name=HN3L_M3_e.name, ana_dir=analysis_dir+sig_dir, tree_prod_name=tree_prod_name, xsec=signal_scale, sumweights=HN3L_M3_e.nGenEvents, is_signal=True)
     ]
     samples_signal_m = [
-        SampleCfg(name='HN3L_M3'              , dir_name=HN3L_M3_m           .name, ana_dir=analysis_dir+sig_dir, tree_prod_name=tree_prod_name, xsec=200.0                       , sumweights=HN3L_M3_m          .nGenEvents, is_signal=True)
+#        SampleCfg(name='HN3L_M3'              , dir_name=HN3L_M3_m           .name, ana_dir=analysis_dir+sig_dir, tree_prod_name=tree_prod_name, xsec=200.0                       , sumweights=HN3L_M3_m          .nGenEvents, is_signal=True)
 
     ]
     if channel == 'e': samples_signal = samples_signal_e

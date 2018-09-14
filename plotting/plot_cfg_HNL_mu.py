@@ -58,7 +58,82 @@ Cut = namedtuple('Cut', ['name', 'cut'])
 int_lumi = 41000.0 # pb #### FIXME 
 #int_lumi = 80000.0 # pb #### FIXME 
 
-def prepareCuts(mode):
+## RICCARDO
+# cuts.append(Cut('ttjetsloose', 'nbj>1'))
+# cuts.append(Cut('zmmloose' , 'l1_pt>5  & l2_pt>5  & l1_q!=l2_q & l1_id_t & l2_id_t & l1_reliso05<0.2 & l2_reliso05<0.2 & abs(l1_dz)<0.2 & abs(l2_dz)<0.2 & abs(l1_dxy)<0.045 & abs(l2_dxy)<0.045 & nbj==0 & pass_e_veto & pass_m_veto'))
+# cuts.append(Cut('zmmhighpt', 'l1_pt>15  & l2_pt>15  & l1_q!=l2_q & l1_id_t & l2_id_t & l1_reliso05<0.2 & l2_reliso05<0.2 & abs(l1_dz)<0.2 & abs(l2_dz)<0.2 & abs(l1_dxy)<0.045 & abs(l2_dxy)<0.045 & nbj==0 & pass_e_veto & pass_m_veto'))
+# cuts.append(Cut('zmm'      , 'l1_pt>10 & l2_pt>10 & l1_q!=l2_q & !l0_eid_mva_iso_loose & l0_reliso05>0.15 & l1_id_t & l2_id_t & l1_reliso05<0.2 & l2_reliso05<0.2 & abs(l1_dz)<0.2 & abs(l2_dz)<0.2 & abs(l1_dxy)<0.045 & abs(l2_dxy)<0.045 & nbj==0 & pass_e_veto & pass_m_veto'))
+
+# cuts.append(Cut('inclusive'    , 'l0_pt>30 & l1_pt>4 & l2_pt>4 & l1_q != l2_q && l0_eid_mva_iso_loose & l0_reliso05<0.15'))
+# cuts.append(Cut('inclusive'    , 'l0_pt>30 & l1_pt>4 & l2_pt>4 & l1_q != l2_q && l0_eid_mva_iso_loose & l0_reliso05<0.15 & l1_id_m & l2_id_m & l1_reliso05<0.2 & l2_reliso05<0.2'))
+# cuts.append(Cut('inc_nobj'     , 'l0_pt>30 & l1_pt>4 & l2_pt>4 & l1_q != l2_q && l0_eid_mva_iso_loose & l0_reliso05<0.15 & l1_id_m & l2_id_m & l1_reliso05<0.2 & l2_reliso05<0.2 & nbj==0'))
+# cuts.append(Cut('inc_nobj_veto', 'l0_pt>30 & l1_pt>4 & l2_pt>4 & l1_q != l2_q && l0_eid_mva_iso_loose & l0_reliso05<0.15 & l1_id_m & l2_id_m & l1_reliso05<0.2 & l2_reliso05<0.2 & nbj==0 & pass_e_veto & pass_m_veto'))
+# cuts.append(Cut('stringent'    , 'l0_pt>30 & l1_pt>4 & l2_pt>4 & sv_prob>0.1 & sv_cos>0.9 & hnl_2d_disp_sig>3 & abs(hnl_w_q)==1 & hnl_iso_rel<0.2 & hnl_hn_q==0 & hnl_pt_12>20 & l0_eid_mva_iso_loose & l1_is_oot==0 & l2_is_oot==0 & pass_e_veto & pass_m_veto & l1_id_l & l2_id_l & l0_reliso05<0.2 & nbj==0 & hnl_2d_disp>2'))
+
+### VINZENZ
+## CONTROL REGIONS
+'''slide 14 - DY:     OSSF pair present; |M_ll - m_Z| < 15 GeV; |M_3l - m_Z| > 15 GeV; 0 b-jets; E_T^miss < 30GeV; M_T < 30GeV
+   slide 15 - ttbar:  |M_ll - m_Z| > 15 GeV (if OSSF); |M_3l - m_Z| > 15 GeV (if OSSF); >= 1 b-jets; veto M_ll < 12 GeV (conversion)
+   slide 17 - WZ:     OSSF pair present; |M_ll -m_Z|< 15 GeV; |M_3l -m_Z| > 15 GeV; 0 b-jets; E_T^miss > 50 GeV ; p_T > 25, 15, 10 GeV (l0,1,2)
+   E_T^Miss == pfmet_pt, M_T == hnl_mt_0 
+'''
+mz = 91.18; mw = 80.4
+
+ZVeto12    = '  &&  abs(hnl_m_12 - 91.18) > 15'
+ZVeto01    = '  &&  abs(hnl_m_01 - 91.18) > 15'
+ZVeto02    = '  &&  abs(hnl_m_02 - 91.18) > 15'
+
+CR_DY      = '  &&  abs(hnl_m_12 - 91.18) < 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj == 0  &&  pfmet_pt < 30  &&  hnl_mt_0 < 30' 
+CR_DYNoM3l = '  &&  abs(hnl_m_12 - 91.18) < 15  &&  nbj == 0  &&  pfmet_pt < 30  &&  hnl_mt_0 < 30' 
+CR_DYRic   = 'abs(l0_dz) < 0.2  &&  l1_q != l2_q  &&  l1_pt > 15  &&  l2_pt > 10  &&  abs(hnl_m_12 - 91.18) < 15  &&  nbj == 0' 
+CR_ttbar   = '  &&  abs(hnl_m_12 - 91.18) > 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj >= 1  &&  hnl_m_12 > 12'
+CR_ttbarb0 = '  &&  abs(hnl_m_12 - 91.18) > 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj == 0  &&  hnl_m_12 > 12'
+CR_ttbarb1 = '  &&  abs(hnl_m_12 - 91.18) > 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj <= 1  &&  hnl_m_12 > 12'
+CR_ttbarb2 = '  &&  abs(hnl_m_12 - 91.18) > 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj >= 2  &&  hnl_m_12 > 12'
+CR_WZ      = '  &&  abs(hnl_m_12 - 91.18) < 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj == 0  &&  pfmet_pt > 50  &&  l0_pt > 25  &&  l1_pt > 15  &&  l2_pt > 10'
+CR_WJets       = '  &&  abs(hnl_m_12 - 91.18) > 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj == 0  &&  pfmet_pt > 50  &&  hnl_mt_0 > 30  &&  hnl_m_12 > 4'
+NaiveSR    = '  &&  hnl_pt_12 > 15  &&  hnl_w_vis_m < 80.4  &&  abs(hnl_m_12 - 91.18) > 10  &&  hnl_iso_rel < 0.2  &&  hnl_2d_disp_sig > 4  &&  l1_id_tnv  &&  l2_id_tnv'
+NaiveSRv2  = NaiveSR + '  &&  sv_cos > 0.99  &&  nbj == 0  &&  hnl_w_m > 50  &&  abs(hnl_dphi_hnvis0) > 2  &&  hnl_mt_0 < 60'
+
+prompt_e_loose  = '  &&  l0_eid_mva_noniso_loose'
+prompt_e_medium = '  &&  l0_eid_cut_medium'
+prompt_e_tight  = '  &&  l0_eid_cut_tight'
+
+prompt_mu_loose  = '  &&  l0_id_l'
+prompt_mu_medium = '  &&  l0_id_m'
+prompt_mu_tight  = '  &&  l0_id_t'
+
+looser  = '  &&  l1_reliso05 < 0.15  &&  l2_reliso05 < 0.15  &&  l1_id_m  &&  l2_id_m'
+tighter = '  &&  abs(l1_dz) < 0.2  &&  abs(l2_dz) < 0.2  &&  l1_reliso05 < 0.15  &&  l2_reliso05 < 0.15  &&  l1_id_t  &&  l2_id_t'
+veto    = '  &&  pass_e_veto  &&  pass_m_veto'
+
+imp_par    = '  &&  abs(l1_dz) < 0.2  &&  abs(l2_dz) < 0.2  &&  abs(l1_dxy) < 0.045  &&  abs(l2_dxy) < 0.045' 
+IDlNoIso   =  '  &&  l1_id_l  &&  l2_id_l'
+IDmNoIso   =  '  &&  l1_id_m  &&  l2_id_m'
+IDlIso15   = IDlNoIso   + '  &&  l1_reliso05 < 0.15  &&  l2_reliso05 < 0.15'
+IDmIso15   = IDmNoIso   + '  &&  l1_reliso05 < 0.15  &&  l2_reliso05 < 0.15'
+
+d0p5noIDnorIso = '  &&  hnl_2d_disp > 0.5' 
+d0p5IDlNoIso   = d0p5noIDnorIso + '  &&  l1_id_l  &&  l2_id_l'                        
+d0p5IDmNoIso   = d0p5noIDnorIso + '  &&  l1_id_m  &&  l2_id_m'
+d0p5IDlIso15   = d0p5IDlNoIso   + '  &&  l1_reliso05 < 0.15  &&  l2_reliso05 < 0.15'
+d0p5IDmIso15   = d0p5IDmNoIso   + '  &&  l1_reliso05 < 0.15  &&  l2_reliso05 < 0.15'
+
+goodVertices                 = '  &&  Flag_goodVertices'    
+globalSuperTightHalo2016     = '  &&  Flag_globalSuperTightHalo2016Filter'    
+HBHENoise                    = '  &&  Flag_HBHENoiseFilter'                   
+HBHENoiseIso                 = '  &&  Flag_HBHENoiseIsoFilter'                
+EcalDeadCellTriggerPrimitive = '  &&  Flag_EcalDeadCellTriggerPrimitiveFilter'
+BadPFMuon                    = '  &&  Flag_BadPFMuonFilter'                   
+BadChargedCandidate          = '  &&  Flag_BadChargedCandidateFilter'         
+eeBadSc                      = '  &&  Flag_eeBadScFilter'                     
+ecalBadCalib                 = '  &&  Flag_ecalBadCalibFilter'                
+
+met_filtered   = goodVertices + globalSuperTightHalo2016 + HBHENoise + HBHENoiseIso + EcalDeadCellTriggerPrimitive + BadPFMuon + BadChargedCandidate + eeBadSc + ecalBadCalib 
+
+disp1      = '  &&  hnl_2d_disp > 1'
+
+def prepareCuts():
     cuts = []
     inc_cut =   'l1_pt > 4  &&  l2_pt > 4  &&  l0_pt > 35' #'.join([cat_Inc])
     inc_cut += '  &&  l1_q != l2_q'
@@ -70,85 +145,25 @@ def prepareCuts(mode):
     inc_cut_relxd += '  &&  abs(l0_dz) < 0.2'
     inc_cut_relxd += '  &&  hnl_dr_01 > 0.05  &&  hnl_dr_02 > 0.05' # avoid ele mu mismatching
 
-    ## RICCARDO
-#    cuts.append(Cut('ttjetsloose', 'nbj>1'))
-#     cuts.append(Cut('zmmloose' , 'l1_pt>5  & l2_pt>5  & l1_q!=l2_q & l1_id_t & l2_id_t & l1_reliso05<0.2 & l2_reliso05<0.2 & abs(l1_dz)<0.2 & abs(l2_dz)<0.2 & abs(l1_dxy)<0.045 & abs(l2_dxy)<0.045 & nbj==0 & pass_e_veto & pass_m_veto'))
-#     cuts.append(Cut('zmmhighpt', 'l1_pt>15  & l2_pt>15  & l1_q!=l2_q & l1_id_t & l2_id_t & l1_reliso05<0.2 & l2_reliso05<0.2 & abs(l1_dz)<0.2 & abs(l2_dz)<0.2 & abs(l1_dxy)<0.045 & abs(l2_dxy)<0.045 & nbj==0 & pass_e_veto & pass_m_veto'))
-#     cuts.append(Cut('zmm'      , 'l1_pt>10 & l2_pt>10 & l1_q!=l2_q & !l0_eid_mva_iso_loose & l0_reliso05>0.15 & l1_id_t & l2_id_t & l1_reliso05<0.2 & l2_reliso05<0.2 & abs(l1_dz)<0.2 & abs(l2_dz)<0.2 & abs(l1_dxy)<0.045 & abs(l2_dxy)<0.045 & nbj==0 & pass_e_veto & pass_m_veto'))
+    l0_loose  = prompt_mu_loose
+    l0_medium = prompt_mu_medium
+    l0_tight  = prompt_mu_tight
 
-#     cuts.append(Cut('inclusive'    , 'l0_pt>30 & l1_pt>4 & l2_pt>4 & l1_q != l2_q && l0_eid_mva_iso_loose & l0_reliso05<0.15'))
-#     cuts.append(Cut('inclusive'    , 'l0_pt>30 & l1_pt>4 & l2_pt>4 & l1_q != l2_q && l0_eid_mva_iso_loose & l0_reliso05<0.15 & l1_id_m & l2_id_m & l1_reliso05<0.2 & l2_reliso05<0.2'))
-#     cuts.append(Cut('inc_nobj'     , 'l0_pt>30 & l1_pt>4 & l2_pt>4 & l1_q != l2_q && l0_eid_mva_iso_loose & l0_reliso05<0.15 & l1_id_m & l2_id_m & l1_reliso05<0.2 & l2_reliso05<0.2 & nbj==0'))
-#     cuts.append(Cut('inc_nobj_veto', 'l0_pt>30 & l1_pt>4 & l2_pt>4 & l1_q != l2_q && l0_eid_mva_iso_loose & l0_reliso05<0.15 & l1_id_m & l2_id_m & l1_reliso05<0.2 & l2_reliso05<0.2 & nbj==0 & pass_e_veto & pass_m_veto'))
-#     cuts.append(Cut('stringent'    , 'l0_pt>30 & l1_pt>4 & l2_pt>4 & sv_prob>0.1 & sv_cos>0.9 & hnl_2d_disp_sig>3 & abs(hnl_w_q)==1 & hnl_iso_rel<0.2 & hnl_hn_q==0 & hnl_pt_12>20 & l0_eid_mva_iso_loose & l1_is_oot==0 & l2_is_oot==0 & pass_e_veto & pass_m_veto & l1_id_l & l2_id_l & l0_reliso05<0.2 & nbj==0 & hnl_2d_disp>2'))
-
-    ### VINZENZ
-    ## CONTROL REGIONS
-    '''slide 14 - DY:     OSSF pair present; |M_ll - m_Z| < 15 GeV; |M_3l - m_Z| > 15 GeV; 0 b-jets; E_T^miss < 30GeV; M_T < 30GeV
-       slide 15 - ttbar:  |M_ll - m_Z| > 15 GeV (if OSSF); |M_3l - m_Z| > 15 GeV (if OSSF); >= 1 b-jets; veto M_ll < 12 GeV (conversion)
-       slide 17 - WZ:     OSSF pair present; |M_ll -m_Z|< 15 GeV; |M_3l -m_Z| > 15 GeV; 0 b-jets; E_T^miss > 50 GeV ; p_T > 25, 15, 10 GeV (l0,1,2)
-       E_T^Miss == pfmet_pt, M_T == hnl_mt_0 
-    '''
-    mz = 91.18; mw = 80.4
-
-    ZVeto12    = '  &&  abs(hnl_m_12 - 91.18) > 15'
-    ZVeto01    = '  &&  abs(hnl_m_01 - 91.18) > 15'
-    ZVeto02    = '  &&  abs(hnl_m_02 - 91.18) > 15'
-
-    CR_DY      = '  &&  abs(hnl_m_12 - 91.18) < 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj == 0  &&  pfmet_pt < 30  &&  hnl_mt_0 < 30' 
-    CR_DYNoM3l = '  &&  abs(hnl_m_12 - 91.18) < 15  &&  nbj == 0  &&  pfmet_pt < 30  &&  hnl_mt_0 < 30' 
-    CR_DYRic   = 'abs(l0_dz) < 0.2  &&  l1_q != l2_q  &&  l1_pt > 15  &&  l2_pt > 10  &&  abs(hnl_m_12 - 91.18) < 15  &&  nbj == 0' 
-    CR_ttbar   = '  &&  abs(hnl_m_12 - 91.18) > 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj >= 1  &&  hnl_m_12 > 12'
-    CR_ttbarb0 = '  &&  abs(hnl_m_12 - 91.18) > 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj == 0  &&  hnl_m_12 > 12'
-    CR_ttbarb1 = '  &&  abs(hnl_m_12 - 91.18) > 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj <= 1  &&  hnl_m_12 > 12'
-    CR_ttbarb2 = '  &&  abs(hnl_m_12 - 91.18) > 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj >= 2  &&  hnl_m_12 > 12'
-    CR_WZ      = '  &&  abs(hnl_m_12 - 91.18) < 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj == 0  &&  pfmet_pt > 50  &&  l0_pt > 25  &&  l1_pt > 15  &&  l2_pt > 10'
-    CR_WJets       = '  &&  abs(hnl_m_12 - 91.18) > 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj == 0  &&  pfmet_pt > 50  &&  hnl_mt_0 > 30  &&  hnl_m_12 > 4'
-    NaiveSR    = '  &&  hnl_pt_12 > 15  &&  hnl_w_vis_m < 80.4  &&  abs(hnl_m_12 - 91.18) > 10  &&  hnl_iso_rel < 0.2  &&  hnl_2d_disp_sig > 4  &&  l1_id_tnv  &&  l2_id_tnv'
-    NaiveSRv2  = NaiveSR + '  &&  sv_cos > 0.99  &&  nbj == 0  &&  hnl_w_m > 50  &&  abs(hnl_dphi_hnvis0) > 2  &&  hnl_mt_0 < 60'
-
-    prompt_e_loose  = '  &&  l0_eid_mva_noniso_loose'
-    prompt_e_medium = '  &&  l0_eid_cut_medium'
-    prompt_e_tight  = '  &&  l0_eid_cut_tight'
-    
-    prompt_mu_loose  = '  &&  l0_id_l'
-    prompt_mu_medium = '  &&  l0_id_m'
-    prompt_mu_tight  = '  &&  l0_id_t'
-
-    looser  = '  &&  l1_reliso05 < 0.15  &&  l2_reliso05 < 0.15  &&  l1_id_m  &&  l2_id_m'
-    tighter = '  &&  abs(l1_dz) < 0.2  &&  abs(l2_dz) < 0.2  &&  l1_reliso05 < 0.15  &&  l2_reliso05 < 0.15  &&  l1_id_t  &&  l2_id_t'
-    veto    = '  &&  pass_e_veto  &&  pass_m_veto'
-
-    noIDnorIso = '  &&  abs(l1_dz) < 0.2  &&  abs(l2_dz) < 0.2  &&  abs(l1_dxy) < 0.045  &&  abs(l2_dxy) < 0.045' 
-    IDlNoIso   = noIDnorIso + '  &&  l1_id_l  &&  l2_id_l'
-    IDmNoIso   = noIDnorIso + '  &&  l1_id_m  &&  l2_id_m'
-    IDlIso15   = IDlNoIso   + '  &&  l1_reliso05 < 0.15  &&  l2_reliso05 < 0.15'
-    IDmIso15   = IDmNoIso   + '  &&  l1_reliso05 < 0.15  &&  l2_reliso05 < 0.15'
-
-    disp1      = '  &&  hnl_2d_disp > 1'
-
-    if mode == 'e':
-        l0_loose  = prompt_e_loose
-        l0_medium = prompt_e_medium
-        l0_tight  = prompt_e_tight
-
-    if mode == 'm':
-        l0_loose  = prompt_mu_loose
-        l0_medium = prompt_mu_medium
-        l0_tight  = prompt_mu_tight
+#### 13.9.
+    cuts.append(Cut('CR_WJets_IDlNoIso'         , inc_cut_relxd + l0_tight + IDlNoIso + CR_WJets + '  &&  hnl_dr_12 < 0.4  &&  hnl_dr_hnvis0 > 1' + ZVeto01 + ZVeto02)) # NO IMP PAR! !!CHANGED!!
 
 #### 10.9.
-#    cuts.append(Cut('CR_WJets_noIDnorIso'       , inc_cut_relxd + l0_tight + noIDnorIso  + CR_WJets + '  &&  hnl_dr_12 < 0.4  &&  hnl_dr_hnvis0 > 1' + ZVeto01 + ZVeto02))
+#    cuts.append(Cut('CR_WJets_imp_par'       , inc_cut_relxd + l0_tight + imp_par  + CR_WJets + '  &&  hnl_dr_12 < 0.4  &&  hnl_dr_hnvis0 > 1' + ZVeto01 + ZVeto02))
     cuts.append(Cut('CR_WJets_IDlNoIso'         , inc_cut_relxd + l0_tight + IDlNoIso    + CR_WJets + '  &&  hnl_dr_12 < 0.4  &&  hnl_dr_hnvis0 > 1' + ZVeto01 + ZVeto02))
 #    cuts.append(Cut('CR_WJets_IDlIso15'         , inc_cut_relxd + l0_tight + IDlIso15    + CR_WJets + '  &&  hnl_dr_12 < 0.4  &&  hnl_dr_hnvis0 > 1' + ZVeto01 + ZVeto02))
 
     return cuts
 
-def createSamples(analysis_dir, total_weight, qcd_from_same_sign, w_qcd_mssm_method, r_qcd_os_ss):
+def createSamples(analysis_dir, total_weight, qcd_from_same_sign, w_qcd_mssm_method, r_qcd_os_ss, add_data_cut=None, mode='m'):
     hist_dict = {}
     sample_dict = {}
 #    set_trace()
-    samples_mc, samples_data, samples, all_samples, sampleDict = createSampleLists(analysis_dir=analysis_dir, channel = mode)
+    samples_mc, samples_data, samples, all_samples, sampleDict = createSampleLists(analysis_dir=analysis_dir, add_data_cut=add_data_cut, channel=mode)
     
     sample_dict['all_samples'] = all_samples
 #    sample_dict['samples_essential'] = samples_essential
@@ -212,9 +227,6 @@ def makePlots(variables, cuts, total_weight, sample_dict, hist_dict, qcd_from_sa
                     print item, key
 
 if __name__ == '__main__':
-        
-
-    mode = 'm'
 
     friend_func = None
     
@@ -232,7 +244,7 @@ if __name__ == '__main__':
 
     print total_weight
 
-    cuts = prepareCuts(mode)
+    cuts = prepareCuts()
 
     variables = createVariables(2)
 

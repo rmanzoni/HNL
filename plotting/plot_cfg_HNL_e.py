@@ -105,9 +105,9 @@ looser  = '  &&  l1_reliso05 < 0.15  &&  l2_reliso05 < 0.15  &&  l1_id_m  &&  l2
 tighter = '  &&  abs(l1_dz) < 0.2  &&  abs(l2_dz) < 0.2  &&  l1_reliso05 < 0.15  &&  l2_reliso05 < 0.15  &&  l1_id_t  &&  l2_id_t'
 veto    = '  &&  pass_e_veto  &&  pass_m_veto'
 
-noIDnorIso = '  &&  abs(l1_dz) < 0.2  &&  abs(l2_dz) < 0.2  &&  abs(l1_dxy) < 0.045  &&  abs(l2_dxy) < 0.045' 
-IDlNoIso   = noIDnorIso + '  &&  l1_id_l  &&  l2_id_l'
-IDmNoIso   = noIDnorIso + '  &&  l1_id_m  &&  l2_id_m'
+imp_par = '  &&  abs(l1_dz) < 0.2  &&  abs(l2_dz) < 0.2  &&  abs(l1_dxy) < 0.045  &&  abs(l2_dxy) < 0.045' 
+IDlNoIso   = '  &&  l1_id_l  &&  l2_id_l'
+IDmNoIso   = '  &&  l1_id_m  &&  l2_id_m'
 IDlIso15   = IDlNoIso   + '  &&  l1_reliso05 < 0.15  &&  l2_reliso05 < 0.15'
 IDmIso15   = IDmNoIso   + '  &&  l1_reliso05 < 0.15  &&  l2_reliso05 < 0.15'
 
@@ -129,7 +129,7 @@ ecalBadCalib                 = '  &&  Flag_ecalBadCalibFilter'
 
 met_filtered   = goodVertices + globalSuperTightHalo2016 + HBHENoise + HBHENoiseIso + EcalDeadCellTriggerPrimitive + BadPFMuon + BadChargedCandidate + eeBadSc + ecalBadCalib 
 
-def prepareCuts(mode):
+def prepareCuts():
     cuts = []
     inc_cut =   'l1_pt > 4  &&  l2_pt > 4  &&  l0_pt > 35' #'.join([cat_Inc])
     inc_cut += '  &&  l1_q != l2_q'
@@ -141,29 +141,22 @@ def prepareCuts(mode):
     inc_cut_relxd += '  &&  abs(l0_dz) < 0.2'
     inc_cut_relxd += '  &&  hnl_dr_01 > 0.05  &&  hnl_dr_02 > 0.05' # avoid ele mu mismatching
 
-    if mode == 'e':
-        l0_loose  = prompt_e_loose
-        l0_medium = prompt_e_medium
-        l0_tight  = prompt_e_tight
-
-    if mode == 'm':
-        l0_loose  = prompt_mu_loose
-        l0_medium = prompt_mu_medium
-        l0_tight  = prompt_mu_tight
+    l0_loose  = prompt_e_loose
+    l0_medium = prompt_e_medium
+    l0_tight  = prompt_e_tight
 
 #### 13.9. ## MET FILTER AND VETO LEP MASSES
-#    cuts.append(Cut('CR_WJets_noIDnorIso'       , inc_cut_relxd + l0_tight + noIDnorIso  + CR_WJets + '  &&  hnl_dr_12 < 0.4  &&  hnl_dr_hnvis0 > 1'))
-    cuts.append(Cut('CR_WJets_IDlNoIso'         , inc_cut_relxd + l0_tight + IDlNoIso    + CR_WJets + '  &&  hnl_dr_12 < 0.4  &&  hnl_dr_hnvis0 > 1'))
-#    cuts.append(Cut('CR_WJets_IDlIso15'         , inc_cut_relxd + l0_tight + IDlIso15    + CR_WJets + '  &&  hnl_dr_12 < 0.4  &&  hnl_dr_hnvis0 > 1'))
+#    cuts.append(Cut('CR_WJets_imp_par'       , inc_cut_relxd + l0_tight + imp_par  + CR_WJets + '  &&  hnl_dr_12 < 0.4  &&  hnl_dr_hnvis0 > 1'))
+    cuts.append(Cut('CR_WJets_IDlNoIso'         , inc_cut_relxd + l0_tight + IDlNoIso + CR_WJets + '  &&  hnl_dr_12 < 0.4  &&  hnl_dr_hnvis0 > 1')) # NO IMP PAR! !!CHANGED!!
 
 #### 10.9.
-#    cuts.append(Cut('CR_WJets_noIDnorIso'       , inc_cut_relxd + l0_tight + noIDnorIso  + CR_WJets + '  &&  hnl_dr_12 < 0.4  &&  hnl_dr_hnvis0 > 1'))
+#    cuts.append(Cut('CR_WJets_imp_par'       , inc_cut_relxd + l0_tight + imp_par  + CR_WJets + '  &&  hnl_dr_12 < 0.4  &&  hnl_dr_hnvis0 > 1'))
 #    cuts.append(Cut('CR_WJets_IDlNoIso'         , inc_cut_relxd + l0_tight + IDlNoIso    + CR_WJets + '  &&  hnl_dr_12 < 0.4  &&  hnl_dr_hnvis0 > 1'))
 #    cuts.append(Cut('CR_WJets_IDlIso15'         , inc_cut_relxd + l0_tight + IDlIso15    + CR_WJets + '  &&  hnl_dr_12 < 0.4  &&  hnl_dr_hnvis0 > 1'))
 
 #### 6.9.
 #    cuts.append(Cut('CR_TTbarNoCV_d0p5IDmNoIso'    , inc_cut + l0_tight + d0p5IDmNoIso + CR_ttbarNoCV))
-#    cuts.append(Cut('CR_TTbar_d0p5IDmNoIso_dxyz'   , inc_cut + l0_tight + d0p5IDmNoIso + noIDnorIso + CR_ttbar))
+#    cuts.append(Cut('CR_TTbar_d0p5IDmNoIso_dxyz'   , inc_cut + l0_tight + d0p5IDmNoIso + imp_par + CR_ttbar))
 #    cuts.append(Cut('CR_JPsi_d0p5IDmNoIsov'        , inc_cut + l0_tight + d0p5IDmNoIso   + CR_jpsiv2))   
 #    cuts.append(Cut('CR_JPsi_IDmNoIsov2'           , inc_cut + l0_tight + IDmNoIso   + CR_jpsiv2))  # adding smaller2ddisp 
 #    cuts.append(Cut('NaiveSRv6'          , inc_cut + l0_tight + NaiveSRv2 + '  &&  sv_prob>0.05'))     ### DO THIS WITHOUT DATA! ## SETTING NORM TO 0.5 
@@ -173,16 +166,16 @@ def prepareCuts(mode):
 
 #### 5.9.     ## incl proper LHE weighting
 ###  morning
-#    cuts.append(Cut('CR_TTbar_d0p5noIDnorIso'    , inc_cut + l0_tight + d0p5noIDnorIso + CR_ttbar))
+#    cuts.append(Cut('CR_TTbar_d0p5imp_par'    , inc_cut + l0_tight + d0p5imp_par + CR_ttbar))
 #    cuts.append(Cut('CR_TTbar_d0p5IDmNoIso'      , inc_cut + l0_tight + d0p5IDmNoIso   + CR_ttbar))
-#    cuts.append(Cut('CR_TTbarb0_d0p5noIDnorIso'  , inc_cut + l0_tight + d0p5noIDnorIso + CR_ttbarb0))
+#    cuts.append(Cut('CR_TTbarb0_d0p5imp_par'  , inc_cut + l0_tight + d0p5imp_par + CR_ttbarb0))
 #    cuts.append(Cut('CR_WZ_d0p5IDmIso15'         , inc_cut + l0_tight + d0p5IDmIso15   + CR_WZ))
 ###  afternoon  # CHECK IF PLOTS FROM LAST WEEK STILL MAKE SENSE WITH PROPER WEIGHTING
-#    cuts.append(Cut('CR_TTbar_noIDnorIsov4'    , inc_cut + l0_tight + noIDnorIso + CR_ttbar))
+#    cuts.append(Cut('CR_TTbar_imp_parv4'    , inc_cut + l0_tight + imp_par + CR_ttbar))
 #    cuts.append(Cut('CR_TTbar_IDmNoIsov3'      , inc_cut + l0_tight + IDmNoIso   + CR_ttbar))
-#    cuts.append(Cut('CR_TTbarb0_noIDnorIsov3'  , inc_cut + l0_tight + noIDnorIso + CR_ttbarb0))
+#    cuts.append(Cut('CR_TTbarb0_imp_parv3'  , inc_cut + l0_tight + imp_par + CR_ttbarb0))
 #    cuts.append(Cut('CR_WZ_IDmIso15v3'         , inc_cut + l0_tight + IDmIso15   + CR_WZ))
-#    cuts.append(Cut('CR_DY_noIDnorIsov3'     , inc_cut + l0_tight + noIDnorIso + CR_DY + veto))
+#    cuts.append(Cut('CR_DY_imp_parv3'     , inc_cut + l0_tight + imp_par + CR_DY + veto))
 #    cuts.append(Cut('CR_DY_IDlNoIsov3'       , inc_cut + l0_tight + IDlNoIso   + CR_DY + veto))
 #    cuts.append(Cut('CR_DY_IDlIso15v3'       , inc_cut + l0_tight + IDlIso15   + CR_DY + veto))
 #    cuts.append(Cut('CR_WZ_IDmNoIsov3'         , inc_cut + l0_tight + IDmNoIso   + CR_WZ))
@@ -192,43 +185,43 @@ def prepareCuts(mode):
 #    cuts.append(Cut('CR_WZ_IDmIso15v4'          , inc_cut + l0_tight + IDmIso15       + CR_WZ))
 #    cuts.append(Cut('CR_TTbar_d0p5IDmNoIsov2'   , inc_cut + l0_tight + d0p5IDmNoIso   + CR_ttbar))
 #    cuts.append(Cut('NaiveSRv5'          , inc_cut + l0_tight + NaiveSRv2))     ### DO THIS WITHOUT DATA! 
-#    cuts.append(Cut('CR_JPsi_noIDnorIso'          , inc_cut + l0_tight + noIDnorIso + CR_jpsi))   
+#    cuts.append(Cut('CR_JPsi_imp_par'          , inc_cut + l0_tight + imp_par + CR_jpsi))   
 #    cuts.append(Cut('CR_JPsi_IDmNoIso'            , inc_cut + l0_tight + IDmNoIso   + CR_jpsi))   
 #    cuts.append(Cut('CR_JPsi_IDmIso15'            , inc_cut + l0_tight + IDmIso15   + CR_jpsi))   
 #    cuts.append(Cut('CR_JPsi_IDmNoIsov2'           , inc_cut + l0_tight + IDmNoIso   + CR_jpsiv2))   
 #    cuts.append(Cut('CR_JPsi_IDlNoIso'             , inc_cut + l0_tight + IDlNoIso   + CR_jpsiv2))   
 
 #### 4.9.
-#    cuts.append(Cut('CR_TTbar_d1noIDnorIso'    , inc_cut + l0_tight + d1noIDnorIso + CR_ttbar))
+#    cuts.append(Cut('CR_TTbar_d1imp_par'    , inc_cut + l0_tight + d1imp_par + CR_ttbar))
 #    cuts.append(Cut('CR_TTbar_d1IDmNoIso'      , inc_cut + l0_tight + d1IDmNoIso   + CR_ttbar))
-#    cuts.append(Cut('CR_TTbarb0_d1noIDnorIso'  , inc_cut + l0_tight + d1noIDnorIso + CR_ttbarb0))
+#    cuts.append(Cut('CR_TTbarb0_d1imp_par'  , inc_cut + l0_tight + d1imp_par + CR_ttbarb0))
 #    cuts.append(Cut('CR_WZ_d1IDmIso15'         , inc_cut + l0_tight + d1IDmIso15   + CR_WZ))
 #    cuts.append(Cut('NaiveSRNoIdv2'            , inc_cut + l0_tight + NaiveSRNoId))
 #    cuts.append(Cut('NaiveSRv2NoIdv2'          , inc_cut + l0_tight + NaiveSRv2NoId))
 
 #### 3.9.
-#    cuts.append(Cut('CR_TTbarb0v2', inc_cut + l0_tight + noIDnorIso + CR_ttbarb0))
-#    cuts.append(Cut('CR_TTbarb0v3', inc_cut + l0_tight + noIDnorIso + CR_ttbarb0))  # NEW SAMPLES
-#    cuts.append(Cut('test_batch_multi_CR_TTbarb0v3', inc_cut + l0_tight + noIDnorIso + CR_ttbarb0))  # NEW SAMPLES
+#    cuts.append(Cut('CR_TTbarb0v2', inc_cut + l0_tight + imp_par + CR_ttbarb0))
+#    cuts.append(Cut('CR_TTbarb0v3', inc_cut + l0_tight + imp_par + CR_ttbarb0))  # NEW SAMPLES
+#    cuts.append(Cut('test_batch_multi_CR_TTbarb0v3', inc_cut + l0_tight + imp_par + CR_ttbarb0))  # NEW SAMPLES
 #    cuts.append(Cut('TTbar_disp1' , inc_cut + l0_tight + CR_ttbar + '  &&  hnl_2d_disp > 1'))
 ### evening ## NEW SAMPLES FOR DY
 #    cuts.append(Cut('TTbar_disp1v2'          , inc_cut + l0_tight + CR_ttbar   + '  &&  hnl_2d_disp > 1')) # NEW SAMPLES
-#    cuts.append(Cut('CR_TTbar_noIDnorIsov3'  , inc_cut + l0_tight + noIDnorIso + CR_ttbar))
-#    cuts.append(Cut('CR_TTbarb0_noIDnorIsov2', inc_cut + l0_tight + noIDnorIso + CR_ttbarb0))
-#    cuts.append(Cut('CR_TTbarb0NoCVv2'       , inc_cut + l0_tight + noIDnorIso + CR_ttbarb0NoCV))
-#    cuts.append(Cut('CR_DY_noIDnorIsov2'     , inc_cut + l0_tight + noIDnorIso + CR_DY + veto))
+#    cuts.append(Cut('CR_TTbar_imp_parv3'  , inc_cut + l0_tight + imp_par + CR_ttbar))
+#    cuts.append(Cut('CR_TTbarb0_imp_parv2', inc_cut + l0_tight + imp_par + CR_ttbarb0))
+#    cuts.append(Cut('CR_TTbarb0NoCVv2'       , inc_cut + l0_tight + imp_par + CR_ttbarb0NoCV))
+#    cuts.append(Cut('CR_DY_imp_parv2'     , inc_cut + l0_tight + imp_par + CR_DY + veto))
 #    cuts.append(Cut('CR_DY_IDlNoIsov2'       , inc_cut + l0_tight + IDlNoIso   + CR_DY + veto))
 #    cuts.append(Cut('CR_DY_IDlIso15v2'       , inc_cut + l0_tight + IDlIso15   + CR_DY + veto))
 
 #### 2.9.
-#    cuts.append(Cut('CR_TTbarb1_noIDnorIsov2', inc_cut + l0_tight + noIDnorIso + CR_ttbarb1))
+#    cuts.append(Cut('CR_TTbarb1_imp_parv2', inc_cut + l0_tight + imp_par + CR_ttbarb1))
 #    cuts.append(Cut('CR_TTbarb1_IDlNoIsov2'  , inc_cut + l0_tight + IDlNoIso   + CR_ttbarb1))
 #    cuts.append(Cut('CR_TTbarb1_IDlIso15v2'  , inc_cut + l0_tight + IDlIso15   + CR_ttbarb1))
-#    cuts.append(Cut('CR_TTbarb2_noIDnorIsov2', inc_cut + l0_tight + noIDnorIso + CR_ttbarb2))
+#    cuts.append(Cut('CR_TTbarb2_imp_parv2', inc_cut + l0_tight + imp_par + CR_ttbarb2))
 #    cuts.append(Cut('CR_TTbarb2_IDlNoIsov2'  , inc_cut + l0_tight + IDlNoIso   + CR_ttbarb2))
 #    cuts.append(Cut('CR_TTbarb2_IDlIso15v2'  , inc_cut + l0_tight + IDlIso15   + CR_ttbarb2))
 # 
-#    cuts.append(Cut('CR_WZ_noIDnorIsov2'   , inc_cut + l0_tight + noIDnorIso + CR_WZ))
+#    cuts.append(Cut('CR_WZ_imp_parv2'   , inc_cut + l0_tight + imp_par + CR_WZ))
 #    cuts.append(Cut('CR_WZ_IDmNoIsov2'   , inc_cut + l0_tight + IDmNoIso + CR_WZ))
 #    cuts.append(Cut('CR_WZ_IDmIso15v2'   , inc_cut + l0_tight + IDmIso15 + CR_WZ))
 #    cuts.append(Cut('CR_WZ_IDlNoIsov2'   , inc_cut + l0_tight + IDlNoIso + CR_WZ))
@@ -236,52 +229,52 @@ def prepareCuts(mode):
 
 #### 1.9.
 ### testing multiprocessing
-#    cuts.append(Cut('test_multi_ttbar', inc_cut + l0_tight + noIDnorIso + CR_ttbarb0))
+#    cuts.append(Cut('test_multi_ttbar', inc_cut + l0_tight + imp_par + CR_ttbarb0))
 #    cuts.append(Cut('test_multi', inc_cut + l0_tight + tighter))
 ###                            ## NEW hnl_dr_01>0.05 AND hnl_dr_02>0.05 AND UPDATED BINNING FOR reliso (UP TO 0.5) 
 #    cuts.append(Cut('NaiveSRv3'          , inc_cut + l0_tight + NaiveSRv2))
-#    cuts.append(Cut('CR_DY_noIDnorIsov2'   , inc_cut + l0_tight + noIDnorIso + CR_DY + veto))
+#    cuts.append(Cut('CR_DY_imp_parv2'   , inc_cut + l0_tight + imp_par + CR_DY + veto))
 #    cuts.append(Cut('CR_DY_IDmNoIsov2'   , inc_cut + l0_tight + IDmNoIso + CR_DY + veto))
 #    cuts.append(Cut('CR_DY_IDmIso15v2'   , inc_cut + l0_tight + IDmIso15 + CR_DY + veto))
 #    cuts.append(Cut('CR_DYNoM3l_IDlNoIsov2'  , inc_cut + l0_tight + CR_DYNoM3l + veto + IDlNoIso))
 #    cuts.append(Cut('CR_DYNoM3l_IDlIso15v2'  , inc_cut + l0_tight + CR_DYNoM3l + veto + IDlIso15))
 
-#    cuts.append(Cut('CR_TTbar_noIDnorIsov2', inc_cut + l0_tight + noIDnorIso + CR_ttbar))
+#    cuts.append(Cut('CR_TTbar_imp_parv2', inc_cut + l0_tight + imp_par + CR_ttbar))
 #    cuts.append(Cut('CR_TTbar_IDmNoIsov2', inc_cut + l0_tight + IDmNoIso + CR_ttbar))
 #    cuts.append(Cut('CR_TTbar_IDmIso15v2', inc_cut + l0_tight + IDmIso15 + CR_ttbar))
 
 #### 31.8.
-#    cuts.append(Cut('CR_TTbarb0_noIDnorIso', inc_cut + l0_tight + noIDnorIso + CR_ttbarb0))
-#    cuts.append(Cut('CR_TTbarb0NoCV_noIDnorIso', inc_cut + l0_tight + noIDnorIso + CR_ttbarb0NoCV))
+#    cuts.append(Cut('CR_TTbarb0_imp_par', inc_cut + l0_tight + imp_par + CR_ttbarb0))
+#    cuts.append(Cut('CR_TTbarb0NoCV_imp_par', inc_cut + l0_tight + imp_par + CR_ttbarb0NoCV))
 #    cuts.append(Cut('NaiveSRNoId'            , inc_cut + l0_tight + NaiveSRNoId))
 #    cuts.append(Cut('test_multi', inc_cut + l0_tight + tighter))
 
 #### 30.8.
 ###  morning
-#    cuts.append(Cut('tight_noIDnorIso'     , inc_cut + l0_tight + noIDnorIso))
+#    cuts.append(Cut('tight_imp_par'     , inc_cut + l0_tight + imp_par))
 #    cuts.append(Cut('CR_DYRic'             , CR_DYRic + looser))
-#    cuts.append(Cut('CR_DYNoM3l_noIDnorIso', inc_cut + l0_tight + CR_DYNoM3l + veto + noIDnorIso))
+#    cuts.append(Cut('CR_DYNoM3l_imp_par', inc_cut + l0_tight + CR_DYNoM3l + veto + imp_par))
 #    cuts.append(Cut('CR_DYNoM3l_IDmNoIso'  , inc_cut + l0_tight + CR_DYNoM3l + veto + IDmNoIso))
 #    cuts.append(Cut('CR_DYNoM3l_IDmIso15'  , inc_cut + l0_tight + CR_DYNoM3l + veto + IDmIso15))
 #    cuts.append(Cut('NaiveSR'              , inc_cut + l0_tight + NaiveSR))
 ###  afternoon
 #    cuts.append(Cut('CR_DYNoM3l_IDlNoIso'  , inc_cut + l0_tight + CR_DYNoM3l + veto + IDlNoIso))
 #    cuts.append(Cut('CR_DYNoM3l_IDlIso15'  , inc_cut + l0_tight + CR_DYNoM3l + veto + IDlIso15))
-#    cuts.append(Cut('CR_TTbarb2_noIDnorIso', inc_cut + l0_tight + noIDnorIso + CR_ttbarb2))
+#    cuts.append(Cut('CR_TTbarb2_imp_par', inc_cut + l0_tight + imp_par + CR_ttbarb2))
 #    cuts.append(Cut('CR_TTbarb2_IDlNoIso'  , inc_cut + l0_tight + IDlNoIso   + CR_ttbarb2))
 #    cuts.append(Cut('CR_TTbarb2_IDlIso15'  , inc_cut + l0_tight + IDlIso15   + CR_ttbarb2))
 #    cuts.append(Cut('NaiveSRv2'            , inc_cut + l0_tight + NaiveSRv2))
 #    cuts.append(Cut('CR_WZ_IDlNoIso'   , inc_cut + l0_tight + IDlNoIso + CR_WZ))
 #    cuts.append(Cut('CR_WZ_IDlIso15'   , inc_cut + l0_tight + IDlIso15 + CR_WZ))
 ###  night
-#    cuts.append(Cut('CR_TTbarb1_noIDnorIso', inc_cut + l0_tight + noIDnorIso + CR_ttbarb1))
+#    cuts.append(Cut('CR_TTbarb1_imp_par', inc_cut + l0_tight + imp_par + CR_ttbarb1))
 #    cuts.append(Cut('CR_TTbarb1_IDlNoIso'  , inc_cut + l0_tight + IDlNoIso   + CR_ttbarb1))
 #    cuts.append(Cut('CR_TTbarb1_IDlIso15'  , inc_cut + l0_tight + IDlIso15   + CR_ttbarb1))
 
 ####  29.8.
-#    cuts.append(Cut('CR_DY_noIDnorIso'   , inc_cut + l0_tight + noIDnorIso + CR_DY + veto))
-#    cuts.append(Cut('CR_TTbar_noIDnorIso', inc_cut + l0_tight + noIDnorIso + CR_ttbar))
-#    cuts.append(Cut('CR_WZ_noIDnorIso'   , inc_cut + l0_tight + noIDnorIso + CR_WZ))
+#    cuts.append(Cut('CR_DY_imp_par'   , inc_cut + l0_tight + imp_par + CR_DY + veto))
+#    cuts.append(Cut('CR_TTbar_imp_par', inc_cut + l0_tight + imp_par + CR_ttbar))
+#    cuts.append(Cut('CR_WZ_imp_par'   , inc_cut + l0_tight + imp_par + CR_WZ))
 
 #    cuts.append(Cut('CR_DY_IDmNoIso'   , inc_cut + l0_tight + IDmNoIso + CR_DY + veto))
 #    cuts.append(Cut('CR_TTbar_IDmNoIso', inc_cut + l0_tight + IDmNoIso + CR_ttbar))
@@ -368,9 +361,6 @@ def makePlots(variables, cuts, total_weight, sample_dict, hist_dict, qcd_from_sa
                     print item, key
 
 if __name__ == '__main__':
-        
-
-    mode = 'e' 
 
     friend_func = None
     
@@ -388,9 +378,9 @@ if __name__ == '__main__':
 
     print total_weight
 
-    cuts = prepareCuts(mode)
+    cuts = prepareCuts()
 
-    variables = createVariables(2.5)
+    variables = createVariables(2)
 
     sample_dict, hist_dict = createSamples(analysis_dir, total_weight, qcd_from_same_sign=False, w_qcd_mssm_method=False, r_qcd_os_ss=None, add_data_cut=met_filtered)
     makePlots(

@@ -244,6 +244,171 @@ DY3JetsToLL_M50_ext = creator.makeMCComponent(
     useAAA  = True
 )
 
+ 
+QCD_pt_15to20_mu = creator.makeMCComponent(
+    name    = 'QCD_pt_15to20_mu', 
+    dataset = '/QCD_Pt-15to20_MuEnrichedPt5_TuneCP5_13TeV_pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
+    user    = 'CMS',
+    pattern = '.*root',
+    useAAA  = True
+) 
+
+QCD_pt_20to30_mu = creator.makeMCComponent(
+    name    = 'QCD_pt_20to30_mu', 
+    dataset = '/QCD_Pt-20to30_MuEnrichedPt5_TuneCP5_13TeV_pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
+    user    = 'CMS',
+    pattern = '.*root',
+    useAAA  = True
+) 
+
+QCD_pt_30to50_mu = creator.makeMCComponent(
+    name    = 'QCD_pt_30to50_mu', 
+    dataset = '/QCD_Pt-30to50_MuEnrichedPt5_TuneCP5_13TeV_pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
+    user    = 'CMS',
+    pattern = '.*root',
+    useAAA  = True
+) 
+
+QCD_pt_50to80_mu = creator.makeMCComponent(
+    name    = 'QCD_pt_50to80_mu', 
+    dataset = '/QCD_Pt-50to80_MuEnrichedPt5_TuneCP5_13TeV_pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
+    user    = 'CMS',
+    pattern = '.*root',
+    useAAA  = True
+) 
+
+QCD_pt_80to120_mu = creator.makeMCComponent(
+    name    = 'QCD_pt_80to120_mu',
+    dataset = '/QCD_Pt-80to120_MuEnrichedPt5_TuneCP5_13TeV_pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
+    user    = 'CMS',
+    pattern = '.*root',
+    useAAA  = True
+) 
+
+# fake electrons
+QCD_pt_20to30_bcToE = creator.makeMCComponent(
+    name    = 'QCD_pt_20to30_bcToE', 
+    dataset = '/QCD_Pt_20to30_bcToE_TuneCP5_13TeV_pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
+    user    = 'CMS',
+    pattern = '.*root',
+    useAAA  = True
+) 
+
+QCD_pt_30to80_bcToE = creator.makeMCComponent(
+    name    = 'QCD_pt_30to80_bcToE', 
+    dataset = '/QCD_Pt_30to80_bcToE_TuneCP5_13TeV_pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
+    user    = 'CMS',
+    pattern = '.*root',
+    useAAA  = True
+) 
+
+QCD_pt_80to170_bcToE = creator.makeMCComponent(
+    name    = 'QCD_pt_80to170_bcToE', 
+    dataset = '/QCD_Pt_80to170_bcToE_TuneCP5_13TeV_pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
+    user    = 'CMS',
+    pattern = '.*root',
+    useAAA  = True
+) 
+
+QCD_pt_170to250_bcToE = creator.makeMCComponent(
+    name    = 'QCD_pt_170to250_bcToE', 
+    dataset = '/QCD_Pt_170to250_bcToE_TuneCP5_13TeV_pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
+    user    = 'CMS',
+    pattern = '.*root',
+    useAAA  = True
+) 
+
+QCD_pt_250toInf_bcToE = creator.makeMCComponent(
+    name    = 'QCD_pt_250toInf_bcToE', 
+    dataset = '/QCD_Pt_250toInf_bcToE_TuneCP5_13TeV_pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
+    user    = 'CMS',
+    pattern = '.*root',
+    useAAA  = True
+) 
+
+QCD_pt_15to20_em = creator.makeMCComponent(
+    name    = 'QCD_pt_15to20_em', 
+    dataset = '/QCD_Pt-15to20_EMEnriched_TuneCP5_13TeV_pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
+    user    = 'CMS',
+    pattern = '.*root',
+    useAAA  = True
+) 
+
+QCD_pt_20to30_em = creator.makeMCComponent(
+    name    = 'QCD_pt_20to30_em',
+    dataset = '/QCD_Pt-20to30_EMEnriched_TuneCP5_13TeV_pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
+    user    = 'CMS',
+    pattern = '.*root',
+    useAAA  = True
+) 
+
+QCD_pt_30to50_em = creator.makeMCComponent(
+    name    = 'QCD_pt_30to50_em',
+    dataset = '/QCD_Pt-30to50_EMEnriched_TuneCP5_13TeV_pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
+    user    = 'CMS',
+    pattern = '.*root',
+    useAAA  = True
+) 
+
+QCD_pt_50to80_em = creator.makeMCComponent(
+    name    = 'QCD_pt_50to80_em', 
+    dataset = '/QCD_Pt-50to80_EMEnriched_TuneCP5_13TeV_pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
+    user    = 'CMS',
+    pattern = '.*root',
+    useAAA  = True
+) 
+
+# NOT ON DAS!
+#QCD_pt_80to120_em = creator.makeMCComponent(
+#    name    = 'QCD_pt_80to120_em', 
+#    dataset = '/QCD_Pt-80to120_EMEnriched_TuneCP5_13TeV_pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
+#    user    = 'CMS',
+#    pattern = '.*root',
+#    useAAA  = True
+#) 
+
+QCD_pt_120to170_em = creator.makeMCComponent(
+    name    = 'QCD_pt_120to170_em', 
+    dataset = '/QCD_Pt-120to170_EMEnriched_TuneCP5_13TeV_pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v2/MINIAODSIM',
+    user    = 'CMS',
+    pattern = '.*root',
+    useAAA  = True
+) 
+
+# NOT ON DAS!
+#QCD_pt_170to300_em = creator.makeMCComponent(
+#    name    = 'QCD_pt_170to300_em', 
+#    dataset = '/QCD_Pt-170to300_EMEnriched_TuneCP5_13TeV_pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
+#    user    = 'CMS',
+#    pattern = '.*root',
+#    useAAA  = True
+#) 
+
+QCD_pt_300toInf_em = creator.makeMCComponent(
+    name    = 'QCD_pt_300toInf_em', 
+    dataset = '/QCD_Pt-300toInf_EMEnriched_TuneCP5_13TeV_pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
+    user    = 'CMS',
+    pattern = '.*root',
+    useAAA  = True
+) 
+
+qcd = [QCD_pt_15to20_em, QCD_pt_20to30_em, QCD_pt_30to50_em, QCD_pt_50to80_em, QCD_pt_120to170_em, QCD_pt_300toInf_em, QCD_pt_20to30_bcToE, QCD_pt_30to80_bcToE, QCD_pt_80to170_bcToE, QCD_pt_170to250_bcToE, QCD_pt_250toInf_bcToE, QCD_pt_15to20_mu, QCD_pt_20to30_mu, QCD_pt_30to50_mu, QCD_pt_50to80_mu, QCD_pt_80to120_mu]
+
+W1JetsToLNu = creator.makeMCComponent(
+    name    = 'W1JetsToLNu', 
+    dataset = '/W1JetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v3/MINIAODSIM',
+    user    = 'CMS',
+    pattern = '.*root',
+    useAAA  = True
+) 
+
+W2JetsToLNu = creator.makeMCComponent(
+    name    = 'W2JetsToLNu', 
+    dataset = '/W2JetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v4/MINIAODSIM',
+    user    = 'CMS',
+    pattern = '.*root',
+    useAAA  = True
+) 
 
 # LINK for crosssections: https://twiki.cern.ch/twiki/bin/viewauth/CMS/SummaryTable1G25ns
 
@@ -271,6 +436,7 @@ DY2JetsToLL_M50                           .puFileMC = os.environ['CMSSW_BASE'] +
 DY2JetsToLL_M50_ext                       .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_DY2JetsToLL_M50_ext.root' # derived manually 
 DY3JetsToLL_M50                           .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_DY3JetsToLL_M50.root' # derived manually     
 DY3JetsToLL_M50_ext                       .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_DY3JetsToLL_M50_ext.root' # derived manually 
+for i in qcd+[W1JetsToLNu,W2JetsToLNu]: i.puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_TTJets_amcat.root' # derived manually 
 
 
 
@@ -299,6 +465,8 @@ hnl_bkg_noskim = [
     DY3JetsToLL_M50,     
     DY3JetsToLL_M50_ext, 
 ] 
+
+hnl_bkg_noskim += qcd + [W1JetsToLNu,W2JetsToLNu]
 
 for sample in hnl_bkg_noskim: sample.nGenEvents = sample.dataset_entries
 

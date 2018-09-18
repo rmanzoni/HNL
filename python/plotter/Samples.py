@@ -22,6 +22,7 @@ from CMGTools.HNL.samples.samples_mc_2017_noskim   import QCD_pt_20to30_bcToE, Q
 #from CMGTools.HNL.samples.signal                   import HN3L_M_3_V_0p00316227766017_mu_onshell as HN3L_M3_m #.ctau = 14.6 cm
 #from CMGTools.HNL.samples.signal                   import HN3L_M_2_V_0p01_e_onshell              as HN3L_M2_e #.ctau = 11.1 cm
 #FIXME UPDATE SAMPLES TO NEW VERSION
+from CMGTools.HNL.samples.samples_mc_2017_noskim   import W1JetsToLNu, W2JetsToLNu
 
 if "/sDYReweighting_cc.so" not in gSystem.GetLibraries(): 
     gROOT.ProcessLine(".L %s/src/CMGTools/HNL/python/plotter/DYReweighting.cc+" % os.environ['CMSSW_BASE']);
@@ -65,13 +66,13 @@ def createSampleLists(analysis_dir='/eos/user/v/vstampf/ntuples/',
     if channel == 'e':
 #        data_dir = '/eos/user/m/manzoni/HNL/singleele_e_23_08_2018/'              # first version
         data_dir = '/eos/user/v/vstampf/ntuples/data_2017_e_noskim/partial_hadd/'  # 9/13 production including met filters and masses between vetoing leps and 3l
-        qcd_dir = 'bkg_mc_e/qcd/'
+        qcd_dir = 'bkg_mc_e/qcd/new/'
         bkg_dir = 'bkg_mc_e/'
         sig_dir = 'sig_mc_e/ntuples/'
         dataB = Single_ele_2017B; dataC = Single_ele_2017C; dataD = Single_ele_2017D; dataE = Single_ele_2017E; dataF = Single_ele_2017F; 
     if channel == 'm':
         data_dir = '/eos/user/v/vstampf/ntuples/data_2017_m_noskim/'
-        qcd_dir = 'bkg_mc_m/qcd/'
+        qcd_dir = 'bkg_mc_m/qcd/new/'
         bkg_dir = 'bkg_mc_m/'
         sig_dir = 'sig_mc_m/ntuples/'
         dataB = Single_mu_2017B; dataC = Single_mu_2017C; dataD = Single_mu_2017D; dataE = Single_mu_2017E; dataF = Single_mu_2017F; 
@@ -80,10 +81,20 @@ def createSampleLists(analysis_dir='/eos/user/v/vstampf/ntuples/',
         SampleCfg(name='DYJetsToLL_M5to50', dir_name=DYJetsToLL_M5to50 .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=DYJetsToLL_M5to50 .xSection, sumweights=DYJetsToLL_M5to50 .nGenEvents),
         SampleCfg(name='DYJets_ext'       , dir_name=DYJetsToLL_M50_ext.name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=DYJetsToLL_M50_ext.xSection, sumweights=DYJetsToLL_M50_ext.nGenEvents),
         SampleCfg(name='TTJets_amc'       , dir_name=TTJets_amcat      .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=TTJets_amcat      .xSection, sumweights=TTJets_amcat      .nGenEvents),
-        SampleCfg(name='WJetsToLNu'       , dir_name=WJetsToLNu        .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=WJetsToLNu        .xSection, sumweights=WJetsToLNu        .nGenEvents),        
         SampleCfg(name='ZZTo4L'           , dir_name=ZZTo4L            .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=ZZTo4L            .xSection, sumweights=ZZTo4L            .nGenEvents),
         SampleCfg(name='WZTo3LNu'         , dir_name=WZTo3LNu          .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=WZTo3LNu          .xSection, sumweights=WZTo3LNu          .nGenEvents),
     ]
+
+    if channel == 'm': 
+        samples_essential += [SampleCfg(name='WJetsToLNu'       , dir_name=WJetsToLNu        .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=WJetsToLNu        .xSection, sumweights=WJetsToLNu        .nGenEvents)]
+
+    if channel == 'e': 
+        samples_essential += [
+            SampleCfg(name='W1JetsToLNu'       , dir_name=W1JetsToLNu        .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=W1JetsToLNu        .xSection, sumweights=W1JetsToLNu        .nGenEvents),
+            SampleCfg(name='W2JetsToLNu'       , dir_name=W2JetsToLNu        .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=W2JetsToLNu        .xSection, sumweights=W2JetsToLNu        .nGenEvents),
+#            SampleCfg(name='W3JetsToLNu'       , dir_name=W3JetsToLNu        .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=W3JetsToLNu        .xSection, sumweights=W3JetsToLNu        .nGenEvents),
+#            SampleCfg(name='W4JetsToLNu'       , dir_name=W4JetsToLNu        .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=W4JetsToLNu        .xSection, sumweights=W4JetsToLNu        .nGenEvents)
+        ]
 
     samples_signal_e = [
 #        SampleCfg(name='HN3L_M3' , dir_name=HN3L_M3_e.name, ana_dir=analysis_dir+sig_dir, tree_prod_name=tree_prod_name, xsec=signal_scale, sumweights=HN3L_M3_e.nGenEvents, is_signal=True)

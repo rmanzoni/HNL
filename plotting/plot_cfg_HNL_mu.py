@@ -87,12 +87,21 @@ CR_DY      = '  &&  abs(hnl_m_12 - 91.18) < 15  &&  abs(hnl_w_vis_m - 91.18) > 1
 CR_DY_noMcuts  = '  &&  nbj == 0  &&  pfmet_pt < 30  &&  hnl_mt_0 < 30' 
 CR_DYNoM3l = '  &&  abs(hnl_m_12 - 91.18) < 15  &&  nbj == 0  &&  pfmet_pt < 30  &&  hnl_mt_0 < 30' 
 CR_DYRic   = 'abs(l0_dz) < 0.2  &&  l1_q != l2_q  &&  l1_pt > 15  &&  l2_pt > 10  &&  abs(hnl_m_12 - 91.18) < 15  &&  nbj == 0' 
+CR_DY_3mu_m3muAtZ      = '  && ((abs(hnl_w_vis_m - 91.18) < 15  &&  nbj == 0  &&  pfmet_pt < 50))' 
+OSlarge      = '  && ((abs(hnl_w_vis_m - 91.18) < 15  &&  nbj == 0  &&  pfmet_pt < 50) && (hnl_q_01 == 0 && hnl_pt_01 > 5)  && (hnl_q_02 == 0 && hnl_pt_02 > 5)  && (hnl_q_12 == 0 && hnl_pt_12 > 5))' 
+CR_DY_3mu_l1l2  = '  &&  ((abs(hnl_m_01 - 91.18) < 10  && hnl_q_01 ==0 && abs(l1_dz) < 0.2 &&  abs(l1_dxy) < 0.045 &&  l1_id_m ) | (abs(hnl_m_02 - 91.18) < 10  && hnl_q_02 ==0 && abs(l2_dz) < 0.2 &&  abs(l2_dxy) < 0.045 &&  l2_id_m ))' 
+CR_DY_3mu_l1l2disp  = '  &&  ((abs(hnl_m_01 - 91.18) < 10  && hnl_q_01 ==0) | (abs(hnl_m_02 - 91.18) < 10  && hnl_q_02 ==0))' 
+CR_DY_3mu_l1  = '  &&  (abs(hnl_m_01 - 91.18) < 10  && hnl_q_01 ==0 && abs(l1_dz) < 0.2 &&  abs(l1_dxy) < 0.045 &&  l1_id_m )' 
+
 CR_ttbar   = '  &&  abs(hnl_m_12 - 91.18) > 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj >= 1  &&  hnl_m_12 > 12'
 CR_ttbarb0 = '  &&  abs(hnl_m_12 - 91.18) > 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj == 0  &&  hnl_m_12 > 12'
 CR_ttbarb1 = '  &&  abs(hnl_m_12 - 91.18) > 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj <= 1  &&  hnl_m_12 > 12'
 CR_ttbarb2 = '  &&  abs(hnl_m_12 - 91.18) > 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj >= 2  &&  hnl_m_12 > 12'
+
 CR_WZ      = '  &&  abs(hnl_m_12 - 91.18) < 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj == 0  &&  pfmet_pt > 50  &&  l0_pt > 25  &&  l1_pt > 15  &&  l2_pt > 10'
+
 CR_WJets       = '  &&  abs(hnl_m_12 - 91.18) > 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj == 0  &&  pfmet_pt > 50  &&  hnl_mt_0 > 30  &&  hnl_m_12 > 4'
+
 NaiveSR    = '  &&  hnl_pt_12 > 15  &&  hnl_w_vis_m < 80.4  &&  abs(hnl_m_12 - 91.18) > 10  &&  hnl_iso_rel < 0.2  &&  hnl_2d_disp_sig > 4  &&  l1_id_tnv  &&  l2_id_tnv'
 NaiveSRv2  = NaiveSR + '  &&  sv_cos > 0.99  &&  nbj == 0  &&  hnl_w_m > 50  &&  abs(hnl_dphi_hnvis0) > 2  &&  hnl_mt_0 < 60'
 
@@ -103,6 +112,11 @@ prompt_e_tight  = '  &&  l0_eid_cut_tight'
 prompt_mu_loose  = '  &&  l0_id_l'
 prompt_mu_medium = '  &&  l0_id_m'
 prompt_mu_tight  = '  &&  l0_id_t'
+
+smalll2eta  = '  && abs(l2_eta)<1.1' 
+largel2eta  = '  && abs(l2_eta)>1.1' 
+l2_id_m     = '  &&  l1_id_m && l2_id_m ' 
+l2_id_l     = '  &&  l1_id_m && l2_id_l ' 
 
 looser  = '  &&  l1_reliso05 < 0.15  &&  l2_reliso05 < 0.15  &&  l1_id_m  &&  l2_id_m'
 tighter = '  &&  abs(l1_dz) < 0.2  &&  abs(l2_dz) < 0.2  &&  l1_reliso05 < 0.15  &&  l2_reliso05 < 0.15  &&  l1_id_t  &&  l2_id_t'
@@ -134,17 +148,27 @@ met_filtered   = goodVertices + globalSuperTightHalo2016 + HBHENoise + HBHENoise
 
 disp1      = '  &&  hnl_2d_disp > 1'
 
+inc_cut =   'l1_pt > 4  &&  l2_pt > 4  &&  l0_pt > 27' #'.join([cat_Inc])
+inc_cut += '  &&  l1_q != l2_q'
+inc_cut += '  &&  l0_reliso05 < 0.15'
+inc_cut += '  &&  abs(l0_dz) < 0.2'
+inc_cut += '  &&  hnl_dr_01 > 0.05  &&  hnl_dr_02 > 0.05' # avoid ele mu mismatching
+
+inc_cut_relxd =   'l1_pt > 4  &&  l2_pt > 4  &&  l0_pt > 35' #'.join([cat_Inc])
+inc_cut_relxd += '  &&  abs(l0_dz) < 0.2'
+inc_cut_relxd += '  &&  hnl_dr_01 > 0.05  &&  hnl_dr_02 > 0.05' # avoid ele mu mismatching
+
+## equality for all 3 muons
+inc_cut_3mu =   'l1_pt > 20  &&  l2_pt > 10  &&  l0_pt > 27'\
+                '  &&  abs(l0_dz) < 0.2 &&  abs(l1_dz) < 0.2 &&  abs(l2_dz) < 0.2 '\
+                '  &&  abs(l0_dxy) < 0.045 &&  abs(l1_dxy) < 0.045 &&  abs(l2_dxy) < 0.045 '\
+                '  && l0_id_m && l1_id_m && l2_id_m '\
+                '  && abs(l0_eta) < 2.4 && abs(l1_eta) < 2.4 && abs(l2_eta) < 2.4 '\
+                '  && l0_reliso05 < 0.1 && l1_reliso05 < 0.1 && l2_reliso05 < 0.1 '\
+                '  && hnl_dr_01 > 0.05 && hnl_dr_02 > 0.05 && hnl_dr_12 > 0.05 '
+
 def prepareCuts():
     cuts = []
-    inc_cut =   'l1_pt > 4  &&  l2_pt > 4  &&  l0_pt > 27' #'.join([cat_Inc])
-    inc_cut += '  &&  l1_q != l2_q'
-    inc_cut += '  &&  l0_reliso05 < 0.15'
-    inc_cut += '  &&  abs(l0_dz) < 0.2'
-    inc_cut += '  &&  hnl_dr_01 > 0.05  &&  hnl_dr_02 > 0.05' # avoid ele mu mismatching
-
-    inc_cut_relxd =   'l1_pt > 4  &&  l2_pt > 4  &&  l0_pt > 35' #'.join([cat_Inc])
-    inc_cut_relxd += '  &&  abs(l0_dz) < 0.2'
-    inc_cut_relxd += '  &&  hnl_dr_01 > 0.05  &&  hnl_dr_02 > 0.05' # avoid ele mu mismatching
 
     l0_loose  = prompt_mu_loose
     l0_medium = prompt_mu_medium
@@ -153,15 +177,34 @@ def prepareCuts():
 #### 18.9.
 #    cuts.append(Cut('CR_WJets_IDlNoIso'         , inc_cut_relxd + l0_tight + IDlNoIso + CR_WJets + '  &&  hnl_dr_12 < 0.4  &&  hnl_dr_hnvis0 > 1' + ZVeto01 + ZVeto02)) # NO IMP PAR! !!CHANGED!!
 #    cuts.append(Cut('CR_DY_IDlNoIso'            , inc_cut_relxd + l0_tight + IDlNoIso + CR_DY)) # NO IMP PAR! !!CHANGED!!
-    cuts.append(Cut('CR_DY_noMcuts'            , inc_cut + imp_par + l0_tight + CR_DY_noMcuts + veto))
+#    cuts.append(Cut('CR_DY_noMcuts'            , inc_cut + imp_par + l0_tight + CR_DY_noMcuts + veto))
+    cuts.append(Cut('CR_DY_3muequal_m3muAtZ',    inc_cut_3mu + CR_DY_3mu_m3muAtZ))
 
 #### 13.9.
 #    cuts.append(Cut('CR_WJets_IDlNoIso'         , inc_cut_relxd + l0_tight + IDlNoIso + CR_WJets + '  &&  hnl_dr_12 < 0.4  &&  hnl_dr_hnvis0 > 1' + ZVeto01 + ZVeto02)) # NO IMP PAR! !!CHANGED!!
 
 #### 10.9.
-#    cuts.append(Cut('CR_WJets_imp_par'       , inc_cut_relxd + l0_tight + imp_par  + CR_WJets + '  &&  hnl_dr_12 < 0.4  &&  hnl_dr_hnvis0 > 1' + ZVeto01 + ZVeto02))
+#    cuts.append(Cut('CR_DY_3muequal_m3muAtZ',    inc_cut_3mu + CR_DY_3mu_m3muAtZ))
+#    cuts.append(Cut('CR_DY_small2eta_mveto',    inc_cut_3mu + CR_DY_ZZ + smalll2eta + mveto))
+#    cuts.append(Cut('CR_DY_ZZ',    inc_cut_3mu + CR_DY_ZZ))
+#    cuts.append(Cut('CR_WJets_noIDnorIso'       , inc_cut_relxd + l0_tight + imp_par     + CR_WJets + '  &&  hnl_dr_12 < 0.4  &&  hnl_dr_hnvis0 > 1' + ZVeto01 + ZVeto02))
 #    cuts.append(Cut('CR_WJets_IDlNoIso'         , inc_cut_relxd + l0_tight + IDlNoIso    + CR_WJets + '  &&  hnl_dr_12 < 0.4  &&  hnl_dr_hnvis0 > 1' + ZVeto01 + ZVeto02))
 #    cuts.append(Cut('CR_WJets_IDlIso15'         , inc_cut_relxd + l0_tight + IDlIso15    + CR_WJets + '  &&  hnl_dr_12 < 0.4  &&  hnl_dr_hnvis0 > 1' + ZVeto01 + ZVeto02))
+
+#### 06.9.
+    # cuts.append(Cut('CR_DY_l0tight_3mu_l1',            inc_cut + l0_tight + CR_DY_3mu_l1))
+    # cuts.append(Cut('CR_DY_l0tight_3mu_l1l2',    inc_cut + l0_tight + CR_DY_3mu_l1l2))
+    # cuts.append(Cut('CR_DY_l0tight_3mu_l1l2_dispp5',    inc_cut + l0_tight + CR_DY_3mu_l1l2 + dispp5))
+    # cuts.append(Cut('CR_DY_l0tight_3mu_l1l2_small2eta',    inc_cut + l0_tight + CR_DY_3mu_l1l2 + smalll2eta))
+    # cuts.append(Cut('CR_DY_l0tight_3mu_l1l2_dispp5',    inc_cut + l0_tight + CR_DY_3mu_l1l2 + dispp5))
+    # cuts.append(Cut('CR_DY_l0tight_3mu_l1l2disp_largel2eta_dispp5',    inc_cut + l0_tight + CR_DY_3mu_l1l2disp + largel2eta + dispp5))
+    # cuts.append(Cut('CR_DY_l0tight_3mu_l1l2disp_dispp5',    inc_cut + l0_tight + CR_DY_3mu_l1l2disp + largel2eta + dispp5))
+    # cuts.append(Cut('CR_DY_l0tight_3mu_l1l2_l2_id_m',    inc_cut + l0_tight + CR_DY_3mu_l1l2 + l2_id_m))
+    # cuts.append(Cut('CR_DY_l0tight_3mu_l1l2_l2_id_l',    inc_cut + l0_tight + CR_DY_3mu_l1l2 + l2_id_l))
+    # cuts.append(Cut('CR_DY_l0tight_3mu_l2_id_l',    inc_cut + l0_tight + CR_DY_3mu_l1 + l2_id_l))
+    # cuts.append(Cut('CR_DY_l0tight_3mu_m3muAtZ',    inc_cut + l0_tight + CR_DY_3mu_m3muAtZ + smalll2eta))
+    # cuts.append(Cut('CR_DY_l0tight_3muequal_m3muAtZ_v2',    inc_cut_3mu + l0_tight + CR_DY_3mu_m3muAtZ + smalll2eta))
+    # cuts.append(Cut('CR_DY_l0tight_3muequal_l1l2_small2eta',    inc_cut_3mu + l0_tight + CR_DY_3mu_l1l2 + smalll2eta))
 
     return cuts
 
@@ -207,7 +250,8 @@ def makePlots(variables, cuts, total_weight, sample_dict, hist_dict, qcd_from_sa
             plot = plots[variable.name]
             plot.Group('data_obs', ['data_2017B', 'data_2017C', 'data_2017D', 'data_2017E', 'data_2017F'])
             plot.Group('single t', ['ST_tW_at_5f_incD', 'ST_tW_t_5f_incD'])
-            plot.Group('Diboson', ['WZTo3LNu', 'ZZTo4L', 'WWTo2L2Nu'])
+#            plot.Group('Diboson', ['WZTo3LNu', 'ZZTo4L', 'WWTo2L2Nu'])
+            plot.Group('Diboson', ['WZTo3LNu', 'WWTo2L2Nu'])
             plot.Group('Triboson', ['ZZZ', 'WWW', 'WGGJets'])
             plot.Group('ttV', ['TTZToLLNuNu', 'TTWJetsToLNu'])
             plot.Group('QCD',['QCD_pt_15to20_mu', 'QCD_pt_20to30_mu', 'QCD_pt_30to50_mu', 'QCD_pt_50to80_mu', 'QCD_pt_80to120_mu'])

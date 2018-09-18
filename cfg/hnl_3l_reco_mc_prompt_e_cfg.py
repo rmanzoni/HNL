@@ -33,11 +33,9 @@ from CMGTools.HNL.analyzers.LeptonWeighter     import LeptonWeighter
 # from CMGTools.HNL.samples.samples_mc_2017_noskim import DYJetsToLL_M5to50
 #from CMGTools.HNL.samples.samples_mc_2017_noskim import DYJetsToLL_M50
 #from CMGTools.HNL.samples.signal import all_signals_e as samples
-#from CMGTools.HNL.samples.samples_mc_2017_noskim import qcd_mu as samples#, W1JetsToLNu, W2JetsToLNu
-from CMGTools.HNL.samples.samples_mc_2017_noskim import qcd_e
-#from CMGTools.HNL.samples.samples_mc_2017_noskim import W1JetsToLNu, W2JetsToLNu
-#samples = [W1JetsToLNu, W2JetsToLNu]
-#from CMGTools.HNL.samples.samples_mc_2017_noskim import qcd_mu #, W1JetsToLNu, W2JetsToLNu
+#from CMGTools.HNL.samples.samples_mc_2017_noskim import qcd_mu as samples
+#from CMGTools.HNL.samples.samples_mc_2017_noskim import qcd_e
+from CMGTools.HNL.samples.samples_mc_2017_noskim import wjets as samples
 
 ###################################################
 ###                   OPTIONS                   ###
@@ -56,7 +54,6 @@ pick_events        = getHeppyOption('pick_events', False)
 #samples = [DYJetsToLL_M50]
 #samples = qcd_mu
 #samples = signals_e
-samples = qcd_e
 auxsamples = [] #[ttbar, DYJetsToLL_M50]
 
 #samples = [comp for comp in samples if comp.name=='TTJets_amcat']

@@ -432,6 +432,28 @@ W2JetsToLNu = creator.makeMCComponent(
     useAAA  = True
 ) 
 
+W3JetsToLNu = creator.makeMCComponent(
+    name    = 'W3JetsToLNu',
+    dataset = '/W3JetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
+    user    = 'CMS',
+    pattern = '.*root', 
+    xSec    = 993.4*1.17, 
+    useAAA  = True
+)
+#.sigma = 993.4*1.17 pb; .nevents = 6265138; .L = 5390.395413145565 pb^-1 
+ 
+W4JetsToLNu = creator.makeMCComponent(
+    name    = 'W4JetsToLNu',
+    dataset = '/W4JetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
+    user    = 'CMS',
+    pattern = '.*root', 
+    xSec    = 542.4*1.17, 
+    useAAA  = True
+)
+#.sigma = 542.4*1.17 pb; .nevents = 3356894; .L = 5289.712704535714 pb^-1  
+
+wjets = [W1JetsToLNu, W2JetsToLNu, W3JetsToLNu, W4JetsToLNu]
+
 # LINK for crosssections: https://twiki.cern.ch/twiki/bin/viewauth/CMS/SummaryTable1G25ns
 
 ##########################################################################################
@@ -458,7 +480,8 @@ DY2JetsToLL_M50                           .puFileMC = os.environ['CMSSW_BASE'] +
 DY2JetsToLL_M50_ext                       .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_DY2JetsToLL_M50_ext.root' # derived manually 
 DY3JetsToLL_M50                           .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_DY3JetsToLL_M50.root' # derived manually     
 DY3JetsToLL_M50_ext                       .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_DY3JetsToLL_M50_ext.root' # derived manually 
-for i in qcd+[W1JetsToLNu,W2JetsToLNu]: i.puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_TTJets_amcat.root' # derived manually 
+# TODO temporary workaround for pu of new samples
+for i in qcd+wjets: i.puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_TTJets_amcat.root' # derived manually 
 
 
 
@@ -488,7 +511,7 @@ hnl_bkg_noskim = [
     DY3JetsToLL_M50_ext, 
 ] 
 
-hnl_bkg_noskim += qcd + [W1JetsToLNu,W2JetsToLNu]
+hnl_bkg_noskim += qcd + wjets
 for sample in hnl_bkg_noskim: sample.nGenEvents = sample.dataset_entries
 
 

@@ -9,7 +9,9 @@ hnl_vars = [
     VCfg(name='CR_l2_pt_cone' , drawname='l2_pt * (1 + l2_reliso05)'  , binning={'nbinsx':16, 'xmin':0.  , 'xmax':200.}, unit='GeV', xtitle='p_{T}^{Cone} (trailing)'),
     VCfg(name='CR_hnl_m_12'   , drawname='hnl_m_12'   , binning={'nbinsx':24, 'xmin':0   , 'xmax':150 }, unit='GeV', xtitle='dimuon mass'),
     VCfg(name='CR_hnl_mt_0'   , drawname='hnl_mt_0'   , binning={'nbinsx':16, 'xmin':0   , 'xmax':200 }, unit='GeV', xtitle='M_{T} (leading)'),
-    VCfg(name='CR_hnl_w_vis_m', drawname='hnl_w_vis_m', binning={'nbinsx':24, 'xmin':50  , 'xmax':300 }, unit='GeV', xtitle='3 lepton mass'),
+    VCfg(name='CR_hnl_w_vis_m_wide', drawname='hnl_w_vis_m', binning={'nbinsx':24, 'xmin':50  , 'xmax':300 }, unit='GeV', xtitle='3 lepton mass'),
+#    VCfg(name='CR_hnl_w_vis_m', drawname='hnl_w_vis_m', binning={'nbinsx':24, 'xmin':50  , 'xmax':300 }, unit='GeV', xtitle='3 lepton mass'),
+    VCfg(name='CR_hnl_w_vis_m_z', drawname='hnl_w_vis_m', binning={'nbinsx':40, 'xmin':70  , 'xmax':110 }, unit='GeV', xtitle='3 lepton mass'),
 
     VCfg(name='_norm_'     , drawname='1.', binning={'nbinsx':5, 'xmin':-1.5, 'xmax':3.5}, unit='', xtitle='Normalisation'),
 

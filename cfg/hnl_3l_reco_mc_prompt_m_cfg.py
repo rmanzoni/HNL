@@ -29,9 +29,9 @@ from CMGTools.HNL.analyzers.LeptonWeighter     import LeptonWeighter
 # import samples, signal
 # from CMGTools.HNL.samples.localsignal import TTJets_amcat as ttbar
 # from CMGTools.HNL.samples.samples_mc_2017 import DYJetsToLL_M50, hnl_bkg_essentials
-#from CMGTools.HNL.samples.signal import all_signals_m as samples
+from CMGTools.HNL.samples.signal import all_signals_m as samples
 # from CMGTools.HNL.samples.samples_mc_2017_noskim import DYJetsToLL_M5to50
-from CMGTools.HNL.samples.samples_mc_2017_noskim import qcd_mu as samples
+#from CMGTools.HNL.samples.samples_mc_2017_noskim import qcd_mu as samples
 
 
 ###################################################

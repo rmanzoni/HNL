@@ -38,7 +38,7 @@ pick_events        = getHeppyOption('pick_events', False)
 ###               HANDLE SAMPLES                ###
 ###################################################
 # samples = [Single_ele_2017B]
-samples = [Single_ele_2017C]#, Single_ele_2017E, Single_ele_2017F]
+samples = [Single_ele_2017F]
 
 for sample in samples:
     sample.triggers  = ['HLT_Ele27_WPTight_Gsf_v%d'          %i for i in range(1, 15)] #electron trigger
@@ -57,7 +57,7 @@ selectedComponents = samples
 eventSelector = cfg.Analyzer(
     EventSelector,
     name='EventSelector',
-    toSelect=[140900505]
+    toSelect=[441216441]
 )
 
 jsonAna = cfg.Analyzer(
@@ -155,7 +155,7 @@ jetAna = cfg.Analyzer(
 ###                  SEQUENCE                   ###
 ###################################################
 sequence = cfg.Sequence([
-#    eventSelector,
+    eventSelector,
     jsonAna,
     skimAna,
     triggerAna,
@@ -171,11 +171,15 @@ sequence = cfg.Sequence([
 ###            SET BATCH OR LOCAL               ###
 ###################################################
 if not production:
-    comp                 = Single_ele_2017B
+    comp                 = Single_ele_2017F
     selectedComponents   = [comp]
     comp.splitFactor     = 1
     comp.fineSplitFactor = 1
-    comp.files           = comp.files[:50]
+    comp.files           = [
+        'root://cms-xrd-global.cern.ch//store/data/Run2017F/SingleMuon/MINIAOD/31Mar2018-v1/00000/781D53E6-6E37-E811-B454-0CC47AD98BC8.root',
+        'root://cms-xrd-global.cern.ch//store/data/Run2017F/SingleMuon/MINIAOD/31Mar2018-v1/00000/608C27B9-7037-E811-88B6-0CC47AD98F78.root',
+        'root://cms-xrd-global.cern.ch//store/data/Run2017F/SingleMuon/MINIAOD/31Mar2018-v1/00000/24954DD5-7037-E811-9E23-90B11C27E141.root',  
+    ]
 #    comp.files = ['root://cms-xrd-global.cern.ch//store/data/Run2017F/SingleElectron/MINIAOD/31Mar2018-v1/100000/46B02DB3-C037-E811-8155-0CC47A7C360E.root']
 #    comp.files           = ['root://cms-xrd-global.cern.ch//store/user/vstampf/SingleElectron/HNLSKIM2017/180709_175219/0001/miniAOD_skim_1764.root',
 # 'root://cms-xrd-global.cern.ch//store/user/vstampf/SingleElectron/HNLSKIM2017/180709_175219/0001/miniAOD_skim_1251.root']

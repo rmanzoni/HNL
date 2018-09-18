@@ -23,13 +23,15 @@ from CMGTools.HNL.analyzers.HNLTreeProducer    import HNLTreeProducer
 from CMGTools.HNL.analyzers.HNLGenTreeAnalyzer import HNLGenTreeAnalyzer
 from CMGTools.HNL.analyzers.TriggerAnalyzer    import TriggerAnalyzer
 from CMGTools.HNL.analyzers.JetAnalyzer        import JetAnalyzer
+from CMGTools.HNL.analyzers.METFilter          import METFilter
 from CMGTools.HNL.analyzers.LeptonWeighter     import LeptonWeighter
 
 # import samples, signal
 # from CMGTools.HNL.samples.localsignal import TTJets_amcat as ttbar
 # from CMGTools.HNL.samples.samples_mc_2017 import DYJetsToLL_M50, hnl_bkg_essentials
-from CMGTools.HNL.samples.signal import all_signals_mu
+#from CMGTools.HNL.samples.signal import all_signals_m as samples
 # from CMGTools.HNL.samples.samples_mc_2017_noskim import DYJetsToLL_M5to50
+from CMGTools.HNL.samples.samples_mc_2017_noskim import qcd_mu as samples
 
 
 ###################################################
@@ -47,7 +49,7 @@ pick_events        = getHeppyOption('pick_events', False)
 ###################################################
 # samples = hnl_bkg_essentials
 # samples = [DYJetsToLL_M5to50]
-samples = all_signals_mu
+#samples = all_signals_m
 auxsamples = []#[ttbar, DYJetsToLL_M50]
 
 # samples = [comp for comp in samples if comp.name=='TTJets_amcat']
@@ -108,6 +110,23 @@ pileUpAna = cfg.Analyzer(
     true=True
 )
 
+metFilter = cfg.Analyzer(
+    METFilter,
+    name='METFilter',
+    processName='RECO',
+    triggers=[
+        'Flag_goodVertices',
+        'Flag_globalSuperTightHalo2016Filter',
+        'Flag_HBHENoiseFilter',
+        'Flag_HBHENoiseIsoFilter',
+        'Flag_EcalDeadCellTriggerPrimitiveFilter',
+        'Flag_BadPFMuonFilter',
+        'Flag_BadChargedCandidateFilter',
+        'Flag_eeBadScFilter',
+        'Flag_ecalBadCalibFilter',
+    ]
+)
+
 genAna = GeneratorAnalyzer.defaultConfig
 genAna.allGenTaus = True # save in event.gentaus *ALL* taus, regardless whether hadronic / leptonic decay
 
@@ -132,7 +151,7 @@ HNLAnalyzer = cfg.Analyzer(
     candidate_selection='maxpt',
 )
 
-muonWeighter = cfg.Analyzer(
+muonWeighterl0 = cfg.Analyzer(
     LeptonWeighter,
     name='LeptonWeighter_prompt_mu',
     scaleFactorFiles={
@@ -145,6 +164,34 @@ muonWeighter = cfg.Analyzer(
     },
     getter = lambda event : event.the_3lep_cand.l0(),
     disable=False
+)
+
+muonWeighterl1 = cfg.Analyzer(
+    LeptonWeighter,
+    name='LeptonWeighter_disp_mu_1',
+    scaleFactorFiles={
+        'idiso'   :('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_v17_1.root', 'm_id'),
+        'tracking':('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_v17_1.root', 'm_iso'),
+    },
+    dataEffFiles={
+        # 'trigger':('$CMSSW_BASE/src/CMGTools/H2TauTau/data/htt_scalefactors_v16_2.root', 'm_trgIsoMu22orTkIsoMu22_desy'),
+    },
+    getter = lambda event : event.the_3lep_cand.l1(),
+    disable=True
+)
+
+muonWeighterl2 = cfg.Analyzer(
+    LeptonWeighter,
+    name='LeptonWeighter_disp_mu_2',
+    scaleFactorFiles={
+        'idiso'   :('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_v17_1.root', 'm_id'),
+        'tracking':('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_v17_1.root', 'm_iso'),
+    },
+    dataEffFiles={
+        # 'trigger':('$CMSSW_BASE/src/CMGTools/H2TauTau/data/htt_scalefactors_v16_2.root', 'm_trgIsoMu22orTkIsoMu22_desy'),
+    },
+    getter = lambda event : event.the_3lep_cand.l2(),
+    disable=True
 )
 
 HNLTreeProducer = cfg.Analyzer(
@@ -184,15 +231,18 @@ sequence = cfg.Sequence([
 #     eventSelector,
     lheWeightAna, # les houches
     jsonAna,
-#    skimAna,
+    skimAna,
     triggerAna,
     vertexAna,
     pileUpAna,
     genAna,
     HNLGenTreeAnalyzer,
     HNLAnalyzer,
-    muonWeighter,
+    muonWeighterl0,
+    muonWeighterl1,
+    muonWeighterl2,
     jetAna,
+    metFilter,
     HNLTreeProducer,
 ])
 
@@ -202,7 +252,7 @@ sequence = cfg.Sequence([
 if not production:
 #     comp                 = ttbar
 #    comp                 = DYJetsToLL_M5to50
-    comp                 = all_signals_mu[0]
+    comp                 = samples[0]
     selectedComponents   = [comp]
     comp.splitFactor     = 1
     comp.fineSplitFactor = 1

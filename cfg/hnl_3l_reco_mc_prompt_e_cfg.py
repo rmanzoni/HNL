@@ -31,9 +31,13 @@ from CMGTools.HNL.analyzers.LeptonWeighter     import LeptonWeighter
 # from CMGTools.HNL.samples.localsignal import TTJets_amcat as ttbar
 # from CMGTools.HNL.samples.samples_mc_2017 import DYJetsToLL_M50, hnl_bkg_essentials
 # from CMGTools.HNL.samples.samples_mc_2017_noskim import DYJetsToLL_M5to50
-from CMGTools.HNL.samples.samples_mc_2017_noskim import DYJetsToLL_M50
-from CMGTools.HNL.samples.signal import signals_e
-from CMGTools.HNL.samples.samples_mc_2017_noskim import qcd, W1JetsToLNu, W2JetsToLNu
+#from CMGTools.HNL.samples.samples_mc_2017_noskim import DYJetsToLL_M50
+#from CMGTools.HNL.samples.signal import all_signals_e as samples
+#from CMGTools.HNL.samples.samples_mc_2017_noskim import qcd_mu as samples#, W1JetsToLNu, W2JetsToLNu
+from CMGTools.HNL.samples.samples_mc_2017_noskim import qcd_e
+#from CMGTools.HNL.samples.samples_mc_2017_noskim import W1JetsToLNu, W2JetsToLNu
+#samples = [W1JetsToLNu, W2JetsToLNu]
+#from CMGTools.HNL.samples.samples_mc_2017_noskim import qcd_mu #, W1JetsToLNu, W2JetsToLNu
 
 ###################################################
 ###                   OPTIONS                   ###
@@ -41,7 +45,7 @@ from CMGTools.HNL.samples.samples_mc_2017_noskim import qcd, W1JetsToLNu, W2Jets
 # Get all heppy options; set via "-o production" or "-o production=True"
 # production = True run on batch, production = False (or unset) run locally
 
-production         = getHeppyOption('production' , False)
+production         = getHeppyOption('production' , True)
 # production         = getHeppyOption('production' , False)
 pick_events        = getHeppyOption('pick_events', False)
 
@@ -50,8 +54,9 @@ pick_events        = getHeppyOption('pick_events', False)
 ###################################################
 #samples = hnl_bkg_essentials
 #samples = [DYJetsToLL_M50]
-#samples = qcd+[W1JetsToLNu,W2JetsToLNu]
-samples = signals_e
+#samples = qcd_mu
+#samples = signals_e
+samples = qcd_e
 auxsamples = [] #[ttbar, DYJetsToLL_M50]
 
 #samples = [comp for comp in samples if comp.name=='TTJets_amcat']
@@ -230,7 +235,7 @@ sequence = cfg.Sequence([
 #     eventSelector,
     lheWeightAna, # les houches
     jsonAna,
-#    skimAna,
+    skimAna,
     triggerAna,
     vertexAna,
     pileUpAna,
@@ -251,7 +256,7 @@ sequence = cfg.Sequence([
 if not production:
 #     comp                 = HN3L_M_2p5_V_0p0173205080757_e_onshell
 #    comp                 = HN3L_M_2p5_V_0p00707106781187_e_onshell
-    comp                 = signals_e[0]
+    comp                 = samples[0]
 #     comp                 = ttbar
     selectedComponents   = [comp]
     comp.splitFactor     = 1

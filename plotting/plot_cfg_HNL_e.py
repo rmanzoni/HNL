@@ -22,7 +22,7 @@ from CMGTools.HNL.plotter.defaultGroups import createDefaultGroups
 from CMGTools.HNL.plotter.Samples import createSampleLists
 from CMGTools.HNL.plotter.metrics import ams_hists
 
-plotDir = '/eos/user/v/vstampf/ntuples/plots/prompt_e/'
+plotDir = '/eos/user/v/vstampf/plots/prompt_e/'
 
 def _pickle_method(method): 
     func_name = method.im_func.__name__
@@ -76,6 +76,7 @@ ZVeto01    = '  &&  abs(hnl_m_01 - 91.18) > 15'
 ZVeto02    = '  &&  abs(hnl_m_02 - 91.18) > 15'
 
 CR_DY          = '  &&  abs(hnl_m_12 - 91.18) < 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj == 0  &&  pfmet_pt < 30  &&  hnl_mt_0 < 30' 
+CR_DY_noMcuts  = '  &&  nbj == 0  &&  pfmet_pt < 30  &&  hnl_mt_0 < 30' 
 CR_DYNoM3l     = '  &&  abs(hnl_m_12 - 91.18) < 15  &&  nbj == 0  &&  pfmet_pt < 30  &&  hnl_mt_0 < 30' 
 CR_DYRic       = 'abs(l0_dz) < 0.2  &&  l1_q != l2_q  &&  l1_pt > 15  &&  l2_pt > 10  &&  abs(hnl_m_12 - 91.18) < 15  &&  nbj == 0' 
 CR_ttbar       = '  &&  abs(hnl_m_12 - 91.18) > 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj >= 1  &&  hnl_m_12 > 12'
@@ -145,9 +146,17 @@ def prepareCuts():
     l0_medium = prompt_e_medium
     l0_tight  = prompt_e_tight
 
+#### 18.9. ## adding all qcd_mu samples
+    cuts.append(Cut('CR_WJets'         , inc_cut_relxd + l0_tight + CR_WJets + '  &&  hnl_dr_12 < 0.4  &&  hnl_dr_hnvis0 > 1')) 
+    cuts.append(Cut('CR_DY'            , inc_cut_relxd + l0_tight + CR_DY + veto))
+
+#### 14.9. ## adding some qcd samples
+#    cuts.append(Cut('CR_WJets_imp_par'       , inc_cut_relxd + l0_tight + imp_par  + CR_WJets + '  &&  hnl_dr_12 < 0.4  &&  hnl_dr_hnvis0 > 1'))
+#    cuts.append(Cut('CR_WJets_IDlNoIso'         , inc_cut_relxd + l0_tight + IDlNoIso + CR_WJets + '  &&  hnl_dr_12 < 0.4  &&  hnl_dr_hnvis0 > 1')) # NO IMP PAR! !!CHANGED!!
+
 #### 13.9. ## MET FILTER AND VETO LEP MASSES
 #    cuts.append(Cut('CR_WJets_imp_par'       , inc_cut_relxd + l0_tight + imp_par  + CR_WJets + '  &&  hnl_dr_12 < 0.4  &&  hnl_dr_hnvis0 > 1'))
-    cuts.append(Cut('CR_WJets_IDlNoIso'         , inc_cut_relxd + l0_tight + IDlNoIso + CR_WJets + '  &&  hnl_dr_12 < 0.4  &&  hnl_dr_hnvis0 > 1')) # NO IMP PAR! !!CHANGED!!
+#    cuts.append(Cut('CR_WJets_IDlNoIso'         , inc_cut_relxd + l0_tight + IDlNoIso + CR_WJets + '  &&  hnl_dr_12 < 0.4  &&  hnl_dr_hnvis0 > 1')) # NO IMP PAR! !!CHANGED!!
 
 #### 10.9.
 #    cuts.append(Cut('CR_WJets_imp_par'       , inc_cut_relxd + l0_tight + imp_par  + CR_WJets + '  &&  hnl_dr_12 < 0.4  &&  hnl_dr_hnvis0 > 1'))
@@ -339,6 +348,9 @@ def makePlots(variables, cuts, total_weight, sample_dict, hist_dict, qcd_from_sa
             plot.Group('Triboson', ['ZZZ', 'WWW', 'WGGJets', 'WZZ', 'WWZ'])
             plot.Group('ttV', ['TTZToLL_M10', 'TTWJetsToLNu', 'TTZToLL_M1to10'])
             plot.Group('DY', ['DYJetsToLL_M5to50', 'DYJets_ext', 'DYJets'])
+#            plot.Group('QCD',['QCD_pt_15to20_mu', 'QCD_pt_20to30_mu', 'QCD_pt_30to50_mu', 'QCD_pt_50to80_mu', 'QCD_pt_80to120_mu'])
+            plot.Group('QCD',['QCD_pt_15to20_em', 'QCD_pt_20to30_em', 'QCD_pt_30to50_em', 'QCD_pt_50to80_em', 'QCD_pt_120to170_em', 'QCD_pt_300toInf_em', 
+                              'QCD_pt_20to30_bcToE', 'QCD_pt_30to80_bcToE', 'QCD_pt_80to170_bcToE', 'QCD_pt_170to250_bcToE', 'QCD_pt_250toInf_bcToE'])
 #            plot.Group('DY', ['DYJetsToLL_M5to50', 'DY2Jets_M50_ext', 'DY2Jets_M50', 'DY3Jets_M50_ext', 'DY3Jets_M50', 'DY1Jets_M50'])
             createDefaultGroups(plot)
             if make_plots:

@@ -336,8 +336,8 @@ class CreateHists(object):
 
             if cfg.norm_cut:
 #                norm_cut = cfg.norm_cut
-                norm_cut += cfg.norm_cut  # to add met filters for data
-            print('sample = %s, cuts = %s'%(cfg.name, norm_cut))
+                norm_cut += cfg.norm_cut  # to add met filters only for data
+#            print('sample = %s, cuts = %s'%(cfg.name, norm_cut))
             if cfg.shape_cut:
                 shape_cut = cfg.shape_cut
 

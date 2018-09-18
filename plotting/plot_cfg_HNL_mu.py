@@ -25,7 +25,7 @@ from CMGTools.HNL.plotter.metrics import ams_hists
 ######################
 # Basic configurations
 ######################
-plotDir = '/eos/user/v/vstampf/ntuples/plots/prompt_mu/'
+plotDir = '/eos/user/v/vstampf/plots/prompt_mu/'
 mode = 'm'
 
 if mode == 'e':
@@ -84,6 +84,7 @@ ZVeto01    = '  &&  abs(hnl_m_01 - 91.18) > 15'
 ZVeto02    = '  &&  abs(hnl_m_02 - 91.18) > 15'
 
 CR_DY      = '  &&  abs(hnl_m_12 - 91.18) < 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj == 0  &&  pfmet_pt < 30  &&  hnl_mt_0 < 30' 
+CR_DY_noMcuts  = '  &&  nbj == 0  &&  pfmet_pt < 30  &&  hnl_mt_0 < 30' 
 CR_DYNoM3l = '  &&  abs(hnl_m_12 - 91.18) < 15  &&  nbj == 0  &&  pfmet_pt < 30  &&  hnl_mt_0 < 30' 
 CR_DYRic   = 'abs(l0_dz) < 0.2  &&  l1_q != l2_q  &&  l1_pt > 15  &&  l2_pt > 10  &&  abs(hnl_m_12 - 91.18) < 15  &&  nbj == 0' 
 CR_ttbar   = '  &&  abs(hnl_m_12 - 91.18) > 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj >= 1  &&  hnl_m_12 > 12'
@@ -135,7 +136,7 @@ disp1      = '  &&  hnl_2d_disp > 1'
 
 def prepareCuts():
     cuts = []
-    inc_cut =   'l1_pt > 4  &&  l2_pt > 4  &&  l0_pt > 35' #'.join([cat_Inc])
+    inc_cut =   'l1_pt > 4  &&  l2_pt > 4  &&  l0_pt > 27' #'.join([cat_Inc])
     inc_cut += '  &&  l1_q != l2_q'
     inc_cut += '  &&  l0_reliso05 < 0.15'
     inc_cut += '  &&  abs(l0_dz) < 0.2'
@@ -149,12 +150,17 @@ def prepareCuts():
     l0_medium = prompt_mu_medium
     l0_tight  = prompt_mu_tight
 
+#### 18.9.
+#    cuts.append(Cut('CR_WJets_IDlNoIso'         , inc_cut_relxd + l0_tight + IDlNoIso + CR_WJets + '  &&  hnl_dr_12 < 0.4  &&  hnl_dr_hnvis0 > 1' + ZVeto01 + ZVeto02)) # NO IMP PAR! !!CHANGED!!
+#    cuts.append(Cut('CR_DY_IDlNoIso'            , inc_cut_relxd + l0_tight + IDlNoIso + CR_DY)) # NO IMP PAR! !!CHANGED!!
+    cuts.append(Cut('CR_DY_noMcuts'            , inc_cut + imp_par + l0_tight + CR_DY_noMcuts + veto))
+
 #### 13.9.
-    cuts.append(Cut('CR_WJets_IDlNoIso'         , inc_cut_relxd + l0_tight + IDlNoIso + CR_WJets + '  &&  hnl_dr_12 < 0.4  &&  hnl_dr_hnvis0 > 1' + ZVeto01 + ZVeto02)) # NO IMP PAR! !!CHANGED!!
+#    cuts.append(Cut('CR_WJets_IDlNoIso'         , inc_cut_relxd + l0_tight + IDlNoIso + CR_WJets + '  &&  hnl_dr_12 < 0.4  &&  hnl_dr_hnvis0 > 1' + ZVeto01 + ZVeto02)) # NO IMP PAR! !!CHANGED!!
 
 #### 10.9.
 #    cuts.append(Cut('CR_WJets_imp_par'       , inc_cut_relxd + l0_tight + imp_par  + CR_WJets + '  &&  hnl_dr_12 < 0.4  &&  hnl_dr_hnvis0 > 1' + ZVeto01 + ZVeto02))
-    cuts.append(Cut('CR_WJets_IDlNoIso'         , inc_cut_relxd + l0_tight + IDlNoIso    + CR_WJets + '  &&  hnl_dr_12 < 0.4  &&  hnl_dr_hnvis0 > 1' + ZVeto01 + ZVeto02))
+#    cuts.append(Cut('CR_WJets_IDlNoIso'         , inc_cut_relxd + l0_tight + IDlNoIso    + CR_WJets + '  &&  hnl_dr_12 < 0.4  &&  hnl_dr_hnvis0 > 1' + ZVeto01 + ZVeto02))
 #    cuts.append(Cut('CR_WJets_IDlIso15'         , inc_cut_relxd + l0_tight + IDlIso15    + CR_WJets + '  &&  hnl_dr_12 < 0.4  &&  hnl_dr_hnvis0 > 1' + ZVeto01 + ZVeto02))
 
     return cuts
@@ -204,6 +210,7 @@ def makePlots(variables, cuts, total_weight, sample_dict, hist_dict, qcd_from_sa
             plot.Group('Diboson', ['WZTo3LNu', 'ZZTo4L', 'WWTo2L2Nu'])
             plot.Group('Triboson', ['ZZZ', 'WWW', 'WGGJets'])
             plot.Group('ttV', ['TTZToLLNuNu', 'TTWJetsToLNu'])
+            plot.Group('QCD',['QCD_pt_15to20_mu', 'QCD_pt_20to30_mu', 'QCD_pt_30to50_mu', 'QCD_pt_50to80_mu', 'QCD_pt_80to120_mu'])
             # plot.Group('DY', ['DYJets_M5T50', 'DYJets_M50_x', 'DYJets_M50'])
             plot.Group('DY', ['DYJetsToLL_M5to50', 'DYJets_ext'])
             createDefaultGroups(plot)

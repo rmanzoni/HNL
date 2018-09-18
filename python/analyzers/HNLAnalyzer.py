@@ -59,6 +59,7 @@ class HNLAnalyzer(Analyzer):
         self.counters.addCounter('HNL')
         count = self.counters.counter('HNL')
         count.register('all events')
+        count.register('good collections')
         count.register('>0 good vtx')
         count.register('>0 prompt lep')
         count.register('>0 trig match prompt lep')
@@ -151,15 +152,15 @@ class HNLAnalyzer(Analyzer):
 
 
     def process(self, event):
+        self.readCollections(event.input)
+        self.counters.counter('HNL').inc('all events')
         # make PF candidates
         try:
             pfs = map(PhysicsObject, self.handles['pfcand'].product())
 #            set_trace()
 #            return False
-        except: print(event.eventId, event.run, event.lumi)#; return False#; set_trace()
-
-        self.readCollections(event.input)
-        self.counters.counter('HNL').inc('all events')
+        except: print(event.eventId, event.run, event.lumi); return False#; set_trace()
+        self.counters.counter('HNL').inc('good collections')
 
         #####################################################################################
         # primary vertex

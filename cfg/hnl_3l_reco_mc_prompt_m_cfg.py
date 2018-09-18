@@ -29,8 +29,9 @@ from CMGTools.HNL.analyzers.LeptonWeighter     import LeptonWeighter
 # from CMGTools.HNL.samples.localsignal import TTJets_amcat as ttbar
 from CMGTools.HNL.samples.samples_mc_2017 import DYJetsToLL_M50, hnl_bkg_essentials, hnl_bkg
 from CMGTools.HNL.samples.signal import all_signals_mu
-from CMGTools.HNL.samples.samples_mc_2017_noskim import DYJetsToLL_M5to50, hnl_bkg_noskim
+from CMGTools.HNL.samples.samples_mc_2017_noskim import DYJetsToLL_M5to50, hnl_bkg_noskim, hnl_bkg_noskim_ggZZWJets,W1JetsToLNu, ggZZTo2mu2nu_ext
 
+    # W1JetsToLNu        ,
 
 ###################################################
 ###                   OPTIONS                   ###
@@ -46,9 +47,10 @@ pick_events        = getHeppyOption('pick_events', False)
 ###               HANDLE SAMPLES                ###
 ###################################################
 # samples = hnl_bkg_essentials
-# samples = [DYJetsToLL_M5to50]
+samples = [W1JetsToLNu]
 # samples = all_signals_mu
-samples = hnl_bkg + hnl_bkg_noskim
+# samples = hnl_bkg + hnl_bkg_noskim
+# samples = hnl_bkg + hnl_bkg_noskim + hnl_bkg_noskim_ggZZWJets
 auxsamples = []#[ttbar, DYJetsToLL_M50]
 
 # samples = [comp for comp in samples if comp.name=='TTJets_amcat']
@@ -202,9 +204,11 @@ sequence = cfg.Sequence([
 ###################################################
 if not production:
 #     comp                 = ttbar
-    comp                 = DYJetsToLL_M5to50
+    # comp                 = DYJetsToLL_M5to50
     # comp                 = all_signals_mu[0]
     # comp                 = samples
+    comp                 = W1JetsToLNu
+    # comp                 = ggZZTo2mu2nu_ext
     selectedComponents   = [comp]
     comp.splitFactor     = 1
     comp.fineSplitFactor = 1

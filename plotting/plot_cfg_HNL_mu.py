@@ -69,7 +69,7 @@ def prepareCuts(mode):
     inc_cut += '  &&  hnl_dr_01 > 0.05  &&  hnl_dr_02 > 0.05' # avoid ele mu mismatching
 
 ## all 3 muons equal
-    inc_cut_3mu =   'l1_pt > 20  &&  l2_pt > 10  &&  l0_pt > 27'\
+    inc_cut_3mu =   '  l0_pt > 27 && l1_pt > 4  &&  l2_pt > 4'\
                     '  &&  abs(l0_dz) < 0.2 &&  abs(l1_dz) < 0.2 &&  abs(l2_dz) < 0.2 '\
                     '  &&  abs(l0_dxy) < 0.045 &&  abs(l1_dxy) < 0.045 &&  abs(l2_dxy) < 0.045 '\
                     '  && l0_id_m && l1_id_m && l2_id_m '\

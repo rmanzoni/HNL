@@ -38,7 +38,8 @@ WZTo3LNu                        = creator.makeMyPrivateMCComponent('WZTo3LNu'   
 WZTo3LNu            .nGenEvents = 10881896 
 #.sigma = 4.4297 pb
 
-ZZTo4L                          = creator.makeMyPrivateMCComponent('ZZTo4L'                        , '/ZZTo4L_13TeV_powheg_pythia8/manzoni-HNLSKIM2017_ZZTo4L_13TeV_powheg_pythia8-115d0bad8e8ff59118d83f903524e0b3/USER'                                                                     , 'PRIVATE', '*.root', 'phys03', xSec=1.256, useAAA=True)
+# ZZTo4L                          = creator.makeMyPrivateMCComponent('ZZTo4L'                        , '/ZZTo4L_13TeV_powheg_pythia8/manzoni-HNLSKIM2017_ZZTo4L_13TeV_powheg_pythia8-115d0bad8e8ff59118d83f903524e0b3/USER'                                                                     , 'PRIVATE', '*.root', 'phys03', xSec=1.256, useAAA=True)
+ZZTo4L                          = creator.makeMyPrivateMCComponent('ZZTo4L'                        , '/ZZTo4L_13TeV_powheg_pythia8/manzoni-HNLSKIM2017_ZZTo4L_13TeV_powheg_pythia8-115d0bad8e8ff59118d83f903524e0b3/USER'                                                                     , 'PRIVATE', '*.root', 'phys03', xSec=1.325, useAAA=True)
 ZZTo4L              .nGenEvents = 6835701 
 #.sigma = 1.256 pb
 

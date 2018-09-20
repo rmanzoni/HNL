@@ -100,7 +100,7 @@ histPref['HN*'] = {'style':sHNL_HN, 'layer':2999, 'legend':'#splitline{M = 3GeV,
 histPref['Data'] = {'style':sData, 'layer':2999, 'legend':'Observed'}
 histPref['data_*'] = {'style':sData, 'layer':2999, 'legend':'Observed'}
 histPref['ZTT*'] = {'style':sHNL_DYJets, 'layer':4, 'legend':'Z#rightarrow#tau#tau'}
-histPref['DY*'] = {'style':sHNL_DYJets, 'layer':4, 'legend':'DY'}#Z#rightarrow#tau#tau'}
+histPref['DY*'] = {'style':sHNL_DYJets, 'layer':4, 'legend':'DY'}
 histPref['embed_*'] = {'style':sViolet, 'layer':4.1, 'legend':None}
 histPref['TTJets*'] = {'style':sHNL_TTJets, 'layer':1, 'legend':'t#bar{t}'} 
 histPref['T*tW*'] = {'style':sHNL_TTJets, 'layer':1, 'legend':'Single t'} 
@@ -123,7 +123,7 @@ histPref['Triboson'] = {'style':sHNL_rare, 'layer':0.7, 'legend':'Triboson'}
 # histPref['VV*'] = {'style':sHNL_VV, 'layer':0.7, 'legend':'Diboson'} 
 histPref['VV*'] = {'style':sHNL_ZZ, 'layer':0.7, 'legend':'ZZ'} 
 histPref['Electroweak'] = {'style':sHNL_VV, 'layer':0.7, 'legend':'Electroweak'} 
-histPref['QCD*'] = {'style':sHNL_QCD, 'layer':2, 'legend':'QCD multijet'}
+histPref['QCD'] = {'style':sHNL_QCD, 'layer':2, 'legend':'QCD multijet'}
 histPref['W'] = {'style':sHNL_WJets, 'layer':3, 'legend':'W+jets'}  
 histPref['WJ*'] = {'style':sHNL_WJets, 'layer':3, 'legend':'W+jets'}  
 #histPref['W*Jets*'] = {'style':sHNL_WJets, 'layer':3, 'legend':'W+jets'}  

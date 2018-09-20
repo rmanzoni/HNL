@@ -23,6 +23,7 @@ from CMGTools.HNL.analyzers.HNLTreeProducer    import HNLTreeProducer
 from CMGTools.HNL.analyzers.HNLGenTreeAnalyzer import HNLGenTreeAnalyzer
 from CMGTools.HNL.analyzers.TriggerAnalyzer    import TriggerAnalyzer
 from CMGTools.HNL.analyzers.JetAnalyzer        import JetAnalyzer
+from CMGTools.HNL.analyzers.METFilter          import METFilter
 from CMGTools.HNL.analyzers.LeptonWeighter     import LeptonWeighter
 
 # import samples, signal
@@ -30,8 +31,9 @@ from CMGTools.HNL.analyzers.LeptonWeighter     import LeptonWeighter
 from CMGTools.HNL.samples.samples_mc_2017 import DYJetsToLL_M50, hnl_bkg_essentials, hnl_bkg
 from CMGTools.HNL.samples.signal import all_signals_mu
 from CMGTools.HNL.samples.samples_mc_2017_noskim import DYJetsToLL_M5to50, hnl_bkg_noskim, hnl_bkg_noskim_ggZZWJets,W1JetsToLNu, ggZZTo2mu2nu_ext
+# from CMGTools.HNL.samples.samples_mc_2017_noskim import DYJetsToLL_M5to50
+#from CMGTools.HNL.samples.samples_mc_2017_noskim import qcd_mu as samples
 
-    # W1JetsToLNu        ,
 
 ###################################################
 ###                   OPTIONS                   ###
@@ -47,6 +49,7 @@ pick_events        = getHeppyOption('pick_events', False)
 ###               HANDLE SAMPLES                ###
 ###################################################
 # samples = hnl_bkg_essentials
+<<<<<<< HEAD
 samples = [W1JetsToLNu]
 # samples = all_signals_mu
 # samples = hnl_bkg + hnl_bkg_noskim
@@ -111,6 +114,23 @@ pileUpAna = cfg.Analyzer(
     true=True
 )
 
+metFilter = cfg.Analyzer(
+    METFilter,
+    name='METFilter',
+    processName='RECO',
+    triggers=[
+        'Flag_goodVertices',
+        'Flag_globalSuperTightHalo2016Filter',
+        'Flag_HBHENoiseFilter',
+        'Flag_HBHENoiseIsoFilter',
+        'Flag_EcalDeadCellTriggerPrimitiveFilter',
+        'Flag_BadPFMuonFilter',
+        'Flag_BadChargedCandidateFilter',
+        'Flag_eeBadScFilter',
+        'Flag_ecalBadCalibFilter',
+    ]
+)
+
 genAna = GeneratorAnalyzer.defaultConfig
 genAna.allGenTaus = True # save in event.gentaus *ALL* taus, regardless whether hadronic / leptonic decay
 
@@ -135,7 +155,7 @@ HNLAnalyzer = cfg.Analyzer(
     candidate_selection='maxpt',
 )
 
-muonWeighter = cfg.Analyzer(
+muonWeighterl0 = cfg.Analyzer(
     LeptonWeighter,
     name='LeptonWeighter_prompt_mu',
     scaleFactorFiles={
@@ -148,6 +168,34 @@ muonWeighter = cfg.Analyzer(
     },
     getter = lambda event : event.the_3lep_cand.l0(),
     disable=False
+)
+
+muonWeighterl1 = cfg.Analyzer(
+    LeptonWeighter,
+    name='LeptonWeighter_disp_mu_1',
+    scaleFactorFiles={
+        'idiso'   :('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_v17_1.root', 'm_id'),
+        'tracking':('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_v17_1.root', 'm_iso'),
+    },
+    dataEffFiles={
+        # 'trigger':('$CMSSW_BASE/src/CMGTools/H2TauTau/data/htt_scalefactors_v16_2.root', 'm_trgIsoMu22orTkIsoMu22_desy'),
+    },
+    getter = lambda event : event.the_3lep_cand.l1(),
+    disable=True
+)
+
+muonWeighterl2 = cfg.Analyzer(
+    LeptonWeighter,
+    name='LeptonWeighter_disp_mu_2',
+    scaleFactorFiles={
+        'idiso'   :('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_v17_1.root', 'm_id'),
+        'tracking':('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_v17_1.root', 'm_iso'),
+    },
+    dataEffFiles={
+        # 'trigger':('$CMSSW_BASE/src/CMGTools/H2TauTau/data/htt_scalefactors_v16_2.root', 'm_trgIsoMu22orTkIsoMu22_desy'),
+    },
+    getter = lambda event : event.the_3lep_cand.l2(),
+    disable=True
 )
 
 HNLTreeProducer = cfg.Analyzer(
@@ -187,15 +235,18 @@ sequence = cfg.Sequence([
 #     eventSelector,
     lheWeightAna, # les houches
     jsonAna,
-#    skimAna,
+    skimAna,
     triggerAna,
     vertexAna,
     pileUpAna,
     genAna,
     HNLGenTreeAnalyzer,
     HNLAnalyzer,
-    muonWeighter,
+    muonWeighterl0,
+    muonWeighterl1,
+    muonWeighterl2,
     jetAna,
+    metFilter,
     HNLTreeProducer,
 ])
 

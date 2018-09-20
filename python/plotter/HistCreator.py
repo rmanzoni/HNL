@@ -1,6 +1,6 @@
 import hashlib
-from multiprocessing import Pool, Process
-#from multiprocessing.dummy import Pool
+from multiprocessing import Pool, Process, cpu_count
+#from multiprocessing.dummy import Pool, Process, cpu_count
 
 from array import array
 
@@ -238,11 +238,18 @@ class CreateHists(object):
 #        set_trace()
         pool = Pool(processes=len(self.hist_cfg.cfgs))
         print('number of processes for filling histos (ie. samples): %i'%len(self.hist_cfg.cfgs))
+        result = pool.map(self.makealltheplots, self.hist_cfg.cfgs) 
+        
+#        workers = cpu_count()
+#        result = []
+#        batches = len(self.hist_cfg.cfgs) / workers + 1 if len(self.hist_cfg.cfgs) % workers != 0 else len(self.hist_cfg.cfgs) / workers
+#        pool = Pool(processes=batches)
+#        print('number of batches for filling histos (%i samples each): %i'%(workers, batches))
+#        for i in range(batches):
+#           try:    histlist = self.hist_cfg.cfgs[i*workers:(i+1)*workers] 
+#           except: print('entering exception'); histlist = self.hist_cfg.cfgs[(batches-1)*workers:len(self.hist_cfg.cfgs)-1]
+#           result += pool.map(self.makealltheplots, histlist)
 
-        result = pool.map(self.makealltheplots, self.hist_cfg.cfgs) # for no return 
-#        result = pool.apply_async(self.makealltheplots, self.hist_cfg.cfgs) # for no return 
-#        self.plots = result.get() 
-#        set_trace()
         for i, cfg in enumerate(self.hist_cfg.cfgs):
             stack = not cfg.is_data and not cfg.is_signal
 #            print(cfg.name, stack)
@@ -322,15 +329,15 @@ class CreateHists(object):
 
             # attach the trees to the first DataMCPlot
             plot = self.plots[self.vcfgs[0].name]
-#            set_trace()
             ttree = plot.readTree(file_name, cfg.tree_name, verbose=verbose, friend_func=friend_func)
 
             norm_cut = self.hist_cfg.cut
             shape_cut = self.hist_cfg.cut
 
             if cfg.norm_cut:
-                norm_cut = cfg.norm_cut
-
+#                norm_cut = cfg.norm_cut
+                norm_cut += cfg.norm_cut  # to add met filters only for data
+#            print('sample = %s, cuts = %s'%(cfg.name, norm_cut))
             if cfg.shape_cut:
                 shape_cut = cfg.shape_cut
 

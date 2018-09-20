@@ -100,7 +100,7 @@ def prepareCuts(mode):
 #    cuts.append(Cut('CR_TTbarb0_noIDnorIso', inc_cut + l0_tight + noIDnorIso + CR_ttbarb0))
 #    cuts.append(Cut('CR_TTbarb0NoCV_noIDnorIso', inc_cut + l0_tight + noIDnorIso + CR_ttbarb0NoCV))
 #    cuts.append(Cut('NaiveSRv2NoId'            , inc_cut + l0_tight + NaiveSRv2NoId))
-    cuts.append(Cut('test_multi', inc_cut + l0_tight + tighter))
+#    cuts.append(Cut('test_multi', inc_cut + l0_tight + tighter))
 
 #### 30.8.
 ###  morning

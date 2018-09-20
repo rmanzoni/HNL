@@ -379,6 +379,11 @@ samples =  [
             # W2JetsToLNu,
             # W3JetsToLNu,
             W4JetsToLNu,
+            # DY1JetsToLL_M50,
+            # DY2JetsToLL_M50,
+            # DY2JetsToLL_M50_ext,
+            # DY3JetsToLL_M50,
+            # DY3JetsToLL_M50_ext,
 ]
 
 for sample in samples:

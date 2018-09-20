@@ -268,23 +268,28 @@ def prepareCuts(mode):
 
     return cuts
 
-def createSamples(analysis_dir, total_weight, qcd_from_same_sign, w_qcd_mssm_method, r_qcd_os_ss):
+def createSamples(analysis_dir, total_weight, qcd_from_same_sign, w_qcd_mssm_method, r_qcd_os_ss, add_data_cut=None, mode='m'):
     hist_dict = {}
     sample_dict = {}
 #    set_trace()
-    samples_mc, samples_data, samples, all_samples, sampleDict = createSampleLists(analysis_dir=analysis_dir, channel = mode)
+    samples_mc, samples_data, samples, all_samples, sampleDict = createSampleLists(analysis_dir=analysis_dir, add_data_cut=add_data_cut, channel=mode)
     
     sample_dict['all_samples'] = all_samples
+#    sample_dict['samples_essential'] = samples_essential
 
     return sample_dict, hist_dict
 
-def createVariables():
+def createVariables(rebin=None):
     # Taken from Variables.py; can get subset with e.g. getVars(['mt', 'mvis'])
     # variables = taumu_vars
     # variables = getVars(['_norm_', 'mt', 'mvis', 'l1_pt', 'l2_pt', 'l1_eta', 'l2_eta', 'n_vertices', 'n_jets', 'n_bjets'])
 #    variables = CR_vars
+    DoNotRebin = ['_norm_', 'n_vtx', 'nj', 'nbj',] 
     variables = hnl_vars
-    # variables = test_vars
+    if rebin>0:
+        for ivar in hnl_vars:
+            if ivar.name in DoNotRebin: continue
+            ivar.binning['nbinsx'] = int(ivar.binning['nbinsx']/rebin)
 
     return variables
 
@@ -303,13 +308,13 @@ def makePlots(variables, cuts, total_weight, sample_dict, hist_dict, qcd_from_sa
         for variable in variables:
         # for plot in plots.itervalues():
             plot = plots[variable.name]
-            # plot.Group('data_obs', ['data_2017B_e', 'data_2017C_e', 'data_2017D_e', 'data_2017E_e', 'data_2017F_e'])
             plot.Group('data_obs', ['data_2017B', 'data_2017C', 'data_2017D', 'data_2017E', 'data_2017F'])
             plot.Group('single t', ['ST_tW_at_5f_incD', 'ST_tW_t_5f_incD'])
-            # plot.Group('Diboson', ['WZTo3LNu', 'ZZTo4L', 'WWTo2L2Nu'])
+#            plot.Group('Diboson', ['WZTo3LNu', 'ZZTo4L', 'WWTo2L2Nu'])
             plot.Group('Diboson', ['WZTo3LNu', 'WWTo2L2Nu'])
             plot.Group('Triboson', ['ZZZ', 'WWW', 'WGGJets'])
             plot.Group('ttV', ['TTZToLLNuNu', 'TTWJetsToLNu'])
+            plot.Group('QCD',['QCD_pt_15to20_mu', 'QCD_pt_20to30_mu', 'QCD_pt_30to50_mu', 'QCD_pt_50to80_mu', 'QCD_pt_80to120_mu'])
             # plot.Group('DY', ['DYJets_M5T50', 'DYJets_M50_x', 'DYJets_M50'])
             plot.Group('DY', ['DYJetsToLL_M5to50', 'DYJets_ext'])
             createDefaultGroups(plot)
@@ -347,17 +352,27 @@ if __name__ == '__main__':
     analysis_dir = '/eos/user/v/vstampf/ntuples/'
 
     total_weight = 'weight * lhe_weight'
-# FIXME fix this 
-#    total_weight = 'weight * (1. - 0.0772790*(l2_gen_match == 5 && l2_decayMode==0) - 0.138582*(l2_gen_match == 5 && l2_decayMode==1) - 0.220793*(l2_gen_match == 5 && l2_decayMode==10) )' # Tau ID eff scale factor
 
     print total_weight
 
-    cuts = prepareCuts(mode)
+    cuts = prepareCuts()
 
-    variables = createVariables()
+    variables = createVariables(2)
 
     sample_dict, hist_dict = createSamples(analysis_dir, total_weight, qcd_from_same_sign=False, w_qcd_mssm_method=False, r_qcd_os_ss=None)
-    makePlots(variables, cuts, total_weight, sample_dict, hist_dict={}, qcd_from_same_sign=False, w_qcd_mssm_method=False, mt_cut='', friend_func=lambda f: f.replace('TESUp', 'TESUpMultiMVA'), dc_postfix='_CMS_scale_t_mt_13TeVUp', make_plots=True)
+    makePlots(
+        variables, 
+        cuts, 
+        total_weight, 
+        sample_dict, 
+        hist_dict={}, 
+        qcd_from_same_sign=False, 
+        w_qcd_mssm_method=False, 
+        mt_cut='', 
+        friend_func=lambda f: f.replace('TESUp', 'TESUpMultiMVA'), 
+        dc_postfix='_CMS_scale_t_mt_13TeVUp', 
+        make_plots=True
+    )
 
     for i in cuts:
         copyfile('plot_cfg_HNL_mu.py', plotDir+i.name+'/plot_cfg.py')

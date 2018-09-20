@@ -59,6 +59,7 @@ class HNLAnalyzer(Analyzer):
         self.counters.addCounter('HNL')
         count = self.counters.counter('HNL')
         count.register('all events')
+        count.register('good collections')
         count.register('>0 good vtx')
         count.register('>0 prompt lep')
         count.register('>0 trig match prompt lep')
@@ -151,15 +152,15 @@ class HNLAnalyzer(Analyzer):
 
 
     def process(self, event):
+        self.readCollections(event.input)
+        self.counters.counter('HNL').inc('all events')
         # make PF candidates
         try:
             pfs = map(PhysicsObject, self.handles['pfcand'].product())
 #            set_trace()
-            return False
+#            return False
         except: print(event.eventId, event.run, event.lumi); return False#; set_trace()
-
-        self.readCollections(event.input)
-        self.counters.counter('HNL').inc('all events')
+        self.counters.counter('HNL').inc('good collections')
 
         #####################################################################################
         # primary vertex
@@ -408,8 +409,11 @@ class HNLAnalyzer(Analyzer):
         ########################################################################################
         # Extra prompt and isolated lepton veto
         ########################################################################################        
-        event.veto_eles = [ele for ele in event.selMuons     if ele.physObj not in [event.the_3lep_cand.l0().physObj, event.the_3lep_cand.l1().physObj, event.the_3lep_cand.l2().physObj] ]
-        event.veto_mus  = [mu  for mu  in event.selElectrons if mu .physObj not in [event.the_3lep_cand.l0().physObj, event.the_3lep_cand.l1().physObj, event.the_3lep_cand.l2().physObj] ]
+        event.veto_mus   = [ele for ele in event.selMuons     if ele.physObj not in [event.the_3lep_cand.l0().physObj, event.the_3lep_cand.l1().physObj, event.the_3lep_cand.l2().physObj] ]
+        event.veto_eles  = [mu  for mu  in event.selElectrons if mu .physObj not in [event.the_3lep_cand.l0().physObj, event.the_3lep_cand.l1().physObj, event.the_3lep_cand.l2().physObj] ]
+
+        if len(event.veto_eles): event.veto_save_ele = sorted([ele for ele in event.veto_eles], key = lambda x : x.pt, reverse = True)[0] 
+        if len(event.veto_mus ): event.veto_save_mu  = sorted([mu  for mu  in event.veto_mus ], key = lambda x : x.pt, reverse = True)[0] 
 
         ########################################################################################
         # charged PF isolation
@@ -420,7 +424,7 @@ class HNLAnalyzer(Analyzer):
 
         chisopfs = [ipf for ipf in chargedpfs if deltaR(ipf, event.the_3lep_cand.hnP4())<0.5]
 
-        event.the_3lep_cand.abs_ch_iso = sum([ipf.pt() for ipf in chisopfs])
+        event.the_3lep_cand.abs_ch_iso = sum([ipf.pt() for ipf in chisopfs]) #FIXME MAYBE WE WANNA CHANGE HERE TO E INSTEAD OF pT
         event.the_3lep_cand.rel_ch_iso = event.the_3lep_cand.abs_ch_iso/event.the_3lep_cand.hnP4().pt()
 
         return True

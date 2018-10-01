@@ -89,7 +89,7 @@ hnl_vars = [
 
 ]
 
-test = [VCfg(name='hnl_2d_smaller_disp', drawname='hnl_2d_disp', binning={'nbinsx':20, 'xmin':0   , 'xmax':5 }, unit='cm' , xtitle='2D displacement'),]
+test_vars = [VCfg(name='hnl_2d_smaller_disp', drawname='hnl_2d_disp', binning={'nbinsx':20, 'xmin':0   , 'xmax':5 }, unit='cm' , xtitle='2D displacement'),]
 
 def getVars(names, channel='all'):
     return [dict_channel_vars[channel][n] for n in names]

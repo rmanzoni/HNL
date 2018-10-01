@@ -19,11 +19,24 @@ class HNLTreeProducer(TreeProducerBase):
         # event variables
         self.bookEvent(self.tree)
         self.var      (self.tree, 'n_cands')
+        self.var      (self.tree, 'rho')
         
         # reco variables
         self.bookHNL (self.tree, 'hnl')
-        self.var     (self.tree, 'hnl_iso_abs')
-        self.var     (self.tree, 'hnl_iso_rel')
+        self.var     (self.tree, 'hnl_iso03_abs_rhoArea')
+        self.var     (self.tree, 'hnl_iso04_abs_rhoArea')
+        self.var     (self.tree, 'hnl_iso05_abs_rhoArea')
+        self.var     (self.tree, 'hnl_iso03_abs_deltaBeta')
+        self.var     (self.tree, 'hnl_iso04_abs_deltaBeta')
+        self.var     (self.tree, 'hnl_iso05_abs_deltaBeta')
+#        self.var     (self.tree, 'hnl_iso_abs_met')
+        self.var     (self.tree, 'hnl_iso03_rel_rhoArea')
+        self.var     (self.tree, 'hnl_iso04_rel_rhoArea')
+        self.var     (self.tree, 'hnl_iso05_rel_rhoArea')
+        self.var     (self.tree, 'hnl_iso03_rel_deltaBeta')
+        self.var     (self.tree, 'hnl_iso04_rel_deltaBeta')
+        self.var     (self.tree, 'hnl_iso05_rel_deltaBeta')
+#        self.var     (self.tree, 'hnl_iso_rel_met')
         
         if   self.cfg_ana.promptLepType == 'ele':
             self.bookEle (self.tree, 'l0')
@@ -46,9 +59,9 @@ class HNLTreeProducer(TreeProducerBase):
         self.bookMuon(self.tree, 'l2' )
         
         # book the matched  gen particle
-        self.bookParticle(self.tree, 'l0_gen_match')
-        self.bookParticle(self.tree, 'l1_gen_match')
-        self.bookParticle(self.tree, 'l2_gen_match')
+        self.bookSimpleGenParticle(self.tree, 'l0_gen_match')
+        self.bookSimpleGenParticle(self.tree, 'l1_gen_match')
+        self.bookSimpleGenParticle(self.tree, 'l2_gen_match')
 
         # relevant for signal: check if reco matched with gen, save a bool
         self.var(self.tree, 'l0_is_real')
@@ -161,17 +174,29 @@ class HNLTreeProducer(TreeProducerBase):
         self.event = event
         # event variables 
         self.fillEvent(self.tree, event)
-
-        self.fill(self.tree, 'n_cands', len(event.dimuonsvtx))
+        self.fill     (self.tree, 'n_cands', len(event.dimuonsvtx))
+        self.fill     (self.tree, 'rho'    , event.rho)
 
         # reco HNL
-        self.fillHNL (self.tree, 'hnl'        , event.the_3lep_cand           )
-        self.fill    (self.tree, 'hnl_iso_abs', event.the_3lep_cand.abs_ch_iso)
-        self.fill    (self.tree, 'hnl_iso_rel', event.the_3lep_cand.rel_ch_iso)
-        self.fillMuon(self.tree, 'l1'         , event.the_3lep_cand.l1()      )
-        self.fillMuon(self.tree, 'l2'         , event.the_3lep_cand.l2()      )
-        if self.cfg_ana.promptLepType == 'ele': self.fillEle (self.tree, 'l0', event.the_3lep_cand.l0())
-        if self.cfg_ana.promptLepType == 'mu' : self.fillMuon(self.tree, 'l0', event.the_3lep_cand.l0())
+        self.fillHNL (self.tree, 'hnl'                  , event.the_3lep_cand                 )
+        self.fill    (self.tree, 'hnl_iso03_abs_rhoArea', event.the_3lep_cand.abs_tot_iso03_rhoArea)
+        self.fill    (self.tree, 'hnl_iso04_abs_rhoArea', event.the_3lep_cand.abs_tot_iso04_rhoArea)
+        self.fill    (self.tree, 'hnl_iso05_abs_rhoArea', event.the_3lep_cand.abs_tot_iso05_rhoArea)
+        self.fill    (self.tree, 'hnl_iso03_abs_deltaBeta', event.the_3lep_cand.abs_tot_iso03_deltaBeta)
+        self.fill    (self.tree, 'hnl_iso04_abs_deltaBeta', event.the_3lep_cand.abs_tot_iso04_deltaBeta)
+        self.fill    (self.tree, 'hnl_iso05_abs_deltaBeta', event.the_3lep_cand.abs_tot_iso05_deltaBeta)
+#        self.fill    (self.tree, 'hnl_iso_abs_met'      , event.the_3lep_cand.abs_ch_iso_met  )
+        self.fill    (self.tree, 'hnl_iso03_rel_rhoArea', event.the_3lep_cand.rel_tot_iso03_rhoArea)
+        self.fill    (self.tree, 'hnl_iso04_rel_rhoArea', event.the_3lep_cand.rel_tot_iso04_rhoArea)
+        self.fill    (self.tree, 'hnl_iso05_rel_rhoArea', event.the_3lep_cand.rel_tot_iso05_rhoArea)
+        self.fill    (self.tree, 'hnl_iso03_rel_deltaBeta', event.the_3lep_cand.rel_tot_iso03_deltaBeta)
+        self.fill    (self.tree, 'hnl_iso04_rel_deltaBeta', event.the_3lep_cand.rel_tot_iso04_deltaBeta)
+        self.fill    (self.tree, 'hnl_iso05_rel_deltaBeta', event.the_3lep_cand.rel_tot_iso05_deltaBeta)
+#        self.fill    (self.tree, 'hnl_iso_rel_met'      , event.the_3lep_cand.rel_ch_iso_met  )
+        self.fillMuon(self.tree, 'l1'                   , event.the_3lep_cand.l1()            )
+        self.fillMuon(self.tree, 'l2'                   , event.the_3lep_cand.l2()            )
+        if self.cfg_ana.promptLepType == 'ele' :       self.fillEle (self.tree, 'l0', event.the_3lep_cand.l0())
+        if self.cfg_ana.promptLepType == 'mu'  :       self.fillMuon(self.tree, 'l0', event.the_3lep_cand.l0())
 
         # output of MC analysis ONLY FOR SIGNAL
         if hasattr(event, 'the_hnl'):
@@ -274,8 +299,10 @@ class HNLTreeProducer(TreeProducerBase):
 
         # gen match
         if self.cfg_comp.isMC == True:
-            stable_genp  = [pp for pp in event.genParticles if pp.status()==1]
-            stable_genp += [pp for pp in event.genp_packed if pp.status()==1]
+            stable_genp  = [pp for pp in event.genParticles if ((pp.status()==23 or pp.status() == 1) and (pp.vertex().z() != 0))]
+            stable_genp += [pp for pp in event.genp_packed  if ((pp.status()==23 or pp.status() == 1) and (pp.vertex().z() != 0))] 
+            # particle status: http://home.thep.lu.se/~torbjorn/pythia81html/ParticleProperties.html
+            # 1 ... stable; 23 ... from hardest scattering subprocess
         
             tomatch = [(event.the_3lep_cand.l0(), 0.05*0.05),
                        (event.the_3lep_cand.l1(), 0.2 *0.2 ),
@@ -283,13 +310,13 @@ class HNLTreeProducer(TreeProducerBase):
         
             for ilep, idr2 in tomatch:
                 bestmatch, dr2 = bestMatch(ilep, stable_genp)
-                if dr2 < idr2:
+                if ( dr2 < idr2 and abs((ilep.pt() - bestmatch.pt())/ilep.pt()) < 0.2 ):
                     ilep.bestmatch = bestmatch
 
             # relevant for signal: check if reco matched with gen, save a bool
-            if hasattr(event.the_3lep_cand.l0(), 'bestmatch'): self.fillParticle(self.tree, 'l0_gen_match', event.the_3lep_cand.l0().bestmatch)
-            if hasattr(event.the_3lep_cand.l1(), 'bestmatch'): self.fillParticle(self.tree, 'l1_gen_match', event.the_3lep_cand.l1().bestmatch)
-            if hasattr(event.the_3lep_cand.l2(), 'bestmatch'): self.fillParticle(self.tree, 'l2_gen_match', event.the_3lep_cand.l2().bestmatch)
+            if hasattr(event.the_3lep_cand.l0(), 'bestmatch'): self.fillSimpleGenParticle(self.tree, 'l0_gen_match', event.the_3lep_cand.l0().bestmatch)
+            if hasattr(event.the_3lep_cand.l1(), 'bestmatch'): self.fillSimpleGenParticle(self.tree, 'l1_gen_match', event.the_3lep_cand.l1().bestmatch)
+            if hasattr(event.the_3lep_cand.l2(), 'bestmatch'): self.fillSimpleGenParticle(self.tree, 'l2_gen_match', event.the_3lep_cand.l2().bestmatch)
 
             # FIXME! matching by pointer does not work, so let's trick it with deltaR
             if hasattr(event, 'the_hnl'):

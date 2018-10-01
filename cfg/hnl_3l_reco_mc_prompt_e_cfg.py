@@ -28,14 +28,15 @@ from CMGTools.HNL.analyzers.LeptonWeighter     import LeptonWeighter
 
 # import samples, signal
 # from CMGTools.HNL.samples.localsignal import HN3L_M_2p5_V_0p0173205080757_e_onshell, HN3L_M_2p5_V_0p00707106781187_e_onshell
-# from CMGTools.HNL.samples.localsignal import TTJets_amcat as ttbar
+from CMGTools.HNL.samples.samples_mc_2017_noskim import DYJetsToLL_M10to50, DYJetsToLL_M10to50_ext, DYJetsToLL_M50, DYBB, WJetsToLNu, WJetsToLNu_ext, TTJets 
 # from CMGTools.HNL.samples.samples_mc_2017 import DYJetsToLL_M50, hnl_bkg_essentials
-# from CMGTools.HNL.samples.samples_mc_2017_noskim import DYJetsToLL_M5to50
+# from CMGTools.HNL.samples.samples_mc_2017_noskim import DYJetsToLL_M10to50
 #from CMGTools.HNL.samples.samples_mc_2017_noskim import DYJetsToLL_M50
 #from CMGTools.HNL.samples.signal import all_signals_e as samples
 #from CMGTools.HNL.samples.samples_mc_2017_noskim import qcd_mu as samples
 #from CMGTools.HNL.samples.samples_mc_2017_noskim import qcd_e
-from CMGTools.HNL.samples.samples_mc_2017_noskim import wjets as samples
+#from CMGTools.HNL.samples.samples_mc_2017_noskim import wjets as samples
+
 
 ###################################################
 ###                   OPTIONS                   ###
@@ -54,6 +55,9 @@ pick_events        = getHeppyOption('pick_events', False)
 #samples = [DYJetsToLL_M50]
 #samples = qcd_mu
 #samples = signals_e
+#samples = [DYJetsToLL_M10to50]
+#samples = [TTJets]
+samples = [DYJetsToLL_M10to50, DYJetsToLL_M10to50_ext, DYJetsToLL_M50, DYBB, WJetsToLNu, WJetsToLNu_ext, TTJets]
 auxsamples = [] #[ttbar, DYJetsToLL_M50]
 
 #samples = [comp for comp in samples if comp.name=='TTJets_amcat']
@@ -253,7 +257,7 @@ sequence = cfg.Sequence([
 if not production:
 #     comp                 = HN3L_M_2p5_V_0p0173205080757_e_onshell
 #    comp                 = HN3L_M_2p5_V_0p00707106781187_e_onshell
-    comp                 = samples[0]
+    comp                 = samples[6]
 #     comp                 = ttbar
     selectedComponents   = [comp]
     comp.splitFactor     = 1

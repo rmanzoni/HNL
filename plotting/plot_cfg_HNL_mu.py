@@ -13,7 +13,7 @@ from CMGTools.HNL.plotter.PlotConfigs import HistogramCfg, VariableCfg
 from CMGTools.HNL.plotter.categories_HNL import cat_Inc
 from CMGTools.HNL.plotter.HistCreator import CreateHists, createTrees
 from CMGTools.HNL.plotter.HistDrawer import HistDrawer
-from CMGTools.HNL.plotter.Variables import hnl_vars, getVars
+from CMGTools.HNL.plotter.Variables import hnl_vars, test_vars, getVars
 from CMGTools.HNL.samples.samples_mc_2017 import hnl_bkg
 from pdb import set_trace
 # from CMGTools.HNL.plotter.qcdEstimationMSSMltau import estimateQCDWMSSM, createQCDWHistograms
@@ -93,6 +93,11 @@ CR_DY_3mu_l1l2  = '  &&  ((abs(hnl_m_01 - 91.18) < 10  && hnl_q_01 ==0 && abs(l1
 CR_DY_3mu_l1l2disp  = '  &&  ((abs(hnl_m_01 - 91.18) < 10  && hnl_q_01 ==0) | (abs(hnl_m_02 - 91.18) < 10  && hnl_q_02 ==0))' 
 CR_DY_3mu_l1  = '  &&  (abs(hnl_m_01 - 91.18) < 10  && hnl_q_01 ==0 && abs(l1_dz) < 0.2 &&  abs(l1_dxy) < 0.045 &&  l1_id_m )' 
 
+CR_DY_ZZ  = '&&  nbj == 0  &&  pfmet_pt < 50  && ('\
+            '(hnl_m_01 > 4 && hnl_m_01 < 75) &&' \
+            '(hnl_m_02 > 4 && hnl_m_02 < 75) &&' \
+            '(hnl_m_12 > 4 && hnl_m_12 < 75))' \
+
 CR_ttbar   = '  &&  abs(hnl_m_12 - 91.18) > 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj >= 1  &&  hnl_m_12 > 12'
 CR_ttbarb0 = '  &&  abs(hnl_m_12 - 91.18) > 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj == 0  &&  hnl_m_12 > 12'
 CR_ttbarb1 = '  &&  abs(hnl_m_12 - 91.18) > 15  &&  abs(hnl_w_vis_m - 91.18) > 15  &&  nbj <= 1  &&  hnl_m_12 > 12'
@@ -122,6 +127,8 @@ looser  = '  &&  l1_reliso05 < 0.15  &&  l2_reliso05 < 0.15  &&  l1_id_m  &&  l2
 tighter = '  &&  abs(l1_dz) < 0.2  &&  abs(l2_dz) < 0.2  &&  l1_reliso05 < 0.15  &&  l2_reliso05 < 0.15  &&  l1_id_t  &&  l2_id_t'
 veto    = '  &&  pass_e_veto  &&  pass_m_veto'
 
+mvetofail = '  && pass_m_veto == 0' 
+
 imp_par    = '  &&  abs(l1_dz) < 0.2  &&  abs(l2_dz) < 0.2  &&  abs(l1_dxy) < 0.045  &&  abs(l2_dxy) < 0.045' 
 IDlNoIso   =  '  &&  l1_id_l  &&  l2_id_l'
 IDmNoIso   =  '  &&  l1_id_m  &&  l2_id_m'
@@ -147,6 +154,7 @@ ecalBadCalib                 = '  &&  Flag_ecalBadCalibFilter'
 met_filtered   = goodVertices + globalSuperTightHalo2016 + HBHENoise + HBHENoiseIso + EcalDeadCellTriggerPrimitive + BadPFMuon + BadChargedCandidate + eeBadSc + ecalBadCalib 
 
 disp1      = '  &&  hnl_2d_disp > 1'
+M10 = '  &&  hnl_m_01 > 10  &&  hnl_m_02 > 10  &&  hnl_m_12 > 10'
 
 inc_cut =   'l1_pt > 4  &&  l2_pt > 4  &&  l0_pt > 27' #'.join([cat_Inc])
 inc_cut += '  &&  l1_q != l2_q'
@@ -167,6 +175,15 @@ inc_cut_3mu =   'l1_pt > 20  &&  l2_pt > 10  &&  l0_pt > 27'\
                 '  && l0_reliso05 < 0.1 && l1_reliso05 < 0.1 && l2_reliso05 < 0.1 '\
                 '  && hnl_dr_01 > 0.05 && hnl_dr_02 > 0.05 && hnl_dr_12 > 0.05 '
 
+threeMu_pt_rlxd =   'l1_pt > 20  &&  l2_pt > 4  &&  l0_pt > 4'\
+                '  &&  abs(l0_dz) < 0.2 &&  abs(l1_dz) < 0.2 &&  abs(l2_dz) < 0.2 '\
+                '  &&  abs(l0_dxy) < 0.045 &&  abs(l1_dxy) < 0.045 &&  abs(l2_dxy) < 0.045 '\
+                '  && l0_id_m && l1_id_m && l2_id_m '\
+                '  && abs(l0_eta) < 2.4 && abs(l1_eta) < 2.4 && abs(l2_eta) < 2.4 '\
+                '  && l0_reliso05 < 0.1 && l1_reliso05 < 0.1 && l2_reliso05 < 0.1 '\
+                '  && hnl_dr_01 > 0.05 && hnl_dr_02 > 0.05 && hnl_dr_12 > 0.05 '
+
+
 def prepareCuts():
     cuts = []
 
@@ -174,11 +191,20 @@ def prepareCuts():
     l0_medium = prompt_mu_medium
     l0_tight  = prompt_mu_tight
 
+#### 19.9.
+#    cuts.append(Cut('CR_DY_ZZ_3mu_pt_rlxd',         threeMu_pt_rlxd + CR_DY_ZZ + M10))
+    cuts.append(Cut('CR_DY_m3muAtZ_3mu_pt_rlxd',    threeMu_pt_rlxd  + CR_DY_3mu_m3muAtZ + M10))
+#    cuts.append(Cut('no_sel', '1'))
+
 #### 18.9.
 #    cuts.append(Cut('CR_WJets_IDlNoIso'         , inc_cut_relxd + l0_tight + IDlNoIso + CR_WJets + '  &&  hnl_dr_12 < 0.4  &&  hnl_dr_hnvis0 > 1' + ZVeto01 + ZVeto02)) # NO IMP PAR! !!CHANGED!!
 #    cuts.append(Cut('CR_DY_IDlNoIso'            , inc_cut_relxd + l0_tight + IDlNoIso + CR_DY)) # NO IMP PAR! !!CHANGED!!
 #    cuts.append(Cut('CR_DY_noMcuts'            , inc_cut + imp_par + l0_tight + CR_DY_noMcuts + veto))
-    cuts.append(Cut('CR_DY_3muequal_m3muAtZ',    inc_cut_3mu + CR_DY_3mu_m3muAtZ))
+#    cuts.append(Cut('CR_DY_3muequal_m3muAtZ',    inc_cut_3mu + CR_DY_3mu_m3muAtZ))
+#    cuts.append(Cut('CR_DY_small2eta_mveto',    inc_cut_3mu + CR_DY_ZZ + smalll2eta + mvetofail))
+#    cuts.append(Cut('CR_DY_ZZ',    inc_cut_3mu + CR_DY_ZZ))
+#    cuts.append(Cut('no_sel', '1'))
+#    cuts.append(Cut('CR_DY_ZZ_3mu_rlxd',    threeMu_pt_rlxd + CR_DY_ZZ))
 
 #### 13.9.
 #    cuts.append(Cut('CR_WJets_IDlNoIso'         , inc_cut_relxd + l0_tight + IDlNoIso + CR_WJets + '  &&  hnl_dr_12 < 0.4  &&  hnl_dr_hnvis0 > 1' + ZVeto01 + ZVeto02)) # NO IMP PAR! !!CHANGED!!
@@ -220,12 +246,9 @@ def createSamples(analysis_dir, total_weight, qcd_from_same_sign, w_qcd_mssm_met
     return sample_dict, hist_dict
 
 def createVariables(rebin=None):
-    # Taken from Variables.py; can get subset with e.g. getVars(['mt', 'mvis'])
-    # variables = taumu_vars
-    # variables = getVars(['_norm_', 'mt', 'mvis', 'l1_pt', 'l2_pt', 'l1_eta', 'l2_eta', 'n_vertices', 'n_jets', 'n_bjets'])
-#    variables = CR_vars
-    DoNotRebin = ['_norm_', 'n_vtx', 'nj', 'nbj',] 
+    DoNotRebin = ['_norm_', 'n_vtx', 'nj', 'nbj', 'hnl_m_12_wide'] 
     variables = hnl_vars
+#    variables = test_vars
     if rebin>0:
         for ivar in hnl_vars:
             if ivar.name in DoNotRebin: continue
@@ -255,8 +278,8 @@ def makePlots(variables, cuts, total_weight, sample_dict, hist_dict, qcd_from_sa
             plot.Group('Triboson', ['ZZZ', 'WWW', 'WGGJets'])
             plot.Group('ttV', ['TTZToLLNuNu', 'TTWJetsToLNu'])
             plot.Group('QCD',['QCD_pt_15to20_mu', 'QCD_pt_20to30_mu', 'QCD_pt_30to50_mu', 'QCD_pt_50to80_mu', 'QCD_pt_80to120_mu'])
-            # plot.Group('DY', ['DYJets_M5T50', 'DYJets_M50_x', 'DYJets_M50'])
-            plot.Group('DY', ['DYJetsToLL_M5to50', 'DYJets_ext'])
+#            plot.Group('DY', ['DYJetsToLL_M10to50', 'DYJets_ext'])
+            plot.Group('DYJetsToLL_M10to50', ['DYJetsToLL_M10to50', 'DYJetsToLL_M10to50_ext'])
             createDefaultGroups(plot)
             if make_plots:
                 HistDrawer.draw(plot,channel = channel_name, plot_dir = plotDir+cut.name)#plot_dir='plots/'+cut.name)

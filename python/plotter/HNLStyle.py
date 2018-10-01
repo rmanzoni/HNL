@@ -1,4 +1,4 @@
-from ROOT import TColor, kViolet, kBlue, kRed, kCyan, kAzure, kGreen
+from ROOT import TColor, kViolet, kBlue, kRed, kCyan, kAzure, kGreen, kYellow
 
 class Style:
 
@@ -53,6 +53,8 @@ sViolet = Style(lineColor=1, markerColor=kViolet, fillColor=kViolet)
 # John's colours
 qcdcol = TColor.GetColor(250,202,255)
 dycol =  TColor.GetColor(248,206,104)
+dylowcol =  kYellow+1
+dybbcol =  kYellow
 wcol = TColor.GetColor(222,90,106)
 ttcol = TColor.GetColor(155,152,204)
 zlcol = TColor.GetColor(100,182,232)
@@ -62,15 +64,17 @@ ttvcol = kCyan+2 #TColor.GetColor(222,90,106)
 zzcol = kGreen+2 #TColor.GetColor(222,90,106)
 
 # Backgrounds
-sHNL_QCD = Style(lineColor=1, markerColor=qcdcol, fillColor=qcdcol)
-sHNL_DYJets = Style(lineColor=1, markerColor=dycol, fillColor=dycol)
-sHNL_WJets = Style(lineColor=1, markerColor=wcol, fillColor=wcol)
-sHNL_TTJets = Style(lineColor=1, markerColor=ttcol, fillColor=ttcol)
-sHNL_ZL = Style(lineColor=1, markerColor=zlcol, fillColor=zlcol)
-sHNL_VV = Style(lineColor=1, markerColor=dibosoncol, fillColor=dibosoncol)
-sHNL_TTV = Style(lineColor=1, markerColor=ttvcol, fillColor=ttvcol)
-sHNL_rare = Style(lineColor=1, markerColor=tribosoncol, fillColor=tribosoncol)
-sHNL_ZZ = Style(lineColor=1, markerColor=zzcol, fillColor=zzcol)
+sHNL_QCD = Style(lineColor=qcdcol, markerColor=qcdcol, fillColor=qcdcol)
+sHNL_DYJets = Style(lineColor=dycol, markerColor=dycol, fillColor=dycol)
+sHNL_DYJets_low = Style(lineColor=dylowcol, markerColor=dylowcol, fillColor=dylowcol)
+sHNL_DYJets_bb = Style(lineColor=dybbcol, markerColor=dybbcol, fillColor=dybbcol)
+sHNL_WJets = Style(lineColor=wcol, markerColor=wcol, fillColor=wcol)
+sHNL_TTJets = Style(lineColor=ttcol, markerColor=ttcol, fillColor=ttcol)
+sHNL_ZL = Style(lineColor=zlcol, markerColor=zlcol, fillColor=zlcol)
+sHNL_VV = Style(lineColor=dibosoncol, markerColor=dibosoncol, fillColor=dibosoncol)
+sHNL_TTV = Style(lineColor=ttvcol, markerColor=ttvcol, fillColor=ttvcol)
+sHNL_rare = Style(lineColor=tribosoncol, markerColor=tribosoncol, fillColor=tribosoncol)
+sHNL_ZZ = Style(lineColor=zzcol, markerColor=zzcol, fillColor=zzcol)
 
 # Signals
 sHNL_HN = Style(lineColor=kBlue, markerColor=0, lineStyle=2, fillColor=0, lineWidth=3)
@@ -100,7 +104,10 @@ histPref['HN*'] = {'style':sHNL_HN, 'layer':2999, 'legend':'#splitline{M = 3GeV,
 histPref['Data'] = {'style':sData, 'layer':2999, 'legend':'Observed'}
 histPref['data_*'] = {'style':sData, 'layer':2999, 'legend':'Observed'}
 histPref['ZTT*'] = {'style':sHNL_DYJets, 'layer':4, 'legend':'Z#rightarrow#tau#tau'}
-histPref['DY*'] = {'style':sHNL_DYJets, 'layer':4, 'legend':'DY'}
+histPref['DY'] = {'style':sHNL_DYJets, 'layer':4, 'legend':'DY'}
+histPref['DYJets_ext'] = {'style':sHNL_DYJets, 'layer':4, 'legend':'DYM50'}
+histPref['DYJetsToLL_M10to50*'] = {'style':sHNL_DYJets_low, 'layer':4, 'legend':'DYM10'}
+histPref['DYBB'] = {'style':sHNL_DYJets_bb, 'layer':4, 'legend':'DYBB'}
 histPref['embed_*'] = {'style':sViolet, 'layer':4.1, 'legend':None}
 histPref['TTJets*'] = {'style':sHNL_TTJets, 'layer':1, 'legend':'t#bar{t}'} 
 histPref['T*tW*'] = {'style':sHNL_TTJets, 'layer':1, 'legend':'Single t'} 

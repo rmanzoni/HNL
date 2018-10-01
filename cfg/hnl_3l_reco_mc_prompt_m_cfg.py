@@ -27,11 +27,12 @@ from CMGTools.HNL.analyzers.METFilter          import METFilter
 from CMGTools.HNL.analyzers.LeptonWeighter     import LeptonWeighter
 
 # import samples, signal
-# from CMGTools.HNL.samples.localsignal import TTJets_amcat as ttbar
+# from CMGTools.HNL.samples.samples_mc_2017_noskim import TTWJetsToLNu as tt
 # from CMGTools.HNL.samples.samples_mc_2017 import DYJetsToLL_M50, hnl_bkg_essentials
-from CMGTools.HNL.samples.signal import all_signals_m as samples
-# from CMGTools.HNL.samples.samples_mc_2017_noskim import DYJetsToLL_M5to50
-#from CMGTools.HNL.samples.samples_mc_2017_noskim import qcd_mu as samples
+# from CMGTools.HNL.samples.signal_old import all_signals_m as samples
+from CMGTools.HNL.samples.samples_mc_2017_noskim import DYJetsToLL_M10to50, DYJetsToLL_M10to50_ext, DYJetsToLL_M50, DYBB, WJetsToLNu, WJetsToLNu_ext, TTJets 
+# from CMGTools.HNL.samples.samples_mc_2017_noskim import DYBB 
+# from CMGTools.HNL.samples.samples_mc_2017_noskim import qcd_mu as samples
 
 
 ###################################################
@@ -40,7 +41,7 @@ from CMGTools.HNL.samples.signal import all_signals_m as samples
 # Get all heppy options; set via "-o production" or "-o production=True"
 # production = True run on batch, production = False (or unset) run locally
 
-production         = getHeppyOption('production' , True)
+production         = getHeppyOption('production' , False)
 # production         = getHeppyOption('production' , False)
 pick_events        = getHeppyOption('pick_events', False)
 
@@ -48,7 +49,7 @@ pick_events        = getHeppyOption('pick_events', False)
 ###               HANDLE SAMPLES                ###
 ###################################################
 # samples = hnl_bkg_essentials
-# samples = [DYJetsToLL_M5to50]
+samples = [DYJetsToLL_M10to50, DYJetsToLL_M10to50_ext, DYJetsToLL_M50, DYBB, WJetsToLNu, WJetsToLNu_ext, TTJets]
 #samples = all_signals_m
 auxsamples = []#[ttbar, DYJetsToLL_M50]
 
@@ -134,14 +135,14 @@ genAna.allGenTaus = True # save in event.gentaus *ALL* taus, regardless whether 
 triggers_and_filters = OrderedDict()
 
 ## 2017
-# triggers_and_filters['HLT_IsoMu24'] = 'hltL3crIsoL1sSingleMu22L1f0L2f10QL3f24QL3trkIsoFiltered0p07'
-# triggers_and_filters['HLT_IsoMu27'] = 'hltL3crIsoL1sMu22Or25L1f0L2f10QL3f27QL3trkIsoFiltered0p07'
-# triggers_and_filters['HLT_Mu50']    = 'hltL3fL1sMu22Or25L1f0L2f10QL3Filtered50Q'
+triggers_and_filters['HLT_IsoMu24'] = 'hltL3crIsoL1sSingleMu22L1f0L2f10QL3f24QL3trkIsoFiltered0p07'
+triggers_and_filters['HLT_IsoMu27'] = 'hltL3crIsoL1sMu22Or25L1f0L2f10QL3f27QL3trkIsoFiltered0p07'
+triggers_and_filters['HLT_Mu50']    = 'hltL3fL1sMu22Or25L1f0L2f10QL3Filtered50Q'
 
 ## 2016 ## from https://cmsweb.cern.ch/confdb/#config=/cdaq/physics/Run2016/25ns15e33/v4.0.1/HLT/V3
-triggers_and_filters['HLT_IsoMu24'] = 'hltL3crIsoL1sMu22L1f0L2f10QL3f24QL3trkIsoFiltered0p09'
-triggers_and_filters['HLT_IsoMu27'] = 'hltL3crIsoL1sMu22Or25L1f0L2f10QL3f27QL3trkIsoFiltered0p09'
-triggers_and_filters['HLT_Mu50']    = 'hltL3fL1sMu22Or25L1f0L2f10QL3Filtered50Q'
+# triggers_and_filters['HLT_IsoMu24'] = 'hltL3crIsoL1sMu22L1f0L2f10QL3f24QL3trkIsoFiltered0p09'
+# triggers_and_filters['HLT_IsoMu27'] = 'hltL3crIsoL1sMu22Or25L1f0L2f10QL3f27QL3trkIsoFiltered0p09'
+# triggers_and_filters['HLT_Mu50']    = 'hltL3fL1sMu22Or25L1f0L2f10QL3Filtered50Q'
 
 HNLAnalyzer = cfg.Analyzer(
     HNLAnalyzer,
@@ -252,7 +253,7 @@ sequence = cfg.Sequence([
 if not production:
 #     comp                 = ttbar
 #    comp                 = DYJetsToLL_M5to50
-    comp                 = samples[0]
+    comp                 = samples[6]
     selectedComponents   = [comp]
     comp.splitFactor     = 1
     comp.fineSplitFactor = 1

@@ -11,7 +11,7 @@ from CMGTools.HNL.plotter.PlotConfigs import SampleCfg, HistogramCfg
 
 from CMGTools.HNL.samples.samples_mc_2017          import hnl_bkg
 from CMGTools.HNL.samples.samples_mc_2017          import TTJets_amcat, TTJets_mdgrph, DYJetsToLL_M50, DYJetsToLL_M50_ext, WJetsToLNu, W3JetsToLNu, W4JetsToLNu, WLLJJ_WToLNu_EWK, WW_DoubleScattering, WZTo3LNu, ZZTo4L, ZZTo4L_ext
-from CMGTools.HNL.samples.samples_mc_2017_noskim   import DYJetsToLL_M5to50, DYJetsToLL_M50, DY1JetsToLL_M50, DY2JetsToLL_M50, DY2JetsToLL_M50_ext, DY3JetsToLL_M50, DY3JetsToLL_M50_ext
+from CMGTools.HNL.samples.samples_mc_2017_noskim   import DYBB, DYJetsToLL_M10to50, DYJetsToLL_M10to50_ext, DYJetsToLL_M50, DY1JetsToLL_M50, DY2JetsToLL_M50, DY2JetsToLL_M50_ext, DY3JetsToLL_M50, DY3JetsToLL_M50_ext
 from CMGTools.HNL.samples.samples_mc_2017_noskim   import ZZZ, WZZ, WWZ, WWW, WWTo2L2Nu, WGGJets, TTWJetsToLNu, TTZToLL_M10, TTZToLL_M1to10, ST_sch_lep, STbar_tch_inc, ST_tch_inc, STbar_tW_inc, ST_tW_inc
 from CMGTools.HNL.samples.samples_data_2017_noskim import Single_ele_2017B, Single_ele_2017C, Single_ele_2017D, Single_ele_2017E, Single_ele_2017F
 from CMGTools.HNL.samples.samples_data_2017_noskim import Single_mu_2017B,  Single_mu_2017C,  Single_mu_2017D,  Single_mu_2017E,  Single_mu_2017F
@@ -66,19 +66,18 @@ def createSampleLists(analysis_dir='/eos/user/v/vstampf/ntuples/',
     if channel == 'e':
 #        data_dir = '/eos/user/m/manzoni/HNL/singleele_e_23_08_2018/'              # first version
         data_dir = '/eos/user/v/vstampf/ntuples/data_2017_e_noskim/partial_hadd/'  # 9/13 production including met filters and masses between vetoing leps and 3l
-        qcd_dir = 'bkg_mc_e/qcd/new/'
         bkg_dir = 'bkg_mc_e/'
         sig_dir = 'sig_mc_e/ntuples/'
         dataB = Single_ele_2017B; dataC = Single_ele_2017C; dataD = Single_ele_2017D; dataE = Single_ele_2017E; dataF = Single_ele_2017F; 
     if channel == 'm':
         data_dir = '/eos/user/v/vstampf/ntuples/data_2017_m_noskim/'
-        qcd_dir = 'bkg_mc_m/qcd/new/'
         bkg_dir = 'bkg_mc_m/'
         sig_dir = 'sig_mc_m/ntuples/'
         dataB = Single_mu_2017B; dataC = Single_mu_2017C; dataD = Single_mu_2017D; dataE = Single_mu_2017E; dataF = Single_mu_2017F; 
 
     samples_essential = [
-        SampleCfg(name='DYJetsToLL_M5to50', dir_name=DYJetsToLL_M5to50 .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=DYJetsToLL_M5to50 .xSection, sumweights=DYJetsToLL_M5to50 .nGenEvents),
+        SampleCfg(name='DYJetsToLL_M10to50', dir_name=DYJetsToLL_M10to50 .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=DYJetsToLL_M10to50 .xSection, sumweights=DYJetsToLL_M10to50 .nGenEvents),
+        SampleCfg(name='DYJetsToLL_M10to50_ext', dir_name=DYJetsToLL_M10to50_ext .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=DYJetsToLL_M10to50_ext .xSection, sumweights=DYJetsToLL_M10to50_ext .nGenEvents),
         SampleCfg(name='DYJets_ext'       , dir_name=DYJetsToLL_M50_ext.name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=DYJetsToLL_M50_ext.xSection, sumweights=DYJetsToLL_M50_ext.nGenEvents),
         SampleCfg(name='TTJets_amc'       , dir_name=TTJets_amcat      .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=TTJets_amcat      .xSection, sumweights=TTJets_amcat      .nGenEvents),
         SampleCfg(name='ZZTo4L'           , dir_name=ZZTo4L            .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=ZZTo4L            .xSection, sumweights=ZZTo4L            .nGenEvents),
@@ -92,8 +91,8 @@ def createSampleLists(analysis_dir='/eos/user/v/vstampf/ntuples/',
         samples_essential += [
             SampleCfg(name='W1JetsToLNu'       , dir_name=W1JetsToLNu        .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=W1JetsToLNu        .xSection, sumweights=W1JetsToLNu        .nGenEvents),
             SampleCfg(name='W2JetsToLNu'       , dir_name=W2JetsToLNu        .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=W2JetsToLNu        .xSection, sumweights=W2JetsToLNu        .nGenEvents),
-#            SampleCfg(name='W3JetsToLNu'       , dir_name=W3JetsToLNu        .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=W3JetsToLNu        .xSection, sumweights=W3JetsToLNu        .nGenEvents),
-#            SampleCfg(name='W4JetsToLNu'       , dir_name=W4JetsToLNu        .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=W4JetsToLNu        .xSection, sumweights=W4JetsToLNu        .nGenEvents)
+            SampleCfg(name='W3JetsToLNu'       , dir_name=W3JetsToLNu        .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=W3JetsToLNu        .xSection, sumweights=W3JetsToLNu        .nGenEvents),
+            SampleCfg(name='W4JetsToLNu'       , dir_name=W4JetsToLNu        .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=W4JetsToLNu        .xSection, sumweights=W4JetsToLNu        .nGenEvents)
         ]
 
     samples_signal_e = [
@@ -118,6 +117,7 @@ def createSampleLists(analysis_dir='/eos/user/v/vstampf/ntuples/',
 
     samples_additional = [
         SampleCfg(name='DYJets'           , dir_name=DYJetsToLL_M50    .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=DYJetsToLL_M50    .xSection, sumweights=DYJetsToLL_M50    .nGenEvents),
+        SampleCfg(name='DYBB'           , dir_name=DYBB    .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=DYBB    .xSection, sumweights=DYBB    .nGenEvents),
 #        SampleCfg(name='DY1Jets_M50'        , dir_name=DY1JetsToLL_M50      .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=DY1JetsToLL_M50     .xSection, sumweights=DY1JetsToLL_M50     .nGenEvents),
 #        SampleCfg(name='DY2Jets_M50'        , dir_name=DY2JetsToLL_M50      .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=DY2JetsToLL_M50     .xSection, sumweights=DY2JetsToLL_M50     .nGenEvents),
 #        SampleCfg(name='DY2Jets_M50_ext'    , dir_name=DY2JetsToLL_M50_ext  .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=DY2JetsToLL_M50_ext .xSection, sumweights=DY2JetsToLL_M50_ext .nGenEvents),
@@ -145,27 +145,27 @@ def createSampleLists(analysis_dir='/eos/user/v/vstampf/ntuples/',
     ]
 
     samples_qcd_e = [
-        SampleCfg(name='QCD_pt_20to30_bcToE', dir_name=QCD_pt_20to30_bcToE.name, ana_dir=analysis_dir+qcd_dir, tree_prod_name=tree_prod_name, xsec=QCD_pt_20to30_bcToE.xSection, sumweights=QCD_pt_20to30_bcToE.nGenEvents),
-        SampleCfg(name='QCD_pt_30to80_bcToE', dir_name=QCD_pt_30to80_bcToE.name, ana_dir=analysis_dir+qcd_dir, tree_prod_name=tree_prod_name, xsec=QCD_pt_30to80_bcToE.xSection, sumweights=QCD_pt_30to80_bcToE.nGenEvents),
-        SampleCfg(name='QCD_pt_80to170_bcToE', dir_name=QCD_pt_80to170_bcToE.name, ana_dir=analysis_dir+qcd_dir, tree_prod_name=tree_prod_name, xsec=QCD_pt_80to170_bcToE.xSection, sumweights=QCD_pt_80to170_bcToE.nGenEvents),
-        SampleCfg(name='QCD_pt_170to250_bcToE', dir_name=QCD_pt_170to250_bcToE.name, ana_dir=analysis_dir+qcd_dir, tree_prod_name=tree_prod_name, xsec=QCD_pt_170to250_bcToE.xSection, sumweights=QCD_pt_170to250_bcToE.nGenEvents),
-        SampleCfg(name='QCD_pt_250toInf_bcToE', dir_name=QCD_pt_250toInf_bcToE.name, ana_dir=analysis_dir+qcd_dir, tree_prod_name=tree_prod_name, xsec=QCD_pt_250toInf_bcToE.xSection, sumweights=QCD_pt_250toInf_bcToE.nGenEvents),
-        SampleCfg(name='QCD_pt_15to20_em', dir_name=QCD_pt_15to20_em.name, ana_dir=analysis_dir+qcd_dir, tree_prod_name=tree_prod_name, xsec=QCD_pt_15to20_em.xSection, sumweights=QCD_pt_15to20_em.nGenEvents),
-        SampleCfg(name='QCD_pt_20to30_em', dir_name=QCD_pt_20to30_em.name, ana_dir=analysis_dir+qcd_dir, tree_prod_name=tree_prod_name, xsec=QCD_pt_20to30_em.xSection, sumweights=QCD_pt_20to30_em.nGenEvents),
-        SampleCfg(name='QCD_pt_30to50_em', dir_name=QCD_pt_30to50_em.name, ana_dir=analysis_dir+qcd_dir, tree_prod_name=tree_prod_name, xsec=QCD_pt_30to50_em.xSection, sumweights=QCD_pt_30to50_em.nGenEvents),
-        SampleCfg(name='QCD_pt_50to80_em', dir_name=QCD_pt_50to80_em.name, ana_dir=analysis_dir+qcd_dir, tree_prod_name=tree_prod_name, xsec=QCD_pt_50to80_em.xSection, sumweights=QCD_pt_50to80_em.nGenEvents),
-#        SampleCfg(name='QCD_pt_80to120_em', dir_name=QCD_pt_80to120_em.name, ana_dir=analysis_dir+qcd_dir, tree_prod_name=tree_prod_name, xsec=QCD_pt_80to120_em.xSection, sumweights=QCD_pt_80to120_em.nGenEvents),  #NOT IN DAS
-        SampleCfg(name='QCD_pt_120to170_em', dir_name=QCD_pt_120to170_em.name, ana_dir=analysis_dir+qcd_dir, tree_prod_name=tree_prod_name, xsec=QCD_pt_120to170_em.xSection, sumweights=QCD_pt_120to170_em.nGenEvents),
-        SampleCfg(name='QCD_pt_300toInf_em', dir_name=QCD_pt_300toInf_em.name, ana_dir=analysis_dir+qcd_dir, tree_prod_name=tree_prod_name, xsec=QCD_pt_300toInf_em.xSection, sumweights=QCD_pt_300toInf_em.nGenEvents),
+        SampleCfg(name='QCD_pt_20to30_bcToE', dir_name=QCD_pt_20to30_bcToE.name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=QCD_pt_20to30_bcToE.xSection, sumweights=QCD_pt_20to30_bcToE.nGenEvents),
+        SampleCfg(name='QCD_pt_30to80_bcToE', dir_name=QCD_pt_30to80_bcToE.name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=QCD_pt_30to80_bcToE.xSection, sumweights=QCD_pt_30to80_bcToE.nGenEvents),
+        SampleCfg(name='QCD_pt_80to170_bcToE', dir_name=QCD_pt_80to170_bcToE.name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=QCD_pt_80to170_bcToE.xSection, sumweights=QCD_pt_80to170_bcToE.nGenEvents),
+        SampleCfg(name='QCD_pt_170to250_bcToE', dir_name=QCD_pt_170to250_bcToE.name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=QCD_pt_170to250_bcToE.xSection, sumweights=QCD_pt_170to250_bcToE.nGenEvents),
+        SampleCfg(name='QCD_pt_250toInf_bcToE', dir_name=QCD_pt_250toInf_bcToE.name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=QCD_pt_250toInf_bcToE.xSection, sumweights=QCD_pt_250toInf_bcToE.nGenEvents),
+        SampleCfg(name='QCD_pt_15to20_em', dir_name=QCD_pt_15to20_em.name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=QCD_pt_15to20_em.xSection, sumweights=QCD_pt_15to20_em.nGenEvents),
+        SampleCfg(name='QCD_pt_20to30_em', dir_name=QCD_pt_20to30_em.name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=QCD_pt_20to30_em.xSection, sumweights=QCD_pt_20to30_em.nGenEvents),
+        SampleCfg(name='QCD_pt_30to50_em', dir_name=QCD_pt_30to50_em.name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=QCD_pt_30to50_em.xSection, sumweights=QCD_pt_30to50_em.nGenEvents),
+        SampleCfg(name='QCD_pt_50to80_em', dir_name=QCD_pt_50to80_em.name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=QCD_pt_50to80_em.xSection, sumweights=QCD_pt_50to80_em.nGenEvents),
+#        SampleCfg(name='QCD_pt_80to120_em', dir_name=QCD_pt_80to120_em.name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=QCD_pt_80to120_em.xSection, sumweights=QCD_pt_80to120_em.nGenEvents),  #NOT IN DAS
+        SampleCfg(name='QCD_pt_120to170_em', dir_name=QCD_pt_120to170_em.name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=QCD_pt_120to170_em.xSection, sumweights=QCD_pt_120to170_em.nGenEvents),
+        SampleCfg(name='QCD_pt_300toInf_em', dir_name=QCD_pt_300toInf_em.name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=QCD_pt_300toInf_em.xSection, sumweights=QCD_pt_300toInf_em.nGenEvents),
     ]
 
 
     samples_qcd_mu = [
-        SampleCfg(name='QCD_pt_15to20_mu', dir_name=QCD_pt_15to20_mu.name, ana_dir=analysis_dir+qcd_dir, tree_prod_name=tree_prod_name, xsec=QCD_pt_15to20_mu.xSection, sumweights=QCD_pt_15to20_mu.nGenEvents),
-        SampleCfg(name='QCD_pt_20to30_mu', dir_name=QCD_pt_20to30_mu.name, ana_dir=analysis_dir+qcd_dir, tree_prod_name=tree_prod_name, xsec=QCD_pt_20to30_mu.xSection, sumweights=QCD_pt_20to30_mu.nGenEvents),
-        SampleCfg(name='QCD_pt_30to50_mu', dir_name=QCD_pt_30to50_mu.name, ana_dir=analysis_dir+qcd_dir, tree_prod_name=tree_prod_name, xsec=QCD_pt_30to50_mu.xSection, sumweights=QCD_pt_30to50_mu.nGenEvents),
-        SampleCfg(name='QCD_pt_50to80_mu', dir_name=QCD_pt_50to80_mu.name, ana_dir=analysis_dir+qcd_dir, tree_prod_name=tree_prod_name, xsec=QCD_pt_50to80_mu.xSection, sumweights=QCD_pt_50to80_mu.nGenEvents),
-        SampleCfg(name='QCD_pt_80to120_mu', dir_name=QCD_pt_80to120_mu.name, ana_dir=analysis_dir+qcd_dir, tree_prod_name=tree_prod_name, xsec=QCD_pt_80to120_mu.xSection, sumweights=QCD_pt_80to120_mu.nGenEvents),
+        SampleCfg(name='QCD_pt_15to20_mu', dir_name=QCD_pt_15to20_mu.name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=QCD_pt_15to20_mu.xSection, sumweights=QCD_pt_15to20_mu.nGenEvents),
+        SampleCfg(name='QCD_pt_20to30_mu', dir_name=QCD_pt_20to30_mu.name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=QCD_pt_20to30_mu.xSection, sumweights=QCD_pt_20to30_mu.nGenEvents),
+        SampleCfg(name='QCD_pt_30to50_mu', dir_name=QCD_pt_30to50_mu.name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=QCD_pt_30to50_mu.xSection, sumweights=QCD_pt_30to50_mu.nGenEvents),
+        SampleCfg(name='QCD_pt_50to80_mu', dir_name=QCD_pt_50to80_mu.name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=QCD_pt_50to80_mu.xSection, sumweights=QCD_pt_50to80_mu.nGenEvents),
+        SampleCfg(name='QCD_pt_80to120_mu', dir_name=QCD_pt_80to120_mu.name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=QCD_pt_80to120_mu.xSection, sumweights=QCD_pt_80to120_mu.nGenEvents),
     ]
   
     samples_additional += samples_qcd_e
@@ -173,7 +173,7 @@ def createSampleLists(analysis_dir='/eos/user/v/vstampf/ntuples/',
     samples_mc  = samples_essential + samples_additional 
     samples     = samples_essential + samples_additional + samples_data
     if channel == 'm':
-        samples_mc = samples_essential + samples_qcd_mu
+        samples_mc = samples_essential + samples_qcd_mu + [samples_additional[1]] # DYBB
     all_samples = samples_mc + samples_data
 
     # RM: this is needed to retrieve the sum of weights *before* any selection
@@ -182,7 +182,6 @@ def createSampleLists(analysis_dir='/eos/user/v/vstampf/ntuples/',
 
     weighted_list = [
        'HN3L_M3'            ,
-       'DYJetsToLL_M5to50'  ,
        'DYJets'             ,
        'DYJets_ext'         ,
        'DY1Jets_M50'        ,
@@ -218,7 +217,6 @@ def createSampleLists(analysis_dir='/eos/user/v/vstampf/ntuples/',
     # RM hand made patch!
     initial_weights = OrderedDict()
     initial_weights['HN3L_M3'            ] = 1.
-    initial_weights['DYJetsToLL_M5to50'  ] = 0.9992
     initial_weights['DYJets'             ] = 0.6777
     initial_weights['DYJets_ext'         ] = 0.6777
     initial_weights['DY1Jets_M50'        ] = 0.9992

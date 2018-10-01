@@ -214,6 +214,7 @@ class DataMCPlot(object):
             self.legend.SetFillColor(0)
             self.legend.SetFillStyle(0)
             self.legend.SetLineColor(0)
+            self.legend.SetLineWidth(1)
             self.legend.SetNColumns(5) # number of comps / 2 (or 3) + 1
             self.legend.SetEntrySeparation(0.2) 
             self.legend.SetColumnSeparation(0.2) 

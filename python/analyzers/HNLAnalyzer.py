@@ -429,7 +429,7 @@ class HNLAnalyzer(Analyzer):
 # 
 #        charged_pfs = [ipf for ipf in pfs if ipf.charge() != 0 and abs(ipf.pdgId()) != 11 and abs(ipf.pdgId())!=13]
 #        charged_pfs = [ipf for ipf in charged_pfs if ipf.pt()>0.6 and abs(ipf.eta())<2.5]
-#        charged_pu_pfs = [ipf for ipf in charged_pfs if ipf.fromPV <= 1]
+#        charged_pu_pfs = [ipf for ipf in charged_pfs if ipf.fromPV() <= 1]
 #        charged_pv_pfs = [ipf for ipf in charged_pfs if abs(ipf.dxy(event.recoSv.position()))<0.1 and abs(ipf.dz(event.recoSv.position()))<0.5]
 # 
 #        photon_pfs = [ipf for ipf in pfs if abs(ipf.pdgId()) == 22]
@@ -551,20 +551,21 @@ def offset_rhoArea(rho, dRCone, eta):
     if abs(eta) > 1.3000 and abs(eta) < 2.0000: area = 0.0363
     if abs(eta) > 2.0000 and abs(eta) < 2.2000: area = 0.0119
     if abs(eta) > 2.2000 and abs(eta) < 2.4000: area = 0.0064
-    if dRCone != 0.3: area = area * ( (dRCone ** 2) / (0.3 **2) )
+    if dRCone != 0.3: area *= ( (dRCone ** 2) / (0.3 **2) )
+    print 'area = {a}, offset = {o}'.format(a = area, o = area * rho) 
     return area * rho
     
 def offset_dBeta(dBeta, ch_pu_iso):
+    print 'dbeta = {db}, offset = {o}'.format(db = dBeta, o = dBeta * ch_pu_iso)
     return ch_pu_iso * dBeta
         
 def chargedHadronIso(event, dRCone, PU = False): 
-    charged_pfs = [ipf for ipf in event.pfs if ( ipf.charge() != 0 and abs(ipf.pdgId()) != 11 and abs(ipf.pdgId()) != 13 and ipf.pt() > 0.5 )]
-#    charged_pfs = [ipf for ipf in event.pfs if ( ipf.charge() != 0 and abs(ipf.pdgId()) != 11 and abs(ipf.pdgId()) != 13 and ipf.pt() > 0.6 and abs(ipf.eta()) < 2.5 )]
     if PU == True:
-        charged_pfs = [ipf for ipf in charged_pfs if ipf.fromPV <= 1]
+        charged_pfs = [ipf for ipf in event.pfs if ( ipf.charge() != 0 and ipf.pt() > 0.5 )]
+        charged_pfs = [ipf for ipf in charged_pfs if ipf.fromPV() <= 1]
     if PU == False:
-        #charged_pfs = [ipf for ipf in charged_pfs if ( abs(ipf.dxy(event.recoSv.position())) < 0.1 and abs(ipf.dz(event.recoSv.position())) < 0.5 )]
-        charged_pfs = [ipf for ipf in charged_pfs if (ipf.fromPV > 1 and abs(ipf.pdgId()) == 211) ]
+        charged_pfs = [ipf for ipf in event.pfs if ( ipf.charge() != 0 and abs(ipf.pdgId()) != 11 and abs(ipf.pdgId()) != 13 and ipf.pt() > 0.5 )]
+        charged_pfs = [ipf for ipf in charged_pfs if (ipf.fromPV() > 1 and abs(ipf.pdgId()) == 211) ]
     charged_pfs  = [ipf for ipf in charged_pfs  if deltaR(ipf, event.the_3lep_cand.hnVisP4()) < dRCone ]
     ch_iso       = sum([ipf.pt() for ipf in charged_pfs]) 
 #    for i in charged_pfs: print 'charged hadron, pile up:\t', dRCone, PU, i.dz(), i.dxy(), i.pt(), i.pdgId()
@@ -573,7 +574,6 @@ def chargedHadronIso(event, dRCone, PU = False):
 def neutralHadronIso(event, dRCone): 
     neutral_pfs = [ipf for ipf in event.pfs if ( ipf.charge() == 0 and abs(ipf.pdgId()) != 11 and abs(ipf.pdgId()) != 13 and abs(ipf.pdgId()) != 22 )]
     neutral_pfs = [ipf for ipf in neutral_pfs if ipf.pt() > 0.5]
-#    neutral_pfs = [ipf for ipf in neutral_pfs if ( ipf.pt() > 0.6 and abs(ipf.eta()) < 2.5 )]
     neutral_pfs = [ipf for ipf in neutral_pfs if deltaR(ipf, event.the_3lep_cand.hnVisP4()) < dRCone ]
     neu_iso     = sum([ipf.pt() for ipf in neutral_pfs])
 #    for i in neutral_pfs: print 'neutral hadron\t', dRCone, i.dz(), i.dxy(), i.pt(), i.pdgId()
@@ -582,7 +582,6 @@ def neutralHadronIso(event, dRCone):
 def photonIso(event, dRCone): 
     photon_pfs = [ipf for ipf in event.pfs if abs(ipf.pdgId()) == 22]
     photon_pfs = [ipf for ipf in photon_pfs if ipf.pt() > 0.5]
-#    photon_pfs = [ipf for ipf in photon_pfs if ( ipf.pt() > 0.6 and abs(ipf.eta()) < 2.5 )]
     photon_pfs = [ipf for ipf in photon_pfs if deltaR(ipf, event.the_3lep_cand.hnVisP4()) < dRCone ] 
     ph_iso     = sum([ipf.pt() for ipf in photon_pfs])
 #    for i in photon_pfs: print 'photon\t\t', dRCone, i.dz(), i.dxy(), i.pt(), i.pdgId()

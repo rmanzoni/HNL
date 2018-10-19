@@ -31,7 +31,7 @@ from CMGTools.HNL.analyzers.LeptonWeighter     import LeptonWeighter
 # from CMGTools.HNL.samples.localsignal import TTJets_amcat as ttbar
 # from CMGTools.HNL.samples.samples_mc_2017 import DYJetsToLL_M50, hnl_bkg_essentials
 # from CMGTools.HNL.samples.samples_mc_2017 import DYJetsToLL_M50, hnl_bkg_essentials
-from CMGTools.HNL.samples.samples_mc_2017_noskim import ST_t_channel_top_4f_inclusiveDecays as bkg
+# from CMGTools.HNL.samples.samples_mc_2017_noskim import ST_t_channel_top_4f_inclusiveDecays as bkg
 # from CMGTools.HNL.samples.samples_mc_2017_noskim import DY3JetsToLL_M50_ext as bkg
 from CMGTools.HNL.samples.signal import all_signals_e
 # from CMGTools.HNL.samples.samples_mc_2017_noskim import DYJetsToLL_M5to50
@@ -47,8 +47,8 @@ from CMGTools.HNL.samples.samples_mc_2017_noskim import wjets as samples
 # Get all heppy options; set via "-o production" or "-o production=True"
 # production = True run on batch, production = False (or unset) run locally
 
-production         = getHeppyOption('production' , True)
-# production         = getHeppyOption('production' , False)
+# production         = getHeppyOption('production' , True)
+production         = getHeppyOption('production' , False)
 pick_events        = getHeppyOption('pick_events', False)
 
 ###################################################
@@ -56,7 +56,7 @@ pick_events        = getHeppyOption('pick_events', False)
 ###################################################
 #samples = hnl_bkg_essentials
 # samples = all_signals_e
-samples = [bkg]
+# samples = [bkg]
 samples = [DYJetsToLL_M50]
 #samples = qcd_mu
 #samples = signals_e
@@ -260,10 +260,10 @@ if not production:
 #     comp                 = HN3L_M_2p5_V_0p0173205080757_e_onshell
 #     comp                 = HN3L_M_2p5_V_0p00707106781187_e_onshell
     # comp                 = all_signals_e[0]
-    comp                 = DYJetsToLL_M50
+    # comp                 = DYJetsToLL_M50
     comp                 = samples[0]
 #     comp                 = ttbar
-    comp                 = bkg
+    # comp                 = bkg
     selectedComponents   = [comp]
     comp.splitFactor     = 1
     comp.fineSplitFactor = 1

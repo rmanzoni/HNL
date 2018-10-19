@@ -239,7 +239,7 @@ class CreateHists(object):
         pool = Pool(processes=len(self.hist_cfg.cfgs))
         print('number of processes for filling histos (ie. samples): %i'%len(self.hist_cfg.cfgs))
         result = pool.map(self.makealltheplots, self.hist_cfg.cfgs) 
-        
+        # result = self.makealltheplots(self.hist_cfg.cfgs[0]) 
 #        workers = cpu_count()
 #        result = []
 #        batches = len(self.hist_cfg.cfgs) / workers + 1 if len(self.hist_cfg.cfgs) % workers != 0 else len(self.hist_cfg.cfgs) / workers
@@ -400,7 +400,7 @@ class CreateHists(object):
                     print 'Histogram', cfg.name, 'already exists; adding...', cfg.dir_name
                     hist_to_add = Histogram(cfg.name, hist)
                     if not cfg.is_data:
-                        hist_to_add.SetWeight(hist_cfg.lumi*cfg.xsec/cfg.sumweights)
+                        hist_to_add.SetWeight(self.hist_cfg.lumi*cfg.xsec/cfg.sumweights)
                     plot[cfg.name].Add(hist_to_add)
                 else:
 #                    print(cfg.name, hist.GetEntries(), stack)
@@ -412,6 +412,3 @@ class CreateHists(object):
             print('added histos for %s'%cfg.name)
             PLOTS = self.plots
         return PLOTS
-
-
-

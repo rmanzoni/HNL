@@ -30,7 +30,8 @@ from CMGTools.HNL.analyzers.LeptonWeighter     import LeptonWeighter
 # from CMGTools.HNL.samples.localsignal import TTJets_amcat as ttbar
 from CMGTools.HNL.samples.samples_mc_2017 import DYJetsToLL_M50, hnl_bkg_essentials, hnl_bkg
 from CMGTools.HNL.samples.signal import all_signals_mu
-from CMGTools.HNL.samples.samples_mc_2017_noskim import DYJetsToLL_M5to50, hnl_bkg_noskim, hnl_bkg_noskim_ggZZWJets,W1JetsToLNu, ggZZTo2mu2nu_ext
+from CMGTools.HNL.samples.samples_mc_2017_noskim import DYJetsToLL_M5to50, hnl_bkg_noskim, hnl_bkg_noskim_ggZZWJets,W1JetsToLNu, ggZZTo2mu2nu_ext, ggZZTo2e2mu, ggZZTo2e2mu_ext, ggZZTo2e2nu, ggZZTo2e2nu_ext, ggZZTo2e2tau, ggZZTo2e2tau_ext, ggZZTo2mu2nu, ggZZTo2mu2nu_ext, ggZZTo2mu2tau, ggZZTo2mu2tau_ext, ggZZTo4e, ggZZTo4mu, ggZZTo4tau, W1JetsToLNu, W2JetsToLNu, W3JetsToLNu, W4JetsToLNu
+
 # from CMGTools.HNL.samples.samples_mc_2017_noskim import DYJetsToLL_M5to50
 #from CMGTools.HNL.samples.samples_mc_2017_noskim import qcd_mu as samples
 
@@ -49,8 +50,8 @@ pick_events        = getHeppyOption('pick_events', False)
 ###               HANDLE SAMPLES                ###
 ###################################################
 # samples = hnl_bkg_essentials
-<<<<<<< HEAD
-samples = [W1JetsToLNu]
+# samples = [ggZZTo2mu2tau_ext]
+samples = [DYJetsToLL_M50]
 # samples = all_signals_mu
 # samples = hnl_bkg + hnl_bkg_noskim
 # samples = hnl_bkg + hnl_bkg_noskim + hnl_bkg_noskim_ggZZWJets
@@ -257,8 +258,9 @@ if not production:
 #     comp                 = ttbar
     # comp                 = DYJetsToLL_M5to50
     # comp                 = all_signals_mu[0]
-    # comp                 = samples
-    comp                 = W1JetsToLNu
+    # comp                 = samples[0]
+    comp                 = samples[0]
+    # comp                 = ggZZTo2mu2tau_ext
     # comp                 = ggZZTo2mu2nu_ext
     selectedComponents   = [comp]
     comp.splitFactor     = 1

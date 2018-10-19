@@ -120,7 +120,7 @@ ggZZTo2mu2tau = creator.makeMCComponent(
 ggZZTo2mu2tau.nGenEvents = ggZZTo2mu2tau.dataset_entries
 
 ggZZTo2mu2tau_ext = creator.makeMCComponent(
-    name    = 'ggZZto2mu2tau_ext', 
+    name    = 'ggZZTo2mu2tau_ext', 
     dataset = '/GluGluToContinToZZTo2mu2tau_13TeV_MCFM701_pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14_ext1-v2/MINIAODSIM',
     user    = 'CMS', 
     pattern = '.*root', 
@@ -159,45 +159,45 @@ ggZZTo4tau = creator.makeMCComponent(
 )
 ggZZTo4tau.nGenEvents = ggZZTo4tau.dataset_entries
 
-# W1JetsToLNu = creator.makeMCComponent(
-    # name    = 'W1JetsToLNu', 
-    # dataset = '/W1JetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v3/MINIAODSIM',
-    # user    = 'CMS', 
-    # pattern = '.*root', 
-    # xSec    = 9493,
-    # useAAA  = True
-# )
-# W1JetsToLNu.nGenEvents = W1JetsToLNu.dataset_entries
+W1JetsToLNu = creator.makeMCComponent(
+    name    = 'W1JetsToLNu', 
+    dataset = '/W1JetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v3/MINIAODSIM',
+    user    = 'CMS', 
+    pattern = '.*root', 
+    xSec    = 9493,
+    useAAA  = True
+)
+W1JetsToLNu.nGenEvents = W1JetsToLNu.dataset_entries
 
-# W2JetsToLNu = creator.makeMCComponent(
-    # name    = 'W2JetsToLNu', 
-    # dataset = '/W2JetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v4/MINIAODSIM',
-    # user    = 'CMS', 
-    # pattern = '.*root', 
-    # xSec    = 3120,
-    # useAAA  = True
-# )
-# W2JetsToLNu.nGenEvents = W2JetsToLNu.dataset_entries
+W2JetsToLNu = creator.makeMCComponent(
+    name    = 'W2JetsToLNu', 
+    dataset = '/W2JetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v4/MINIAODSIM',
+    user    = 'CMS', 
+    pattern = '.*root', 
+    xSec    = 3120,
+    useAAA  = True
+)
+W2JetsToLNu.nGenEvents = W2JetsToLNu.dataset_entries
 
-# W3JetsToLNu = creator.makeMCComponent(
-    # name    = 'W3JetsToLNu', 
-    # dataset = '/W3JetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
-    # user    = 'CMS', 
-    # pattern = '.*root', 
-    # xSec    = 942.3,
-    # useAAA  = True
-# )
-# W3JetsToLNu.nGenEvents = W3JetsToLNu.dataset_entries
+W3JetsToLNu = creator.makeMCComponent(
+    name    = 'W3JetsToLNu', 
+    dataset = '/W3JetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
+    user    = 'CMS', 
+    pattern = '.*root', 
+    xSec    = 942.3,
+    useAAA  = True
+)
+W3JetsToLNu.nGenEvents = W3JetsToLNu.dataset_entries
 
-# W4JetsToLNu = creator.makeMCComponent(
-    # name    = 'W4JetsToLNu', 
-    # dataset = '/W4JetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
-    # user    = 'CMS', 
-    # pattern = '.*root', 
-    # xSec    = 524.2,
-    # useAAA  = True
-# )
-# W4JetsToLNu.nGenEvents = W4JetsToLNu.dataset_entries
+W4JetsToLNu = creator.makeMCComponent(
+    name    = 'W4JetsToLNu', 
+    dataset = '/W4JetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
+    user    = 'CMS', 
+    pattern = '.*root', 
+    xSec    = 524.2,
+    useAAA  = True
+)
+W4JetsToLNu.nGenEvents = W4JetsToLNu.dataset_entries
 
 
 DYJetsToLL_M5to50 = creator.makeMCComponent(
@@ -438,46 +438,46 @@ qcd_e = [QCD_pt_15to20_em, QCD_pt_20to30_em, QCD_pt_30to50_em, QCD_pt_50to80_em,
 
 qcd_mu = [QCD_pt_15to20_mu, QCD_pt_20to30_mu, QCD_pt_30to50_mu, QCD_pt_50to80_mu, QCD_pt_80to120_mu]
 
-W1JetsToLNu = creator.makeMCComponent(
-    name    = 'W1JetsToLNu', 
-    dataset = '/W1JetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v3/MINIAODSIM',
-    user    = 'CMS',
-    pattern = '.*root',
-    xSec    = 8.139e+03,# +- 3.379e+01 pb
-    useAAA  = True
-) 
-W1JetsToLNu.nGenEvents = W1JetsToLNu.dataset_entries
+# W1JetsToLNu = creator.makeMCComponent(
+    # name    = 'W1JetsToLNu', 
+    # dataset = '/W1JetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v3/MINIAODSIM',
+    # user    = 'CMS',
+    # pattern = '.*root',
+    # xSec    = 8.139e+03,# +- 3.379e+01 pb
+    # useAAA  = True
+# ) 
+# W1JetsToLNu.nGenEvents = W1JetsToLNu.dataset_entries
 
-W2JetsToLNu = creator.makeMCComponent(
-    name    = 'W2JetsToLNu', 
-    dataset = '/W2JetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v4/MINIAODSIM',
-    user    = 'CMS',
-    pattern = '.*root',
-    xSec    = 2.781e+03,# +- 1.672e+01 pb
-    useAAA  = True
-) 
-W2JetsToLNu.nGenEvents = W2JetsToLNu.dataset_entries
+# W2JetsToLNu = creator.makeMCComponent(
+    # name    = 'W2JetsToLNu', 
+    # dataset = '/W2JetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v4/MINIAODSIM',
+    # user    = 'CMS',
+    # pattern = '.*root',
+    # xSec    = 2.781e+03,# +- 1.672e+01 pb
+    # useAAA  = True
+# ) 
+# W2JetsToLNu.nGenEvents = W2JetsToLNu.dataset_entries
 
-W3JetsToLNu = creator.makeMCComponent(
-    name    = 'W3JetsToLNu',
-    dataset = '/W3JetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
-    user    = 'CMS',
-    pattern = '.*root', 
-    xSec    = 993.4*1.17, 
-    useAAA  = True
-)
-W3JetsToLNu.nGenEvents = W3JetsToLNu.dataset_entries
-#.sigma = 993.4*1.17 pb; .nevents = 6265138; .L = 5390.395413145565 pb^-1 
+# W3JetsToLNu = creator.makeMCComponent(
+    # name    = 'W3JetsToLNu',
+    # dataset = '/W3JetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
+    # user    = 'CMS',
+    # pattern = '.*root', 
+    # xSec    = 993.4*1.17, 
+    # useAAA  = True
+# )
+# W3JetsToLNu.nGenEvents = W3JetsToLNu.dataset_entries
+# #.sigma = 993.4*1.17 pb; .nevents = 6265138; .L = 5390.395413145565 pb^-1 
  
-W4JetsToLNu = creator.makeMCComponent(
-    name    = 'W4JetsToLNu',
-    dataset = '/W4JetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
-    user    = 'CMS',
-    pattern = '.*root', 
-    xSec    = 542.4*1.17, 
-    useAAA  = True
-)
-W4JetsToLNu.nGenEvents = W4JetsToLNu.dataset_entries
+# W4JetsToLNu = creator.makeMCComponent(
+    # name    = 'W4JetsToLNu',
+    # dataset = '/W4JetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
+    # user    = 'CMS',
+    # pattern = '.*root', 
+    # xSec    = 542.4*1.17, 
+    # useAAA  = True
+# )
+# W4JetsToLNu.nGenEvents = W4JetsToLNu.dataset_entries
 #.sigma = 542.4*1.17 pb; .nevents = 3356894; .L = 5289.712704535714 pb^-1  
 
 wjets = [W1JetsToLNu, W2JetsToLNu, W3JetsToLNu, W4JetsToLNu]

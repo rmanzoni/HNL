@@ -69,7 +69,7 @@ def prepareCuts(mode):
     inc_cut += '  &&  hnl_dr_01 > 0.05  &&  hnl_dr_02 > 0.05' # avoid ele mu mismatching
 
 ## all 3 muons equal
-    inc_cut_3mu =   '  l0_pt > 27 && l1_pt > 4  &&  l2_pt > 4'\
+    inc_cut_3mu =   '  l0_pt > 27 && l1_pt > 20  &&  l2_pt > 10'\
                     '  &&  abs(l0_dz) < 0.2 &&  abs(l1_dz) < 0.2 &&  abs(l2_dz) < 0.2 '\
                     '  &&  abs(l0_dxy) < 0.045 &&  abs(l1_dxy) < 0.045 &&  abs(l2_dxy) < 0.045 '\
                     '  && l0_id_m && l1_id_m && l2_id_m '\
@@ -262,7 +262,7 @@ def prepareCuts(mode):
 #### 20180910
     # cuts.append(Cut('CR_DY_3muequal_m3muAtZ',    inc_cut_3mu + CR_DY_3mu_m3muAtZ))
     # cuts.append(Cut('CR_DY_small2eta_mveto',    inc_cut_3mu + CR_DY_ZZ + smalll2eta + mveto))
-    cuts.append(Cut('CR_DY_ZZ',    inc_cut_3mu + CR_DY_ZZ))
+    cuts.append(Cut('CR_DY_ZZ_v2',    inc_cut_3mu + CR_DY_ZZ))
 
 
 
@@ -285,7 +285,8 @@ def createVariables(rebin=None):
     # variables = getVars(['_norm_', 'mt', 'mvis', 'l1_pt', 'l2_pt', 'l1_eta', 'l2_eta', 'n_vertices', 'n_jets', 'n_bjets'])
 #    variables = CR_vars
     DoNotRebin = ['_norm_', 'n_vtx', 'nj', 'nbj',] 
-    variables = hnl_vars
+    # variables = hnl_vars
+    variables = test_vars
     if rebin>0:
         for ivar in hnl_vars:
             if ivar.name in DoNotRebin: continue
@@ -312,11 +313,12 @@ def makePlots(variables, cuts, total_weight, sample_dict, hist_dict, qcd_from_sa
             plot.Group('single t', ['ST_tW_at_5f_incD', 'ST_tW_t_5f_incD'])
 #            plot.Group('Diboson', ['WZTo3LNu', 'ZZTo4L', 'WWTo2L2Nu'])
             plot.Group('Diboson', ['WZTo3LNu', 'WWTo2L2Nu'])
-            plot.Group('Triboson', ['ZZZ', 'WWW', 'WGGJets'])
+            plot.Group('Triboson', ['ZZZ', 'WWW', 'WGGJets,WWZ,WZZ'])
             plot.Group('ttV', ['TTZToLLNuNu', 'TTWJetsToLNu'])
             plot.Group('QCD',['QCD_pt_15to20_mu', 'QCD_pt_20to30_mu', 'QCD_pt_30to50_mu', 'QCD_pt_50to80_mu', 'QCD_pt_80to120_mu'])
             # plot.Group('DY', ['DYJets_M5T50', 'DYJets_M50_x', 'DYJets_M50'])
             plot.Group('DY', ['DYJetsToLL_M5to50', 'DYJets_ext'])
+            # plot.Group('ZZ', ['ZZTo4L,ggZZTo2e2mu,ggZZTo2e2mu_ext,ggZZTo2e2nu,ggZZTo2e2nu_ext,ggZZTo2e2tau,,ggZZTo2e2tau_ext,ggZZTo2mu2nu,ggZZTo2mu2nu_ext,ggZZTo2mu2tau,ggZZTo2mu2tau_ext,ggZZTo4e,ggZZTo4mu,ggZZTo4tau,W1JetsToLNu,W2JetsToLNu,W3JetsToLNu,W4JetsToLNu'])
             createDefaultGroups(plot)
             if make_plots:
                 HistDrawer.draw(plot,channel = channel_name, plot_dir = plotDir+cut.name)#plot_dir='plots/'+cut.name)
@@ -355,7 +357,7 @@ if __name__ == '__main__':
 
     print total_weight
 
-    cuts = prepareCuts()
+    cuts = prepareCuts(mode)
 
     variables = createVariables(2)
 

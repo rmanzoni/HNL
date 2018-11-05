@@ -206,7 +206,7 @@ def prepareCuts(mode):
 #    cuts.append(Cut('tighter_e_tight', inc_cut + l0_tight + tighter))
 
 ####
-    # cuts.append(Cut('CR_JPsi'            , inc_cut + l0_tight + dispp5 + CR_JPsi))
+    cuts.append(Cut('CR_JPsi'            , inc_cut + l0_tight + dispp5 + CR_JPsi))
     return cuts
 
 def createSamples(analysis_dir, total_weight, qcd_from_same_sign, w_qcd_mssm_method, r_qcd_os_ss):
@@ -215,8 +215,8 @@ def createSamples(analysis_dir, total_weight, qcd_from_same_sign, w_qcd_mssm_met
 #    set_trace()
     samples_mc, samples_data, samples, all_samples, sampleDict = createSampleLists(analysis_dir=analysis_dir)
 
-    # sample_dict['all_samples'] = all_samples
-    sample_dict['all_samples'] = samples_mc
+    sample_dict['all_samples'] = all_samples
+    # sample_dict['all_samples'] = samples_mc
 
     return sample_dict, hist_dict
 
@@ -288,7 +288,7 @@ if __name__ == '__main__':
 
     analysis_dir = '/eos/user/v/vstampf/ntuples/'#bkg_mc_prompt_e/' # input
 
-    total_weight = 'weight'
+    total_weight = 'weight * lhe_weight'
 # FIXME fix this 
 #    total_weight = 'weight * (1. - 0.0772790*(l2_gen_match == 5 && l2_decayMode==0) - 0.138582*(l2_gen_match == 5 && l2_decayMode==1) - 0.220793*(l2_gen_match == 5 && l2_decayMode==10) )' # Tau ID eff scale factor
 

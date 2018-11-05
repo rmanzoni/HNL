@@ -216,7 +216,6 @@ def createSampleLists(analysis_dir='/eos/user/v/vstampf/ntuples/',
     if channel == 'e':
         # samples_mc  = samples_essential + samples_additional_e + samples_qcd_e 
         samples_mc  = samples_essential +samples_signal_e + samples_additional_e 
-        # samples_mc  = samples_test
 
     # samples     = samples_essential + samples_additional + samples_data
 

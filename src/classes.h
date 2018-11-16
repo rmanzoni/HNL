@@ -44,16 +44,17 @@ namespace {
     VolumeBasedMagneticField hnlVolumeBasedMagneticField_;
     atomic<bool> hnlAtomicBool_;
 //     std::atomic<char> hnlAtomicChar_;
-//     MagVolume hnlMagVolume_;
-//     MagVolume * hnlMagVolumePtr_;
+    //MagVolume hnlMagVolume_;
+    MagVolume * hnlMagVolumePtr_;
 //     std::atomic<MagVolume> hnla_;
-//     std::atomic<MagVolume*> hnlb_;
+     //std::atomic<MagVolume*> hnlb_;
 //     std::atomic<const MagVolume> hnlc_;
-//     std::atomic<const MagVolume*> hnld_;
-//     atomic<const MagVolume*> hnld_;
-//     atomic<MagVolume const *> hnle_;
-//     MagGeometry hnlMagGeometry_;
-//     MagGeometry * hnlMagGeometryPtr_;
+     //std::atomic<const MagVolume*> hnld_;
+    atomic<const MagVolume*> hnld_;
+     //atomic<MagVolume const *> hnle_;
+    __atomic_base<const MagVolume*> hnlf_;
+    MagGeometry hnlMagGeometry_;
+    MagGeometry * hnlMagGeometryPtr_;
     
     edm::eventsetup::EventSetupRecord * hnlEventSetupRecordPtr_;
     edm::eventsetup::EventSetupRecordImplementation<IdealMagneticFieldRecord> hnlEventSetupRecordImplementation_;

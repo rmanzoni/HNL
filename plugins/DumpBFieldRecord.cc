@@ -172,10 +172,18 @@ void DumpBFieldRecord::analyze(const edm::Event& iEvent, const edm::EventSetup& 
 
         std::cout << __LINE__ << "]\t" << std::endl;
 
-        writer_->fill(edm::ESRecordAuxiliary(edm::EventID(0,0,0),edm::Timestamp()));
 
-//         writer_->fill(edm::ESRecordAuxiliary(firstValue_.eventID(),
-//                                              firstValue_.time()));
+        std::cout << firstValue_.eventID().run() << std::endl;
+        std::cout << firstValue_.time().value() << std::endl;
+
+        std::cout << __LINE__ << "]\t" << std::endl;
+
+        //writer_->fill(edm::ESRecordAuxiliary(edm::EventID(0,0,0),edm::Timestamp()));
+        edm::ESRecordAuxiliary(edm::EventID(0,0,0),edm::Timestamp());
+        //writer_->fill(edm::ESRecordAuxiliary(firstValue_.eventID(),firstValue_.time()));
+        //writer_->fill();
+        //std::cout<<edm::ESRecordAuxiliary(firstValue_.eventID(),firstValue_.time())<<std::endl;
+        //edm::ESRecordAuxiliary(firstValue_.eventID(),firstValue_.time());
         
 //         writer_->update(&(theField), typeid(MagneticField)    , record.key().name());
 
@@ -185,7 +193,7 @@ void DumpBFieldRecord::analyze(const edm::Event& iEvent, const edm::EventSetup& 
 
         std::cout << __LINE__ << "]\t" << std::endl;
 
-//         writer_->write();
+        writer_->write();
 
         std::cout << __LINE__ << "]\t" << std::endl;
 
@@ -199,10 +207,9 @@ void DumpBFieldRecord::endJob() {
   std::cout << __LINE__ << "]\t" << std::endl;
   if(writer_.get()) {
     std::cout << __LINE__ << "]\t" << std::endl;
-    writer_->fill(edm::ESRecordAuxiliary(lastValue_.eventID(),
-                                         lastValue_.time()));
+    //writer_->fill(edm::ESRecordAuxiliary(lastValue_.eventID(),lastValue_.time()));
     std::cout << __LINE__ << "]\t" << std::endl;
-//     writer_->write();
+     writer_->write();
     std::cout << __LINE__ << "]\t" << std::endl;
   } //*/
   std::cout << __LINE__ << "]\t" << std::endl;

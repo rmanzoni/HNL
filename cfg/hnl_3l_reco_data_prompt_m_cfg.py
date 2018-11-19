@@ -21,7 +21,7 @@ from CMGTools.HNL.analyzers.HNLTreeProducer import HNLTreeProducer
 from CMGTools.HNL.analyzers.TriggerAnalyzer import TriggerAnalyzer
 from CMGTools.HNL.analyzers.JetAnalyzer     import JetAnalyzer
 
-from CMGTools.HNL.samples.samples_data_2017_noskim import Single_mu_2017, Single_mu_2017B
+from CMGTools.HNL.samples.samples_data_2017_noskim import Single_mu_2017#, Single_mu_2017B
 
 ###################################################
 ###                   OPTIONS                   ###
@@ -30,7 +30,7 @@ from CMGTools.HNL.samples.samples_data_2017_noskim import Single_mu_2017, Single
 # production = True run on batch, production = False (or unset) run locally
 
 # production         = getHeppyOption('production' , True)
-production         = getHeppyOption('production' , False)
+production         = getHeppyOption('production' , True)
 pick_events        = getHeppyOption('pick_events', False)
 
 ###################################################
@@ -44,7 +44,7 @@ for sample in samples:
     sample.triggers += ['HLT_IsoMu27_v%d' %i for i in range(1, 15)] #muon trigger
     sample.triggers += ['HLT_Mu50_v%d'    %i for i in range(1, 15)] #muon trigger
 
-    sample.splitFactor = splitFactor(sample, 1e5)
+    sample.splitFactor = splitFactor(sample, 2e5)
 
 selectedComponents = samples
 

@@ -1,3 +1,5 @@
+from pdb import set_trace
+
 class VariableCfg(object):
     '''Configuration object for a variable.
 

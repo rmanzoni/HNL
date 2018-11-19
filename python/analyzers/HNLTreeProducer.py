@@ -27,12 +27,21 @@ class HNLTreeProducer(TreeProducerBase):
         
         if   self.cfg_ana.promptLepType == 'ele':
             self.bookEle (self.tree, 'l0')
+            self.var(self.tree, 'hlt_Ele27_WPTight_Gsf'        )
+            self.var(self.tree, 'hlt_Ele32_WPTight_Gsf'        )
+            self.var(self.tree, 'hlt_Ele35_WPTight_Gsf'        )
+            self.var(self.tree, 'hlt_Ele115_CaloIdVT_GsfTrkIdT')
+            self.var(self.tree, 'hlt_Ele135_CaloIdVT_GsfTrkIdT')
+
         elif self.cfg_ana.promptLepType == 'mu':
             self.bookMuon(self.tree, 'l0')
+            self.var(self.tree, 'hlt_soMu24'                   )
+            self.var(self.tree, 'hlt_soMu27'                   )
+            self.var(self.tree, 'hlt_u50'                      )
         else:
              print 'ERROR: prompt lepton type non specified or missing! Exit'
              exit(0)
-    
+        
         self.bookMuon(self.tree, 'l1' )
         self.bookMuon(self.tree, 'l2' )
         
@@ -77,6 +86,18 @@ class HNLTreeProducer(TreeProducerBase):
         # lepton vetoes
         self.var(self.tree, 'pass_e_veto')
         self.var(self.tree, 'pass_m_veto')
+
+        # save vetoing lepton
+        self.bookEle(self.tree, 'veto_ele')
+        self.bookMuon(self.tree, 'veto_mu')
+    
+        # invariant masses with vetoing leptons
+        self.var(self.tree, 'hnl_m_0Vele')
+        self.var(self.tree, 'hnl_m_1Vele')
+        self.var(self.tree, 'hnl_m_2Vele')
+        self.var(self.tree, 'hnl_m_0Vmu')
+        self.var(self.tree, 'hnl_m_1Vmu')
+        self.var(self.tree, 'hnl_m_2Vmu')
         
         # gen level particles
         self.bookHNL     (self.tree, 'hnl_gen')
@@ -105,8 +126,21 @@ class HNLTreeProducer(TreeProducerBase):
         self.var(self.tree, 'hnl_2d_disp_sig')
         self.var(self.tree, 'hnl_3d_disp_sig')
 
-        # jet/met information
+        # met information
         self.bookExtraMetInfo(self.tree)
+
+        self.var(self.tree, 'Flag_goodVertices')
+        self.var(self.tree, 'Flag_globalSuperTightHalo2016Filter')
+        self.var(self.tree, 'Flag_HBHENoiseFilter')
+        self.var(self.tree, 'Flag_HBHENoiseIsoFilter')
+        self.var(self.tree, 'Flag_EcalDeadCellTriggerPrimitiveFilter')
+        self.var(self.tree, 'Flag_BadPFMuonFilter')
+        self.var(self.tree, 'Flag_BadChargedCandidateFilter')
+        self.var(self.tree, 'Flag_eeBadScFilter')
+        self.var(self.tree, 'Flag_ecalBadCalibFilter')
+#        self.var(self.tree, 'Flag_any_met_filters')
+        
+        # jet information
         self.bookJet(self.tree, 'j1' , fill_extra=False)
         self.bookJet(self.tree, 'j2' , fill_extra=False)
         self.bookJet(self.tree, 'bj1', fill_extra=False)
@@ -124,7 +158,7 @@ class HNLTreeProducer(TreeProducerBase):
         '''
         self.readCollections(event.input)
         self.tree.reset()
-
+        self.event = event
         # event variables 
         self.fillEvent(self.tree, event)
 
@@ -181,6 +215,20 @@ class HNLTreeProducer(TreeProducerBase):
             # displacements
             self.fill(self.tree, 'hnl_2d_gen_disp', displacement2D(event.the_hn.lep1, event.the_hn))
             self.fill(self.tree, 'hnl_3d_gen_disp', displacement3D(event.the_hn.lep1, event.the_hn))
+
+        # HLT bits & matches
+        trig_list = [trig.name for trig in event.trigger_infos if trig.fired]
+        if self.cfg_ana.promptLepType == 'ele':
+            self.fill(self.tree, 'hlt_Ele27_WPTight_Gsf'               , any('HLT_Ele27_WPTight_Gsf'                 in name for name in trig_list))
+            self.fill(self.tree, 'hlt_Ele32_WPTight_Gsf'               , any('HLT_Ele32_WPTight_Gsf'                 in name for name in trig_list))
+            self.fill(self.tree, 'hlt_Ele35_WPTight_Gsf'               , any('HLT_Ele35_WPTight_Gsf'                 in name for name in trig_list))
+            self.fill(self.tree, 'hlt_Ele115_CaloIdVT_GsfTrkIdT'       , any('HLT_Ele115_CaloIdVT_GsfTrkIdT'         in name for name in trig_list))
+            self.fill(self.tree, 'hlt_Ele135_CaloIdVT_GsfTrkIdT'       , any('HLT_Ele135_CaloIdVT_GsfTrkIdT'         in name for name in trig_list))
+        if self.cfg_ana.promptLepType == 'mu':
+            self.fill(self.tree, 'hlt_soMu24'                          , any('HLT_IsoMu24'                           in name for name in trig_list))
+            self.fill(self.tree, 'hlt_soMu27'                          , any('HLT_IsoMu27'                           in name for name in trig_list))
+            self.fill(self.tree, 'hlt_u50'                             , any('HLT_Mu50'                              in name for name in trig_list))
+    
         
         # reco secondary vertex and displacement
         self.fill(self.tree, 'sv_x'   , event.recoSv.x()             )
@@ -200,6 +248,19 @@ class HNLTreeProducer(TreeProducerBase):
 
         # jet/met variables
         self.fillExtraMetInfo(self.tree, event)
+
+#        set_trace()
+        # met filter flags
+        self.fill(self.tree, 'Flag_goodVertices'                      , event.Flag_goodVertices                      )
+        self.fill(self.tree, 'Flag_globalSuperTightHalo2016Filter'    , event.Flag_globalSuperTightHalo2016Filter    )
+        self.fill(self.tree, 'Flag_HBHENoiseFilter'                   , event.Flag_HBHENoiseFilter                   )
+        self.fill(self.tree, 'Flag_HBHENoiseIsoFilter'                , event.Flag_HBHENoiseIsoFilter                )
+        self.fill(self.tree, 'Flag_EcalDeadCellTriggerPrimitiveFilter', event.Flag_EcalDeadCellTriggerPrimitiveFilter)
+        self.fill(self.tree, 'Flag_BadPFMuonFilter'                   , event.Flag_BadPFMuonFilter                   )
+        self.fill(self.tree, 'Flag_BadChargedCandidateFilter'         , event.Flag_BadChargedCandidateFilter         )
+        self.fill(self.tree, 'Flag_eeBadScFilter'                     , event.Flag_eeBadScFilter                     )
+        self.fill(self.tree, 'Flag_ecalBadCalibFilter'                , event.Flag_ecalBadCalibFilter                )
+#        self.fill(self.tree, 'Flag_any_met_filters', event.Flag_goodVertices or event.Flag_globalSuperTightHalo2016Filter or event.Flag_HBHENoiseFilter or event.Flag_HBHENoiseIsoFilter or event.Flag_EcalDeadCellTriggerPrimitiveFilter or event.Flag_BadPFMuonFilter or event.Flag_BadChargedCandidateFilter or event.Flag_eeBadScFilter or event.Flag_ecalBadCalibFilter)
 
         if len(event.cleanJets )>0: self.fillJet(self.tree, 'j1' , event.cleanJets [0], fill_extra=False)
         if len(event.cleanJets )>1: self.fillJet(self.tree, 'j2' , event.cleanJets [1], fill_extra=False)
@@ -239,7 +300,18 @@ class HNLTreeProducer(TreeProducerBase):
         # extra lepton veto
         self.fill(self.tree, 'pass_e_veto', len(event.veto_eles)==0)
         self.fill(self.tree, 'pass_m_veto', len(event.veto_mus )==0)
-        
+
+        # save vetoing lepton invariant masses
+        if len(event.veto_eles):
+                self.fillEle(self.tree, 'veto_ele', event.veto_save_ele)
+                self.fill(self.tree, 'hnl_m_0Vele', (event.veto_save_ele.p4() + event.the_3lep_cand.l0().p4()).mass())
+                self.fill(self.tree, 'hnl_m_1Vele', (event.veto_save_ele.p4() + event.the_3lep_cand.l1().p4()).mass())
+                self.fill(self.tree, 'hnl_m_2Vele', (event.veto_save_ele.p4() + event.the_3lep_cand.l2().p4()).mass())
+        if len(event.veto_mus):
+                self.fillMuon(self.tree, 'veto_mu', event.veto_save_mu)
+                self.fill(self.tree, 'hnl_m_0Vmu', (event.veto_save_mu.p4() + event.the_3lep_cand.l0().p4()).mass())
+                self.fill(self.tree, 'hnl_m_1Vmu', (event.veto_save_mu.p4() + event.the_3lep_cand.l1().p4()).mass())
+                self.fill(self.tree, 'hnl_m_2Vmu', (event.veto_save_mu.p4() + event.the_3lep_cand.l2().p4()).mass())
         # LHE weight
         self.fill(self.tree, 'lhe_weight', np.sign(getattr(event, 'LHE_originalWeight', 1.)))
                 

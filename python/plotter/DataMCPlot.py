@@ -199,6 +199,7 @@ class DataMCPlot(object):
             hist.Draw(same + opt)
             if same == '':
                 same = 'same'
+#        set_trace()
         yaxis = self.supportHist.GetYaxis()
         yaxis.SetRangeUser(0.01, 1.5*ymax(self._SortedHistograms()))
         self.DrawLegend()

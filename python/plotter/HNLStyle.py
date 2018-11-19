@@ -1,4 +1,4 @@
-from ROOT import TColor, kViolet, kBlue, kRed, kCyan, kAzure
+from ROOT import TColor, kViolet, kBlue, kRed, kCyan, kAzure, kGreen, kMagenta
 
 class Style:
 
@@ -51,26 +51,28 @@ sYellow = Style(lineColor=1, markerColor=5, fillColor=5)
 sViolet = Style(lineColor=1, markerColor=kViolet, fillColor=kViolet)
 
 # John's colours
-qcdcol      = TColor.GetColor(250,202,255)
-dycol       = TColor.GetColor(248,206,104)
-wcol        = TColor.GetColor(222,90,106)
-ttcol       = TColor.GetColor(155,152,204)
-stcol       = TColor.GetColor(154,124,204)
-zlcol       = TColor.GetColor(100,182,232)
-dibosoncol  = kBlue+2 
-tribosoncol = kCyan   
-ttvcol      = kCyan+2 
+qcdcol = TColor.GetColor(250,202,255)
+dycol =  TColor.GetColor(248,206,104)
+wcol = TColor.GetColor(222,90,106)
+ttcol = TColor.GetColor(155,152,204)
+tcol = kMagenta+2
+zlcol = TColor.GetColor(100,182,232)
+dibosoncol = kBlue+2 #TColor.GetColor(222,90,106)
+tribosoncol = kCyan #TColor.GetColor(222,90,106)
+ttvcol = kCyan+2 #TColor.GetColor(222,90,106)
+zzcol = kGreen+2 #TColor.GetColor(222,90,106)
 
 # Backgrounds
-sHNL_QCD    = Style(lineColor=1, markerColor=qcdcol     , fillColor=qcdcol     )
-sHNL_DYJets = Style(lineColor=1, markerColor=dycol      , fillColor=dycol      )
-sHNL_WJets  = Style(lineColor=1, markerColor=wcol       , fillColor=wcol       )
-sHNL_TTJets = Style(lineColor=1, markerColor=ttcol      , fillColor=ttcol      )
-sHNL_ST     = Style(lineColor=1, markerColor=stcol      , fillColor=stcol      )
-sHNL_ZL     = Style(lineColor=1, markerColor=zlcol      , fillColor=zlcol      )
-sHNL_VV     = Style(lineColor=1, markerColor=dibosoncol , fillColor=dibosoncol )
-sHNL_TTV    = Style(lineColor=1, markerColor=ttvcol     , fillColor=ttvcol     )
-sHNL_rare   = Style(lineColor=1, markerColor=tribosoncol, fillColor=tribosoncol)
+sHNL_QCD = Style(lineColor=1, markerColor=qcdcol, fillColor=qcdcol)
+sHNL_DYJets = Style(lineColor=1, markerColor=dycol, fillColor=dycol)
+sHNL_WJets = Style(lineColor=1, markerColor=wcol, fillColor=wcol)
+sHNL_TTJets = Style(lineColor=1, markerColor=ttcol, fillColor=ttcol)
+sHNL_SingleT = Style(lineColor=1, markerColor=tcol, fillColor=tcol)
+sHNL_ZL = Style(lineColor=1, markerColor=zlcol, fillColor=zlcol)
+sHNL_VV = Style(lineColor=1, markerColor=dibosoncol, fillColor=dibosoncol)
+sHNL_TTV = Style(lineColor=1, markerColor=ttvcol, fillColor=ttvcol)
+sHNL_rare = Style(lineColor=1, markerColor=tribosoncol, fillColor=tribosoncol)
+sHNL_ZZ = Style(lineColor=1, markerColor=zzcol, fillColor=zzcol)
 
 # Signals
 sHNL_HN  = Style(lineColor=kBlue   , markerColor=0, lineStyle=2, fillColor=0, lineWidth=3)
@@ -96,49 +98,58 @@ def nextStyle():
     return style
 
 histPref = {}
-histPref['Data'       ] = {'style':sData      , 'layer':2999, 'legend':'Observed'}
-histPref['data_*'     ] = {'style':sData      , 'layer':2999, 'legend':'Observed'}
-histPref['data_obs'   ] = {'style':sData      , 'layer':2999, 'legend':'Observed'}
-histPref['ZTT*'       ] = {'style':sHNL_DYJets, 'layer':4   , 'legend':'Z#rightarrow#tau#tau'}
-histPref['DY*'        ] = {'style':sHNL_DYJets, 'layer':4   , 'legend':'DY'}#Z#rightarrow#tau#tau'}
-histPref['embed_*'    ] = {'style':sViolet    , 'layer':4.1 , 'legend':None}
-histPref['TTJets*'    ] = {'style':sHNL_TTJets, 'layer':1   , 'legend':'t#bar{t}'} 
-histPref['T*tW*'      ] = {'style':sHNL_ST    , 'layer':1   , 'legend':'Single t'} 
-histPref['TTo*'       ] = {'style':sHNL_ST    , 'layer':1   , 'legend':'Single t'} 
-histPref['TBarTo*'    ] = {'style':sHNL_ST    , 'layer':1   , 'legend':'Single t'} 
-histPref['Single t'   ] = {'style':sHNL_ST    , 'layer':1   , 'legend':'Single t'} 
-histPref['single-t'   ] = {'style':sHNL_ST    , 'layer':1   , 'legend':'Single t'} 
-histPref['WW*'        ] = {'style':sHNL_VV    , 'layer':0.9 , 'legend':'Diboson'} 
-histPref['WZ*'        ] = {'style':sHNL_VV    , 'layer':0.8 , 'legend':'Diboson'} 
-histPref['ZZ*'        ] = {'style':sHNL_VV    , 'layer':0.7 , 'legend':'Diboson'} 
-histPref['Diboson'    ] = {'style':sHNL_VV    , 'layer':0.7 , 'legend':'Diboson'} 
-histPref['di-boson'   ] = {'style':sHNL_VV    , 'layer':0.7 , 'legend':'Diboson'} 
-histPref['VV*'        ] = {'style':sHNL_VV    , 'layer':0.7 , 'legend':'Diboson'} 
-histPref['TTZ*'       ] = {'style':sHNL_TTV   , 'layer':1   , 'legend':'t#bar{t}Z'} 
-histPref['TTW*'       ] = {'style':sHNL_TTV   , 'layer':1   , 'legend':'t#bar{t}W'} 
-histPref['ttV'        ] = {'style':sHNL_TTV   , 'layer':1   , 'legend':'t#bar{t}V'} 
-histPref['WGG*'       ] = {'style':sHNL_rare  , 'layer':0.7 , 'legend':'Triboson'} 
-histPref['WWW*'       ] = {'style':sHNL_rare  , 'layer':0.7 , 'legend':'Triboson'} 
-histPref['ZZZ*'       ] = {'style':sHNL_rare  , 'layer':0.7 , 'legend':'Triboson'} 
-histPref['Triboson'   ] = {'style':sHNL_rare  , 'layer':0.7 , 'legend':'Triboson'} 
-histPref['tri-boson'  ] = {'style':sHNL_rare  , 'layer':0.7 , 'legend':'Triboson'} 
-histPref['Electroweak'] = {'style':sHNL_VV    , 'layer':0.7 , 'legend':'Electroweak'} 
-histPref['QCD*'       ] = {'style':sHNL_QCD   , 'layer':2   , 'legend':'QCD multijet'}
-histPref['W'          ] = {'style':sHNL_WJets , 'layer':3   , 'legend':'W+jets'}  
-histPref['WJ*'        ] = {'style':sHNL_WJets , 'layer':3   , 'legend':'W+jets'}  
-histPref['W1J*'       ] = {'style':sHNL_WJets , 'layer':3   , 'legend':'W+jets'}  
-histPref['W2J*'       ] = {'style':sHNL_WJets , 'layer':3   , 'legend':'W+jets'}  
-histPref['W3J*'       ] = {'style':sHNL_WJets , 'layer':3   , 'legend':'W+jets'}  
-histPref['W4J*'       ] = {'style':sHNL_WJets , 'layer':3   , 'legend':'W+jets'}  
-# histPref['W*Jets*'    ] = {'style':sHNL_WJets , 'layer':3   , 'legend':'W+jets'}  
-histPref['EWK'        ] = {'style':sHNL_WJets , 'layer':3   , 'legend':'EWK'}  
-histPref['ElectroWeak'] = {'style':sHNL_WJets , 'layer':3   , 'legend':'ElectroWeak'}  
-histPref['ZJ*'        ] = {'style':sHNL_DYJets, 'layer':3.1 , 'legend':'Z#rightarrow#tau#tau/Z#rightarrow ll, j#rightarrow#tau'}
-histPref['ZL*'        ] = {'style':sHNL_ZL    , 'layer':3.2 , 'legend':'Z#rightarrow ll'}
-histPref['WLL*'       ] = {'style':sHNL_ZL    , 'layer':3.2 , 'legend':'W#rightarrow ll'}
-histPref['Zl0jet*'    ] = {'style':sHNL_ZL    , 'layer':3.2 , 'legend':'Z#rightarrow ll + 0 jets'}
-histPref['Zl1jet*'    ] = {'style':sHNL_DYJets, 'layer':3.2 , 'legend':'Z#rightarrow ll + 1 jet'}
-histPref['ZLL'        ] = {'style':sHNL_ZL    , 'layer':3.2 , 'legend':'Z#rightarrow ll'}
-histPref['Ztt_TL'     ] = {'style':sViolet    , 'layer':4.1 , 'legend':'Z#rightarrow#tau#tau/Z#rightarrow ll, j#rightarrow#tau'}
-histPref['HN*'        ] = {'style':sHNL_HN    , 'layer':2999, 'legend':'Sig @ 200pb'}
-
+histPref['HN*'] = {'style':sHNL_HN, 'layer':2999, 'legend':'#splitline{M = 3GeV, L = 200/pb}{c#tau = 14.6cm}'}
+histPref['Data'] = {'style':sData, 'layer':2999, 'legend':'Observed'}
+histPref['data_*'] = {'style':sData, 'layer':2999, 'legend':'Observed'}
+histPref['ZTT*'] = {'style':sHNL_DYJets, 'layer':4, 'legend':'Z#rightarrow#tau#tau'}
+histPref['DY*'] = {'style':sHNL_DYJets, 'layer':4, 'legend':'DY'}
+histPref['embed_*'] = {'style':sViolet, 'layer':4.1, 'legend':None}
+histPref['TTJets*'] = {'style':sHNL_TTJets, 'layer':1, 'legend':'t#bar{t}'} 
+histPref['T*tW*'] = {'style':sHNL_SingleT, 'layer':1, 'legend':'Single t'} 
+histPref['TTo*'] = {'style':sHNL_SingleT, 'layer':1, 'legend':'Single t'} 
+histPref['TBarTo*'] = {'style':sHNL_SingleT, 'layer':1, 'legend':'Single t'} 
+histPref['ST*'] = {'style':sHNL_SingleT, 'layer':1, 'legend':'Single t'} 
+histPref['Single t'] = {'style':sHNL_SingleT, 'layer':1, 'legend':'Single t'} 
+histPref['WWTo*'] = {'style':sHNL_VV, 'layer':0.9, 'legend':'Diboson'} 
+histPref['WZTo*'] = {'style':sHNL_VV, 'layer':0.8, 'legend':'Diboson'} 
+# histPref['ZZTo*'] = {'style':sHNL_VV, 'layer':0.7, 'legend':'Diboson'} 
+# histPref['ZZTo*'] = {'style':sHNL_VV, 'layer':0.7, 'legend':'ZZ'} 
+histPref['ZZTo*'] = {'style':sHNL_ZZ, 'layer':0.7, 'legend':'ZZ'} 
+histPref['Diboson'] = {'style':sHNL_VV, 'layer':0.7, 'legend':'Diboson'} 
+histPref['TTZ*'] = {'style':sHNL_TTV, 'layer':1, 'legend':'t#bar{t}Z'} 
+histPref['TTW*'] = {'style':sHNL_TTV, 'layer':1, 'legend':'t#bar{t}W'} 
+histPref['ttV'] = {'style':sHNL_TTV, 'layer':1, 'legend':'t#bar{t}V'} 
+histPref['WGG*'] = {'style':sHNL_rare, 'layer':0.7, 'legend':'Triboson'} 
+histPref['WWW*'] = {'style':sHNL_rare, 'layer':0.7, 'legend':'Triboson'} 
+histPref['WZZ*'] = {'style':sHNL_rare, 'layer':0.7, 'legend':'Triboson'} 
+histPref['WWZ*'] = {'style':sHNL_rare, 'layer':0.7, 'legend':'Triboson'} 
+histPref['ZZZ*'] = {'style':sHNL_rare, 'layer':0.7, 'legend':'Triboson'} 
+histPref['Triboson'] = {'style':sHNL_rare, 'layer':0.7, 'legend':'Triboson'} 
+# histPref['VV*'] = {'style':sHNL_VV, 'layer':0.7, 'legend':'Diboson'} 
+histPref['VV*'] = {'style':sHNL_ZZ, 'layer':0.7, 'legend':'ZZ'} 
+histPref['ggZZ*'] = {'style':sHNL_ZZ, 'layer':0.7, 'legend':'ZZ'} 
+histPref['Electroweak'] = {'style':sHNL_VV, 'layer':0.7, 'legend':'Electroweak'} 
+histPref['QCD'] = {'style':sHNL_QCD, 'layer':2, 'legend':'QCD multijet'}
+histPref['W'] = {'style':sHNL_WJets, 'layer':3, 'legend':'W+jets'}  
+histPref['WJ*'] = {'style':sHNL_WJets, 'layer':3, 'legend':'W+jets'}  
+histPref['W+Jets'] = {'style':sHNL_WJets, 'layer':3, 'legend':'W+jets'}  
+histPref['W1J*'] = {'style':sHNL_WJets, 'layer':3, 'legend':'W+jets'}  
+histPref['W2J*'] = {'style':sHNL_WJets, 'layer':3, 'legend':'W+jets'}  
+histPref['W3J*'] = {'style':sHNL_WJets, 'layer':3, 'legend':'W+jets'}  
+histPref['W4J*'] = {'style':sHNL_WJets, 'layer':3, 'legend':'W+jets'}  
+#histPref['W*Jets*'] = {'style':sHNL_WJets, 'layer':3, 'legend':'W+jets'}  
+histPref['EWK'] = {'style':sHNL_WJets, 'layer':3, 'legend':'EWK'}  
+histPref['ElectroWeak'] = {'style':sHNL_WJets, 'layer':3, 'legend':'ElectroWeak'}  
+histPref['ZJ*'] = {'style':sHNL_DYJets, 'layer':3.1, 'legend':'Z#rightarrow#tau#tau/Z#rightarrow ll, j#rightarrow#tau'}
+histPref['ZL*'] = {'style':sHNL_ZL, 'layer':3.2, 'legend':'Z#rightarrow ll'}
+histPref['WLL*'] = {'style':sHNL_ZL, 'layer':3.2, 'legend':'W#rightarrow ll'}
+histPref['Zl0jet*'] = {'style':sHNL_ZL, 'layer':3.2, 'legend':'Z#rightarrow ll + 0 jets'}
+histPref['Zl1jet*'] = {'style':sHNL_DYJets, 'layer':3.2, 'legend':'Z#rightarrow ll + 1 jet'}
+histPref['Zl2jet*'] = {'style':sHNL_HN, 'layer':3.2, 'legend':'Z#rightarrow ll + #geq 2 jets'}
+histPref['ZLL'] = {'style':sHNL_ZL, 'layer':3.2, 'legend':'Z#rightarrow ll'}
+histPref['Ztt_TL'] = {'style':sViolet, 'layer':4.1, 'legend':'Z#rightarrow#tau#tau/Z#rightarrow ll, j#rightarrow#tau'}
+histPref['HiggsGGH125'] = {'style':sHNL_HN, 'layer':1001, 'legend':'H_{125}#rightarrow#tau#tau (ggH)'}
+histPref['HiggsVBF125'] = {'style':sHNL_HN2, 'layer':1001, 'legend':'H_{125}#rightarrow#tau#tau (VBF)'}
+histPref['ggH*'] = {'style':sHNL_HN, 'layer':1001, 'legend':None}
+histPref['bbH*'] = {'style':sHNL_HN, 'layer':1001, 'legend':None}
+histPref['SMS*'] = {'style':sHNL_HN, 'layer':1001, 'legend':None}

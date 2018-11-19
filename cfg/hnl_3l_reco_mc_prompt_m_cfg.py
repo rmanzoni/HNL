@@ -23,11 +23,18 @@ from CMGTools.HNL.analyzers.HNLTreeProducer    import HNLTreeProducer
 from CMGTools.HNL.analyzers.HNLGenTreeAnalyzer import HNLGenTreeAnalyzer
 from CMGTools.HNL.analyzers.TriggerAnalyzer    import TriggerAnalyzer
 from CMGTools.HNL.analyzers.JetAnalyzer        import JetAnalyzer
+from CMGTools.HNL.analyzers.METFilter          import METFilter
 from CMGTools.HNL.analyzers.LeptonWeighter     import LeptonWeighter
 
 # import samples, signal
 # from CMGTools.HNL.samples.localsignal import TTJets_amcat as ttbar
-from CMGTools.HNL.samples.samples_mc_2017 import DYJetsToLL_M50, hnl_bkg_essentials
+from CMGTools.HNL.samples.samples_mc_2017 import DYJetsToLL_M50, hnl_bkg_essentials, hnl_bkg
+from CMGTools.HNL.samples.signal import all_signals_mu
+from CMGTools.HNL.samples.samples_mc_2017_noskim import DYJetsToLL_M5to50, hnl_bkg_noskim, hnl_bkg_noskim_ggZZWJets,W1JetsToLNu, ggZZTo2mu2nu_ext, ggZZTo2e2mu, ggZZTo2e2mu_ext, ggZZTo2e2nu, ggZZTo2e2nu_ext, ggZZTo2e2tau, ggZZTo2e2tau_ext, ggZZTo2mu2nu, ggZZTo2mu2nu_ext, ggZZTo2mu2tau, ggZZTo2mu2tau_ext, ggZZTo4e, ggZZTo4mu, ggZZTo4tau, W1JetsToLNu, W2JetsToLNu, W3JetsToLNu, W4JetsToLNu
+
+# from CMGTools.HNL.samples.samples_mc_2017_noskim import DYJetsToLL_M5to50
+#from CMGTools.HNL.samples.samples_mc_2017_noskim import qcd_mu as samples
+
 
 ###################################################
 ###                   OPTIONS                   ###
@@ -35,17 +42,22 @@ from CMGTools.HNL.samples.samples_mc_2017 import DYJetsToLL_M50, hnl_bkg_essenti
 # Get all heppy options; set via "-o production" or "-o production=True"
 # production = True run on batch, production = False (or unset) run locally
 
-production         = getHeppyOption('production' , True)
-# production         = getHeppyOption('production' , False)
+# production         = getHeppyOption('production' , True)
+production         = getHeppyOption('production' , False)
 pick_events        = getHeppyOption('pick_events', False)
 
 ###################################################
 ###               HANDLE SAMPLES                ###
 ###################################################
-samples = hnl_bkg_essentials
+# samples = hnl_bkg_essentials
+# samples = [ggZZTo2mu2tau_ext]
+samples = [DYJetsToLL_M50]
+# samples = all_signals_mu
+# samples = hnl_bkg + hnl_bkg_noskim
+# samples = hnl_bkg + hnl_bkg_noskim + hnl_bkg_noskim_ggZZWJets
 auxsamples = []#[ttbar, DYJetsToLL_M50]
 
-samples = [comp for comp in samples if comp.name=='TTJets_amcat']
+# samples = [comp for comp in samples if comp.name=='TTJets_amcat']
 
 for sample in samples+auxsamples:
     sample.triggers  = ['HLT_IsoMu24_v%d'%i for i in range(1, 15)] #muon trigger
@@ -103,13 +115,37 @@ pileUpAna = cfg.Analyzer(
     true=True
 )
 
+metFilter = cfg.Analyzer(
+    METFilter,
+    name='METFilter',
+    processName='RECO',
+    triggers=[
+        'Flag_goodVertices',
+        'Flag_globalSuperTightHalo2016Filter',
+        'Flag_HBHENoiseFilter',
+        'Flag_HBHENoiseIsoFilter',
+        'Flag_EcalDeadCellTriggerPrimitiveFilter',
+        'Flag_BadPFMuonFilter',
+        'Flag_BadChargedCandidateFilter',
+        'Flag_eeBadScFilter',
+        'Flag_ecalBadCalibFilter',
+    ]
+)
+
 genAna = GeneratorAnalyzer.defaultConfig
 genAna.allGenTaus = True # save in event.gentaus *ALL* taus, regardless whether hadronic / leptonic decay
 
 # for each path specify which filters you want the muons to match to
 triggers_and_filters = OrderedDict()
-triggers_and_filters['HLT_IsoMu24'] = 'hltL3crIsoL1sSingleMu22L1f0L2f10QL3f24QL3trkIsoFiltered0p07'
-triggers_and_filters['HLT_IsoMu27'] = 'hltL3crIsoL1sMu22Or25L1f0L2f10QL3f27QL3trkIsoFiltered0p07'
+
+## 2017
+# triggers_and_filters['HLT_IsoMu24'] = 'hltL3crIsoL1sSingleMu22L1f0L2f10QL3f24QL3trkIsoFiltered0p07'
+# triggers_and_filters['HLT_IsoMu27'] = 'hltL3crIsoL1sMu22Or25L1f0L2f10QL3f27QL3trkIsoFiltered0p07'
+# triggers_and_filters['HLT_Mu50']    = 'hltL3fL1sMu22Or25L1f0L2f10QL3Filtered50Q'
+
+## 2016 ## from https://cmsweb.cern.ch/confdb/#config=/cdaq/physics/Run2016/25ns15e33/v4.0.1/HLT/V3
+triggers_and_filters['HLT_IsoMu24'] = 'hltL3crIsoL1sMu22L1f0L2f10QL3f24QL3trkIsoFiltered0p09'
+triggers_and_filters['HLT_IsoMu27'] = 'hltL3crIsoL1sMu22Or25L1f0L2f10QL3f27QL3trkIsoFiltered0p09'
 triggers_and_filters['HLT_Mu50']    = 'hltL3fL1sMu22Or25L1f0L2f10QL3Filtered50Q'
 
 HNLAnalyzer = cfg.Analyzer(
@@ -120,7 +156,7 @@ HNLAnalyzer = cfg.Analyzer(
     candidate_selection='maxpt',
 )
 
-muonWeighter = cfg.Analyzer(
+muonWeighterl0 = cfg.Analyzer(
     LeptonWeighter,
     name='LeptonWeighter_prompt_mu',
     scaleFactorFiles={
@@ -133,6 +169,34 @@ muonWeighter = cfg.Analyzer(
     },
     getter = lambda event : event.the_3lep_cand.l0(),
     disable=False
+)
+
+muonWeighterl1 = cfg.Analyzer(
+    LeptonWeighter,
+    name='LeptonWeighter_disp_mu_1',
+    scaleFactorFiles={
+        'idiso'   :('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_v17_1.root', 'm_id'),
+        'tracking':('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_v17_1.root', 'm_iso'),
+    },
+    dataEffFiles={
+        # 'trigger':('$CMSSW_BASE/src/CMGTools/H2TauTau/data/htt_scalefactors_v16_2.root', 'm_trgIsoMu22orTkIsoMu22_desy'),
+    },
+    getter = lambda event : event.the_3lep_cand.l1(),
+    disable=True
+)
+
+muonWeighterl2 = cfg.Analyzer(
+    LeptonWeighter,
+    name='LeptonWeighter_disp_mu_2',
+    scaleFactorFiles={
+        'idiso'   :('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_v17_1.root', 'm_id'),
+        'tracking':('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_v17_1.root', 'm_iso'),
+    },
+    dataEffFiles={
+        # 'trigger':('$CMSSW_BASE/src/CMGTools/H2TauTau/data/htt_scalefactors_v16_2.root', 'm_trgIsoMu22orTkIsoMu22_desy'),
+    },
+    getter = lambda event : event.the_3lep_cand.l2(),
+    disable=True
 )
 
 HNLTreeProducer = cfg.Analyzer(
@@ -179,8 +243,11 @@ sequence = cfg.Sequence([
     genAna,
     HNLGenTreeAnalyzer,
     HNLAnalyzer,
-    muonWeighter,
+    muonWeighterl0,
+    muonWeighterl1,
+    muonWeighterl2,
     jetAna,
+    metFilter,
     HNLTreeProducer,
 ])
 
@@ -189,7 +256,12 @@ sequence = cfg.Sequence([
 ###################################################
 if not production:
 #     comp                 = ttbar
-    comp                 = DYJetsToLL_M50
+    # comp                 = DYJetsToLL_M5to50
+    # comp                 = all_signals_mu[0]
+    # comp                 = samples[0]
+    comp                 = samples[0]
+    # comp                 = ggZZTo2mu2tau_ext
+    # comp                 = ggZZTo2mu2nu_ext
     selectedComponents   = [comp]
     comp.splitFactor     = 1
     comp.fineSplitFactor = 1

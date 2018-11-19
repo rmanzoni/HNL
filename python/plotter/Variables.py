@@ -257,50 +257,66 @@ additional_extra_tau_vars = [
 ]
 
 hnl_vars = [
-    VCfg(name='_norm_'           , drawname='1.', binning={'nbinsx':5, 'xmin':-1.5, 'xmax':3.5}, unit='', xtitle='Normalisation'),
+    VCfg(name='CR_l0_pt_cone' , drawname='l0_pt * (1 + l0_reliso05)'  , binning={'nbinsx':16, 'xmin':0.  , 'xmax':200.}, unit='GeV', xtitle='p_{T}^{Cone} (leading)'),
+    VCfg(name='CR_l2_pt_cone' , drawname='l2_pt * (1 + l2_reliso05)'  , binning={'nbinsx':16, 'xmin':0.  , 'xmax':200.}, unit='GeV', xtitle='p_{T}^{Cone} (trailing)'),
+    VCfg(name='CR_hnl_m_12'   , drawname='hnl_m_12'   , binning={'nbinsx':24, 'xmin':0   , 'xmax':150 }, unit='GeV', xtitle='dilepton mass'),
+    VCfg(name='CR_hnl_mt_0'   , drawname='hnl_mt_0'   , binning={'nbinsx':16, 'xmin':0   , 'xmax':200 }, unit='GeV', xtitle='M_{T} (leading)'),
+    VCfg(name='CR_hnl_w_vis_m_wide', drawname='hnl_w_vis_m', binning={'nbinsx':24, 'xmin':50  , 'xmax':300 }, unit='GeV', xtitle='3 lepton mass'),
+    VCfg(name='CR_hnl_w_vis_m_z', drawname='hnl_w_vis_m', binning={'nbinsx':40, 'xmin':70  , 'xmax':110 }, unit='GeV', xtitle='3 lepton mass'),
 
-    VCfg(name='n_vtx'            , binning={'nbinsx':101, 'xmin':-0.5, 'xmax':100.5}, unit=None, xtitle='N_{vertices}'),
-      
-    VCfg(name='l0_pt'            , binning={'nbinsx':40, 'xmin':0.  , 'xmax':100.}, unit='GeV', xtitle='prompt electron p_{T}'),
-    VCfg(name='l0_eta'           , binning={'nbinsx':20, 'xmin':-2.5, 'xmax':2.5 }, unit=None , xtitle='prompt electron #eta'),
-    VCfg(name='l0_phi'           , binning={'nbinsx':40, 'xmin':-pi , 'xmax':pi  }, unit='rad', xtitle='prompt electron #phi'),
-    VCfg(name='l1_pt'            , binning={'nbinsx':40, 'xmin':0.  , 'xmax':100.}, unit='GeV', xtitle='1st muon p_{T}'),
-    VCfg(name='l1_eta'           , binning={'nbinsx':20, 'xmin':-2.5, 'xmax':2.5 }, unit=None , xtitle='1st muon #eta'),
-    VCfg(name='l1_phi'           , binning={'nbinsx':40, 'xmin':-pi , 'xmax':pi  }, unit='rad', xtitle='1st muon #phi'),
-    VCfg(name='l2_pt'            , binning={'nbinsx':40, 'xmin':0.  , 'xmax':100.}, unit='GeV', xtitle='2nd muon p_{T}'),
-    VCfg(name='l2_eta'           , binning={'nbinsx':20, 'xmin':-2.5, 'xmax':2.5 }, unit=None , xtitle='2nd muon #eta'),
-    VCfg(name='l2_phi'           , binning={'nbinsx':40, 'xmin':-pi , 'xmax':pi  }, unit='rad', xtitle='2nd muon #phi'),
-      
-    VCfg(name='l0_dxy'           , binning={'nbinsx':100, 'xmin':-2. , 'xmax':2. }, unit='cm', xtitle='prompt electron dxy'),
-    VCfg(name='l0_dz'            , binning={'nbinsx':100, 'xmin':-3. , 'xmax':3. }, unit='cm', xtitle='prompt electron dz'),
-    VCfg(name='l1_dxy'           , binning={'nbinsx':100, 'xmin':-4. , 'xmax':4. }, unit='cm', xtitle='1st muon dxy'),
-    VCfg(name='l1_dz'            , binning={'nbinsx':100, 'xmin':-20., 'xmax':20.}, unit='cm', xtitle='1st muon dz'),
-    VCfg(name='l2_dxy'           , binning={'nbinsx':100, 'xmin':-4. , 'xmax':4. }, unit='cm', xtitle='2st muon dxy'),
-    VCfg(name='l2_dz'            , binning={'nbinsx':100, 'xmin':-20., 'xmax':20.}, unit='cm', xtitle='2st muon dz'),
-      
-    VCfg(name='l0_reliso05'      , binning={'nbinsx':50, 'xmin':0., 'xmax':2}, unit=None, xtitle='prompt electron relative isolation cone 0.4'),
-    VCfg(name='l1_reliso05'      , binning={'nbinsx':50, 'xmin':0., 'xmax':2}, unit=None, xtitle='1st muon relative isolation cone 0.4'),
-    VCfg(name='l2_reliso05'      , binning={'nbinsx':50, 'xmin':0., 'xmax':2}, unit=None, xtitle='2nd muon relative isolation cone 0.4'),
-      
-    VCfg(name='hnl_m_01'         , binning={'nbinsx':40, 'xmin':0   , 'xmax':200 }, unit='GeV', xtitle='mass(e, #mu_1)'),
-    VCfg(name='hnl_m_02'         , binning={'nbinsx':40, 'xmin':0   , 'xmax':200 }, unit='GeV', xtitle='mass(e, #mu_2)'),
-    
-    VCfg(name='hnl_m_12_wide'    , drawname='hnl_m_12', binning={'nbinsx':80, 'xmin':0   , 'xmax':200 }, unit='GeV', xtitle='dimuon mass'),
-    VCfg(name='hnl_m_12_z'       , drawname='hnl_m_12', binning={'nbinsx':40, 'xmin':70  , 'xmax':110 }, unit='GeV', xtitle='dimuon mass'),
-    VCfg(name='hnl_m_12_jpsi'    , drawname='hnl_m_12', binning={'nbinsx':50, 'xmin':2.5 , 'xmax':3.5 }, unit='GeV', xtitle='dimuon mass'),
-    VCfg(name='hnl_m_12_low'     , drawname='hnl_m_12', binning={'nbinsx':40, 'xmin':0   , 'xmax':10  }, unit='GeV', xtitle='dimuon mass'),
-    
-    VCfg(name='hnl_hn_pt'        , binning={'nbinsx':80, 'xmin':0   , 'xmax':200 }, unit='GeV', xtitle='dimuon p_{T}'),
-    VCfg(name='hnl_hn_eta'       , binning={'nbinsx':40, 'xmin':-2.5, 'xmax':2.5 }, unit=None , xtitle='dimuon #eta'),
-    VCfg(name='hnl_hn_phi'       , binning={'nbinsx':40, 'xmin':-pi , 'xmax':pi  }, unit='rad', xtitle='dimuon #phi'),
+    VCfg(name='_norm_'     , drawname='1.', binning={'nbinsx':5, 'xmin':-1.5, 'xmax':3.5}, unit='', xtitle='Normalisation'),
 
-    VCfg(name='hnl_dr_01'        , binning={'nbinsx':40, 'xmin':0   , 'xmax':6 }, unit=None, xtitle='#DeltaR (e, #mu_{1})'),
-    VCfg(name='hnl_dr_02'        , binning={'nbinsx':40, 'xmin':0   , 'xmax':6 }, unit=None, xtitle='#DeltaR (e, #mu_{2})'),
-    VCfg(name='hnl_dr_12'        , binning={'nbinsx':40, 'xmin':0   , 'xmax':6 }, unit=None, xtitle='#DeltaR (#mu_{1}, #mu_{2})'),
-    VCfg(name='hnl_dr_hnvis0'    , binning={'nbinsx':40, 'xmin':0   , 'xmax':6 }, unit=None, xtitle='#DeltaR (dimuon, e)'),
-    VCfg(name='hnl_dphi_hnvismet', binning={'nbinsx':40, 'xmin':-pi , 'xmax':pi}, unit=None, xtitle='#Delta#phi (dimuon, E_{T}^{miss})'),
-    VCfg(name='hnl_dphi_0met'    , binning={'nbinsx':40, 'xmin':-pi , 'xmax':pi}, unit=None, xtitle='#Delta#phi (e, E_{T}^{miss})'),
-    VCfg(name='hnl_dphi_hnvis0'  , binning={'nbinsx':40, 'xmin':-pi , 'xmax':pi}, unit=None, xtitle='#Delta#phi (dimuon, e)'),
+    VCfg(name='n_vtx', binning={'nbinsx':101, 'xmin':-0.5, 'xmax':100.5}, unit=None, xtitle='N_{vertices}'),
+
+    VCfg(name='l0_pt'      , binning={'nbinsx':40, 'xmin':0.  , 'xmax':100.}, unit='GeV', xtitle='l0 p_{T}'),
+    VCfg(name='l0_eta'     , binning={'nbinsx':20, 'xmin':-2.5, 'xmax':2.5 }, unit=None , xtitle='l0 #eta'),
+    VCfg(name='l0_phi'     , binning={'nbinsx':40, 'xmin':-pi , 'xmax':pi  }, unit='rad', xtitle='l0 #phi'),
+    VCfg(name='l1_pt'      , binning={'nbinsx':40, 'xmin':0.  , 'xmax':100.}, unit='GeV', xtitle='l1 p_{T}'),
+    VCfg(name='l1_eta'     , binning={'nbinsx':20, 'xmin':-2.5, 'xmax':2.5 }, unit=None , xtitle='l1 #eta'),
+    VCfg(name='l1_phi'     , binning={'nbinsx':40, 'xmin':-pi , 'xmax':pi  }, unit='rad', xtitle='l1 #phi'),
+    VCfg(name='l2_pt'      , binning={'nbinsx':40, 'xmin':0.  , 'xmax':100.}, unit='GeV', xtitle='l2 p_{T}'),
+    VCfg(name='l2_eta'     , binning={'nbinsx':20, 'xmin':-2.5, 'xmax':2.5 }, unit=None , xtitle='l2 #eta'),
+    VCfg(name='l2_phi'     , binning={'nbinsx':40, 'xmin':-pi , 'xmax':pi  }, unit='rad', xtitle='l2 #phi'),
+
+    VCfg(name='l0_dxy', binning={'nbinsx':100, 'xmin':-2. , 'xmax':2. }, unit='cm', xtitle='l0 dxy'),
+    VCfg(name='l0_dz' , binning={'nbinsx':100, 'xmin':-3. , 'xmax':3. }, unit='cm', xtitle='l0 dz'),
+    VCfg(name='l1_dxy', binning={'nbinsx':100, 'xmin':-4. , 'xmax':4. }, unit='cm', xtitle='l1 dxy'),
+    VCfg(name='l1_dxy_coarse', drawname='l1_dxy', binning={'nbinsx':40, 'xmin':-1. , 'xmax':1. }, unit='cm', xtitle='l1 dxy'),
+    VCfg(name='l1_dz' , binning={'nbinsx':100, 'xmin':-20., 'xmax':20.}, unit='cm', xtitle='l1 dz'),
+    VCfg(name='l2_dxy', binning={'nbinsx':100, 'xmin':-4. , 'xmax':4. }, unit='cm', xtitle='l2 dxy'),
+    VCfg(name='l2_dxy_coarse', drawname='l2_dxy', binning={'nbinsx':40, 'xmin':-1. , 'xmax':1. }, unit='cm', xtitle='l2 dxy'),
+    VCfg(name='l2_dz' , binning={'nbinsx':100, 'xmin':-20., 'xmax':20.}, unit='cm', xtitle='l2 dz'),
+
+    VCfg(name='l0_reliso05', binning={'nbinsx':20, 'xmin':0., 'xmax':0.5}, unit=None, xtitle='l0 relative isolation cone 0.4'),
+    VCfg(name='l1_reliso05', binning={'nbinsx':20, 'xmin':0., 'xmax':0.5}, unit=None, xtitle='l1 relative isolation cone 0.4'),
+    VCfg(name='l2_reliso05', binning={'nbinsx':20, 'xmin':0., 'xmax':0.5}, unit=None, xtitle='l2 relative isolation cone 0.4'),
+
+    VCfg(name='hnl_m_01', binning={'nbinsx':40, 'xmin':0   , 'xmax':200 }, unit='GeV', xtitle='mass(l0,l1)'),
+    VCfg(name='hnl_m_02', binning={'nbinsx':40, 'xmin':0   , 'xmax':200 }, unit='GeV', xtitle='mass(l0,l2)'),
+
+    VCfg(name='hnl_m_12_wide', drawname='hnl_m_12', binning={'nbinsx':80, 'xmin':0   , 'xmax':200 }, unit='GeV', xtitle='dilepton mass'),
+    VCfg(name='hnl_m_12_z'   , drawname='hnl_m_12', binning={'nbinsx':40, 'xmin':70  , 'xmax':110 }, unit='GeV', xtitle='dilepton mass'),
+    VCfg(name='hnl_m_12_jpsi', drawname='hnl_m_12', binning={'nbinsx':50, 'xmin':2.5 , 'xmax':3.5 }, unit='GeV', xtitle='dilepton mass'),
+    VCfg(name='hnl_m_12_low' , drawname='hnl_m_12', binning={'nbinsx':40, 'xmin':0   , 'xmax':10  }, unit='GeV', xtitle='dilepton mass'),
+
+    VCfg(name='hnl_hn_pt' , binning={'nbinsx':80, 'xmin':0   , 'xmax':200 }, unit='GeV', xtitle='dilepton p_{T}'),
+    VCfg(name='hnl_hn_eta', binning={'nbinsx':40, 'xmin':-2.5, 'xmax':2.5 }, unit=None , xtitle='dilepton #eta'),
+    VCfg(name='hnl_hn_phi', binning={'nbinsx':40, 'xmin':-pi , 'xmax':pi  }, unit='rad', xtitle='dilepton #phi'),
+
+    VCfg(name='hnl_dr_01'        , binning={'nbinsx':40, 'xmin':0   , 'xmax':6 }, unit=None, xtitle='#DeltaR (l0, l1)'),
+    VCfg(name='hnl_dr_02'        , binning={'nbinsx':40, 'xmin':0   , 'xmax':6 }, unit=None, xtitle='#DeltaR (l0, l2)'),
+    VCfg(name='hnl_dr_12'        , binning={'nbinsx':40, 'xmin':0   , 'xmax':6 }, unit=None, xtitle='#DeltaR (l1, l2)'),
+    VCfg(name='hnl_dr_hnvis0'    , binning={'nbinsx':40, 'xmin':0   , 'xmax':6 }, unit=None, xtitle='#DeltaR (dilepton, l0)'),
+
+    VCfg(name='hnl_dphi_0met'    , binning={'nbinsx':40, 'xmin':-pi , 'xmax':pi}, unit=None, xtitle='#Delta#phi (l0, E_{T}^{miss})'),
+    VCfg(name='hnl_dphi_1met'    , binning={'nbinsx':40, 'xmin':-pi , 'xmax':pi}, unit=None, xtitle='#Delta#phi (l1, E_{T}^{miss})'),
+    VCfg(name='hnl_dphi_2met'    , binning={'nbinsx':40, 'xmin':-pi , 'xmax':pi}, unit=None, xtitle='#Delta#phi (l2, E_{T}^{miss})'),
+    VCfg(name='hnl_dphi_hnvismet', binning={'nbinsx':40, 'xmin':-pi , 'xmax':pi}, unit=None, xtitle='#Delta#phi (dilepton, E_{T}^{miss})'),
+
+    VCfg(name='hnl_dphi_01'      , binning={'nbinsx':40, 'xmin':-pi , 'xmax':pi}, unit=None, xtitle='#Delta#phi (l0, l1)'),
+    VCfg(name='hnl_dphi_02'      , binning={'nbinsx':40, 'xmin':-pi , 'xmax':pi}, unit=None, xtitle='#Delta#phi (l0, l2)'),
+    VCfg(name='hnl_dphi_12'      , binning={'nbinsx':40, 'xmin':-pi , 'xmax':pi}, unit=None, xtitle='#Delta#phi (l1, l2)'),
+    VCfg(name='hnl_dphi_hnvis0'  , binning={'nbinsx':40, 'xmin':-pi , 'xmax':pi}, unit=None, xtitle='#Delta#phi (dilepton, l0)'),
 
     VCfg(name='hnl_w_vis_m'      , binning={'nbinsx':40, 'xmin':0   , 'xmax':250 }, unit='GeV', xtitle='3 lepton mass'),
     VCfg(name='hnl_2d_disp'      , binning={'nbinsx':40, 'xmin':0   , 'xmax':100 }, unit='cm' , xtitle='2D displacement'),
@@ -317,16 +333,26 @@ hnl_vars = [
     VCfg(name='nj' , binning={'nbinsx':12, 'xmin':-0.5, 'xmax':11.5}, unit=None, xtitle='N_{jets}'),
     VCfg(name='nbj', binning={'nbinsx':12, 'xmin':-0.5, 'xmax':11.5}, unit=None, xtitle='N_{b-jets}'),
 
+    VCfg(name='hnl_iso_rel', binning={'nbinsx':40, 'xmin':0., 'xmax':3.} , unit=None, xtitle='rel. dilepton isolation'),
+    VCfg(name='hnl_iso_abs', binning={'nbinsx':40, 'xmin':0., 'xmax':50.}, unit=None, xtitle='abs. dilepton isolation'),
+
 ]
 
-CR_vars = [
-#    VCfg(name='l0_jet_pt'      , binning={'nbinsx':16, 'xmin':0.  , 'xmax':200.}, unit='GeV', xtitle='p_{T}^{Cone} (leading)'),
-#    VCfg(name='l2_jet_pt'      , binning={'nbinsx':16, 'xmin':0.  , 'xmax':200.}, unit='GeV', xtitle='p_{T}^{Cone} (trailing)'),
-#    VCfg(name='hnl_m_12_wide', drawname='hnl_m_12', binning={'nbinsx':24, 'xmin':0   , 'xmax':150 }, unit='GeV', xtitle='dimuon mass'),
-#    VCfg(name='hnl_mt_0'       , binning={'nbinsx':16, 'xmin':0   , 'xmax':200 }, unit='GeV', xtitle='M_{T} (leading)'),
-    VCfg(name='hnl_w_vis_m', binning={'nbinsx':24, 'xmin':50   , 'xmax':300 }, unit='GeV', xtitle='3 lepton mass'),
+test_vars = [
+    VCfg(name='hnl_w_vis_m', drawname='hnl_w_vis_m', binning={'nbinsx':24, 'xmin':50  , 'xmax':300 }, unit='GeV', xtitle='3 lepton mass'),
+    VCfg(name='CR_hnl_w_vis_m_z', drawname='hnl_w_vis_m', binning={'nbinsx':40, 'xmin':50  , 'xmax':150 }, unit='GeV', xtitle='3 lepton mass'),
+    VCfg(name='hnl_2d_disp', binning={'nbinsx':40, 'xmin':0   , 'xmax':100 }, unit='cm' , xtitle='2D displacement'),
+    VCfg(name='hnl_2d_disp', binning={'nbinsx':40, 'xmin':0   , 'xmax':5. }, unit='cm' , xtitle='2D displacement'),
+    VCfg(name='CR_hnl_m_12_JPsi'   , drawname='hnl_m_12'   , binning={'nbinsx':20, 'xmin':2.5   , 'xmax':3.5 }, unit='GeV', xtitle='dilepton mass'),
+    VCfg(name='CR_hnl_m_12'   , drawname='hnl_m_12'   , binning={'nbinsx':24, 'xmin':0   , 'xmax':150 }, unit='GeV', xtitle='dilepton mass'),
+    # VCfg(name='hnl_m_01', binning={'nbinsx':40, 'xmin':0   , 'xmax':200 }, unit='GeV', xtitle='mass(l0,l1)'),
+    # VCfg(name='hnl_m_02', binning={'nbinsx':40, 'xmin':0   , 'xmax':200 }, unit='GeV', xtitle='mass(l0,l2)'),
+    # VCfg(name='hnl_m_12_wide', drawname='hnl_m_12', binning={'nbinsx':80, 'xmin':0   , 'xmax':200 }, unit='GeV', xtitle='dilepton mass'),
+    # VCfg(name='l2_eta'     , binning={'nbinsx':20, 'xmin':-2.5, 'xmax':2.5 }, unit=None , xtitle='l2 #eta'),
 ]
 
+
+taumu_vars = generic_vars + muon_l1_vars + tau_l2_vars + tau_mu_special_vars
 
 mumu_vars = generic_vars + muon_l1_vars + muon_l2_vars + mu_mu_special_vars + additional_tau_vars
 
@@ -335,6 +361,8 @@ emu_vars = generic_vars +electron_l1_vars + muon_l2_vars + mu_mu_special_vars + 
 tautau_vars = generic_vars + tau_l1_vars + tau_l2_vars + tau_tau_special_vars
 
 all_vars = generic_vars + muon_l1_vars + muon_l2_vars + tau_l2_vars + additional_tau_vars + tau_tau_special_vars + tau_mu_special_vars # + additional_tau_vars 
+
+test_vars = test_vars
 
 
 dict_all_vars = {}
@@ -352,4 +380,3 @@ dict_channel_vars = {
 
 def getVars(names, channel='all'):
     return [dict_channel_vars[channel][n] for n in names]
-    

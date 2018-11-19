@@ -31,6 +31,11 @@
 #include "RecoVertex/VertexTools/interface/VertexDistance3D.h"
 #include "RecoVertex/VertexTools/interface/VertexDistanceXY.h"
 
+//#include "TFile.h"
+//#include "TTree.h"
+//#include "MagneticField/VolumeBasedEngine/interface/VolumeBasedMagneticField.h"
+
+
 class HNLKinematicVertexFitter {
 
   public:
@@ -39,6 +44,8 @@ class HNLKinematicVertexFitter {
 
     reco::TransientTrack getTransientTrack(const reco::TrackRef& trackRef) {    
       reco::TransientTrack transientTrack(trackRef, paramField);
+      //reco::TransientTrack transientTrack(trackRef, volumeField);
+
       return transientTrack;
     }
 
@@ -61,6 +68,9 @@ class HNLKinematicVertexFitter {
     }
 
   private:
+    //TFile *f = new TFile("bfield_bkp.root");
+    //VolumeBasedMagneticField *volumeField; f->GetObject("IdealMagneticFieldRecord/MagneticField__IdealMagneticFieldRecord",volumeField);
+    
     OAEParametrizedMagneticField *paramField = new OAEParametrizedMagneticField("3_8T");
     // Insignificant mass sigma to avoid singularities in the covariance matrix.
     // initial chi2 and ndf before kinematic fits. The chi2 of the reconstruction is not considered 

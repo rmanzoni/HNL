@@ -75,14 +75,14 @@ sHNL_rare = Style(lineColor=1, markerColor=tribosoncol, fillColor=tribosoncol)
 sHNL_ZZ = Style(lineColor=1, markerColor=zzcol, fillColor=zzcol)
 
 # Signals
-sHNL_HN = Style(lineColor=kBlue, markerColor=0, lineStyle=2, fillColor=0, lineWidth=3)
+sHNL_HN  = Style(lineColor=kBlue   , markerColor=0, lineStyle=2, fillColor=0, lineWidth=3)
 sHNL_HN2 = Style(lineColor=kAzure+8, markerColor=0, lineStyle=3, fillColor=0, lineWidth=3)
 
 
 sBlackSquares = Style(markerStyle=21)
-sBlueSquares = Style(lineColor=4, markerStyle=21, markerColor=4)
+sBlueSquares  = Style(lineColor=4, markerStyle=21, markerColor=4)
 sGreenSquares = Style(lineColor=8, markerStyle=21, markerColor=8)
-sRedSquares = Style(lineColor=2, markerStyle=21, markerColor=2)
+sRedSquares   = Style(lineColor=2, markerStyle=21, markerColor=2)
 
 
 styleSet = [sBlue, sGreen, sRed, sYellow, sViolet, sBlackSquares, sBlueSquares, sGreenSquares, sRedSquares]

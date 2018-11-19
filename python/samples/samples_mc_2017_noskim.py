@@ -589,7 +589,6 @@ hnl_bkg_noskim_ggZZWJets = [
     W3JetsToLNu        ,
     W4JetsToLNu        ,
 ]   
-# =======
 # ZZZ                                       .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_ZZZ.root' # derived manually 
 # WZZ                                       .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_WZZ.root' # derived manually 
 # WWZ                                       .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_WWZ.root' # derived manually 
@@ -647,7 +646,6 @@ hnl_bkg_noskim_ggZZWJets = [
 
 
 
-# >>>>>>> vstampf/master
 
 ##########################################################################################
 #  data PileUp profile

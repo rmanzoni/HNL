@@ -318,16 +318,16 @@ hnl_vars = [
     VCfg(name='hnl_dphi_12'      , binning={'nbinsx':40, 'xmin':-pi , 'xmax':pi}, unit=None, xtitle='#Delta#phi (l1, l2)'),
     VCfg(name='hnl_dphi_hnvis0'  , binning={'nbinsx':40, 'xmin':-pi , 'xmax':pi}, unit=None, xtitle='#Delta#phi (dilepton, l0)'),
 
-    VCfg(name='hnl_w_vis_m', binning={'nbinsx':40, 'xmin':0   , 'xmax':250 }, unit='GeV', xtitle='3 lepton mass'),
-    VCfg(name='hnl_2d_disp', binning={'nbinsx':40, 'xmin':0   , 'xmax':100 }, unit='cm' , xtitle='2D displacement'),
-    VCfg(name='hnl_3d_disp', binning={'nbinsx':40, 'xmin':0   , 'xmax':200 }, unit='cm' , xtitle='3D displacement'),
+    VCfg(name='hnl_w_vis_m'      , binning={'nbinsx':40, 'xmin':0   , 'xmax':250 }, unit='GeV', xtitle='3 lepton mass'),
+    VCfg(name='hnl_2d_disp'      , binning={'nbinsx':40, 'xmin':0   , 'xmax':100 }, unit='cm' , xtitle='2D displacement'),
+    VCfg(name='hnl_3d_disp'      , binning={'nbinsx':40, 'xmin':0   , 'xmax':200 }, unit='cm' , xtitle='3D displacement'),
 
-    VCfg(name='pfmet_phi' , binning={'nbinsx':40, 'xmin':-3.141593, 'xmax':3.141593}, unit=None, xtitle='E_{T}^{miss} #Phi (PF)'),
-    VCfg(name='pfmet_pt'  , binning={'nbinsx':40, 'xmin':0., 'xmax':300.}, unit='GeV', xtitle='E_{T}^{miss} (PF)'),
+    VCfg(name='pfmet_phi'        , binning={'nbinsx':40, 'xmin':-3.141593, 'xmax':3.141593}, unit=None, xtitle='E_{T}^{miss} #Phi (PF)'),
+    VCfg(name='pfmet_pt'         , binning={'nbinsx':40, 'xmin':0., 'xmax':300.}, unit='GeV', xtitle='E_{T}^{miss} (PF)'),
 
-    VCfg(name='sv_prob'        , binning={'nbinsx':40 , 'xmin':0   , 'xmax':1   }, unit=None, xtitle='SV probability'),
-    VCfg(name='sv_cos'         , binning={'nbinsx':40 , 'xmin':-1  , 'xmax':1   }, unit=None, xtitle='SV cos'),
-    VCfg(name='hnl_2d_disp_sig', binning={'nbinsx':40 , 'xmin':0   , 'xmax':20  }, unit=None, xtitle='SV L/#sigma'),
+    VCfg(name='sv_prob'          , binning={'nbinsx':40 , 'xmin':0   , 'xmax':1   }, unit=None, xtitle='SV probability'),
+    VCfg(name='sv_cos'           , binning={'nbinsx':40 , 'xmin':-1  , 'xmax':1   }, unit=None, xtitle='SV cos'),
+    VCfg(name='hnl_2d_disp_sig'  , binning={'nbinsx':40 , 'xmin':0   , 'xmax':20  }, unit=None, xtitle='SV L/#sigma'),
     VCfg(name='hnl_2d_disp_sig_extended', drawname='hnl_2d_disp_sig', binning={'nbinsx':100 , 'xmin':0   , 'xmax':1000  }, unit=None, xtitle='SV L/#sigma'),
 
     VCfg(name='nj' , binning={'nbinsx':12, 'xmin':-0.5, 'xmax':11.5}, unit=None, xtitle='N_{jets}'),

@@ -1,4 +1,4 @@
-from CMGTools.HNL.plotter.categories_common import categories_common
+# from CMGTools.HNL.plotter.categories_common import categories_common
 from CMGTools.HNL.plotter.cut import Cut
 
 pt1 = 4
@@ -18,4 +18,4 @@ categories = {
     'Xcat_IncX': cat_Inc,
 }
 
-categories.update(categories_common)
+# categories.update(categories_common)

@@ -38,8 +38,16 @@
  <class name="MagBSlab"/>
  <class name="MagELayer"/>
  <class name="MagESector"/>
+ <class name="TransientTrackRecord"/>
  <class name="GloballyPositioned<float>"/>
  <class name="TkRotation<float>"/>
+ <class name="std::pair<edm::Ptr<pat::Electron>,reco::Track>"/>
+ <class name="edm::Wrapper<std::pair<edm::Ptr<pat::Electron>,reco::Track> >"/>
+ <class name="std::vector<std::pair<edm::Ptr<pat::Electron>,reco::Track> >"/>
+ <class name="edm::Wrapper<std::vector<std::pair<edm::Ptr<pat::Electron>,reco::Track> > >"/> 
+
+ <!--<class name="edm::Wrapper<std::vector<std::pair<edm::Ptr<pat::Electron>,reco::Track> > >"/>-->
+ <!--<class name="std::vector<std::pair<edm::Ptr<pat::Electron>,reco::Track> >"/>-->
 <!-- 
  <class name="std::vector<art::ProductID>"/>
  <class name="std::pair<art::ProductID, std::set<art::ProductID>>"/>

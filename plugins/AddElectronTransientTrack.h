@@ -51,6 +51,7 @@
 
 // B Field
 #include "MagneticField/Engine/interface/MagneticField.h"
+#include "MagneticField/Records/interface/IdealMagneticFieldRecord.h"
 
 namespace cmg{
   class AddElectronTransientTrack : public edm::EDProducer {
@@ -69,6 +70,7 @@ namespace cmg{
       // transien track builder handle
       edm::ESHandle<TransientTrackBuilder> ttrack_builder;
       
+      
   };
 }
 
@@ -79,24 +81,28 @@ cmg::AddElectronTransientTrack::AddElectronTransientTrack(const edm::ParameterSe
   produces<std::vector<std::pair<edm::Ptr<pat::Electron>, reco::Track>>> ("eleTtkMap");
 }
 
-
 void 
 cmg::AddElectronTransientTrack::produce(edm::Event & iEvent, const edm::EventSetup & iSetup)
 {
 
+  //std::cout << __LINE__ << "]\t" << std::endl;
   // unique pointers for the output
   std::unique_ptr< std::vector<std::pair<edm::Ptr<pat::Electron>, reco::Track>> > eleTtkMap_ptr(new std::vector<std::pair<edm::Ptr<pat::Electron>, reco::Track>>);
        
+  //std::cout << __LINE__ << "]\t" << std::endl;
+  
+
   // Get the transient track builder from the event setup
   iSetup.get<TransientTrackRecord>().get("TransientTrackBuilder", ttrack_builder);
 
+  //std::cout << __LINE__ << "]\t" << std::endl;
   // Get the electrons
   iEvent.getByToken(eleSrc_, electrons);
 
   // loop over electrons
   for(edm::View<pat::Electron>::const_iterator iele = electrons->begin(); iele != electrons->end(); iele++){
     
-    // Get the pointer to the muon in the collection
+    // Get the pointer to the electron in the collection
     unsigned int idx = iele - electrons->begin();
     edm::Ptr<pat::Electron> ptrEle = electrons->ptrAt(idx);
 

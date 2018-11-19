@@ -1,7 +1,9 @@
 # Import CMS python class definitions such as Process, Source, and EDProducer
 import FWCore.ParameterSet.Config as cms
 
-process = cms.Process('TTK')
+# Set up a process named MakeElectronTracks
+processName = "MakeElectronTracks"
+process = cms.Process(processName)
 
 process.load('Configuration/StandardSequences/Services_cff')
 process.load('FWCore/MessageService/MessageLogger_cfi')
@@ -10,64 +12,49 @@ process.load('Configuration.StandardSequences.GeometryRecoDB_cff')
 process.load('Configuration.StandardSequences.MagneticField_AutoFromDBCurrent_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_condDBv2_cff')
 
+process.GlobalTag.globaltag = '94X_dataRun2_v6'
 
-############ DATA ##############
-process.GlobalTag.globaltag = cms.string( "101X_dataRun2_Prompt_v9" )
-############ THOMAS' MC ##############
-# process.GlobalTag.globaltag = cms.string( "94X_mc2017_realistic_v12" )  
-  
-# Configure the object that reads the input file
-process.source = cms.Source('PoolSource', 
+
+#configure the source that read the input files
+process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(
-        'root://cms-xrd-global.cern.ch//store/data/Run2018A/ParkingBPH1/MINIAOD/14May2018-v1/30000/C870BB22-1D5A-E811-AE46-0025905D1D7A.root',
-#         'root://cms-xrd-global.cern.ch//store/user/tstreble/Bu_KJPsi_ee_Pythia/BuToKJPsiee_Pythia_MINIAODSIM_18_06_05/180605_092537/0000/Bu_KJPsi_ee_MINIAODSIM_8.root',
-    ),
+        # 'root://cms-xrd-global.cern.ch//store/user/tomc/heavyNeutrinoMiniAOD/Moriond17_aug2018/displaced/HeavyNeutrino_trilepton_M-8_V-0.00547722557505_tau_massiveAndCKM_LO/heavyNeutrino_1.root',
+        'file:/afs/cern.ch/work/d/dezhu/HNL/CMSSW_9_4_6_patch1/src/CMGTools/HNL/test/testfile.root',
+    )    
 )
 
-process.selectedElectrons = cms.EDFilter(
-    "PATElectronSelector",
-    src = cms.InputTag( 'slimmedElectrons' ),
-    cut = cms.string("abs(eta)<2.5")
-)
 
-process.diEleCandProd = cms.EDProducer(
-    "CandViewShallowCloneCombiner",
-    decay = cms.string("selectedElectrons@+ selectedElectrons@-"),
-    cut   = cms.string("mass < 6."),
-)
+# # add the VolumeBasedMagneticFieldESProducer
+# process.VolumeBasedMagneticFieldESProducerNew = cms.ESProducer(
+    # "VolumeBasedMagneticFieldESProducer",
+    # timerOn                     = cms.untracked.bool(False),
+    # useParametrizedTrackerField = cms.bool(False),
+    # label                       = cms.untracked.string('MFConfig_RI_RII_160812_3_8T'),
+    # version                     = cms.string('MFConfig_RI_RII_160812_3_8T'),
+    # debugBuilder                = cms.untracked.bool(True),
+    # cacheLastVolume             = cms.untracked.bool(True),
+    # scalingVolumes              = cms.vint32(),
+    # scalingFactors              = cms.vdouble()
+# )
 
-process.countdiEleCand = cms.EDFilter(
-    "CandViewCountFilter",
-    src = cms.InputTag("diEleCandProd"),
-    minNumber = cms.uint32(1)
-)
-
+# load producer AddElectronTransientTrack
 process.ttk = cms.EDProducer(
     'AddElectronTransientTrack',
     patEleSrc = cms.InputTag('slimmedElectrons'),
 )
 
-process.ttkPath = cms.Path(
-    process.selectedElectrons +
-    process.diEleCandProd +
-    process.countdiEleCand +
-    process.ttk
+# talk to output module
+process.out = cms.OutputModule("PoolOutputModule",
+    fileName = cms.untracked.string("/afs/cern.ch/work/d/dezhu/HNL/CMSSW_9_4_6_patch1/src/CMGTools/HNL/test/outputElectronTracks.root")
 )
 
-# Configure the object that writes an output file
-process.out = cms.OutputModule('PoolOutputModule',
-    fileName = cms.untracked.string('output.root'),
-    SelectEvents = cms.untracked.PSet( 
-        SelectEvents = cms.vstring("ttkPath")
-    )
-)
+#Define which modules and sequences to run
+process.mypath = cms.Path(process.ttk)
 
-process.prunedOutput = cms.EndPath( process.out )
-
-# limit the number of events to be processed
-process.maxEvents = cms.untracked.PSet(
-    input = cms.untracked.int32( 5000 )
-)
+# A list of analyzers or output modules to be run after all paths have been run. 
+process.outpath = cms.EndPath(process.out)
 
 ## logger
-process.MessageLogger.cerr.FwkReport.reportEvery = 1
+# process.MessageLogger.cerr.FwkReport.reportEvery = 1
+
+

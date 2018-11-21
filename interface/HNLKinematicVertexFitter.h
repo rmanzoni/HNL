@@ -42,6 +42,7 @@ class HNLKinematicVertexFitter {
     HNLKinematicVertexFitter() {};
     virtual ~HNLKinematicVertexFitter() {};
 
+    // constructed by reco::TrackRef
     reco::TransientTrack getTransientTrack(const reco::TrackRef& trackRef) {    
       reco::TransientTrack transientTrack(trackRef, paramField);
       //reco::TransientTrack transientTrack(trackRef, volumeField);
@@ -56,8 +57,33 @@ class HNLKinematicVertexFitter {
 
       for (std::vector<reco::RecoChargedCandidate>::const_iterator ilc = candidates.begin(); ilc != candidates.end(); ++ilc){
         float pmass  = ilc->mass();
-        float pmasse = 1.e-6 * pmass;
+        float pmasse = 1.e-6* pmass;
         XParticles.push_back(pFactory.particle(getTransientTrack(ilc->track()), pmass, chi, ndf, pmasse));
+      }
+
+      KinematicConstrainedVertexFitter kvFitter;
+      RefCountedKinematicTree KinVtx = kvFitter.fit(XParticles); 
+      
+      return KinVtx;
+        
+    }
+
+    // constructed by reco::Track
+    reco::TransientTrack getTransientTrack(const reco::Track& track) {    
+      reco::TransientTrack transientTrack(track, paramField);
+
+      return transientTrack;
+    }
+
+    RefCountedKinematicTree Fit(const std::vector<reco::Track> & candidates){
+
+      KinematicParticleFactoryFromTransientTrack pFactory;  
+      std::vector<RefCountedKinematicParticle> XParticles;
+
+      for (std::vector<reco::Track>::const_iterator ilc = candidates.begin(); ilc != candidates.end(); ++ilc){
+        float pmass  = 511e-6;
+        float pmasse = 1.e-6 * pmass;
+        XParticles.push_back(pFactory.particle(getTransientTrack(*ilc), pmass, chi, ndf, pmasse));
       }
 
       KinematicConstrainedVertexFitter kvFitter;

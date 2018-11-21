@@ -16,7 +16,6 @@
 // Adapted to the LL-HNL Analysis by Dehua Zhu
 //
 //
-
 #include <memory>
 
 // ROOT
@@ -110,7 +109,7 @@ cmg::AddElectronTransientTrack::produce(edm::Event & iEvent, const edm::EventSet
     eleTtkMap_ptr -> push_back ( std::pair<edm::Ptr<pat::Electron>, reco::Track>(ptrEle, ttrack_builder->build(iele->gsfTrack()).track()) );
 
   }
-
+  
   // put it back into the event
   iEvent.put(std::move(eleTtkMap_ptr), "eleTtkMap");
 

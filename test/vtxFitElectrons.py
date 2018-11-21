@@ -13,8 +13,7 @@ options = VarParsing ('python')
 options = VarParsing ('analysis')
 options.parseArguments()
 
-def makeRecoVertex(kinVtx, kinVtxChi2=0., kinVtxNdof=0, kinVtxTrkSize=0):
-    point = ROOT.reco.Vertex.Point(
+def makeRecoVertex(kinVtx, kinVtxChi2=0., kinVtxNdof=0, kinVtxTrkSize=0): point = ROOT.reco.Vertex.Point(
         kinVtx.vertexState().position().x(),
         kinVtx.vertexState().position().y(),
         kinVtx.vertexState().position().z(),
@@ -69,7 +68,7 @@ for ii, event in enumerate(events):
         print 'we have %d pair(s)!'%(len(pairs)) 
         
         vtx = None
-        tofit.clear
+        tofit.clear()
 
         #now loop through the pairs and fit Vertices with them
         for index, pair in enumerate(pairs):

@@ -238,6 +238,15 @@ DYJetsToLL_M50 = creator.makeMCComponent(
 )
 DYJetsToLL_M50.nGenEvents = DYJetsToLL_M50.dataset_entries
 
+DYJetsToLL_M50_ext = creator.makeMCComponent(
+    name    = 'DYJetsToLL_M50_ext',
+    dataset = '/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14_ext1-v1/MINIAODSIM',
+    user    = 'CMS', 
+    pattern = '.*root', 
+    xSec    = 1921.8*3, 
+    useAAA  = True
+)
+
 
 DY1JetsToLL_M50 = creator.makeMCComponent(
     name    = 'DY1JetsToLL_M50', 
@@ -525,6 +534,7 @@ WJetsToLNu                                .puFileMC = os.environ['CMSSW_BASE'] +
 W3JetsToLNu                               .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_W3JetsToLNu.root'  # in Albert W3JetsToLNu-LO  /W3JetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM
 W4JetsToLNu                               .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_W4JetsToLNu.root'  # in Albert W4JetsToLNu-LO  /W4JetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM
 DYJetsToLL_M50                            .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_DYJetsToLL_M50.root' 
+DYJetsToLL_M50_ext                        .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_DYJetsToLL_M50_ext.root' 
 DY1JetsToLL_M50                           .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_DY1JetsToLL_M50.root' # derived manually   
 DY2JetsToLL_M50                           .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_DY2JetsToLL_M50.root' # derived manually     
 DY2JetsToLL_M50_ext                       .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_DY2JetsToLL_M50_ext.root' # derived manually 
@@ -554,6 +564,7 @@ hnl_bkg_noskim = [
     DYJetsToLL_M10to50,
     DYJetsToLL_M10to50_ext,
     DYJetsToLL_M50,
+    DYJetsToLL_M50_ext,
     DY1JetsToLL_M50,     
     DY2JetsToLL_M50,     
     DY2JetsToLL_M50_ext, 

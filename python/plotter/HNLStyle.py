@@ -100,7 +100,7 @@ def nextStyle():
     return style
 
 histPref = {}
-histPref['HN*'] = {'style':sHNL_HN, 'layer':2999, 'legend':'#splitline{M = 3GeV, L = 200/pb}{c#tau = 14.6cm}'}
+histPref['HN*'] = {'style':sHNL_HN, 'layer':2999, 'legend':'#splitline{M = 3GeV, #sigma = 90fb}{c#tau = 14.6cm}'}#times 300}{c#tau = 14.6cm}'}
 histPref['Data'] = {'style':sData, 'layer':2999, 'legend':'Observed'}
 histPref['data_*'] = {'style':sData, 'layer':2999, 'legend':'Observed'}
 histPref['ZTT*'] = {'style':sHNL_DYJets, 'layer':4, 'legend':'Z#rightarrow#tau#tau'}

@@ -13,7 +13,7 @@ from CMGTools.HNL.plotter.PlotConfigs import HistogramCfg, VariableCfg
 from CMGTools.HNL.plotter.categories_HNL import cat_Inc
 from CMGTools.HNL.plotter.HistCreator import CreateHists, createTrees
 from CMGTools.HNL.plotter.HistDrawer import HistDrawer
-from CMGTools.HNL.plotter.Variables import hnl_vars, test_vars, getVars
+from CMGTools.HNL.plotter.Variables import hnl_vars, test_vars, getVars, dde_vars
 from CMGTools.HNL.samples.samples_mc_2017 import hnl_bkg
 from pdb import set_trace
 # from CMGTools.HNL.plotter.qcdEstimationMSSMltau import estimateQCDWMSSM, createQCDWHistograms
@@ -183,6 +183,26 @@ threeMu_pt_rlxd =   'l1_pt > 20  &&  l2_pt > 4  &&  l0_pt > 4'\
                 '  && l0_reliso05 < 0.1 && l1_reliso05 < 0.1 && l2_reliso05 < 0.1 '\
                 '  && hnl_dr_01 > 0.05 && hnl_dr_02 > 0.05 && hnl_dr_12 > 0.05 '
 
+iso_cut = 0.15
+def LepIDIsoPass(lep, ID, iso_cut):
+#    cut_var = ' & l%i_id_%s & l%i_reliso05_03 < %f'%(lep, ID, lep, iso_cut)
+    cut_var = ' & l%i_id_%s & l%i_reliso05 < %f'%(lep, ID, lep, iso_cut)
+#    cut_var = ' & l%i_id_%s & l%i_reliso_rho_04 < %f'%(lep, ID, lep, iso_cut) ## FROM v2 ON
+    return cut_var
+
+def LepIDIsoFail(lep, ID, iso_cut):
+#    cut_var = ' & l%i_id_%s & l%i_reliso05_03 > %f'%(lep, ID, lep, iso_cut)
+    cut_var = ' & l%i_id_%s & l%i_reliso05 > %f'%(lep, ID, lep, iso_cut)
+#    cut_var = ' & l%i_id_%s & l%i_reliso_rho_04 > %f'%(lep, ID, lep, iso_cut) ## FROM v2 ON
+    return cut_var
+
+AR_m3lgeq80 = 'abs(l1_jet_pt - l2_jet_pt) < 1 & hnl_w_vis_m > 80 & nbj == 0 & hnl_2d_disp > 0.5 '
+AR_m3lgeq80 += LepIDIsoPass(0, 't', iso_cut) + LepIDIsoPass(1, 't', iso_cut) + LepIDIsoPass(2, 't', iso_cut)
+
+TIGHT         = ' & (l1_pt > 3 & l2_pt > 3 & l0_id_t & l0_reliso05 < 0.15 & l1_id_l & l2_id_l & l1_reliso05 < 0.15 & l2_reliso05 < 0.15 )' 
+cut_T_APL   = 'abs(l1_jet_pt - l2_jet_pt) < 1 & hnl_dr_12 < 0.8 & hnl_w_vis_m > 80 & nbj == 0 & hnl_2d_disp > 0.5 & abs(l1_dz) < 2 & abs(l2_dz) < 2' + TIGHT
+
+l0_tight = ' & l0_id_t'
 
 def prepareCuts():
     cuts = []
@@ -191,9 +211,22 @@ def prepareCuts():
     l0_medium = prompt_mu_medium
     l0_tight  = prompt_mu_tight
 
+#### 10.10.
+#    cuts.append( Cut('AR_m3lgeq80_v2',  cut_T_APL) )         
+#    cuts.append( Cut('AR_m3lgeq80_v3',  cut_T_APL + ' & hnl_hn_vis_pt > 35') )         
+#    cuts.append(Cut('CR_TTbar_imp_par' , inc_cut + l0_tight + imp_par  + CR_ttbar))
+#    cuts.append(Cut('CR_TTbar_IDmNoIso', inc_cut + l0_tight + IDmNoIso + CR_ttbar))
+    cuts.append(Cut('CR_TTbar_IDmIso15', inc_cut + l0_tight + IDmIso15 + CR_ttbar))
+#    cuts.append(Cut('CR_TTbar_imp_par_disp' , inc_cut + l0_tight + imp_par  + CR_ttbar + ' & hnl_2d_disp > 0.5'))
+#    cuts.append(Cut('CR_TTbar_IDmNoIso_disp', inc_cut + l0_tight + IDmNoIso + CR_ttbar + ' & hnl_2d_disp > 0.5'))
+#    cuts.append(Cut('CR_TTbar_IDmIso15_disp', inc_cut + l0_tight + IDmIso15 + CR_ttbar + ' & hnl_2d_disp > 0.5'))
+
+#### 10.10.
+#    cuts.append( Cut('AR_m3lgeq80',  AR_m3lgeq80) )         
+
 #### 19.9.
 #    cuts.append(Cut('CR_DY_ZZ_3mu_pt_rlxd',         threeMu_pt_rlxd + CR_DY_ZZ + M10))
-    cuts.append(Cut('CR_DY_m3muAtZ_3mu_pt_rlxd',    threeMu_pt_rlxd  + CR_DY_3mu_m3muAtZ + M10))
+#    cuts.append(Cut('CR_DY_m3muAtZ_3mu_pt_rlxd',    threeMu_pt_rlxd  + CR_DY_3mu_m3muAtZ + M10))
 #    cuts.append(Cut('no_sel', '1'))
 
 #### 18.9.
@@ -248,7 +281,7 @@ def createSamples(analysis_dir, total_weight, qcd_from_same_sign, w_qcd_mssm_met
 def createVariables(rebin=None):
     DoNotRebin = ['_norm_', 'n_vtx', 'nj', 'nbj', 'hnl_m_12_wide'] 
     variables = hnl_vars
-#    variables = test_vars
+#    variables = dde_vars
     if rebin>0:
         for ivar in hnl_vars:
             if ivar.name in DoNotRebin: continue
@@ -278,6 +311,7 @@ def makePlots(variables, cuts, total_weight, sample_dict, hist_dict, qcd_from_sa
             plot.Group('Triboson', ['ZZZ', 'WWW', 'WGGJets'])
             plot.Group('ttV', ['TTZToLLNuNu', 'TTWJetsToLNu'])
             plot.Group('QCD',['QCD_pt_15to20_mu', 'QCD_pt_20to30_mu', 'QCD_pt_30to50_mu', 'QCD_pt_50to80_mu', 'QCD_pt_80to120_mu'])
+            plot.Group('WJets', ['W1JetsToLNu', 'W2JetsToLNu', 'W3JetsToLNu', 'W4JetsToLNu'])
 #            plot.Group('DY', ['DYJetsToLL_M10to50', 'DYJets_ext'])
             plot.Group('DYJetsToLL_M10to50', ['DYJetsToLL_M10to50', 'DYJetsToLL_M10to50_ext'])
             createDefaultGroups(plot)
@@ -320,7 +354,7 @@ if __name__ == '__main__':
 
     cuts = prepareCuts()
 
-    variables = createVariables(2)
+    variables = createVariables()#2)
 
     sample_dict, hist_dict = createSamples(analysis_dir, total_weight, qcd_from_same_sign=False, w_qcd_mssm_method=False, r_qcd_os_ss=None)
     makePlots(

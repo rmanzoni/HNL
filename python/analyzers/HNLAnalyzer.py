@@ -51,7 +51,7 @@ class HNLAnalyzer(Analyzer):
         self.handles['pfmet'    ] = AutoHandle(('slimmedMETs'                  ,'','PAT' ), 'std::vector<pat::MET>'                         )
         self.handles['puppimet' ] = AutoHandle('slimmedMETsPuppi'                         , 'std::vector<pat::MET>'                         )
         self.handles['pfcand'   ] = AutoHandle('packedPFCandidates'                       , 'std::vector<pat::PackedCandidate> '            )
-        self.handles['rho'      ] = AutoHandle(('fixedGridRhoFastjetAll'       ,'','RECO'), 'double'                                        )
+#        self.handles['rho'      ] = AutoHandle(('fixedGridRhoFastjetAll'       ,'','RECO'), 'double'                                        )
 
     def assignVtx(self, particles, vtx):    
         for ip in particles:
@@ -166,7 +166,7 @@ class HNLAnalyzer(Analyzer):
         except: print(event.eventId, event.run, event.lumi); return False#; set_trace()
         self.counters.counter('HNL').inc('good collections')
       
-        event.rho = self.handles['rho'].product()[0]
+#        event.rho = self.handles['rho'].product()[0]
 
         #####################################################################################
         # primary vertex
@@ -185,7 +185,7 @@ class HNLAnalyzer(Analyzer):
 #        event.dsamuons    = self.buildDisplacedMuons(self.handles['dsamuons'].product())
 #        event.dgmuons     = self.buildDisplacedMuons(self.handles['dgmuons' ].product())
 
-        for imu in event.muons   : imu.type = 13
+        for imu in event.muons   : imu.type = 13; imu.rho = event.rho
 #        for imu in event.dsamuons: imu.type = 26
 #        for imu in event.dgmuons : imu.type = 39
 

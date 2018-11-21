@@ -385,8 +385,11 @@ vertex_vars = [
 
 # muon
 muon_vars = [
-    Variable('reliso05'                   , lambda muon : muon.relIsoR(R=0.4, dBetaFactor=0.5, allCharged=0)  ),
-    Variable('reliso05_03'                , lambda muon : muon.relIsoR(R=0.3, dBetaFactor=0.5, allCharged=0)  ),
+    Variable('reliso_rho_05'              , lambda muon : muon.relIsoFromEA(0.5)                              ),
+    Variable('reliso_rho_04'              , lambda muon : muon.relIsoFromEA(0.4)                              ),
+    Variable('reliso_rho_03'              , lambda muon : muon.relIsoFromEA(0.3)                              ),
+    Variable('reliso_dB_05'               , lambda muon : muon.relIsoR(R=0.4, dBetaFactor=0.5, allCharged=0)  ),
+    Variable('reliso_dB_05_03'            , lambda muon : muon.relIsoR(R=0.3, dBetaFactor=0.5, allCharged=0)  ),
     Variable('id_s'                       , lambda muon : muon.isSoftMuon(muon.associatedVertex)              ),
     Variable('id_l'                       , lambda muon : muon.muonID('POG_ID_Loose')                         ),
     Variable('id_m'                       , lambda muon : muon.muonID('POG_ID_Medium')                        ),
@@ -399,7 +402,7 @@ muon_vars = [
     Variable('is_pf'                      , lambda muon : muon.isPFMuon()                                     ),
     Variable('is_oot'                     , lambda muon : muon.isoot if hasattr(muon, 'isoot') else default() ),
 ## sim type for DD
-    Variable('simType'                    , lambda muon : muon.simType() if abs(muon.simType()) < 100 else -77),
+    Variable('simType'                    , lambda muon : muon.simType() if abs(muon.simType()) < 1001 else muon.simType() - 2**32),
     Variable('simFlavour'                 , lambda muon : muon.simFlavour()                                   ),
     Variable('simHeaviestMotherFlavour'   , lambda muon : muon.simHeaviestMotherFlavour()                     ),
     Variable('simPdgId'                   , lambda muon : muon.simPdgId()                                     ),

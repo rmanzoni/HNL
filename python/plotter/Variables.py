@@ -48,9 +48,10 @@ hnl_vars = [
     VCfg(name='hnl_m_12_jpsi', drawname='hnl_m_12', binning={'nbinsx':50, 'xmin':2.5 , 'xmax':3.5 }, unit='GeV', xtitle='dimuon mass'),
     VCfg(name='hnl_m_12_low' , drawname='hnl_m_12', binning={'nbinsx':40, 'xmin':0   , 'xmax':10  }, unit='GeV', xtitle='dimuon mass'),
 
-    VCfg(name='hnl_hn_pt' , binning={'nbinsx':80, 'xmin':0   , 'xmax':200 }, unit='GeV', xtitle='dimuon p_{T}'),
-    VCfg(name='hnl_hn_eta', binning={'nbinsx':40, 'xmin':-2.5, 'xmax':2.5 }, unit=None , xtitle='dimuon #eta'),
-    VCfg(name='hnl_hn_phi', binning={'nbinsx':40, 'xmin':-pi , 'xmax':pi  }, unit='rad', xtitle='dimuon #phi'),
+    VCfg(name='hnl_hn_pt'    , binning={'nbinsx':80, 'xmin':0   , 'xmax':200 }, unit='GeV', xtitle='dimuon p_{T} (MET)'),
+    VCfg(name='hnl_hn_vis_pt', binning={'nbinsx':80, 'xmin':0   , 'xmax':200 }, unit='GeV', xtitle='dimuon p_{T} (no MET)'),
+    VCfg(name='hnl_hn_eta'   , binning={'nbinsx':40, 'xmin':-2.5, 'xmax':2.5 }, unit=None , xtitle='dimuon #eta'),
+    VCfg(name='hnl_hn_phi'   , binning={'nbinsx':40, 'xmin':-pi , 'xmax':pi  }, unit='rad', xtitle='dimuon #phi'),
 
     VCfg(name='hnl_dr_01'        , binning={'nbinsx':40, 'xmin':0   , 'xmax':6 }, unit=None, xtitle='#DeltaR (l_{0}, #mu_{1})'),
     VCfg(name='hnl_dr_02'        , binning={'nbinsx':40, 'xmin':0   , 'xmax':6 }, unit=None, xtitle='#DeltaR (l_{0}, #mu_{2})'),
@@ -70,6 +71,7 @@ hnl_vars = [
     VCfg(name='hnl_w_vis_m', binning={'nbinsx':40, 'xmin':0   , 'xmax':250 }, unit='GeV', xtitle='3 lepton mass'),
     VCfg(name='hnl_2d_disp', binning={'nbinsx':40, 'xmin':0   , 'xmax':100 }, unit='cm' , xtitle='2D displacement'),
     VCfg(name='hnl_2d_small_disp', drawname='hnl_2d_disp', binning={'nbinsx':20, 'xmin':0   , 'xmax':40 }, unit='cm' , xtitle='2D displacement'),
+    VCfg(name='hnl_2d_smaller_disp', drawname='hnl_2d_disp', binning={'nbinsx':25, 'xmin':0   , 'xmax':10 }, unit='cm' , xtitle='2D displacement'),
     VCfg(name='hnl_3d_disp', binning={'nbinsx':40, 'xmin':0   , 'xmax':200 }, unit='cm' , xtitle='3D displacement'),
 
     VCfg(name='pfmet_phi' , binning={'nbinsx':40, 'xmin':-3.141593, 'xmax':3.141593}, unit=None, xtitle='E_{T}^{miss} #Phi (PF)'),
@@ -89,7 +91,17 @@ hnl_vars = [
 
 ]
 
-test_vars = [VCfg(name='hnl_2d_smaller_disp', drawname='hnl_2d_disp', binning={'nbinsx':20, 'xmin':0   , 'xmax':5 }, unit='cm' , xtitle='2D displacement'),]
+test_vars = [VCfg(name='hnl_2d_smaller_disp', drawname='hnl_2d_disp', binning={'nbinsx':10, 'xmin':0   , 'xmax':10 }, unit='cm' , xtitle='2D displacement'),
+             VCfg(name='hnl_m_12_low' , drawname='hnl_m_12', binning={'nbinsx':10, 'xmin':0   , 'xmax':10  }, unit='GeV', xtitle='dimuon mass'),]
+
+PTCONE = '(  ( hnl_hn_vis_pt * (hnl_iso04_rel_rhoArea<0.15) ) + ( (hnl_iso04_rel_rhoArea>=0.15) * ( hnl_hn_vis_pt * (1. + hnl_iso04_rel_rhoArea - 0.15) ) )  )'
+
+dde_vars = [
+            VCfg(name='ptCone', drawname='hnl_w_vis_pt',      binning={'nbinsx':14, 'xmin':0, 'xmax':70},    unit='GeV', xtitle='p^{Cone}_{T}'),
+#            VCfg(name='2disp',  drawname='hnl_2d_disp',       binning={'nbinsx':15, 'xmin':0, 'xmax':3},     unit='cm',  xtitle='2D displacement'),
+#            VCfg(name='m_dimu', drawname='hnl_m_12',          binning={'nbinsx':20, 'xmin':0., 'xmax':5},    unit='GeV', xtitle='Di-Muon Mass'),
+#            VCfg(name='m_triL', drawname='hnl_w_vis_m',       binning={'nbinsx':100, 'xmin':0., 'xmax':200}, unit='GeV', xtitle='Tri-Lepton Mass'),
+           ]
 
 def getVars(names, channel='all'):
     return [dict_channel_vars[channel][n] for n in names]

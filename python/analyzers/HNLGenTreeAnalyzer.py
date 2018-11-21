@@ -32,6 +32,7 @@ class HNLGenTreeAnalyzer(Analyzer):
         self.counters.addCounter('HNLGenTree')
         count = self.counters.counter('HNLGenTree')
         count.register('all events')
+        count.register('bad events')
         
     def process(self, event):
         self.readCollections(event.input)
@@ -69,7 +70,12 @@ class HNLGenTreeAnalyzer(Analyzer):
 
         event.the_hn.lep1 = max([ii for ii in event.the_hn.initialdaus if abs(ii.pdgId()) in [11, 13]], key = lambda x : x.pt())
         event.the_hn.lep2 = min([ii for ii in event.the_hn.initialdaus if abs(ii.pdgId()) in [11, 13]], key = lambda x : x.pt())
-        event.the_hn.neu  =     [ii for ii in event.the_hn.initialdaus if abs(ii.pdgId()) in [12, 14]][0] # there can be only one
+        try:
+            event.the_hn.neu  =     [ii for ii in event.the_hn.initialdaus if abs(ii.pdgId()) in [12, 14]][0] # there can be only one
+        except: 
+            print('\t<< event.the_hn.neu  = [ii for ii in event.the_hn.initialdaus if abs(ii.pdgId()) in [12, 14]][0] >> crashes\n\tevent:',event.eventId, event.run, event.lumi)
+            self.counters.counter('HNLGenTree').inc('bad events')
+            return False  # FIXME there is some problem with the line above in the new signal samples
 
         # identify the secondary vertex
         event.the_hn.the_sv = event.the_hn.lep1.vertex()

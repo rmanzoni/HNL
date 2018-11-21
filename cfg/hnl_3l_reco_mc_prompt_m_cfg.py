@@ -29,8 +29,8 @@ from CMGTools.HNL.analyzers.LeptonWeighter     import LeptonWeighter
 # import samples, signal
 # from CMGTools.HNL.samples.samples_mc_2017_noskim import TTWJetsToLNu as tt
 # from CMGTools.HNL.samples.samples_mc_2017 import DYJetsToLL_M50, hnl_bkg_essentials
-# from CMGTools.HNL.samples.signal_old import all_signals_m as samples
-from CMGTools.HNL.samples.samples_mc_2017_noskim import DYJetsToLL_M10to50, DYJetsToLL_M10to50_ext, DYJetsToLL_M50, DYBB, WJetsToLNu, WJetsToLNu_ext, TTJets 
+from CMGTools.HNL.samples.signal import all_signals_m as samples
+# from CMGTools.HNL.samples.samples_mc_2017_noskim import DYJetsToLL_M10to50, DYJetsToLL_M10to50_ext, DYJetsToLL_M50, DYJetsToLL_M50_ext, DYBB, WJetsToLNu, WJetsToLNu_ext, TTJets 
 # from CMGTools.HNL.samples.samples_mc_2017_noskim import DYBB 
 # from CMGTools.HNL.samples.samples_mc_2017_noskim import qcd_mu as samples
 
@@ -41,7 +41,7 @@ from CMGTools.HNL.samples.samples_mc_2017_noskim import DYJetsToLL_M10to50, DYJe
 # Get all heppy options; set via "-o production" or "-o production=True"
 # production = True run on batch, production = False (or unset) run locally
 
-production         = getHeppyOption('production' , False)
+production         = getHeppyOption('production' , True)
 # production         = getHeppyOption('production' , False)
 pick_events        = getHeppyOption('pick_events', False)
 
@@ -49,7 +49,10 @@ pick_events        = getHeppyOption('pick_events', False)
 ###               HANDLE SAMPLES                ###
 ###################################################
 # samples = hnl_bkg_essentials
-samples = [DYJetsToLL_M10to50, DYJetsToLL_M10to50_ext, DYJetsToLL_M50, DYBB, WJetsToLNu, WJetsToLNu_ext, TTJets]
+#samples = [TTJets, DYJetsToLL_M10to50, DYJetsToLL_M10to50_ext, DYJetsToLL_M50, DYJetsToLL_M50_ext, DYBB, WJetsToLNu, WJetsToLNu_ext]
+#samples = [TTJets]#, DYJetsToLL_M10to50, DYJetsToLL_M10to50_ext, DYJetsToLL_M50, DYJetsToLL_M50_ext, DYBB, WJetsToLNu, WJetsToLNu_ext]
+#samples = [DYJetsToLL_M50, DYJetsToLL_M50_ext, DYJetsToLL_M10to50, DYJetsToLL_M10to50_ext, DYBB]
+#samples = [WJetsToLNu, WJetsToLNu_ext]
 #samples = all_signals_m
 auxsamples = []#[ttbar, DYJetsToLL_M50]
 
@@ -60,7 +63,7 @@ for sample in samples+auxsamples:
     sample.triggers += ['HLT_IsoMu27_v%d'%i for i in range(1, 15)] #muon trigger
     sample.triggers += ['HLT_Mu50_v%d'   %i for i in range(1, 15)] #muon trigger
 
-    sample.splitFactor = splitFactor(sample, 1e5)
+    sample.splitFactor = splitFactor(sample, 5e4)
 
 selectedComponents = samples
 
@@ -253,7 +256,7 @@ sequence = cfg.Sequence([
 if not production:
 #     comp                 = ttbar
 #    comp                 = DYJetsToLL_M5to50
-    comp                 = samples[6]
+    comp                 = samples[0]
     selectedComponents   = [comp]
     comp.splitFactor     = 1
     comp.fineSplitFactor = 1

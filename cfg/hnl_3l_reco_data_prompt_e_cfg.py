@@ -38,7 +38,7 @@ pick_events        = getHeppyOption('pick_events', False)
 ###               HANDLE SAMPLES                ###
 ###################################################
 # samples = [Single_ele_2017B]
-samples = [Single_ele_2017F]
+samples = [Single_ele_2017B, Single_ele_2017C, Single_ele_2017D, Single_ele_2017E, Single_ele_2017F]
 
 for sample in samples:
     sample.triggers  = ['HLT_Ele27_WPTight_Gsf_v%d'          %i for i in range(1, 15)] #electron trigger
@@ -47,7 +47,7 @@ for sample in samples:
     sample.triggers += ['HLT_Ele115_CaloIdVT_GsfTrkIdT_v%d'  %i for i in range(1, 15)] #electron trigger
     sample.triggers += ['HLT_Ele135_CaloIdVT_GsfTrkIdT_v%d'  %i for i in range(1, 15)] #electron trigger
 
-    sample.splitFactor = splitFactor(sample, 1e5)
+    sample.splitFactor = splitFactor(sample, 3e4)
 
 selectedComponents = samples
 
@@ -155,7 +155,7 @@ jetAna = cfg.Analyzer(
 ###                  SEQUENCE                   ###
 ###################################################
 sequence = cfg.Sequence([
-    eventSelector,
+#    eventSelector,
     jsonAna,
     skimAna,
     triggerAna,

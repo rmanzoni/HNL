@@ -20,8 +20,9 @@ from CMGTools.HNL.analyzers.HNLAnalyzer     import HNLAnalyzer
 from CMGTools.HNL.analyzers.HNLTreeProducer import HNLTreeProducer
 from CMGTools.HNL.analyzers.TriggerAnalyzer import TriggerAnalyzer
 from CMGTools.HNL.analyzers.JetAnalyzer     import JetAnalyzer
+from CMGTools.HNL.analyzers.METFilter       import METFilter
 
-from CMGTools.HNL.samples.samples_data_2017_noskim import Single_mu_2017#, Single_mu_2017B
+from CMGTools.HNL.samples.samples_data_2017_noskim import Single_mu_2017, Single_mu_2017B
 
 ###################################################
 ###                   OPTIONS                   ###
@@ -110,6 +111,23 @@ HNLTreeProducer = cfg.Analyzer(
     promptLepType='mu',
 )
 
+metFilter = cfg.Analyzer(
+    METFilter,
+    name='METFilter',
+    processName='RECO',
+    triggers=[
+        'Flag_goodVertices',
+        'Flag_globalSuperTightHalo2016Filter',
+        'Flag_HBHENoiseFilter',
+        'Flag_HBHENoiseIsoFilter',
+        'Flag_EcalDeadCellTriggerPrimitiveFilter',
+        'Flag_BadPFMuonFilter',
+        'Flag_BadChargedCandidateFilter',
+        'Flag_eeBadScFilter',
+        'Flag_ecalBadCalibFilter',
+    ]
+)
+
 # see SM HTT TWiki
 # https://twiki.cern.ch/twiki/bin/viewauth/CMS/SMTauTau2016#Jet_Energy_Corrections
 jetAna = cfg.Analyzer(
@@ -141,6 +159,7 @@ sequence = cfg.Sequence([
     pileUpAna,
     HNLAnalyzer,
     jetAna,
+    metFilter,
     HNLTreeProducer,
 ])
 

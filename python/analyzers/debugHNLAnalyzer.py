@@ -29,8 +29,6 @@ from pdb import set_trace
 ROOT.gSystem.Load('libCMGToolsHNL')
 from ROOT import HNLKinematicVertexFitter as VertexFitter
 
-deadcone_ch = 0.015; deadcone_pu = 0.015; deadcone_ph = 0.08;
-
 class HNLAnalyzer(Analyzer):
     '''
     '''
@@ -51,7 +49,6 @@ class HNLAnalyzer(Analyzer):
         self.handles['pfmet'    ] = AutoHandle(('slimmedMETs'                  ,'','PAT' ), 'std::vector<pat::MET>'                         )
         self.handles['puppimet' ] = AutoHandle('slimmedMETsPuppi'                         , 'std::vector<pat::MET>'                         )
         self.handles['pfcand'   ] = AutoHandle('packedPFCandidates'                       , 'std::vector<pat::PackedCandidate> '            )
-#        self.handles['rho'      ] = AutoHandle(('fixedGridRhoFastjetAll'       ,'','RECO'), 'double'                                        )
 
     def assignVtx(self, particles, vtx):    
         for ip in particles:
@@ -160,13 +157,10 @@ class HNLAnalyzer(Analyzer):
         # make PF candidates
         try:
             pfs = map(PhysicsObject, self.handles['pfcand'].product())
-            event.pfs = pfs
 #            set_trace()
 #            return False
         except: print(event.eventId, event.run, event.lumi); return False#; set_trace()
         self.counters.counter('HNL').inc('good collections')
-      
-#        event.rho = self.handles['rho'].product()[0]
 
         #####################################################################################
         # primary vertex
@@ -185,7 +179,7 @@ class HNLAnalyzer(Analyzer):
 #        event.dsamuons    = self.buildDisplacedMuons(self.handles['dsamuons'].product())
 #        event.dgmuons     = self.buildDisplacedMuons(self.handles['dgmuons' ].product())
 
-        for imu in event.muons   : imu.type = 13; imu.rho = event.rho
+        for imu in event.muons   : imu.type = 13
 #        for imu in event.dsamuons: imu.type = 26
 #        for imu in event.dgmuons : imu.type = 39
 
@@ -424,165 +418,19 @@ class HNLAnalyzer(Analyzer):
         ########################################################################################
         # charged PF isolation
         ########################################################################################        
-#        neutral_pfs = [ipf for ipf in pfs if ipf.charge() == 0 and abs(ipf.pdgId()) != 11 and abs(ipf.pdgId())!=13 and abs(ipf.pdgId()) != 22]
-#        neutral_pfs = [ipf for ipf in neutral_pfs if ipf.pt()>0.6 and abs(ipf.eta())<2.5]
-# 
-#        charged_pfs = [ipf for ipf in pfs if ipf.charge() != 0 and abs(ipf.pdgId()) != 11 and abs(ipf.pdgId())!=13]
-#        charged_pfs = [ipf for ipf in charged_pfs if ipf.pt()>0.6 and abs(ipf.eta())<2.5]
-#        charged_pu_pfs = [ipf for ipf in charged_pfs if ipf.fromPV() <= 1]
-#        charged_pv_pfs = [ipf for ipf in charged_pfs if abs(ipf.dxy(event.recoSv.position()))<0.1 and abs(ipf.dz(event.recoSv.position()))<0.5]
-# 
-#        photon_pfs = [ipf for ipf in pfs if abs(ipf.pdgId()) == 22]
-#        photon_pfs = [ipf for ipf in photon_pfs if ipf.pt()>0.6 and abs(ipf.eta())<2.5]
-# 
-#        neutral_iso03_pfs  = [ipf for ipf in neutral_pfs if deltaR(ipf, event.the_3lep_cand.hnVisP4()) < 0.3 ]
-#        neutral_iso04_pfs  = [ipf for ipf in neutral_pfs if deltaR(ipf, event.the_3lep_cand.hnVisP4()) < 0.4 ]
-#        neutral_iso05_pfs  = [ipf for ipf in neutral_pfs if deltaR(ipf, event.the_3lep_cand.hnVisP4()) < 0.5 ]
-# 
-#        charged_pv_iso03_pfs   = [ipf for ipf in charged_pv_pfs  if deltaR(ipf, event.the_3lep_cand.hnVisP4()) < 0.3 ]
-#        charged_pv_iso04_pfs   = [ipf for ipf in charged_pv_pfs  if deltaR(ipf, event.the_3lep_cand.hnVisP4()) < 0.4 ]
-#        charged_pv_iso05_pfs   = [ipf for ipf in charged_pv_pfs  if deltaR(ipf, event.the_3lep_cand.hnVisP4()) < 0.5 ]
-# 
-#        charged_pu_iso03_pfs   = [ipf for ipf in charged_pu_pfs  if deltaR(ipf, event.the_3lep_cand.hnVisP4()) < 0.3 ]
-#        charged_pu_iso04_pfs   = [ipf for ipf in charged_pu_pfs  if deltaR(ipf, event.the_3lep_cand.hnVisP4()) < 0.4 ]
-#        charged_pu_iso05_pfs   = [ipf for ipf in charged_pu_pfs  if deltaR(ipf, event.the_3lep_cand.hnVisP4()) < 0.5 ]
-# 
-#        photon_iso03_pfs    = [ipf for ipf in photon_pfs   if deltaR(ipf, event.the_3lep_cand.hnVisP4()) < 0.3 ] 
-#        photon_iso04_pfs    = [ipf for ipf in photon_pfs   if deltaR(ipf, event.the_3lep_cand.hnVisP4()) < 0.4 ]
-#        photon_iso05_pfs    = [ipf for ipf in photon_pfs   if deltaR(ipf, event.the_3lep_cand.hnVisP4()) < 0.5 ]
-# 
-#        charged_iso_met_pfs = [ipf for ipf in charged_pv_pfs  if deltaR(ipf, event.the_3lep_cand.hnP4())    < 0.5 ]
-# 
-#        charged_iso_met     = sum([ipf.pt() for ipf in charged_iso_met_pfs]) 
-# 
-#        abs_neu_iso03       = sum([ipf.pt() for ipf in neutral_iso03_pfs])
-#        abs_neu_iso04       = sum([ipf.pt() for ipf in neutral_iso04_pfs])
-#        abs_neu_iso05       = sum([ipf.pt() for ipf in neutral_iso05_pfs])
-# 
-#        abs_ch_pv_iso03        = sum([ipf.pt() for ipf in charged_pv_iso03_pfs])
-#        abs_ch_pv_iso04        = sum([ipf.pt() for ipf in charged_pv_iso04_pfs])
-#        abs_ch_pv_iso05        = sum([ipf.pt() for ipf in charged_pv_iso05_pfs])
-# 
-#        abs_ch_pu_iso03        = sum([ipf.pt() for ipf in charged_pu_iso03_pfs])
-#        abs_ch_pu_iso04        = sum([ipf.pt() for ipf in charged_pu_iso04_pfs])
-#        abs_ch_pu_iso05        = sum([ipf.pt() for ipf in charged_pu_iso05_pfs])
-# 
-#        abs_ph_iso03        = sum([ipf.pt() for ipf in photon_iso03_pfs])
-#        abs_ph_iso04        = sum([ipf.pt() for ipf in photon_iso04_pfs])
-#        abs_ph_iso05        = sum([ipf.pt() for ipf in photon_iso05_pfs])
-# 
-#        event.the_3lep_cand.abs_ch_pv_iso03    = abs_ch_pv_iso03 
-#        event.the_3lep_cand.abs_ch_pv_iso04    = abs_ch_pv_iso04 
-#        event.the_3lep_cand.abs_ch_pv_iso05    = abs_ch_pv_iso05 
-# 
-#        event.the_3lep_cand.rel_ch_iso03    = abs_ch_pv_iso03 / event.the_3lep_cand.hnVisP4().pt()
-#        event.the_3lep_cand.rel_ch_iso04    = abs_ch_pv_iso04 / event.the_3lep_cand.hnVisP4().pt()
-#        event.the_3lep_cand.rel_ch_iso05    = abs_ch_pv_iso05 / event.the_3lep_cand.hnVisP4().pt()
-# 
-#        event.the_3lep_cand.abs_ch_iso_met  = charged_iso_met
-#        event.the_3lep_cand.rel_ch_iso_met  = charged_iso_met / event.the_3lep_cand.hnP4().pt()
-# 
-#        eta = event.the_3lep_cand.hnVisP4().eta()
-# 
-#        abs_tot_iso03_rhoArea = abs_ch_pv_iso03 + max(0., abs_ph_iso03 + abs_neu_iso03 - offset_rhoArea(event.rho, 0.3, eta))
-#        abs_tot_iso04_rhoArea = abs_ch_pv_iso04 + max(0., abs_ph_iso04 + abs_neu_iso04 - offset_rhoArea(event.rho, 0.4, eta))
-#        abs_tot_iso05_rhoArea = abs_ch_pv_iso05 + max(0., abs_ph_iso05 + abs_neu_iso05 - offset_rhoArea(event.rho, 0.5, eta))
-# 
-#        event.the_3lep_cand.abs_tot_iso03_rhoArea    = abs_tot_iso03_rhoArea 
-#        event.the_3lep_cand.abs_tot_iso04_rhoArea    = abs_tot_iso04_rhoArea 
-#        event.the_3lep_cand.abs_tot_iso05_rhoArea    = abs_tot_iso05_rhoArea 
-# 
-#        event.the_3lep_cand.rel_tot_iso03_rhoArea    = abs_tot_iso03_rhoArea / event.the_3lep_cand.hnVisP4().pt()
-#        event.the_3lep_cand.rel_tot_iso04_rhoArea    = abs_tot_iso04_rhoArea / event.the_3lep_cand.hnVisP4().pt()
-#        event.the_3lep_cand.rel_tot_iso05_rhoArea    = abs_tot_iso05_rhoArea / event.the_3lep_cand.hnVisP4().pt()
-# 
-#        abs_tot_iso03_deltaBeta = abs_ch_pv_iso03 + max(0., abs_ph_iso03 + abs_neu_iso03 - offset_deltaBeta(0.5, abs_ch_pu_iso03))
-#        abs_tot_iso04_deltaBeta = abs_ch_pv_iso04 + max(0., abs_ph_iso04 + abs_neu_iso04 - offset_deltaBeta(0.5, abs_ch_pu_iso04))
-#        abs_tot_iso05_deltaBeta = abs_ch_pv_iso05 + max(0., abs_ph_iso05 + abs_neu_iso05 - offset_deltaBeta(0.5, abs_ch_pu_iso05))
-# 
-#        event.the_3lep_cand.abs_tot_iso03_deltaBeta    = abs_tot_iso03_deltaBeta 
-#        event.the_3lep_cand.abs_tot_iso04_deltaBeta    = abs_tot_iso04_deltaBeta 
-#        event.the_3lep_cand.abs_tot_iso05_deltaBeta    = abs_tot_iso05_deltaBeta 
-# 
-#        event.the_3lep_cand.rel_tot_iso03_deltaBeta    = abs_tot_iso03_deltaBeta / event.the_3lep_cand.hnVisP4().pt()
-#        event.the_3lep_cand.rel_tot_iso04_deltaBeta    = abs_tot_iso04_deltaBeta / event.the_3lep_cand.hnVisP4().pt()
-#        event.the_3lep_cand.rel_tot_iso05_deltaBeta    = abs_tot_iso05_deltaBeta / event.the_3lep_cand.hnVisP4().pt()
+        chargedpfs = [ipf for ipf in pfs if ipf.charge()!=0 and abs(ipf.pdgId())!=11 and abs(ipf.pdgId())!=13]
+        chargedpfs = [ipf for ipf in chargedpfs if ipf.pt()>0.6 and abs(ipf.eta())<2.5]
+        chargedpfs = [ipf for ipf in chargedpfs if abs(ipf.dxy(event.recoSv.position()))<0.1 and abs(ipf.dz(event.recoSv.position()))<0.5]
 
-        event.the_3lep_cand.abs_tot_iso03_rhoArea    = totIso(event, 'rhoArea', 0.3) 
-        event.the_3lep_cand.abs_tot_iso04_rhoArea    = totIso(event, 'rhoArea', 0.4) 
-        event.the_3lep_cand.abs_tot_iso05_rhoArea    = totIso(event, 'rhoArea', 0.5) 
+        chisopfs = [ipf for ipf in chargedpfs if deltaR(ipf, event.the_3lep_cand.hnP4())<0.5]
 
-        event.the_3lep_cand.rel_tot_iso03_rhoArea    = event.the_3lep_cand.abs_tot_iso03_rhoArea / event.the_3lep_cand.hnVisP4().pt()
-        event.the_3lep_cand.rel_tot_iso04_rhoArea    = event.the_3lep_cand.abs_tot_iso04_rhoArea / event.the_3lep_cand.hnVisP4().pt()
-        event.the_3lep_cand.rel_tot_iso05_rhoArea    = event.the_3lep_cand.abs_tot_iso05_rhoArea / event.the_3lep_cand.hnVisP4().pt()
+        event.the_3lep_cand.abs_ch_iso = sum([ipf.pt() for ipf in chisopfs]) #FIXME MAYBE WE WANNA CHANGE HERE TO E INSTEAD OF pT
+        event.the_3lep_cand.rel_ch_iso = event.the_3lep_cand.abs_ch_iso/event.the_3lep_cand.hnP4().pt()
 
-        event.the_3lep_cand.abs_tot_iso03_deltaBeta  = totIso(event, 'dBeta', 0.3) 
-        event.the_3lep_cand.abs_tot_iso04_deltaBeta  = totIso(event, 'dBeta', 0.4) 
-        event.the_3lep_cand.abs_tot_iso05_deltaBeta  = totIso(event, 'dBeta', 0.5) 
-
-        event.the_3lep_cand.rel_tot_iso03_deltaBeta  =  event.the_3lep_cand.abs_tot_iso03_deltaBeta /  event.the_3lep_cand.hnVisP4().pt()
-        event.the_3lep_cand.rel_tot_iso04_deltaBeta  =  event.the_3lep_cand.abs_tot_iso04_deltaBeta /  event.the_3lep_cand.hnVisP4().pt()
-        event.the_3lep_cand.rel_tot_iso05_deltaBeta  =  event.the_3lep_cand.abs_tot_iso05_deltaBeta /  event.the_3lep_cand.hnVisP4().pt()
-
-        print 'l1 dr 0.3: ch_pv_iso: %.2f, neu_iso: %.2f, ph_iso: %.2f, ch_pu_iso: %.2f, l1pt: %.2f'%(event.the_3lep_cand.l1().pfIsolationR03().sumChargedHadronPt, event.the_3lep_cand.l1().pfIsolationR03().sumNeutralHadronEt , event.the_3lep_cand.l1().pfIsolationR03().sumPhotonEt, event.the_3lep_cand.l1().pfIsolationR03().sumPUPt, event.the_3lep_cand.l1().pt())
-        print 'l2 dr 0.3: ch_pv_iso: %.2f, neu_iso: %.2f, ph_iso: %.2f, ch_pu_iso: %.2f, l1pt: %.2f'%(event.the_3lep_cand.l2().pfIsolationR03().sumChargedHadronPt, event.the_3lep_cand.l2().pfIsolationR03().sumNeutralHadronEt , event.the_3lep_cand.l2().pfIsolationR03().sumPhotonEt, event.the_3lep_cand.l2().pfIsolationR03().sumPUPt, event.the_3lep_cand.l2().pt())
-
+        for mu in event.muons:
+            print event.eventId, mu, mu.simType()
+#        if (abs(event.the_3lep_cand.l1().simType()) > 100 or abs(event.the_3lep_cand.l2().simType()) > 100): set_trace()
         return True
-
-def totIso(event, offset_mode, dRCone):
-    ch_pu_iso = chargedHadronIso(event, dRCone, True)
-    ch_pv_iso = chargedHadronIso(event, dRCone, False)
-    neu_iso   = neutralHadronIso(event, dRCone)
-    ph_iso    = photonIso(event, dRCone)
-    if offset_mode == 'rhoArea': 
-        eta = event.the_3lep_cand.hnVisP4().eta()
-        offset = offset_rhoArea(event.rho, dRCone, eta)
-    if offset_mode == 'dBeta': 
-        offset = offset_dBeta(0.5, ch_pu_iso)
-    tot_iso = ch_pv_iso + max(0., ph_iso + neu_iso - offset)
-    if dRCone == 0.3:
-        print '2M dr %.1f: ch_pv_iso: %.2f, neu_iso: %.2f, ph_iso: %.2f, ch_pu_iso: %.2f, l1+l2pt: %.2f, id: %i'%(dRCone, ch_pv_iso, neu_iso, ph_iso, ch_pu_iso, event.the_3lep_cand.l1().pt()+event.the_3lep_cand.l2().pt(), event.eventId)
-    return tot_iso
-
-def offset_rhoArea(rho, dRCone, eta):
-    area = 0.0
-    if abs(eta) < 0.8000: area = 0.0566
-    if abs(eta) > 0.8000 and abs(eta) < 1.3000: area = 0.0562
-    if abs(eta) > 1.3000 and abs(eta) < 2.0000: area = 0.0363
-    if abs(eta) > 2.0000 and abs(eta) < 2.2000: area = 0.0119
-    if abs(eta) > 2.2000 and abs(eta) < 2.4000: area = 0.0064
-    if dRCone != 0.3: area *= ( (dRCone ** 2) / (0.3 **2) )
-    print 'area = {a}, offset = {o}'.format(a = area, o = area * rho) 
-    return area * rho
-    
-def offset_dBeta(dBeta, ch_pu_iso):
-    print 'dbeta = {db}, offset = {o}'.format(db = dBeta, o = dBeta * ch_pu_iso)
-    return ch_pu_iso * dBeta
         
-def chargedHadronIso(event, dRCone, PU = False): 
-    if PU == True:
-        charged_pfs = [ipf for ipf in event.pfs if ( ipf.charge() != 0 and ipf.pt() > 0.5 )]
-        charged_pfs = [ipf for ipf in charged_pfs if ipf.fromPV() <= 1]
-    if PU == False:
-        charged_pfs = [ipf for ipf in event.pfs if ( ipf.charge() != 0 and abs(ipf.pdgId()) != 11 and abs(ipf.pdgId()) != 13 and ipf.pt() > 0.5 )]
-        charged_pfs = [ipf for ipf in charged_pfs if (ipf.fromPV() > 1 and abs(ipf.pdgId()) == 211) ]
-    charged_pfs  = [ipf for ipf in charged_pfs  if deltaR(ipf, event.the_3lep_cand.hnVisP4()) < dRCone ]
-    ch_iso       = sum([ipf.pt() for ipf in charged_pfs]) 
-#    for i in charged_pfs: print 'charged hadron, pile up:\t', dRCone, PU, i.dz(), i.dxy(), i.pt(), i.pdgId()
-    return ch_iso
-
-def neutralHadronIso(event, dRCone): 
-    neutral_pfs = [ipf for ipf in event.pfs if ( ipf.charge() == 0 and abs(ipf.pdgId()) != 11 and abs(ipf.pdgId()) != 13 and abs(ipf.pdgId()) != 22 )]
-    neutral_pfs = [ipf for ipf in neutral_pfs if ipf.pt() > 0.5]
-    neutral_pfs = [ipf for ipf in neutral_pfs if deltaR(ipf, event.the_3lep_cand.hnVisP4()) < dRCone ]
-    neu_iso     = sum([ipf.pt() for ipf in neutral_pfs])
-#    for i in neutral_pfs: print 'neutral hadron\t', dRCone, i.dz(), i.dxy(), i.pt(), i.pdgId()
-    return neu_iso
-
-def photonIso(event, dRCone): 
-    photon_pfs = [ipf for ipf in event.pfs if abs(ipf.pdgId()) == 22]
-    photon_pfs = [ipf for ipf in photon_pfs if ipf.pt() > 0.5]
-    photon_pfs = [ipf for ipf in photon_pfs if deltaR(ipf, event.the_3lep_cand.hnVisP4()) < dRCone ] 
-    ph_iso     = sum([ipf.pt() for ipf in photon_pfs])
-#    for i in photon_pfs: print 'photon\t\t', dRCone, i.dz(), i.dxy(), i.pt(), i.pdgId()
-    return ph_iso
+        
+    

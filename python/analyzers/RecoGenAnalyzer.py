@@ -117,6 +117,7 @@ class RecoGenAnalyzer(Analyzer):
             ip.bestmatch     = None
             ip.bestmatchtype = None
             ip.matches = inConeCollection(ip, matchable, getattr(self.cfg_ana, 'drmax', dr_cut), 0.)
+            set_trace()
 
             # matches the corresponding "slimmed electron" to the gen particle
             if len(event.electrons):

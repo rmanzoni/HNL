@@ -20,6 +20,7 @@ def default():
 # event variables
 event_vars = [
     Variable('run', type=int),
+    Variable('lumi', lambda ev : ev.lumi, type=int),
     Variable('event', lambda ev : ev.eventId, type=int),
     Variable('bx', lambda ev : (ev.input.eventAuxiliary().bunchCrossing() * ev.input.eventAuxiliary().isRealData()), type=int),
     Variable('orbit_number', lambda ev : (ev.input.eventAuxiliary().orbitNumber() * ev.input.eventAuxiliary().isRealData()), type=int),
@@ -249,14 +250,30 @@ hnl_vars = [
 ]
 
 
-# generic particle
+# particle (either reco or gen)
 particle_vars = [
-    Variable('pt'    , lambda p: p.pt() ),
-    Variable('eta'   , lambda p: p.eta()),
-    Variable('phi'   , lambda p: p.phi()),
-    Variable('q'     , lambda p: p.charge() if hasattr(p, 'charge') else 0), # charge may be non-integer for gen particles
-    Variable('mass'  , lambda p: p.mass()),
-    Variable('pdgid' , lambda p: p.pdgId()),
+    Variable('pt'                        , lambda p: p.pt()                                   ),
+    Variable('eta'                       , lambda p: p.eta()                                  ),
+    Variable('phi'                       , lambda p: p.phi()                                  ),
+    Variable('q'                         , lambda p: p.charge() if hasattr(p, 'charge') else 0), # charge may be non-integer for gen particles
+    Variable('mass'                      , lambda p: p.mass()                                 ),
+    Variable('pdgid'                     , lambda p: p.pdgId()                                ),
+]
+
+# gen particle
+gen_particle_vars = [
+    Variable('pt'                        , lambda p: p.pt()                                   ),
+    Variable('eta'                       , lambda p: p.eta()                                  ),
+    Variable('phi'                       , lambda p: p.phi()                                  ),
+    Variable('q'                         , lambda p: p.charge() if hasattr(p, 'charge') else 0), # charge may be non-integer for gen particles
+    Variable('mass'                      , lambda p: p.mass()                                 ),
+    Variable('pdgid'                     , lambda p: p.pdgId()                                ),
+    Variable('fromHardProcessFinalState' , lambda p: p.fromHardProcessFinalState()            ),
+    Variable('isPromptFinalState'        , lambda p: p.isPromptFinalState()                   ),
+    Variable('vtx_x'                     , lambda p: p.vertex().x()                           ),
+    Variable('vtx_y'                     , lambda p: p.vertex().y()                           ),
+    Variable('vtx_z'                     , lambda p: p.vertex().z()                           ),
+    Variable('status'                    , lambda p: p.status()                               ),
 ]
 
 # stage-2 L1 object
@@ -368,20 +385,34 @@ vertex_vars = [
 
 # muon
 muon_vars = [
-    Variable('reliso05'   , lambda muon : muon.relIsoR(R=0.4, dBetaFactor=0.5, allCharged=0) ),
-    Variable('reliso05_03', lambda muon : muon.relIsoR(R=0.3, dBetaFactor=0.5, allCharged=0) ),
-    Variable('id_s'       , lambda muon : muon.isSoftMuon(muon.associatedVertex)             ),
-    Variable('id_l'       , lambda muon : muon.muonID('POG_ID_Loose')                        ),
-    Variable('id_m'       , lambda muon : muon.muonID('POG_ID_Medium')                       ),
-    Variable('id_t'       , lambda muon : muon.muonID('POG_ID_Tight')                        ),
-    Variable('id_tnv'     , lambda muon : muon.muonID('POG_ID_TightNoVtx')                   ),
-    Variable('id_hpt'     , lambda muon : muon.muonID('POG_ID_HighPt')                       ),
-    Variable('is_sa'      , lambda muon : muon.isStandAloneMuon()                            ),
-    Variable('is_gl'      , lambda muon : muon.isGlobalMuon()                                ),
-    Variable('is_tk'      , lambda muon : muon.isTrackerMuon()                               ),
-    Variable('is_pf'      , lambda muon : muon.isPFMuon()                                    ),
-    Variable('is_oot'     , lambda muon : muon.isoot if hasattr(muon, 'isoot') else default()),
-    Variable('simType'    , lambda muon : muon.simType()                                     ),
+    Variable('reliso_rho_05'              , lambda muon : muon.relIsoFromEA(0.5)                              ),
+    Variable('reliso_rho_04'              , lambda muon : muon.relIsoFromEA(0.4)                              ),
+    Variable('reliso_rho_03'              , lambda muon : muon.relIsoFromEA(0.3)                              ),
+    Variable('reliso_dB_05'               , lambda muon : muon.relIsoR(R=0.4, dBetaFactor=0.5, allCharged=0)  ),
+    Variable('reliso_dB_05_03'            , lambda muon : muon.relIsoR(R=0.3, dBetaFactor=0.5, allCharged=0)  ),
+    Variable('id_s'                       , lambda muon : muon.isSoftMuon(muon.associatedVertex)              ),
+    Variable('id_l'                       , lambda muon : muon.muonID('POG_ID_Loose')                         ),
+    Variable('id_m'                       , lambda muon : muon.muonID('POG_ID_Medium')                        ),
+    Variable('id_t'                       , lambda muon : muon.muonID('POG_ID_Tight')                         ),
+    Variable('id_tnv'                     , lambda muon : muon.muonID('POG_ID_TightNoVtx')                    ),
+    Variable('id_hpt'                     , lambda muon : muon.muonID('POG_ID_HighPt')                        ),
+    Variable('is_sa'                      , lambda muon : muon.isStandAloneMuon()                             ),
+    Variable('is_gl'                      , lambda muon : muon.isGlobalMuon()                                 ),
+    Variable('is_tk'                      , lambda muon : muon.isTrackerMuon()                                ),
+    Variable('is_pf'                      , lambda muon : muon.isPFMuon()                                     ),
+    Variable('is_oot'                     , lambda muon : muon.isoot if hasattr(muon, 'isoot') else default() ),
+## sim type for DD
+    Variable('simType'                    , lambda muon : muon.simType() if abs(muon.simType()) < 1001 else muon.simType() - 2**32),
+    Variable('simFlavour'                 , lambda muon : muon.simFlavour()                                   ),
+    Variable('simHeaviestMotherFlavour'   , lambda muon : muon.simHeaviestMotherFlavour()                     ),
+    Variable('simPdgId'                   , lambda muon : muon.simPdgId()                                     ),
+    Variable('simMotherPdgId'             , lambda muon : muon.simMotherPdgId()                               ),
+    Variable('simBX'                      , lambda muon : muon.simBX()                                        ),
+    Variable('simProdRho'                 , lambda muon : muon.simProdRho()                                   ),
+    Variable('simProdZ'                   , lambda muon : muon.simProdZ()                                     ),
+    Variable('simPt'                      , lambda muon : muon.simPt()                                        ),
+    Variable('simEta'                     , lambda muon : muon.simEta()                                       ),
+    Variable('simPhi'                     , lambda muon : muon.simPhi()                                       ),
 ]
 
 # for an extensive summary of possibly interesting muon variables, have a look at

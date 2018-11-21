@@ -20,8 +20,10 @@ tmp_heppy.py
 # VIM SWAP FILES
 *.swp
 
-# ROOT FILES
+# ROOT FILES and PLOTS
 *.root
+*.pdf
+*.png
 
 # Distribution / packaging
 .Python

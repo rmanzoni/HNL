@@ -6914,10 +6914,6 @@ all_signals = [
     HN3L_M_8_V_0p00547722557505_tau_massiveAndCKM_LO  ,
 ]
 
-all_signals_e = [isample for isample in all_signals if '_e_'   in isample.name]
-all_signals_m = [isample for isample in all_signals if '_mu_'  in isample.name]
-all_signals_t = [isample for isample in all_signals if '_tau_' in isample.name]
-
 all_signals_e = [
     HN3L_M_2_V_0p022360679775_e_massiveAndCKM_LO, 
     HN3L_M_2_V_0p01_e_massiveAndCKM_LO, 
@@ -6935,6 +6931,10 @@ all_signals_mu = [
     HN3L_M_5_V_0p01_mu_massiveAndCKM_LO,
     HN3L_M_8_V_0p00244948974278_mu_massiveAndCKM_LO,
     HN3L_M_8_V_0p00547722557505_mu_massiveAndCKM_LO,]
+
+all_signals_e = [isample for isample in all_signals if '_e_'   in isample.name]
+all_signals_m = [isample for isample in all_signals if '_mu_'  in isample.name]
+all_signals_t = [isample for isample in all_signals if '_tau_' in isample.name]
 # set the number of dataset entries by hand. needed by splitFactor
 for sample in all_signals:
     sample.dataset_entries = 1000 * len(sample.files)

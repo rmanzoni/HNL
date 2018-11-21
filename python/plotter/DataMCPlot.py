@@ -214,6 +214,7 @@ class DataMCPlot(object):
             self.legend.SetFillColor(0)
             self.legend.SetFillStyle(0)
             self.legend.SetLineColor(0)
+            self.legend.SetLineWidth(1)
             self.legend.SetNColumns(5) # number of comps / 2 (or 3) + 1
             self.legend.SetEntrySeparation(0.2) 
             self.legend.SetColumnSeparation(0.2) 
@@ -273,8 +274,9 @@ class DataMCPlot(object):
             stackedHists.append(hist)
         self._BuildStack(stackedHists, ytitle='Data/MC')
         mcHist = self.BGHist()
+        if dataHist == None: dataHist = mcHist              # this was added to avoid crashes for SR plots (without data)
         self.dataOverMCHist = copy.deepcopy(dataHist)
-        # self.dataOverMCHist.Add(mcHist, -1)
+        # self.dataOverMCHist.Add(mcHist, -1)   
         self.dataOverMCHist.Divide(mcHist)
         self.dataOverMCHist.Draw()
         yaxis = self.dataOverMCHist.GetYaxis()

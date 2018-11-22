@@ -42,7 +42,6 @@ ZZZ = creator.makeMCComponent(
     xSec    = 0.00319,
     useAAA  = True
 )
-ggZZTo2e2mu.nGenEvents = ggZZTo2e2mu.dataset_entries
 
 ggZZTo2e2mu_ext = creator.makeMCComponent(
     name    = 'ggZZTo2e2mu_ext', 

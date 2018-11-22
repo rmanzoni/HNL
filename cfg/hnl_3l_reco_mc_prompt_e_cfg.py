@@ -28,7 +28,7 @@ from CMGTools.HNL.analyzers.LeptonWeighter     import LeptonWeighter
 
 # import samples, signal
 # from CMGTools.HNL.samples.localsignal import HN3L_M_2p5_V_0p0173205080757_e_onshell, HN3L_M_2p5_V_0p00707106781187_e_onshell
-from CMGTools.HNL.samples.samples_mc_2017_noskim import DYJetsToLL_M10to50, DYJetsToLL_M10to50_ext, DYJetsToLL_M50, DYJetsToLL_M50_ext, DYBB#, WJetsToLNu, WJetsToLNu_ext, TTJets 
+# from CMGTools.HNL.samples.samples_mc_2017_noskim import DYJetsToLL_M10to50, DYJetsToLL_M10to50_ext, DYJetsToLL_M50, DYJetsToLL_M50_ext, DYBB#, WJetsToLNu, WJetsToLNu_ext, TTJets 
 # from CMGTools.HNL.samples.samples_mc_2017 import DYJetsToLL_M50, hnl_bkg_essentials
 # from CMGTools.HNL.samples.samples_mc_2017_noskim import DYJetsToLL_M10to50
 #from CMGTools.HNL.samples.samples_mc_2017_noskim import DYJetsToLL_M50
@@ -55,7 +55,7 @@ pick_events        = getHeppyOption('pick_events', False)
 #samples = hnl_bkg_essentials
 # samples = all_signals_e
 # samples = [bkg]
-samples = [DYJetsToLL_M50]
+# samples = [DYJetsToLL_M50]
 #samples = qcd_mu
 #samples = signals_e
 #samples = [DYJetsToLL_M10to50]

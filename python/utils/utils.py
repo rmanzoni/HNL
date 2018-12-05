@@ -110,6 +110,7 @@ def fitVertex(pair,L1L2LeptonType):
     if tofit.size() == 2 and tofit[0]!=tofit[1]:
         #call the vertix fit function from framework
         sv = vtxfit.Fit(tofit, L1L2LeptonType)
+            
         
 
         if not sv.get().isEmpty() and sv.get().isValid(): # check that the vertex is good

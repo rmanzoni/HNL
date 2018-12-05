@@ -497,7 +497,6 @@ class HNLAnalyzer(Analyzer):
         #####################################################################################
         # After passing all selections and we have an HNL candidate, pass a "true" boolean!
         #####################################################################################
-        set_trace()
         return True
 
 

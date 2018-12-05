@@ -41,6 +41,8 @@ class HNLKinematicVertexFitter {
   public:
     HNLKinematicVertexFitter() {};
     virtual ~HNLKinematicVertexFitter() {};
+    
+    //std::string L1L2LeptonType;
 
     // constructed by reco::TrackRef
     reco::TransientTrack getTransientTrack(const reco::TrackRef& trackRef) {    
@@ -75,15 +77,26 @@ class HNLKinematicVertexFitter {
       return transientTrack;
     }
 
-    RefCountedKinematicTree Fit(const std::vector<reco::Track> & candidates){
+    RefCountedKinematicTree Fit(const std::vector<reco::Track> & candidates, std::string L1L2LeptonType){
 
       KinematicParticleFactoryFromTransientTrack pFactory;  
       std::vector<RefCountedKinematicParticle> XParticles;
-
+      int i = 0;
       for (std::vector<reco::Track>::const_iterator ilc = candidates.begin(); ilc != candidates.end(); ++ilc){
-        float pmass  = 511e-6;
+        float pmass = 511e-6;
+        if (L1L2LeptonType == "ee"){
+            pmass = 511e-6; 
+        }
+        if (L1L2LeptonType == "mm"){
+            pmass = 105658e-6; 
+        }
+        if (L1L2LeptonType == "em"){
+            if (i==0){pmass = 511e-6;}
+            if (i==1){pmass = 105658e-6;}
+        }
         float pmasse = 1.e-6 * pmass;
         XParticles.push_back(pFactory.particle(getTransientTrack(*ilc), pmass, chi, ndf, pmasse));
+        i++;
       }
 
       KinematicConstrainedVertexFitter kvFitter;

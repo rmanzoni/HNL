@@ -63,7 +63,10 @@ class HNLGenTreeAnalyzer(Analyzer):
         event.the_hn = the_hns[0] # one per event
 
         # prompt lepton
-        event.the_pl = map(GenParticle, [ip for ip in event.genp_pruned if abs(ip.pdgId()) in [11,13] and ip.isPromptFinalState() and not isAncestor(event.the_hn, ip)])[0]      
+        try:
+            event.the_pl = map(GenParticle, [ip for ip in event.genp_pruned if abs(ip.pdgId()) in [11,13] and ip.isPromptFinalState() and not isAncestor(event.the_hn, ip)])[0]      
+        except:
+            set_trace()
 
         # get the immediate daughters of the heavy neutrino decay
         event.the_hn.initialdaus = [event.the_hn.daughter(jj) for jj in range(event.the_hn.numberOfDaughters())]

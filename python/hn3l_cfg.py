@@ -1,4 +1,4 @@
-def generateKeyConfigs(production, promptLeptonType, L1L2LeptonType):
+def generateKeyConfigs(samples,production, promptLeptonType, L1L2LeptonType):
     import os
     from collections import OrderedDict
     import PhysicsTools.HeppyCore.framework.config as cfg
@@ -24,6 +24,7 @@ def generateKeyConfigs(production, promptLeptonType, L1L2LeptonType):
     from CMGTools.HNL.analyzers.HNLAnalyzer_emm    import HNLAnalyzer_emm
     from CMGTools.HNL.analyzers.HNLTreeProducer    import HNLTreeProducer
     from CMGTools.HNL.analyzers.HNLGenTreeAnalyzer import HNLGenTreeAnalyzer
+    from CMGTools.HNL.analyzers.RecoGenAnalyzer    import RecoGenAnalyzer
     from CMGTools.HNL.analyzers.TriggerAnalyzer    import TriggerAnalyzer
     from CMGTools.HNL.analyzers.JetAnalyzer        import JetAnalyzer
     from CMGTools.HNL.analyzers.METFilter          import METFilter
@@ -37,7 +38,7 @@ def generateKeyConfigs(production, promptLeptonType, L1L2LeptonType):
     # from CMGTools.HNL.samples.samples_mc_2017 import DYJetsToLL_M50, hnl_bkg_essentials
     # from CMGTools.HNL.samples.samples_mc_2017_noskim import DYJetsToLL_M10to50
     #from CMGTools.HNL.samples.samples_mc_2017_noskim import DYJetsToLL_M50
-    from CMGTools.HNL.samples.signal import all_signals_e as samples
+    # from CMGTools.HNL.samples.signal import all_signals_e as samples
     # from CMGTools.HNL.samples.signal import HN3L_M_2_V_0p00836660026534_e_massiveAndCKM_LO as samples
     # from CMGTools.HNL.samples.localsignal import HN3L_M_2_V_0p00836660026534_e_massiveAndCKM_LO
     #from CMGTools.HNL.samples.samples_mc_2017_noskim import qcd_mu as samples
@@ -62,6 +63,11 @@ def generateKeyConfigs(production, promptLeptonType, L1L2LeptonType):
     # L1L2LeptonType = 'mm' #choose from 'ee', 'mm', 'em'
     promptLeptonType = promptLeptonType # choose from 'ele' or 'mu'
     L1L2LeptonType = L1L2LeptonType  #choose from 'ee', 'mm', 'em'
+
+    # if promptLeptonType == 'ele':
+        # from CMGTools.HNL.samples.signal import all_signals_e as samples
+    # if promptLeptonType == 'mu':
+        # from CMGTools.HNL.samples.signal import all_signals_m as samples
 
     ###################################################
     ###               HANDLE SAMPLES                ###
@@ -92,7 +98,7 @@ def generateKeyConfigs(production, promptLeptonType, L1L2LeptonType):
             sample.triggers  = ['HLT_IsoMu24_v%d' %i for i in range(1, 15)] #muon trigger
             sample.triggers += ['HLT_IsoMu27_v%d' %i for i in range(1, 15)] #muon trigger
             sample.triggers += ['HLT_Mu50_v%d'    %i for i in range(1, 15)] #muon trigger
-            sample.splitFactor = splitFactor(sample, 2e5)
+            sample.splitFactor = splitFactor(sample, 5e4)
 
     selectedComponents = samples+auxsamples
 

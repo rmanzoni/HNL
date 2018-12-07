@@ -20,6 +20,9 @@ class HNLTreeProducer(TreeProducerBase):
         self.bookEvent(self.tree)
         self.var      (self.tree, 'n_cands')
         self.var      (self.tree, 'rho')
+        self.var      (self.tree, 'nLeptons')
+        self.var      (self.tree, 'nElectrons')
+        self.var      (self.tree, 'nMuons')
         
         # reco variables
         self.bookHNL (self.tree, 'hnl')
@@ -94,14 +97,17 @@ class HNLTreeProducer(TreeProducerBase):
         self.var(self.tree, 'bs_dydz')
         
         # reco HN decay vertex (when present)
-        self.var(self.tree, 'sv_x' )
-        self.var(self.tree, 'sv_y' )
-        self.var(self.tree, 'sv_z' )
-        self.var(self.tree, 'sv_xe')
-        self.var(self.tree, 'sv_ye')
-        self.var(self.tree, 'sv_ze')
-        self.var(self.tree, 'sv_prob')
-        self.var(self.tree, 'sv_cos')
+        self.bookVertex(self.tree, 'sv')
+
+        # # reco HN decay vertex (when present)
+        # self.var(self.tree, 'sv_x' )
+        # self.var(self.tree, 'sv_y' )
+        # self.var(self.tree, 'sv_z' )
+        # self.var(self.tree, 'sv_xe')
+        # self.var(self.tree, 'sv_ye')
+        # self.var(self.tree, 'sv_ze')
+        # self.var(self.tree, 'sv_prob')
+        # self.var(self.tree, 'sv_cos')
 
         # lepton vetoes
         self.var(self.tree, 'pass_e_veto')
@@ -183,6 +189,9 @@ class HNLTreeProducer(TreeProducerBase):
         self.fillEvent(self.tree, event)
         self.fill     (self.tree, 'n_cands', len(event.dileptonvtx))
         self.fill     (self.tree, 'rho'    , event.rho)
+        self.fill     (self.tree, 'nLeptons'    , event.nLeptons)
+        self.fill     (self.tree, 'nElectrons'  , event.nElectrons)
+        self.fill     (self.tree, 'nMuons'    , event.nMuons)
 
         # reco HNL
         self.fillHNL (self.tree, 'hnl'                  , event.the_3lep_cand                 )
@@ -272,14 +281,17 @@ class HNLTreeProducer(TreeProducerBase):
     
         
         # reco secondary vertex and displacement
-        self.fill(self.tree, 'sv_x'   , event.recoSv.x()             )
-        self.fill(self.tree, 'sv_y'   , event.recoSv.y()             )
-        self.fill(self.tree, 'sv_z'   , event.recoSv.z()             )
-        self.fill(self.tree, 'sv_xe'  , event.recoSv.xError()        )
-        self.fill(self.tree, 'sv_ye'  , event.recoSv.yError()        )
-        self.fill(self.tree, 'sv_ze'  , event.recoSv.zError()        )
-        self.fill(self.tree, 'sv_prob', event.recoSv.prob            )
-        self.fill(self.tree, 'sv_cos' , event.recoSv.disp2DFromBS_cos)
+        self.fillVertex(self.tree, 'sv' , event.recoSv)
+
+        # # reco secondary vertex and displacement
+        # self.fill(self.tree, 'sv_x'   , event.recoSv.x()             )
+        # self.fill(self.tree, 'sv_y'   , event.recoSv.y()             )
+        # self.fill(self.tree, 'sv_z'   , event.recoSv.z()             )
+        # self.fill(self.tree, 'sv_xe'  , event.recoSv.xError()        )
+        # self.fill(self.tree, 'sv_ye'  , event.recoSv.yError()        )
+        # self.fill(self.tree, 'sv_ze'  , event.recoSv.zError()        )
+        # self.fill(self.tree, 'sv_prob', event.recoSv.prob            )
+        # self.fill(self.tree, 'sv_cos' , event.recoSv.disp2DFromBS_cos)
     
         self.fill(self.tree, 'hnl_2d_disp', event.recoSv.disp2DFromBS.value()) # from beamspot
         self.fill(self.tree, 'hnl_3d_disp', event.recoSv.disp3DFromBS.value()) # from PV

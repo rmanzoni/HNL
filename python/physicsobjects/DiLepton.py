@@ -13,7 +13,9 @@ class DiLepton(object):
     '''
     '''
     def __init__(self, pair, sv, pv, bs):
-        self._leptons = sorted(pair, key = lambda x : x.pt(), reverse = True)
+        # self._leptons = sorted(pair, key = lambda lep : (-abs(lep.pdgId()),lep.pt()), reverse = True)
+        self._leptons = pair
+
         self._vtx = sv
         self._pv  = pv
         self._bs  = bs

@@ -188,7 +188,8 @@ class HNLAnalyzer(Analyzer):
 
         if self.cfg_ana.L1L2LeptonType == 'em':
             dileptons = [(lep1, lep2) for lep1, lep2 in dileptons if abs(lep1.pdgId()) + abs(lep2.pdgId()) == 24]
-            dileptons = sorted(dileptons, key = lambda lep: lep.pdgId()  ,reverse = False)
+            for pair in dileptons:
+                pair = sorted(pair, key = lambda lep: (abs(lep.pdgId()),-lep.pt()),reverse = False)
 
         return dileptons
         
@@ -282,6 +283,7 @@ class HNLAnalyzer(Analyzer):
         #####################################################################################
         # filter for events with at least 3 leptons in proper flavor combination
         #####################################################################################
+        
         #check there are enough leptons
         if len(event.muons + event.electrons) < 3: 
             return False
@@ -290,6 +292,11 @@ class HNLAnalyzer(Analyzer):
         #check there are enough leptons in the resp. flavor combination
         if not self.checkLeptonFlavors(event.electrons, event.muons):
             return False 
+
+        #save the key numbers
+        event.nElectrons = len(event.electrons)
+        event.nMuons     = len(event.muons)
+        event.nLeptons   = len(event.electrons) + len(event.muons) 
         
         self.counters.counter('HNL').inc('>= 3 leptons with correct flavor combo')
 

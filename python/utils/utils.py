@@ -48,7 +48,6 @@ def fitVertex_RecoChargedCandidates(pair):
     tofit.clear()
     for il in pair:
 
-        set_trace()
         ic = ROOT.reco.RecoChargedCandidate() # instantiate a dummy RecoChargedCandidate
         ic.setCharge(il.charge())           # assign the correct charge
 
@@ -86,17 +85,22 @@ def fitVertex(pair,L1L2LeptonType):
     vtx = None
     tofit.clear()
 
-    if pair[0] == pair [1]:
+    if pair[0] == pair[1]:
         print 'vtx fitter: both leps in the pair are the same!'
         return False
     
     for il in pair:
         if abs(il.pdgId())==13:
-            if il.muonBestTrack().get():
-                tofit.push_back(il.muonBestTrack().get())
-                if not il.muonBestTrack().get().numberOfValidHits()>0: 
+            # if il.muonBestTrack().get():
+                # tofit.push_back(il.muonBestTrack().get())
+                # if not il.muonBestTrack().get().numberOfValidHits()>0: 
+                    # print 'there are no valid tracker hits in this muon track'
+            # else: print 'could not load muonBestTrack() from the muon'
+            if il.globalTrack().get():
+                tofit.push_back(il.globalTrack().get())
+                if not il.globalTrack().get().numberOfValidHits()>0: 
                     print 'there are no valid tracker hits in this muon track'
-            else: print 'could not load muonBestTrack() from the muon'
+            # else: print 'could not load globalTrack() from the muon'
         if abs(il.pdgId()) == 26: 
             #TODO: to be implemented once solved the BField issue
             print 'pair contains dsa muons, not compatible yet. make sure to only use PF (slimmed) muons.'

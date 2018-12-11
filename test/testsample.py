@@ -1,5 +1,6 @@
 import ROOT
 from DataFormats.FWLite import Events,Handle
+from pdb import set_trace
 
 genp_label  = "prunedGenParticles"
 genp_handle = Handle("vector<reco::GenParticle>")
@@ -108,6 +109,8 @@ HN3L_M_2_V_0p00836660026534_e_massiveAndCKM_LO_files = [
     'root://cms-xrd-global.cern.ch//store/user/tomc/heavyNeutrinoMiniAOD/Moriond17_aug2018/displaced/HeavyNeutrino_trilepton_M-2_V-0.00836660026534_e_massiveAndCKM_LO/heavyNeutrino_98.root',
     'root://cms-xrd-global.cern.ch//store/user/tomc/heavyNeutrinoMiniAOD/Moriond17_aug2018/displaced/HeavyNeutrino_trilepton_M-2_V-0.00836660026534_e_massiveAndCKM_LO/heavyNeutrino_99.root',
 ]
+
+nPromptTaus = 0
 for file in HN3L_M_2_V_0p00836660026534_e_massiveAndCKM_LO_files:
     print 'scanning %s'%(file)
     events = Events(file) 
@@ -118,5 +121,9 @@ for file in HN3L_M_2_V_0p00836660026534_e_massiveAndCKM_LO_files:
         genp = genp_handle.product()
 
         for gg in genp:
-            if abs(gg.pdgId())==15:
-                print 'found a tau!!! eventId: %d\tpdgId: %d\tpt: %.1f\tphi: %.1f\teta: %.1f' %(event.eventAuxiliary().event(),gg.pdgId(), gg.pt(), gg.eta(), gg.phi())
+            if abs(gg.pdgId())==15 and gg.isPromptDecayed():
+                set_trace()
+                print 'found a prompt decayed tau!!! eventId: %d\tpdgId: %d\tpt: %.1f\tphi: %.1f\teta: %.1f\tnumberOfDaugters: %d' %(event.eventAuxiliary().event(),gg.pdgId(), gg.pt(), gg.eta(), gg.phi(), gg.numberOfDaughters())
+                nPromptTaus += 1
+
+print 'Scanning finished... found in total %d taus with .isPromptDecayed() = True'%(nPromptTaus)

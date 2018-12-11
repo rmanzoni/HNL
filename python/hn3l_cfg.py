@@ -298,12 +298,13 @@ def generateKeyConfigs(samples,production, promptLeptonType, L1L2LeptonType):
         # comp                 = all_signals_e[0]
         # comp                 = DYJetsToLL_M50
         comp                 = samples[0]
+        # comp                 = samples
     #     comp                 = ttbar
         # comp                 = bkg
         selectedComponents   = [comp]
         comp.splitFactor     = 1
         comp.fineSplitFactor = 1
-        comp.files           = comp.files[:50]
+        comp.files           = comp.files[:]
 
     # the following is declared in case this cfg is used in input to the
     # heppy.py script

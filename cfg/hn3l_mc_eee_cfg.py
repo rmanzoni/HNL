@@ -1,7 +1,9 @@
 from CMGTools.HNL.hn3l_cfg import *
 
 # specify the samples considered
-from CMGTools.HNL.samples.signal import all_signals_e as samples
+# from CMGTools.HNL.samples.signal import all_signals_e as samples
+# from CMGTools.HNL.samples.signal_new import signals_e as samples
+from CMGTools.HNL.samples.signal_13sept18 import all_signals_e as samples
 
 # edit the lines here to specify your ntuple production mode 
 production         = True # state whether you're running production mode or not

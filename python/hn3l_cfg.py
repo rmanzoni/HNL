@@ -92,13 +92,13 @@ def generateKeyConfigs(samples,production, promptLeptonType, L1L2LeptonType):
             sample.triggers += ['HLT_Ele35_WPTight_Gsf_v%d'          %i for i in range(1, 15)] #electron trigger
             sample.triggers += ['HLT_Ele115_CaloIdVT_GsfTrkIdT_v%d'  %i for i in range(1, 15)] #electron trigger
             sample.triggers += ['HLT_Ele135_CaloIdVT_GsfTrkIdT_v%d'  %i for i in range(1, 15)] #electron trigger
-            sample.splitFactor = splitFactor(sample, 5e4)
+            sample.splitFactor = splitFactor(sample, 3e4)
     if promptLeptonType == 'mu':
         for sample in samples+auxsamples:
             sample.triggers  = ['HLT_IsoMu24_v%d' %i for i in range(1, 15)] #muon trigger
             sample.triggers += ['HLT_IsoMu27_v%d' %i for i in range(1, 15)] #muon trigger
             sample.triggers += ['HLT_Mu50_v%d'    %i for i in range(1, 15)] #muon trigger
-            sample.splitFactor = splitFactor(sample, 5e4)
+            sample.splitFactor = splitFactor(sample, 3e4)
 
     selectedComponents = samples+auxsamples
 

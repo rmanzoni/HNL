@@ -110,8 +110,16 @@ HN3L_M_2_V_0p00836660026534_e_massiveAndCKM_LO_files = [
     'root://cms-xrd-global.cern.ch//store/user/tomc/heavyNeutrinoMiniAOD/Moriond17_aug2018/displaced/HeavyNeutrino_trilepton_M-2_V-0.00836660026534_e_massiveAndCKM_LO/heavyNeutrino_99.root',
 ]
 
+# events = Events(' root://cms-xrd-global.cern.ch//store/user/tomc/heavyNeutrinoMiniAOD/Moriond17_aug2018/displaced/HeavyNeutrino_trilepton_M-2_V-0.00836660026534_tau_massiveAndCKM_LO/heavyNeutrino_1.root') 
+# files = [' root://cms-xrd-global.cern.ch//store/user/tomc/heavyNeutrinoMiniAOD/Moriond17_aug2018/displaced/HeavyNeutrino_trilepton_M-2_V-0.00836660026534_tau_massiveAndCKM_LO/heavyNeutrino_1.root'] 
+
+files = ['/afs/cern.ch/work/d/dezhu/HNL/CMSSW_9_4_6_patch1/src/CMGTools/HNL/test/testfile.root']
+
+# files = HN3L_M_2_V_0p00836660026534_e_massiveAndCKM_LO_files
+# files = [events]
+
 nPromptTaus = 0
-for file in HN3L_M_2_V_0p00836660026534_e_massiveAndCKM_LO_files:
+for file in files:
     print 'scanning %s'%(file)
     events = Events(file) 
 
@@ -122,7 +130,7 @@ for file in HN3L_M_2_V_0p00836660026534_e_massiveAndCKM_LO_files:
 
         for gg in genp:
             if abs(gg.pdgId())==15 and gg.isPromptDecayed():
-                set_trace()
+                # set_trace()
                 print 'found a prompt decayed tau!!! eventId: %d\tpdgId: %d\tpt: %.1f\tphi: %.1f\teta: %.1f\tnumberOfDaugters: %d' %(event.eventAuxiliary().event(),gg.pdgId(), gg.pt(), gg.eta(), gg.phi(), gg.numberOfDaughters())
                 nPromptTaus += 1
 

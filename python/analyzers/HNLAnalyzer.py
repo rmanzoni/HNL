@@ -1,16 +1,15 @@
 '''
-This is the main analyzer going through data and trying to identify HNL->3L events.
+This is the base analyzer going through data and trying to identify HNL->3L events.
 '''
 
 import ROOT
 from itertools import product, combinations
 from math import sqrt, pow
-
 import PhysicsTools.HeppyCore.framework.config as cfg
-
-from PhysicsTools.HeppyCore.utils.deltar             import deltaR, deltaPhi
-from PhysicsTools.Heppy.analyzers.core.Analyzer      import Analyzer
-from PhysicsTools.Heppy.analyzers.core.AutoHandle    import AutoHandle
+from PhysicsTools.Heppy.analyzers.core.Analyzer import Analyzer
+from PhysicsTools.Heppy.analyzers.core.AutoHandle import AutoHandle
+from PhysicsTools.Heppy.physicsobjects.PhysicsObjects import Lepton
+from PhysicsTools.HeppyCore.utils.deltar import deltaR, deltaR2
 from PhysicsTools.Heppy.physicsobjects.GenParticle   import GenParticle
 from PhysicsTools.Heppy.physicsobjects.Photon        import Photon
 from PhysicsTools.Heppy.physicsobjects.Tau           import Tau
@@ -22,7 +21,6 @@ from CMGTools.HNL.utils.utils                        import isAncestor, displace
 from CMGTools.HNL.physicsobjects.HN3L                import HN3L
 from CMGTools.HNL.physicsobjects.DiLepton            import DiLepton
 from CMGTools.HNL.physicsobjects.DisplacedMuon       import DisplacedMuon
-
 from pdb import set_trace
 
 # load custom library to ROOT. This contains the kinematic vertex fitter class
@@ -32,16 +30,15 @@ from ROOT import HNLKinematicVertexFitter as VertexFitter
 deadcone_ch = 0.015; deadcone_pu = 0.015; deadcone_ph = 0.08;
 
 class HNLAnalyzer(Analyzer):
-    '''
-    '''
+    ''' Generic analyzer for HNL -> DiLepton + MET, independent of the final state flavours '''
 
-    def declareHandles(self):
-        super(HNLAnalyzer, self).declareHandles()
+    def declareHandles(self): 
+        super(HNLAnalyzer, self).declareHandles() 
 
         self.handles['electrons'] = AutoHandle(('slimmedElectrons'             ,'','PAT' ), 'std::vector<pat::Electron>'                    )
         self.handles['muons'    ] = AutoHandle(('slimmedMuons'                 ,'','PAT' ), 'std::vector<pat::Muon>'                        )
-#        self.handles['dsamuons' ] = AutoHandle(('displacedStandAloneMuons'     ,'','RECO'), 'std::vector<reco::Track>'                      )
-#        self.handles['dgmuons'  ] = AutoHandle(('displacedGlobalMuons'         ,'','RECO'), 'std::vector<reco::Track>'                      )
+        self.handles['dsamuons' ] = AutoHandle(('displacedStandAloneMuons'     ,'','RECO'), 'std::vector<reco::Track>'                      )
+        self.handles['dgmuons'  ] = AutoHandle(('displacedGlobalMuons'         ,'','RECO'), 'std::vector<reco::Track>'                      )
         self.handles['photons'  ] = AutoHandle(('slimmedPhotons'               ,'','PAT' ), 'std::vector<pat::Photon>'                      )
         self.handles['taus'     ] = AutoHandle(('slimmedTaus'                  ,'','PAT' ), 'std::vector<pat::Tau>'                         )
         self.handles['jets'     ] = AutoHandle( 'slimmedJets'                             , 'std::vector<pat::Jet>'                         )
@@ -51,9 +48,8 @@ class HNLAnalyzer(Analyzer):
         self.handles['pfmet'    ] = AutoHandle(('slimmedMETs'                  ,'','PAT' ), 'std::vector<pat::MET>'                         )
         self.handles['puppimet' ] = AutoHandle('slimmedMETsPuppi'                         , 'std::vector<pat::MET>'                         )
         self.handles['pfcand'   ] = AutoHandle('packedPFCandidates'                       , 'std::vector<pat::PackedCandidate> '            )
-#        self.handles['rho'      ] = AutoHandle(('fixedGridRhoFastjetAll'       ,'','RECO'), 'double'                                        )
 
-    def assignVtx(self, particles, vtx):    
+    def assignVtx(self, particles, vtx):
         for ip in particles:
             ip.associatedVertex = vtx
 
@@ -62,24 +58,26 @@ class HNLAnalyzer(Analyzer):
         self.counters.addCounter('HNL')
         count = self.counters.counter('HNL')
         count.register('all events')
-        count.register('good collections')
+        count.register('good pf collections')
+        count.register('>= 3 leptons')
+        count.register('>= 3 leptons with correct flavor combo')
         count.register('>0 good vtx')
         count.register('>0 prompt lep')
         count.register('>0 trig match prompt lep')
-        count.register('> 0 di-muon')
-        count.register('> 0 di-muon + vtx')
-
-    def buildDisplacedMuons(self, collection):
-        muons = [DisplacedMuon(mm, collection) for mm in collection]
-        return muons
+        count.register('> 0 di-lepton')
+        count.register('> 0 di-lepton + vtx')
+        # count.register('> 0 di-leptons with good vertices')
+        # count.register('exactly 1 dilepton with good vertex')
+    
+    def buildDiLeptons(self, cmgDiLeptons, event):
+        return map(self.__class_.DiLeptonClass, cmgDiLeptons) 
 
     def testLepKin(self, lep, pt, eta):
-        # kinematics
+        #kinematics
         if abs(lep.eta())>eta: return False
         if lep.pt()      <pt : return False
-        # passed
-        return True        
-
+        return True
+     
     def testLepVtx(self, lep, dxy, dz):
         # vertex
         if abs(lep.dz()) >dz : return False
@@ -106,7 +104,7 @@ class HNLAnalyzer(Analyzer):
         if not self.testLepVtx(mu, dxy, dz): return False
         # passed
         return True
-
+   
     def isOotMuon(self, muon):
         '''
         returns True if the muon fires the out-of-time selection proposed by Piotr
@@ -153,18 +151,78 @@ class HNLAnalyzer(Analyzer):
         
         return False
 
+    def checkLeptonFlavors(self, electrons, muons):
+        ''' Checks whether the existing leptons are 
+        in the correct flavor combination'''
+        minNumMu  = 0
+        minNumEle = 0
+
+        if self.cfg_ana.promptLepton=='mu':
+            minNumMu  += 1
+        if self.cfg_ana.promptLepton=='ele':
+            minNumEle += 1
+        if self.cfg_ana.L1L2LeptonType == 'ee':
+            minNumEle += 2
+        if self.cfg_ana.L1L2LeptonType == 'mm':
+            minNumMu  += 2
+        if self.cfg_ana.L1L2LeptonType == 'em':
+            minNumMu  += 1
+            minNumEle += 1
+
+        if len(electrons) < minNumEle: return False
+        if len(muons)     < minNumMu: return False
+        return True
+
+    def makeLeptonPairs(self, event, electrons, muons):
+        ''' Create all the possible di-lepton pairs 
+        out of the different collections'''
+        if self.cfg_ana.L1L2LeptonType == 'ee':
+            leptons = electrons
+        if self.cfg_ana.L1L2LeptonType == 'mm':
+            leptons = muons
+        if self.cfg_ana.L1L2LeptonType == 'em':
+            leptons = electrons + muons
+
+        dileptons = combinations(leptons, 2)
+        dileptons = [(lep1, lep2) for lep1, lep2 in dileptons if deltaR(lep1, lep2)>0.01]
+
+        if self.cfg_ana.L1L2LeptonType == 'em':
+            dileptons = [(lep1, lep2) for lep1, lep2 in dileptons if abs(lep1.pdgId()) + abs(lep2.pdgId()) == 24]
+            for pair in dileptons:
+                pair = sorted(pair, key = lambda lep: (abs(lep.pdgId()),-lep.pt()),reverse = False)
+
+        return dileptons
+        
+    def selectDiLepton(self, event, dileptonvtx):
+        which_candidate = getattr(self.cfg_ana, 'candidate_selection', 'maxpt')
+        
+        if which_candidate == 'minmass'    : event.displaced_dilepton_reco_cand = None if not len(dileptonvtx) else sorted(dileptonvtx, key = lambda x : (x.isSS(),  x.mass()                        ), reverse=False)[0]
+        if which_candidate == 'minchi2'    : event.displaced_dilepton_reco_cand = None if not len(dileptonvtx) else sorted(dileptonvtx, key = lambda x : (x.isSS(),  x.chi2()                        ), reverse=False)[0]
+        if which_candidate == 'mindr'      : event.displaced_dilepton_reco_cand = None if not len(dileptonvtx) else sorted(dileptonvtx, key = lambda x : (x.isSS(),  x.dr()                          ), reverse=False)[0]
+        if which_candidate == 'maxdphi'    : event.displaced_dilepton_reco_cand = None if not len(dileptonvtx) else sorted(dileptonvtx, key = lambda x : (x.isSS(), -x.dphi()                        ), reverse=False)[0]
+        if which_candidate == 'mindeta'    : event.displaced_dilepton_reco_cand = None if not len(dileptonvtx) else sorted(dileptonvtx, key = lambda x : (x.isSS(),  x.deta()                        ), reverse=False)[0]
+        if which_candidate == 'maxdisp2dbs': event.displaced_dilepton_reco_cand = None if not len(dileptonvtx) else sorted(dileptonvtx, key = lambda x : (x.isSS(), -x.disp2DFromBS()                ), reverse=False)[0]
+        if which_candidate == 'maxdisp2dpv': event.displaced_dilepton_reco_cand = None if not len(dileptonvtx) else sorted(dileptonvtx, key = lambda x : (x.isSS(), -x.disp2DFromPV()                ), reverse=False)[0]
+        if which_candidate == 'maxdisp3dpv': event.displaced_dilepton_reco_cand = None if not len(dileptonvtx) else sorted(dileptonvtx, key = lambda x : (x.isSS(), -x.disp3DFromPV()                ), reverse=False)[0]
+        if which_candidate == 'maxdls2dbs' : event.displaced_dilepton_reco_cand = None if not len(dileptonvtx) else sorted(dileptonvtx, key = lambda x : (x.isSS(), -x.disp2DFromBSSignificance()    ), reverse=False)[0]
+        if which_candidate == 'maxdls2dpv' : event.displaced_dilepton_reco_cand = None if not len(dileptonvtx) else sorted(dileptonvtx, key = lambda x : (x.isSS(), -x.disp2DFromPVSignificance()    ), reverse=False)[0]
+        if which_candidate == 'maxdls3dpv' : event.displaced_dilepton_reco_cand = None if not len(dileptonvtx) else sorted(dileptonvtx, key = lambda x : (x.isSS(), -x.disp3DFromPVSignificance()    ), reverse=False)[0]
+        if which_candidate == 'maxcos'     : event.displaced_dilepton_reco_cand = None if not len(dileptonvtx) else sorted(dileptonvtx, key = lambda x : (x.isSS(), -x.cosTransversePointingAngleBS()), reverse=False)[0]
+        if which_candidate == 'maxpt'      : event.displaced_dilepton_reco_cand = None if not len(dileptonvtx) else sorted(dileptonvtx, key = lambda x : (x.isSS(), -x.pt()                          ), reverse=False)[0]
+
 
     def process(self, event):
+        return self.searchHNL(event)
+        
+    def searchHNL(self, event):
         self.readCollections(event.input)
         self.counters.counter('HNL').inc('all events')
         # make PF candidates
         try:
             pfs = map(PhysicsObject, self.handles['pfcand'].product())
             event.pfs = pfs
-#            set_trace()
-#            return False
         except: print(event.eventId, event.run, event.lumi); return False#; set_trace()
-        self.counters.counter('HNL').inc('good collections')
+        self.counters.counter('HNL').inc('good pf collections')
       
 #        event.rho = self.handles['rho'].product()[0]
 
@@ -179,11 +237,10 @@ class HNLAnalyzer(Analyzer):
         #####################################################################################
         # produce collections and map our objects to convenient Heppy objects
         #####################################################################################
-
         # make muon collections
         event.muons       = map(Muon, self.handles['muons'].product())
-#        event.dsamuons    = self.buildDisplacedMuons(self.handles['dsamuons'].product())
-#        event.dgmuons     = self.buildDisplacedMuons(self.handles['dgmuons' ].product())
+       # event.dsamuons    = self.buildDisplacedMuons(self.handles['dsamuons'].product())
+       # event.dgmuons     = self.buildDisplacedMuons(self.handles['dgmuons' ].product())
 
         for imu in event.muons   : imu.type = 13; imu.rho = event.rho
 #        for imu in event.dsamuons: imu.type = 26
@@ -191,6 +248,7 @@ class HNLAnalyzer(Analyzer):
 
         # save a flag to know whether the muons is likely OOT
         # FIXME! for displaced too?
+        #TODO filter rather saving the flag
         for imu in event.muons:
             imu.isoot = self.isOotMuon(imu)
 
@@ -223,9 +281,28 @@ class HNLAnalyzer(Analyzer):
         self.assignVtx(event.electrons, pv)
 
         #####################################################################################
-        # Preselect the prompt leptons
+        # filter for events with at least 3 leptons in proper flavor combination
         #####################################################################################
         
+        #check there are enough leptons
+        if len(event.muons + event.electrons) < 3: 
+            return False
+        self.counters.counter('HNL').inc('>= 3 leptons')
+        
+        #check there are enough leptons in the resp. flavor combination
+        if not self.checkLeptonFlavors(event.electrons, event.muons):
+            return False 
+
+        #save the key numbers
+        event.nElectrons = len(event.electrons)
+        event.nMuons     = len(event.muons)
+        event.nLeptons   = len(event.electrons) + len(event.muons) 
+        
+        self.counters.counter('HNL').inc('>= 3 leptons with correct flavor combo')
+
+        #####################################################################################
+        # Preselect the prompt leptons
+        #####################################################################################
         prompt_mu_cands  = sorted([mu  for mu  in event.muons     if self.preselectPromptMuons    (mu) ], key = lambda x : x.pt(), reverse = True)
         prompt_ele_cands = sorted([ele for ele in event.electrons if self.preselectPromptElectrons(ele)], key = lambda x : x.pt(), reverse = True)
 
@@ -236,10 +313,9 @@ class HNLAnalyzer(Analyzer):
         else:
             print 'ERROR: HNLAnalyzer not supported lepton flavour', self.cfg_ana.promptLepton
             exit(0) 
-
         if not len(prompt_leps):
             return False
-
+        
         self.counters.counter('HNL').inc('>0 prompt lep')
 
         #####################################################################################
@@ -294,70 +370,53 @@ class HNLAnalyzer(Analyzer):
         event.filtered_electrons = [ele for ele in event.electrons if ele.physObj != prompt_lep.physObj]
          
         ########################################################################################
-        # Preselection for the reco muons before pairing them
+        # Preselection for the reco leptons before pairing them
         ########################################################################################
         # some simple preselection
-        event.muons    = [imu for imu in event.filtered_muons if imu.pt()>3. and abs(imu.eta())<2.4]
-#        event.dsamuons = [imu for imu in event.dsamuons       if imu.pt()>3. and abs(imu.eta())>2.4]
-#        event.dgmuons  = [imu for imu in event.dgmuons        if imu.pt()>3. and abs(imu.eta())>2.4]
+        event.muons      = [imu for imu in event.filtered_muons if imu.pt()>3. and abs(imu.eta())<2.4]
+        # event.dsamuons   = [imu for imu in event.dsamuons       if imu.pt()>3. and abs(imu.eta())>2.4]
+        # event.dgmuons    = [imu for imu in event.dgmuons        if imu.pt()>3. and abs(imu.eta())>2.4]
+        event.electrons  = [iele for iele in event.filtered_electrons if iele.pt()>3. and abs(iele.eta())<2.5]
 
-        # create all the possible di-muon pairs out of the three different collections
-        
-        # FIXME! configure which collections to use
-        # dimuons = combinations(event.muons + event.dsamuons + event.dgmuons, 2)
-        dimuons = combinations(event.muons, 2)
-        
-        dimuons = [(mu1, mu2) for mu1, mu2 in dimuons if deltaR(mu1, mu2)>0.01]
-        
-        if not len(dimuons):
+        # create all the possible di-lepton pairs out of the different collections
+        dileptons = self.makeLeptonPairs(event,event.electrons,event.muons)
+
+        if not len(dileptons):
             return False
-        self.counters.counter('HNL').inc('> 0 di-muon')
+
+        self.counters.counter('HNL').inc('> 0 di-lepton')
 
         ########################################################################################
-        # Vertex Fit: Select only dimuon pairs with mutual vertices
+        # Vertex Fit: Select only dilepton pairs with mutual vertices
         ########################################################################################
-        dimuonsvtx = []
-        for index, pair in enumerate(dimuons):
+        dileptonvtx = []
+        for index, pair in enumerate(dileptons):
             if pair[0]==pair[1]: continue
-            sv = fitVertex(pair)
+            sv = fitVertex(pair,self.cfg_ana.L1L2LeptonType)
             if not sv: continue
-            dimuonsvtx.append(DiLepton(pair, sv, pv, event.beamspot))
+            dileptonvtx.append(DiLepton(pair, sv, pv, event.beamspot))
 
-        event.dimuonsvtx = dimuonsvtx
+        event.dileptonvtx = dileptonvtx
         
-        if not len(event.dimuonsvtx):
+        if not len(event.dileptonvtx):
             return False 
         
-        self.counters.counter('HNL').inc('> 0 di-muon + vtx')
+        self.counters.counter('HNL').inc('> 0 di-lepton + vtx')
 
         ########################################################################################
-        # candidate choice by different criteria
+        # Select the most promising dilepton candidate
         ########################################################################################
-        
-        which_candidate = getattr(self.cfg_ana, 'candidate_selection', 'maxpt')
-        
-        if which_candidate == 'minmass'    : event.displaced_dilepton_reco_cand = None if not len(dimuonsvtx) else sorted(dimuonsvtx, key = lambda x : (x.isSS(),  x.mass()                        ), reverse=False)[0]
-        if which_candidate == 'minchi2'    : event.displaced_dilepton_reco_cand = None if not len(dimuonsvtx) else sorted(dimuonsvtx, key = lambda x : (x.isSS(),  x.chi2()                        ), reverse=False)[0]
-        if which_candidate == 'mindr'      : event.displaced_dilepton_reco_cand = None if not len(dimuonsvtx) else sorted(dimuonsvtx, key = lambda x : (x.isSS(),  x.dr()                          ), reverse=False)[0]
-        if which_candidate == 'maxdphi'    : event.displaced_dilepton_reco_cand = None if not len(dimuonsvtx) else sorted(dimuonsvtx, key = lambda x : (x.isSS(), -x.dphi()                        ), reverse=False)[0]
-        if which_candidate == 'mindeta'    : event.displaced_dilepton_reco_cand = None if not len(dimuonsvtx) else sorted(dimuonsvtx, key = lambda x : (x.isSS(),  x.deta()                        ), reverse=False)[0]
-        if which_candidate == 'maxdisp2dbs': event.displaced_dilepton_reco_cand = None if not len(dimuonsvtx) else sorted(dimuonsvtx, key = lambda x : (x.isSS(), -x.disp2DFromBS()                ), reverse=False)[0]
-        if which_candidate == 'maxdisp2dpv': event.displaced_dilepton_reco_cand = None if not len(dimuonsvtx) else sorted(dimuonsvtx, key = lambda x : (x.isSS(), -x.disp2DFromPV()                ), reverse=False)[0]
-        if which_candidate == 'maxdisp3dpv': event.displaced_dilepton_reco_cand = None if not len(dimuonsvtx) else sorted(dimuonsvtx, key = lambda x : (x.isSS(), -x.disp3DFromPV()                ), reverse=False)[0]
-        if which_candidate == 'maxdls2dbs' : event.displaced_dilepton_reco_cand = None if not len(dimuonsvtx) else sorted(dimuonsvtx, key = lambda x : (x.isSS(), -x.disp2DFromBSSignificance()    ), reverse=False)[0]
-        if which_candidate == 'maxdls2dpv' : event.displaced_dilepton_reco_cand = None if not len(dimuonsvtx) else sorted(dimuonsvtx, key = lambda x : (x.isSS(), -x.disp2DFromPVSignificance()    ), reverse=False)[0]
-        if which_candidate == 'maxdls3dpv' : event.displaced_dilepton_reco_cand = None if not len(dimuonsvtx) else sorted(dimuonsvtx, key = lambda x : (x.isSS(), -x.disp3DFromPVSignificance()    ), reverse=False)[0]
-        if which_candidate == 'maxcos'     : event.displaced_dilepton_reco_cand = None if not len(dimuonsvtx) else sorted(dimuonsvtx, key = lambda x : (x.isSS(), -x.cosTransversePointingAngleBS()), reverse=False)[0]
-        if which_candidate == 'maxpt'      : event.displaced_dilepton_reco_cand = None if not len(dimuonsvtx) else sorted(dimuonsvtx, key = lambda x : (x.isSS(), -x.pt()                          ), reverse=False)[0]
+        self.selectDiLepton(event, dileptonvtx)
 
         ########################################################################################
-        # Create a reco HNL3L object
+        # Create a reco HNL3L object and "harvest" all the relevant eventinfos
         ########################################################################################
         event.the_3lep_cand = HN3L(prompt_lep, 
                                    event.displaced_dilepton_reco_cand.lep1(), 
                                    event.displaced_dilepton_reco_cand.lep2(), 
                                    event.pfmet)
-        
+
+
         # save reco secondary vertex
         event.recoSv = event.displaced_dilepton_reco_cand.vtx()
 
@@ -424,89 +483,6 @@ class HNLAnalyzer(Analyzer):
         ########################################################################################
         # charged PF isolation
         ########################################################################################        
-#        neutral_pfs = [ipf for ipf in pfs if ipf.charge() == 0 and abs(ipf.pdgId()) != 11 and abs(ipf.pdgId())!=13 and abs(ipf.pdgId()) != 22]
-#        neutral_pfs = [ipf for ipf in neutral_pfs if ipf.pt()>0.6 and abs(ipf.eta())<2.5]
-# 
-#        charged_pfs = [ipf for ipf in pfs if ipf.charge() != 0 and abs(ipf.pdgId()) != 11 and abs(ipf.pdgId())!=13]
-#        charged_pfs = [ipf for ipf in charged_pfs if ipf.pt()>0.6 and abs(ipf.eta())<2.5]
-#        charged_pu_pfs = [ipf for ipf in charged_pfs if ipf.fromPV() <= 1]
-#        charged_pv_pfs = [ipf for ipf in charged_pfs if abs(ipf.dxy(event.recoSv.position()))<0.1 and abs(ipf.dz(event.recoSv.position()))<0.5]
-# 
-#        photon_pfs = [ipf for ipf in pfs if abs(ipf.pdgId()) == 22]
-#        photon_pfs = [ipf for ipf in photon_pfs if ipf.pt()>0.6 and abs(ipf.eta())<2.5]
-# 
-#        neutral_iso03_pfs  = [ipf for ipf in neutral_pfs if deltaR(ipf, event.the_3lep_cand.hnVisP4()) < 0.3 ]
-#        neutral_iso04_pfs  = [ipf for ipf in neutral_pfs if deltaR(ipf, event.the_3lep_cand.hnVisP4()) < 0.4 ]
-#        neutral_iso05_pfs  = [ipf for ipf in neutral_pfs if deltaR(ipf, event.the_3lep_cand.hnVisP4()) < 0.5 ]
-# 
-#        charged_pv_iso03_pfs   = [ipf for ipf in charged_pv_pfs  if deltaR(ipf, event.the_3lep_cand.hnVisP4()) < 0.3 ]
-#        charged_pv_iso04_pfs   = [ipf for ipf in charged_pv_pfs  if deltaR(ipf, event.the_3lep_cand.hnVisP4()) < 0.4 ]
-#        charged_pv_iso05_pfs   = [ipf for ipf in charged_pv_pfs  if deltaR(ipf, event.the_3lep_cand.hnVisP4()) < 0.5 ]
-# 
-#        charged_pu_iso03_pfs   = [ipf for ipf in charged_pu_pfs  if deltaR(ipf, event.the_3lep_cand.hnVisP4()) < 0.3 ]
-#        charged_pu_iso04_pfs   = [ipf for ipf in charged_pu_pfs  if deltaR(ipf, event.the_3lep_cand.hnVisP4()) < 0.4 ]
-#        charged_pu_iso05_pfs   = [ipf for ipf in charged_pu_pfs  if deltaR(ipf, event.the_3lep_cand.hnVisP4()) < 0.5 ]
-# 
-#        photon_iso03_pfs    = [ipf for ipf in photon_pfs   if deltaR(ipf, event.the_3lep_cand.hnVisP4()) < 0.3 ] 
-#        photon_iso04_pfs    = [ipf for ipf in photon_pfs   if deltaR(ipf, event.the_3lep_cand.hnVisP4()) < 0.4 ]
-#        photon_iso05_pfs    = [ipf for ipf in photon_pfs   if deltaR(ipf, event.the_3lep_cand.hnVisP4()) < 0.5 ]
-# 
-#        charged_iso_met_pfs = [ipf for ipf in charged_pv_pfs  if deltaR(ipf, event.the_3lep_cand.hnP4())    < 0.5 ]
-# 
-#        charged_iso_met     = sum([ipf.pt() for ipf in charged_iso_met_pfs]) 
-# 
-#        abs_neu_iso03       = sum([ipf.pt() for ipf in neutral_iso03_pfs])
-#        abs_neu_iso04       = sum([ipf.pt() for ipf in neutral_iso04_pfs])
-#        abs_neu_iso05       = sum([ipf.pt() for ipf in neutral_iso05_pfs])
-# 
-#        abs_ch_pv_iso03        = sum([ipf.pt() for ipf in charged_pv_iso03_pfs])
-#        abs_ch_pv_iso04        = sum([ipf.pt() for ipf in charged_pv_iso04_pfs])
-#        abs_ch_pv_iso05        = sum([ipf.pt() for ipf in charged_pv_iso05_pfs])
-# 
-#        abs_ch_pu_iso03        = sum([ipf.pt() for ipf in charged_pu_iso03_pfs])
-#        abs_ch_pu_iso04        = sum([ipf.pt() for ipf in charged_pu_iso04_pfs])
-#        abs_ch_pu_iso05        = sum([ipf.pt() for ipf in charged_pu_iso05_pfs])
-# 
-#        abs_ph_iso03        = sum([ipf.pt() for ipf in photon_iso03_pfs])
-#        abs_ph_iso04        = sum([ipf.pt() for ipf in photon_iso04_pfs])
-#        abs_ph_iso05        = sum([ipf.pt() for ipf in photon_iso05_pfs])
-# 
-#        event.the_3lep_cand.abs_ch_pv_iso03    = abs_ch_pv_iso03 
-#        event.the_3lep_cand.abs_ch_pv_iso04    = abs_ch_pv_iso04 
-#        event.the_3lep_cand.abs_ch_pv_iso05    = abs_ch_pv_iso05 
-# 
-#        event.the_3lep_cand.rel_ch_iso03    = abs_ch_pv_iso03 / event.the_3lep_cand.hnVisP4().pt()
-#        event.the_3lep_cand.rel_ch_iso04    = abs_ch_pv_iso04 / event.the_3lep_cand.hnVisP4().pt()
-#        event.the_3lep_cand.rel_ch_iso05    = abs_ch_pv_iso05 / event.the_3lep_cand.hnVisP4().pt()
-# 
-#        event.the_3lep_cand.abs_ch_iso_met  = charged_iso_met
-#        event.the_3lep_cand.rel_ch_iso_met  = charged_iso_met / event.the_3lep_cand.hnP4().pt()
-# 
-#        eta = event.the_3lep_cand.hnVisP4().eta()
-# 
-#        abs_tot_iso03_rhoArea = abs_ch_pv_iso03 + max(0., abs_ph_iso03 + abs_neu_iso03 - offset_rhoArea(event.rho, 0.3, eta))
-#        abs_tot_iso04_rhoArea = abs_ch_pv_iso04 + max(0., abs_ph_iso04 + abs_neu_iso04 - offset_rhoArea(event.rho, 0.4, eta))
-#        abs_tot_iso05_rhoArea = abs_ch_pv_iso05 + max(0., abs_ph_iso05 + abs_neu_iso05 - offset_rhoArea(event.rho, 0.5, eta))
-# 
-#        event.the_3lep_cand.abs_tot_iso03_rhoArea    = abs_tot_iso03_rhoArea 
-#        event.the_3lep_cand.abs_tot_iso04_rhoArea    = abs_tot_iso04_rhoArea 
-#        event.the_3lep_cand.abs_tot_iso05_rhoArea    = abs_tot_iso05_rhoArea 
-# 
-#        event.the_3lep_cand.rel_tot_iso03_rhoArea    = abs_tot_iso03_rhoArea / event.the_3lep_cand.hnVisP4().pt()
-#        event.the_3lep_cand.rel_tot_iso04_rhoArea    = abs_tot_iso04_rhoArea / event.the_3lep_cand.hnVisP4().pt()
-#        event.the_3lep_cand.rel_tot_iso05_rhoArea    = abs_tot_iso05_rhoArea / event.the_3lep_cand.hnVisP4().pt()
-# 
-#        abs_tot_iso03_deltaBeta = abs_ch_pv_iso03 + max(0., abs_ph_iso03 + abs_neu_iso03 - offset_deltaBeta(0.5, abs_ch_pu_iso03))
-#        abs_tot_iso04_deltaBeta = abs_ch_pv_iso04 + max(0., abs_ph_iso04 + abs_neu_iso04 - offset_deltaBeta(0.5, abs_ch_pu_iso04))
-#        abs_tot_iso05_deltaBeta = abs_ch_pv_iso05 + max(0., abs_ph_iso05 + abs_neu_iso05 - offset_deltaBeta(0.5, abs_ch_pu_iso05))
-# 
-#        event.the_3lep_cand.abs_tot_iso03_deltaBeta    = abs_tot_iso03_deltaBeta 
-#        event.the_3lep_cand.abs_tot_iso04_deltaBeta    = abs_tot_iso04_deltaBeta 
-#        event.the_3lep_cand.abs_tot_iso05_deltaBeta    = abs_tot_iso05_deltaBeta 
-# 
-#        event.the_3lep_cand.rel_tot_iso03_deltaBeta    = abs_tot_iso03_deltaBeta / event.the_3lep_cand.hnVisP4().pt()
-#        event.the_3lep_cand.rel_tot_iso04_deltaBeta    = abs_tot_iso04_deltaBeta / event.the_3lep_cand.hnVisP4().pt()
-#        event.the_3lep_cand.rel_tot_iso05_deltaBeta    = abs_tot_iso05_deltaBeta / event.the_3lep_cand.hnVisP4().pt()
 
         event.the_3lep_cand.abs_tot_iso03_rhoArea    = totIso(event, 'rhoArea', 0.3) 
         event.the_3lep_cand.abs_tot_iso04_rhoArea    = totIso(event, 'rhoArea', 0.4) 
@@ -524,10 +500,13 @@ class HNLAnalyzer(Analyzer):
         event.the_3lep_cand.rel_tot_iso04_deltaBeta  =  event.the_3lep_cand.abs_tot_iso04_deltaBeta /  event.the_3lep_cand.hnVisP4().pt()
         event.the_3lep_cand.rel_tot_iso05_deltaBeta  =  event.the_3lep_cand.abs_tot_iso05_deltaBeta /  event.the_3lep_cand.hnVisP4().pt()
 
-        print 'l1 dr 0.3: ch_pv_iso: %.2f, neu_iso: %.2f, ph_iso: %.2f, ch_pu_iso: %.2f, l1pt: %.2f'%(event.the_3lep_cand.l1().pfIsolationR03().sumChargedHadronPt, event.the_3lep_cand.l1().pfIsolationR03().sumNeutralHadronEt , event.the_3lep_cand.l1().pfIsolationR03().sumPhotonEt, event.the_3lep_cand.l1().pfIsolationR03().sumPUPt, event.the_3lep_cand.l1().pt())
-        print 'l2 dr 0.3: ch_pv_iso: %.2f, neu_iso: %.2f, ph_iso: %.2f, ch_pu_iso: %.2f, l1pt: %.2f'%(event.the_3lep_cand.l2().pfIsolationR03().sumChargedHadronPt, event.the_3lep_cand.l2().pfIsolationR03().sumNeutralHadronEt , event.the_3lep_cand.l2().pfIsolationR03().sumPhotonEt, event.the_3lep_cand.l2().pfIsolationR03().sumPUPt, event.the_3lep_cand.l2().pt())
 
+        #####################################################################################
+        # After passing all selections and we have an HNL candidate, pass a "true" boolean!
+        #####################################################################################
         return True
+
+
 
 def totIso(event, offset_mode, dRCone):
     ch_pu_iso = chargedHadronIso(event, dRCone, True)

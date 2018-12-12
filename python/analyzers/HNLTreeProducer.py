@@ -20,6 +20,9 @@ class HNLTreeProducer(TreeProducerBase):
         self.bookEvent(self.tree)
         self.var      (self.tree, 'n_cands')
         self.var      (self.tree, 'rho')
+        self.var      (self.tree, 'nLeptons')
+        self.var      (self.tree, 'nElectrons')
+        self.var      (self.tree, 'nMuons')
         
         # reco variables
         self.bookHNL (self.tree, 'hnl')
@@ -48,15 +51,22 @@ class HNLTreeProducer(TreeProducerBase):
 
         elif self.cfg_ana.promptLepType == 'mu':
             self.bookMuon(self.tree, 'l0')
-            self.var(self.tree, 'hlt_soMu24'                   )
-            self.var(self.tree, 'hlt_soMu27'                   )
-            self.var(self.tree, 'hlt_u50'                      )
+            self.var(self.tree, 'hlt_IsoMu24'                   )
+            self.var(self.tree, 'hlt_IsoMu27'                   )
+            self.var(self.tree, 'hlt_Mu50'                      )
         else:
              print 'ERROR: prompt lepton type non specified or missing! Exit'
              exit(0)
-        
-        self.bookMuon(self.tree, 'l1' )
-        self.bookMuon(self.tree, 'l2' )
+
+        if self.cfg_ana.L1L2LeptonType == 'mm':
+            self.bookMuon(self.tree, 'l1' )
+            self.bookMuon(self.tree, 'l2' )
+        if self.cfg_ana.L1L2LeptonType == 'ee':
+            self.bookEle(self.tree, 'l1'  )
+            self.bookEle(self.tree, 'l2'  )
+        if self.cfg_ana.L1L2LeptonType == 'em':
+            self.bookEle(self.tree, 'l1'  )
+            self.bookMuon(self.tree, 'l2' )
         
         # book the matched  gen particle
         self.bookSimpleGenParticle(self.tree, 'l0_gen_match')
@@ -87,14 +97,17 @@ class HNLTreeProducer(TreeProducerBase):
         self.var(self.tree, 'bs_dydz')
         
         # reco HN decay vertex (when present)
-        self.var(self.tree, 'sv_x' )
-        self.var(self.tree, 'sv_y' )
-        self.var(self.tree, 'sv_z' )
-        self.var(self.tree, 'sv_xe')
-        self.var(self.tree, 'sv_ye')
-        self.var(self.tree, 'sv_ze')
-        self.var(self.tree, 'sv_prob')
-        self.var(self.tree, 'sv_cos')
+        self.bookVertex(self.tree, 'sv')
+
+        # # reco HN decay vertex (when present)
+        # self.var(self.tree, 'sv_x' )
+        # self.var(self.tree, 'sv_y' )
+        # self.var(self.tree, 'sv_z' )
+        # self.var(self.tree, 'sv_xe')
+        # self.var(self.tree, 'sv_ye')
+        # self.var(self.tree, 'sv_ze')
+        # self.var(self.tree, 'sv_prob')
+        # self.var(self.tree, 'sv_cos')
 
         # lepton vetoes
         self.var(self.tree, 'pass_e_veto')
@@ -174,8 +187,11 @@ class HNLTreeProducer(TreeProducerBase):
         self.event = event
         # event variables 
         self.fillEvent(self.tree, event)
-        self.fill     (self.tree, 'n_cands', len(event.dimuonsvtx))
+        self.fill     (self.tree, 'n_cands', len(event.dileptonvtx))
         self.fill     (self.tree, 'rho'    , event.rho)
+        self.fill     (self.tree, 'nLeptons'    , event.nLeptons)
+        self.fill     (self.tree, 'nElectrons'  , event.nElectrons)
+        self.fill     (self.tree, 'nMuons'    , event.nMuons)
 
         # reco HNL
         self.fillHNL (self.tree, 'hnl'                  , event.the_3lep_cand                 )
@@ -193,8 +209,17 @@ class HNLTreeProducer(TreeProducerBase):
         self.fill    (self.tree, 'hnl_iso04_rel_deltaBeta', event.the_3lep_cand.rel_tot_iso04_deltaBeta)
         self.fill    (self.tree, 'hnl_iso05_rel_deltaBeta', event.the_3lep_cand.rel_tot_iso05_deltaBeta)
 #        self.fill    (self.tree, 'hnl_iso_rel_met'      , event.the_3lep_cand.rel_ch_iso_met  )
-        self.fillMuon(self.tree, 'l1'                   , event.the_3lep_cand.l1()            )
-        self.fillMuon(self.tree, 'l2'                   , event.the_3lep_cand.l2()            )
+        if self.cfg_ana.L1L2LeptonType == 'mm':
+            self.fillMuon(self.tree, 'l1'                   , event.the_3lep_cand.l1()            )
+            self.fillMuon(self.tree, 'l2'                   , event.the_3lep_cand.l2()            )
+        if self.cfg_ana.L1L2LeptonType == 'ee':
+            self.fillEle(self.tree, 'l1'                   , event.the_3lep_cand.l1()            )
+            self.fillEle(self.tree, 'l2'                   , event.the_3lep_cand.l2()            )
+        if self.cfg_ana.L1L2LeptonType == 'em':
+            self.fillEle(self.tree, 'l1'                   , event.the_3lep_cand.l1()            )
+            self.fillMuon(self.tree, 'l2'                   , event.the_3lep_cand.l2()            )
+
+
         if self.cfg_ana.promptLepType == 'ele' :       self.fillEle (self.tree, 'l0', event.the_3lep_cand.l0())
         if self.cfg_ana.promptLepType == 'mu'  :       self.fillMuon(self.tree, 'l0', event.the_3lep_cand.l0())
 
@@ -250,20 +275,23 @@ class HNLTreeProducer(TreeProducerBase):
             self.fill(self.tree, 'hlt_Ele115_CaloIdVT_GsfTrkIdT'       , any('HLT_Ele115_CaloIdVT_GsfTrkIdT'         in name for name in trig_list))
             self.fill(self.tree, 'hlt_Ele135_CaloIdVT_GsfTrkIdT'       , any('HLT_Ele135_CaloIdVT_GsfTrkIdT'         in name for name in trig_list))
         if self.cfg_ana.promptLepType == 'mu':
-            self.fill(self.tree, 'hlt_soMu24'                          , any('HLT_IsoMu24'                           in name for name in trig_list))
-            self.fill(self.tree, 'hlt_soMu27'                          , any('HLT_IsoMu27'                           in name for name in trig_list))
-            self.fill(self.tree, 'hlt_u50'                             , any('HLT_Mu50'                              in name for name in trig_list))
+            self.fill(self.tree, 'hlt_IsoMu24'                          , any('HLT_IsoMu24'                           in name for name in trig_list))
+            self.fill(self.tree, 'hlt_IsoMu27'                          , any('HLT_IsoMu27'                           in name for name in trig_list))
+            self.fill(self.tree, 'hlt_Mu50'                             , any('HLT_Mu50'                              in name for name in trig_list))
     
         
         # reco secondary vertex and displacement
-        self.fill(self.tree, 'sv_x'   , event.recoSv.x()             )
-        self.fill(self.tree, 'sv_y'   , event.recoSv.y()             )
-        self.fill(self.tree, 'sv_z'   , event.recoSv.z()             )
-        self.fill(self.tree, 'sv_xe'  , event.recoSv.xError()        )
-        self.fill(self.tree, 'sv_ye'  , event.recoSv.yError()        )
-        self.fill(self.tree, 'sv_ze'  , event.recoSv.zError()        )
-        self.fill(self.tree, 'sv_prob', event.recoSv.prob            )
-        self.fill(self.tree, 'sv_cos' , event.recoSv.disp2DFromBS_cos)
+        self.fillVertex(self.tree, 'sv' , event.recoSv)
+
+        # # reco secondary vertex and displacement
+        # self.fill(self.tree, 'sv_x'   , event.recoSv.x()             )
+        # self.fill(self.tree, 'sv_y'   , event.recoSv.y()             )
+        # self.fill(self.tree, 'sv_z'   , event.recoSv.z()             )
+        # self.fill(self.tree, 'sv_xe'  , event.recoSv.xError()        )
+        # self.fill(self.tree, 'sv_ye'  , event.recoSv.yError()        )
+        # self.fill(self.tree, 'sv_ze'  , event.recoSv.zError()        )
+        # self.fill(self.tree, 'sv_prob', event.recoSv.prob            )
+        # self.fill(self.tree, 'sv_cos' , event.recoSv.disp2DFromBS_cos)
     
         self.fill(self.tree, 'hnl_2d_disp', event.recoSv.disp2DFromBS.value()) # from beamspot
         self.fill(self.tree, 'hnl_3d_disp', event.recoSv.disp3DFromBS.value()) # from PV

@@ -10,7 +10,6 @@ from ROOT import HNLKinematicVertexFitter as VertexFitter
 vtxfit = VertexFitter()
 
 # create a std::vector<RecoChargedCandidate> to be passed to the fitter
-tofit = ROOT.std.vector('reco::RecoChargedCandidate')()
 
 def isAncestor(a, p):
     if a == p :
@@ -43,7 +42,8 @@ def makeRecoVertex(kinVtx, kinVtxChi2=0., kinVtxNdof=0, kinVtxTrkSize=0):
     recoVtx = ROOT.reco.Vertex(point, error, chi2, ndof, kinVtxTrkSize)
     return recoVtx
 
-def fitVertex(pair):
+def fitVertex_RecoChargedCandidates(pair):
+    tofit = ROOT.std.vector('reco::RecoChargedCandidate')()
     vtx = None
     tofit.clear()
     for il in pair:
@@ -78,6 +78,50 @@ def fitVertex(pair):
             vtx = makeRecoVertex(svtree.currentDecayVertex().get(),kinVtxTrkSize=tofit.size())
             # set_trace()
     # set_trace()
+    return vtx
+
+def fitVertex(pair,L1L2LeptonType):
+    tofit = ROOT.std.vector('reco::Track')()
+    vtx = None
+    tofit.clear()
+
+    if pair[0] == pair[1]:
+        print 'vtx fitter: both leps in the pair are the same!'
+        return False
+    
+    for il in pair:
+        if abs(il.pdgId())==13:
+            if il.muonBestTrack().get():
+                tofit.push_back(il.muonBestTrack().get())
+                if not il.muonBestTrack().get().numberOfValidHits()>0: 
+                    print 'there are no valid tracker hits in this muon track'
+            else: print 'could not load muonBestTrack() from the muon'
+            # if il.globalTrack().get():
+                # tofit.push_back(il.globalTrack().get())
+                # if not il.globalTrack().get().numberOfValidHits()>0: 
+                    # print 'there are no valid tracker hits in this muon track'
+            # # else: print 'could not load globalTrack() from the muon'
+        if abs(il.pdgId()) == 26: 
+            #TODO: to be implemented once solved the BField issue
+            print 'pair contains dsa muons, not compatible yet. make sure to only use PF (slimmed) muons.'
+        if abs(il.pdgId())==11:
+            if il.gsfTrack().get():
+                tofit.push_back(ROOT.reco.Track(il.gsfTrack().get()))
+                if not ROOT.reco.Track(il.gsfTrack().get()).numberOfValidHits()>0:
+                    print 'there are no valid tracker hits in this electron track'%(index)
+            else: print 'could not load gsfTrack() from the electron'%(index)
+
+    if tofit.size() == 2 and tofit[0]!=tofit[1]:
+        #call the vertix fit function from framework
+        sv = vtxfit.Fit(tofit, L1L2LeptonType)
+            
+        
+
+        if not sv.get().isEmpty() and sv.get().isValid(): # check that the vertex is good
+            sv.movePointerToTheTop()
+            vtx = makeRecoVertex(sv.currentDecayVertex().get(),kinVtxTrkSize=tofit.size())
+        else:
+            return False
     return vtx
 
 

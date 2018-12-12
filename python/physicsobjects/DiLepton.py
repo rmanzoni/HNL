@@ -13,7 +13,9 @@ class DiLepton(object):
     '''
     '''
     def __init__(self, pair, sv, pv, bs):
-        self._leptons = sorted(pair, key = lambda x : x.pt(), reverse = True)
+        # self._leptons = sorted(pair, key = lambda lep : (-abs(lep.pdgId()),lep.pt()), reverse = True)
+        self._leptons = pair
+
         self._vtx = sv
         self._pv  = pv
         self._bs  = bs
@@ -90,7 +92,7 @@ class DiLepton(object):
         return int(self.lep1().charge()==self.lep2().charge())
 
     def _disp3DFromPV(self):
-        return ROOT.VertexDistance3D().distance(self.vtx(), self._pv)
+        return ROOT.VertexDistance4D().distance(self.vtx(), self._pv)
 
     def disp3DFromPV(self):
         return self._disp3DFromPV().value()

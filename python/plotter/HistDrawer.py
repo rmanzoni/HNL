@@ -186,19 +186,27 @@ class HistDrawer:
 
         HistDrawer.CMSPrelim(plot, pad, channel, legend=plot.legendPos)
         can.cd()
-
-        plotname = plot_dir + '/'
-        ensureDir(plot_dir)
-        plotname += plot_name if plot_name else plot.name
-        can.SaveAs(plotname + '.png')
-        can.SaveAs(plotname + '.pdf')
-        can.SaveAs(plotname + '.root')
+        
+        if not os.path.exists(plot_dir + '/pdf/'):
+            os.mkdir(plot_dir + '/pdf/')
+        if not os.path.exists(plot_dir + '/root/'):
+            os.mkdir(plot_dir + '/root/')
+        if not os.path.exists(plot_dir + '/png/'):
+            os.mkdir(plot_dir + '/png/')
+        # plotname = plot_dir + '/'
+        # ensureDir(plot_dir)
+        plotname = plot_name if plot_name else plot.name
+        # can.SaveAs(plotname + '.png')
+        can.SaveAs(plot_dir + '/pdf/'  + plotname  + '.pdf')
+        can.SaveAs(plot_dir + '/root/' + plotname  + '.root')
+        can.SaveAs(plot_dir + '/png/'  + plotname  + '.png')
 
         # Also save with log y
         h.GetYaxis().SetRangeUser(pad.GetUymax() * 5./1000000., pad.GetUymax() * 5.)
         pad.SetLogy(True)
-        can.SaveAs(plotname + '_log.png')
-        can.SaveAs(plotname + '_log.pdf')
+        can.SaveAs(plot_dir + '/png/'  + plotname + '_log.png')
+        can.SaveAs(plot_dir + '/root/' + plotname + '_log.root')
+        can.SaveAs(plot_dir + '/pdf/'  + plotname + '_log.pdf')
         pad.SetLogy(0)
 #        return ratio
 

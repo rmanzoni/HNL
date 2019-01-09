@@ -6914,23 +6914,23 @@ all_signals = [
     HN3L_M_8_V_0p00547722557505_tau_massiveAndCKM_LO  ,
 ]
 
-all_signals_e = [
-    HN3L_M_2_V_0p022360679775_e_massiveAndCKM_LO, 
-    HN3L_M_2_V_0p01_e_massiveAndCKM_LO, 
-    HN3L_M_2_V_0p00707106781187_e_massiveAndCKM_LO, 
-    HN3L_M_5_V_0p00707106781187_e_massiveAndCKM_LO,  
-    HN3L_M_5_V_0p01_e_massiveAndCKM_LO,
-    HN3L_M_8_V_0p00244948974278_e_massiveAndCKM_LO,
-    HN3L_M_8_V_0p00547722557505_e_massiveAndCKM_LO,]
+# all_signals_e = [
+    # HN3L_M_2_V_0p022360679775_e_massiveAndCKM_LO, 
+    # HN3L_M_2_V_0p01_e_massiveAndCKM_LO, 
+    # HN3L_M_2_V_0p00707106781187_e_massiveAndCKM_LO, 
+    # HN3L_M_5_V_0p00707106781187_e_massiveAndCKM_LO,  
+    # HN3L_M_5_V_0p01_e_massiveAndCKM_LO,
+    # HN3L_M_8_V_0p00244948974278_e_massiveAndCKM_LO,
+    # HN3L_M_8_V_0p00547722557505_e_massiveAndCKM_LO,]
 
-all_signals_mu = [
-    HN3L_M_2_V_0p022360679775_mu_massiveAndCKM_LO, 
-    HN3L_M_2_V_0p01_mu_massiveAndCKM_LO, 
-    HN3L_M_2_V_0p00707106781187_mu_massiveAndCKM_LO, 
-    HN3L_M_5_V_0p00707106781187_mu_massiveAndCKM_LO,  
-    HN3L_M_5_V_0p01_mu_massiveAndCKM_LO,
-    HN3L_M_8_V_0p00244948974278_mu_massiveAndCKM_LO,
-    HN3L_M_8_V_0p00547722557505_mu_massiveAndCKM_LO,]
+# all_signals_mu = [
+    # HN3L_M_2_V_0p022360679775_mu_massiveAndCKM_LO, 
+    # HN3L_M_2_V_0p01_mu_massiveAndCKM_LO, 
+    # HN3L_M_2_V_0p00707106781187_mu_massiveAndCKM_LO, 
+    # HN3L_M_5_V_0p00707106781187_mu_massiveAndCKM_LO,  
+    # HN3L_M_5_V_0p01_mu_massiveAndCKM_LO,
+    # HN3L_M_8_V_0p00244948974278_mu_massiveAndCKM_LO,
+    # HN3L_M_8_V_0p00547722557505_mu_massiveAndCKM_LO,]
 
 all_signals_e = [isample for isample in all_signals if '_e_'   in isample.name]
 all_signals_m = [isample for isample in all_signals if '_mu_'  in isample.name]

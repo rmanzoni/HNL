@@ -24,7 +24,6 @@ from CMGTools.HNL.plotter.defaultGroups import createDefaultGroups
 from CMGTools.HNL.plotter.Samples import createSampleLists
 from CMGTools.HNL.plotter.metrics import ams_hists
 
-plotDir = '/eos/user/d/dezhu/HNL/plots/prompt_e/'
 
 def _pickle_method(method): 
     func_name = method.im_func.__name__
@@ -309,13 +308,14 @@ def prepareCuts():
 #    cuts.append(Cut('tighter_e_tight', inc_cut + l0_tight + tighter))
     return cuts
 
-def createSamples(analysis_dir, total_weight, qcd_from_same_sign, w_qcd_mssm_method, r_qcd_os_ss, add_data_cut=None):
+def createSamples(channel, analysis_dir, total_weight, qcd_from_same_sign, w_qcd_mssm_method, r_qcd_os_ss, add_data_cut=None):
     hist_dict = {}
     sample_dict = {}
-    samples_mc, samples_data, samples, all_samples, sampleDict, samples_essential = createSampleLists(analysis_dir=analysis_dir, add_data_cut=add_data_cut)
+    samples_mc, samples_data, samples, all_samples, sampleDict, samples_essential, samples_essential_data = createSampleLists(analysis_dir=analysis_dir, channel=channel, add_data_cut=add_data_cut)
 
     sample_dict['all_samples'] = all_samples
     sample_dict['samples_essential'] = samples_essential
+    sample_dict['samples_essential_data'] = samples_essential_data
     sample_dict['samples_mc'] = samples_mc
 
     return sample_dict, hist_dict
@@ -333,7 +333,7 @@ def createVariables(rebin=None):
 
     return variables
 
-def makePlots(variables, cuts, total_weight, sample_dict, hist_dict, qcd_from_same_sign, w_qcd_mssm_method, mt_cut, friend_func, dc_postfix, make_plots=True, create_trees=False):
+def makePlots(plotDir,channel_name,variables, cuts, total_weight, sample_dict, hist_dict, qcd_from_same_sign, w_qcd_mssm_method, mt_cut, friend_func, dc_postfix, make_plots=True, create_trees=False):
     ams_dict = {}
     sample_names = set()
     for cut in cuts:
@@ -346,8 +346,9 @@ def makePlots(variables, cuts, total_weight, sample_dict, hist_dict, qcd_from_sa
             shutil.rmtree(cutDir)
             os.mkdir(cutDir)
 
-        cfg_main = HistogramCfg(name=cut.name, var=None, cfgs=sample_dict['all_samples'], cut=cut.cut, lumi=int_lumi, weight=total_weight)
+        # cfg_main = HistogramCfg(name=cut.name, var=None, cfgs=sample_dict['all_samples'], cut=cut.cut, lumi=int_lumi, weight=total_weight)
         # cfg_main = HistogramCfg(name=cut.name, var=None, cfgs=sample_dict['samples_essential'], cut=cut.cut, lumi=int_lumi, weight=total_weight)
+        cfg_main = HistogramCfg(name=cut.name, var=None, cfgs=sample_dict['samples_essential_data'], cut=cut.cut, lumi=int_lumi, weight=total_weight)
         # cfg_main = HistogramCfg(name=cut.name, var=None, cfgs=sample_dict['samples_mc'], cut=cut.cut, lumi=int_lumi, weight=total_weight)
     
         cfg_main.vars = variables
@@ -372,7 +373,7 @@ def makePlots(variables, cuts, total_weight, sample_dict, hist_dict, qcd_from_sa
 #            plot.Group('DY', ['DYJetsToLL_M5to50', 'DY2Jets_M50_ext', 'DY2Jets_M50', 'DY3Jets_M50_ext', 'DY3Jets_M50', 'DY1Jets_M50'])
             # createDefaultGroups(plot)
             if make_plots:
-                HistDrawer.draw(plot, plot_dir = plotDir+cut.name)
+                HistDrawer.draw(plot, channel = channel_name, plot_dir = plotDir+cut.name)
 
     print '\nOptimisation results:'
 
@@ -391,9 +392,37 @@ def makePlots(variables, cuts, total_weight, sample_dict, hist_dict, qcd_from_sa
                 if key.startswith(name + '__'):
                     print item, key
 
-if __name__ == '__main__':
 
-    friend_func = None
+def producePlots(promptLeptonType, L1L2LeptonType):
+    if promptLeptonType == "ele":
+        channel_name = 'e'
+        if L1L2LeptonType == "ee":
+            plotDir = '/eos/user/d/dezhu/HNL/plots/FinalStates/eee/'
+            channel_name += 'ee'
+            channel = 'eee'
+        if L1L2LeptonType == "em":
+            plotDir = '/eos/user/d/dezhu/HNL/plots/FinalStates/eem/'
+            channel_name += 'e#mu'
+            channel = 'eem'
+        if L1L2LeptonType == "mm":
+            plotDir = '/eos/user/d/dezhu/HNL/plots/FinalStates/emm/'
+            channel_name += '#mu#mu'
+            channel = 'emm'
+    if promptLeptonType == "mu":
+        channel_name = '#mu'
+        if L1L2LeptonType == "ee":
+            plotDir = '/eos/user/d/dezhu/HNL/plots/FinalStates/eee/'
+            channel_name += 'ee'
+            channel = 'mee'
+        if L1L2LeptonType == "em":
+            plotDir = '/eos/user/d/dezhu/HNL/plots/FinalStates/eem/'
+            channel_name += 'e#mu'
+            channel = 'mem'
+        if L1L2LeptonType == "mm":
+            plotDir = '/eos/user/d/dezhu/HNL/plots/FinalStates/emm/'
+            channel_name += '#mu#mu'
+            channel = 'mmm'
+        friend_func = None
     
     qcd_from_same_sign = True
     w_qcd_mssm_method = True
@@ -413,11 +442,13 @@ if __name__ == '__main__':
 
     variables = createVariables(2.5)
 
-    sample_dict, hist_dict = createSamples(analysis_dir, total_weight, qcd_from_same_sign=False, w_qcd_mssm_method=False, r_qcd_os_ss=None, add_data_cut=met_filtered)
+    sample_dict, hist_dict = createSamples(channel,analysis_dir, total_weight, qcd_from_same_sign=False, w_qcd_mssm_method=False, r_qcd_os_ss=None, add_data_cut=met_filtered)
 
    # set_trace()
 
     makePlots(
+        plotDir,
+        channel_name,
         variables, 
         cuts, 
         total_weight, 
@@ -432,5 +463,5 @@ if __name__ == '__main__':
     )
 
     for i in cuts:
-        copyfile('plot_cfg_HNL_e.py', plotDir+i.name+'/plot_cfg.py')
+        copyfile('/afs/cern.ch/work/d/dezhu/HNL/CMSSW_9_4_6_patch1/src/CMGTools/HNL/plotting/plot_cfg_hn3l_'+channel+'.py', plotDir+i.name+'/plot_cfg.py')
         print 'cfg file stored in "', plotDir + i.name + '/plot_cfg.py"'

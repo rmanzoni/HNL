@@ -93,7 +93,7 @@ def createHistogram(hist_cfg, all_stack=False, verbose=False, friend_func=None):
             hist.Scale(cfg.scale)
 
             if cfg.name in plot:
-                print 'Histogram', cfg.name, 'already exists; adding...', cfg.dir_name
+                # print 'Histogram', cfg.name, 'already exists; adding...', cfg.dir_name
                 hist_to_add = Histogram(cfg.name, hist)
                 if not cfg.is_data:
                     hist_to_add.SetWeight(hist_cfg.lumi*cfg.xsec/cfg.sumweights)
@@ -235,9 +235,9 @@ class CreateHists(object):
         config; this version handles multiple variables via MultiDraw.
         '''
         
-#        set_trace()
         pool = Pool(processes=len(self.hist_cfg.cfgs))
         print('number of processes for filling histos (ie. samples): %i'%len(self.hist_cfg.cfgs))
+        # set_trace()
         result = pool.map(self.makealltheplots, self.hist_cfg.cfgs) 
         # result = self.makealltheplots(self.hist_cfg.cfgs[0]) 
 #        workers = cpu_count()
@@ -261,7 +261,7 @@ class CreateHists(object):
 #                hist.Scale(cfg.scale)
 #                set_trace()
                 if cfg.name in plot:
-                    print 'Histogram', cfg.name, 'already exists; adding...', cfg.dir_name
+                    # print 'Histogram', cfg.name, 'already exists; adding...', cfg.dir_name
                     hist_to_add = Histogram(cfg.name, hist)
                     if not cfg.is_data:
                         hist_to_add.SetWeight(hist_cfg.lumi*cfg.xsec/cfg.sumweights)
@@ -321,7 +321,7 @@ class CreateHists(object):
                     total_hist.Scale(cfg.total_scale)
                     # print 'Scaling total', hist_cfg.name, 'by', cfg.total_scale
         else:
-            print('building histos for %s'%cfg.name)
+            # print('building histgrams for %s'%cfg.name)
             # It's a sample cfg
 
             # Now read the tree
@@ -379,6 +379,7 @@ class CreateHists(object):
                 var_hist_tuples.append('{var} >> {hist}'.format(var=vcfg.drawname, hist=hists[vcfg.name].GetName()))
 
             # Implement the multidraw.
+            # set_trace()
             ttree.MultiDraw(var_hist_tuples, norm_cut)
 
             # Do another multidraw here, if needed, and reset the scales in a separate loop
@@ -397,7 +398,7 @@ class CreateHists(object):
                 hist.Scale(cfg.scale)
 
                 if cfg.name in plot:
-                    print 'Histogram', cfg.name, 'already exists; adding...', cfg.dir_name
+                    # print 'Histogram', cfg.name, 'already exists; adding...', cfg.dir_name
                     hist_to_add = Histogram(cfg.name, hist)
                     if not cfg.is_data:
                         hist_to_add.SetWeight(self.hist_cfg.lumi*cfg.xsec/cfg.sumweights)
@@ -409,6 +410,6 @@ class CreateHists(object):
 
                     if not cfg.is_data:
                         plot_hist.SetWeight(self.hist_cfg.lumi*cfg.xsec/cfg.sumweights)
-            print('added histos for %s'%cfg.name)
+            print('added histograms for %s'%cfg.name)
             PLOTS = self.plots
         return PLOTS

@@ -522,14 +522,15 @@ class DataMCPlot(object):
     def _GetHistPref(self, name):
         '''Return the preference dictionary for a given component'''
         thePref = None
+        # set_trace()
         for prefpat, pref in self.histPref.iteritems():
             if fnmatch.fnmatch(name, prefpat):
                 if thePref is not None:
                     print 'several matching preferences for', name
                 thePref = pref
+                # print 'preferences set for', name
         if thePref is None:
             print 'cannot find preference for hist', name
-            thePref = {'style': Style(), 'layer': 999, 'legend':name}
         return thePref
 
     def _ApplyPrefs(self):

@@ -3,6 +3,7 @@ from itertools import combinations, product
 from PhysicsTools.Heppy.analyzers.core.Analyzer import Analyzer
 from PhysicsTools.Heppy.analyzers.core.AutoHandle import AutoHandle
 from PhysicsTools.HeppyCore.utils.deltar import deltaR
+from pdb import set_trace
 
 import PhysicsTools.HeppyCore.framework.config as cfg
 
@@ -136,12 +137,11 @@ class TriggerAnalyzer(Analyzer):
                 return False
                 
         if self.cfg_ana.addTriggerObjects:
-#             import pdb ; pdb.set_trace()
             try:
                 triggerObjects = self.handles['triggerObjects_slim'].product()
             except:
+                # print 'Cannot find the collection std::vector<pat::TriggerObjectStandAlone> labeled as "slimmedPatTrigger" ==> replacing with "selectedPatTrigger"...' 
                 triggerObjects = self.handles['triggerObjects_sel' ].product()
-#             import pdb ; pdb.set_trace()
                 
             for to in triggerObjects:
                 # unpack filter labels if needed (in 2017 it is)

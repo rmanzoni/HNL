@@ -1,4 +1,4 @@
-import PhysicsTools.HeppyCore.framework.config as cfg
+port PhysicsTools.HeppyCore.framework.config as cfg
 import os
 
 #####COMPONENT CREATOR

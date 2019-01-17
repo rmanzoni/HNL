@@ -62,6 +62,8 @@ class HNLAnalyzer(Analyzer):
         count.register('>0 good vtx')
         count.register('>= 3 leptons')
         count.register('>= 3 leptons with correct flavor combo')
+        count.register('enough electrons passing preselection')
+        count.register('enough muons passing preselection')
         count.register('>0 prompt lep')
         count.register('>0 trig match prompt lep')
         count.register('> 0 di-lepton')
@@ -301,6 +303,30 @@ class HNLAnalyzer(Analyzer):
         self.counters.counter('HNL').inc('>= 3 leptons with correct flavor combo')
 
         #####################################################################################
+        # Preselect electrons
+        #####################################################################################
+        event.electrons  = [iele for iele in event.electrons if iele.pt()>3. and abs(iele.eta())<2.5]
+
+        #check there are enough leptons in the resp. flavor combination
+        if not self.checkLeptonFlavors(event.electrons, event.muons):
+            return False 
+
+        self.counters.counter('HNL').inc('enough electrons passing preselection')
+
+        #####################################################################################
+        # Preselect muons
+        #####################################################################################
+        
+        event.muons      = [imu for imu in event.muons if imu.pt()>3. and abs(imu.eta())<2.4]
+        # event.dsamuons   = [imu for imu in event.dsamuons       if imu.pt()>3. and abs(imu.eta())>2.4]
+        # event.dgmuons    = [imu for imu in event.dgmuons        if imu.pt()>3. and abs(imu.eta())>2.4]
+
+        #check there are enough leptons in the resp. flavor combination
+        if not self.checkLeptonFlavors(event.electrons, event.muons):
+            return False 
+        self.counters.counter('HNL').inc('enough muons passing preselection')
+
+        #####################################################################################
         # Preselect the prompt leptons
         #####################################################################################
         prompt_mu_cands  = sorted([mu  for mu  in event.muons     if self.preselectPromptMuons    (mu) ], key = lambda x : x.pt(), reverse = True)
@@ -370,7 +396,7 @@ class HNLAnalyzer(Analyzer):
         event.filtered_electrons = [ele for ele in event.electrons if ele.physObj != prompt_lep.physObj]
          
         ########################################################################################
-        # Preselection for the reco leptons before pairing them
+        # Preselection for the reco leptons and then create pairs
         ########################################################################################
         # some simple preselection
         event.muons      = [imu for imu in event.filtered_muons if imu.pt()>3. and abs(imu.eta())<2.4]

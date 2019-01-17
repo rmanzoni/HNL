@@ -140,7 +140,7 @@ class TriggerAnalyzer(Analyzer):
             try:
                 triggerObjects = self.handles['triggerObjects_slim'].product()
             except:
-                print 'Cannot find the collection std::vector<pat::TriggerObjectStandAlone> labeled as "slimmedPatTrigger" ==> replacing with "selectedPatTrigger"...' 
+                # print 'Cannot find the collection std::vector<pat::TriggerObjectStandAlone> labeled as "slimmedPatTrigger" ==> replacing with "selectedPatTrigger"...' 
                 triggerObjects = self.handles['triggerObjects_sel' ].product()
                 
             for to in triggerObjects:

@@ -171,80 +171,121 @@ def generateKeyConfigs(samples,production, promptLeptonType, L1L2LeptonType, isD
         candidate_selection='maxpt',
     )
 
-
-    Weighter_l0 = cfg.Analyzer(
-        LeptonWeighter,
-        name='LeptonWeighter_l0',
-        if promptLeptonType == 'ele':
+    if promptLeptonType == 'ele':
+        Weighter_l0 = cfg.Analyzer(
+            LeptonWeighter,
+            name='LeptonWeighter_l0',
             scaleFactorFiles={
                 'trigger' :('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_v17_1.root', 'e_trg_SingleEle_Ele32OREle35_desy'),
                 'idiso'   :('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_v17_1.root', 'e_id'),
                 'tracking':('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_v17_1.root', 'e_iso'),
             },
-        if promptLeptonType == 'mu':
+            dataEffFiles={
+                # 'trigger':('$CMSSW_BASE/src/CMGTools/H2TauTau/data/htt_scalefactors_v16_2.root', 'm_trgIsoMu22orTkIsoMu22_desy'),
+            },
+            getter = lambda event : event.the_3lep_cand.l0(),
+            disable=False
+        )
+
+    if promptLeptonType == 'mu':
+        Weighter_l0 = cfg.Analyzer(
+            LeptonWeighter,
+            name='LeptonWeighter_l0',
             scaleFactorFiles={
                 'trigger' :('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_v17_1.root', 'm_trg_SingleMu_Mu24ORMu27_desy'),
                 'idiso'   :('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_v17_1.root', 'm_id'),
                 'tracking':('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_v17_1.root', 'm_iso'),
             },
-        dataEffFiles={
-            # 'trigger':('$CMSSW_BASE/src/CMGTools/H2TauTau/data/htt_scalefactors_v16_2.root', 'm_trgIsoMu22orTkIsoMu22_desy'),
-        },
-        getter = lambda event : event.the_3lep_cand.l0(),
-        disable=False
-    )
+            dataEffFiles={
+                # 'trigger':('$CMSSW_BASE/src/CMGTools/H2TauTau/data/htt_scalefactors_v16_2.root', 'm_trgIsoMu22orTkIsoMu22_desy'),
+            },
+            getter = lambda event : event.the_3lep_cand.l0(),
+            disable=False
+        )
 
-
-    Weighter_l1 = cfg.Analyzer(
-        LeptonWeighter,
-        name='LeptonWeighter_l1',
-        if L1L2LeptonType == 'mm'
+    if L1L2LeptonType == 'mm':
+        Weighter_l1 = cfg.Analyzer(
+            LeptonWeighter,
+            name='LeptonWeighter_l1',
             scaleFactorFiles={
                 'idiso'   :('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_v17_1.root', 'm_id'),
                 'tracking':('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_v17_1.root', 'm_iso'),
             },
-        if L1L2LeptonType == 'ee'
-            scaleFactorFiles={
-                'idiso'   :('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_v17_1.root', 'e_id'),
-                'tracking':('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_v17_1.root', 'e_iso'),
+            dataEffFiles={
+                # 'trigger':('$CMSSW_BASE/src/CMGTools/H2TauTau/data/htt_scalefactors_v16_2.root', 'm_trgIsoMu22orTkIsoMu22_desy'),
             },
-        if L1L2LeptonType == 'em'
-            scaleFactorFiles={
-                'idiso'   :('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_v17_1.root', 'e_id'),
-                'tracking':('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_v17_1.root', 'e_iso'),
-            },
-        dataEffFiles={
-            # 'trigger':('$CMSSW_BASE/src/CMGTools/H2TauTau/data/htt_scalefactors_v16_2.root', 'm_trgIsoMu22orTkIsoMu22_desy'),
-        },
-        getter = lambda event : event.the_3lep_cand.l1(),
-        disable=True
-    )
-
-    Weighter_l2 = cfg.Analyzer(
-        LeptonWeighter,
-        name='LeptonWeighter_l2',
-        if L1L2LeptonType == 'mm'
+            getter = lambda event : event.the_3lep_cand.l1(),
+            disable=True
+        )
+        Weighter_l2 = cfg.Analyzer(
+            LeptonWeighter,
+            name='LeptonWeighter_l2',
             scaleFactorFiles={
                 'idiso'   :('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_v17_1.root', 'm_id'),
                 'tracking':('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_v17_1.root', 'm_iso'),
             },
-        if L1L2LeptonType == 'ee'
+            dataEffFiles={
+                # 'trigger':('$CMSSW_BASE/src/CMGTools/H2TauTau/data/htt_scalefactors_v16_2.root', 'm_trgIsoMu22orTkIsoMu22_desy'),
+            },
+            getter = lambda event : event.the_3lep_cand.l2(),
+            disable=True
+        )
+
+    if L1L2LeptonType == 'em':
+        Weighter_l1 = cfg.Analyzer(
+            LeptonWeighter,
+            name='LeptonWeighter_l1',
             scaleFactorFiles={
                 'idiso'   :('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_v17_1.root', 'e_id'),
                 'tracking':('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_v17_1.root', 'e_iso'),
             },
-        if L1L2LeptonType == 'em'
+            dataEffFiles={
+                # 'trigger':('$CMSSW_BASE/src/CMGTools/H2TauTau/data/htt_scalefactors_v16_2.root', 'm_trgIsoMu22orTkIsoMu22_desy'),
+            },
+            getter = lambda event : event.the_3lep_cand.l1(),
+            disable=True
+        )
+        Weighter_l2 = cfg.Analyzer(
+            LeptonWeighter,
+            name='LeptonWeighter_l2',
             scaleFactorFiles={
                 'idiso'   :('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_v17_1.root', 'm_id'),
                 'tracking':('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_v17_1.root', 'm_iso'),
             },
-        dataEffFiles={
-            # 'trigger':('$CMSSW_BASE/src/CMGTools/H2TauTau/data/htt_scalefactors_v16_2.root', 'm_trgIsoMu22orTkIsoMu22_desy'),
-        },
-        getter = lambda event : event.the_3lep_cand.l2(),
-        disable=True
-    )
+            dataEffFiles={
+                # 'trigger':('$CMSSW_BASE/src/CMGTools/H2TauTau/data/htt_scalefactors_v16_2.root', 'm_trgIsoMu22orTkIsoMu22_desy'),
+            },
+            getter = lambda event : event.the_3lep_cand.l2(),
+            disable=True
+        )
 
+    if L1L2LeptonType == 'ee':
+        Weighter_l1 = cfg.Analyzer(
+            LeptonWeighter,
+            name='LeptonWeighter_l1',
+            scaleFactorFiles={
+                'idiso'   :('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_v17_1.root', 'e_id'),
+                'tracking':('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_v17_1.root', 'e_iso'),
+            },
+            dataEffFiles={
+                # 'trigger':('$CMSSW_BASE/src/CMGTools/H2TauTau/data/htt_scalefactors_v16_2.root', 'm_trgIsoMu22orTkIsoMu22_desy'),
+            },
+            getter = lambda event : event.the_3lep_cand.l1(),
+            disable=True
+        )
+        Weighter_l2 = cfg.Analyzer(
+            LeptonWeighter,
+            name='LeptonWeighter_l2',
+            scaleFactorFiles={
+                'idiso'   :('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_v17_1.root', 'e_id'),
+                'tracking':('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_v17_1.root', 'e_iso'),
+            },
+            dataEffFiles={
+                # 'trigger':('$CMSSW_BASE/src/CMGTools/H2TauTau/data/htt_scalefactors_v16_2.root', 'm_trgIsoMu22orTkIsoMu22_desy'),
+            },
+            getter = lambda event : event.the_3lep_cand.l2(),
+            disable=True
+        )
 
     # see SM HTT TWiki
     # https://twiki.cern.ch/twiki/bin/viewauth/CMS/SMTauTau2016#Jet_Energy_Corrections

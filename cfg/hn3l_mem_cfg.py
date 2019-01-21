@@ -9,12 +9,13 @@ from CMGTools.HNL.hn3l_cfg import *
 # samples = [sample] 
 
 from CMGTools.HNL.samples.samples_data_2017_noskim import Single_mu_2017, Single_mu_2017B, Single_mu_2017C, Single_mu_2017D, Single_mu_2017E, Single_mu_2017F
-samples = [Single_mu_2017B, Single_mu_2017C, Single_mu_2017D, Single_mu_2017E, Single_mu_2017F]
+# samples = [Single_mu_2017B, Single_mu_2017C, Single_mu_2017D, Single_mu_2017E, Single_mu_2017F]
+samples = [Single_mu_2017F]
 
 # edit the lines here to specify your ntuple production mode 
 production         = True # state whether you're running production mode or not
 isData             = True
-isSignal           = True
+isSignal           = False
 promptLeptonType   = "mu" # choose from 'ele', 'mu'
 L1L2LeptonType     = "em"  # choose from 'ee', 'mm', 'em'
 

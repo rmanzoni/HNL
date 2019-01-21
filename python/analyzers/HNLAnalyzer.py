@@ -545,8 +545,8 @@ def totIso(event, offset_mode, dRCone):
     if offset_mode == 'dBeta': 
         offset = offset_dBeta(0.5, ch_pu_iso)
     tot_iso = ch_pv_iso + max(0., ph_iso + neu_iso - offset)
-    if dRCone == 0.3:
-        print '2M dr %.1f: ch_pv_iso: %.2f, neu_iso: %.2f, ph_iso: %.2f, ch_pu_iso: %.2f, l1+l2pt: %.2f, id: %i'%(dRCone, ch_pv_iso, neu_iso, ph_iso, ch_pu_iso, event.the_3lep_cand.l1().pt()+event.the_3lep_cand.l2().pt(), event.eventId)
+    # if dRCone == 0.3:
+        # print '2M dr %.1f: ch_pv_iso: %.2f, neu_iso: %.2f, ph_iso: %.2f, ch_pu_iso: %.2f, l1+l2pt: %.2f, id: %i'%(dRCone, ch_pv_iso, neu_iso, ph_iso, ch_pu_iso, event.the_3lep_cand.l1().pt()+event.the_3lep_cand.l2().pt(), event.eventId)
     return tot_iso
 
 def offset_rhoArea(rho, dRCone, eta):
@@ -557,11 +557,11 @@ def offset_rhoArea(rho, dRCone, eta):
     if abs(eta) > 2.0000 and abs(eta) < 2.2000: area = 0.0119
     if abs(eta) > 2.2000 and abs(eta) < 2.4000: area = 0.0064
     if dRCone != 0.3: area *= ( (dRCone ** 2) / (0.3 **2) )
-    print 'area = {a}, offset = {o}'.format(a = area, o = area * rho) 
+    # print 'area = {a}, offset = {o}'.format(a = area, o = area * rho) 
     return area * rho
     
 def offset_dBeta(dBeta, ch_pu_iso):
-    print 'dbeta = {db}, offset = {o}'.format(db = dBeta, o = dBeta * ch_pu_iso)
+    # print 'dbeta = {db}, offset = {o}'.format(db = dBeta, o = dBeta * ch_pu_iso)
     return ch_pu_iso * dBeta
         
 def chargedHadronIso(event, dRCone, PU = False): 

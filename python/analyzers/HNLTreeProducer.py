@@ -326,7 +326,7 @@ class HNLTreeProducer(TreeProducerBase):
         self.fill(self.tree, 'nbj' , len(event.cleanBJets))
 
         # gen match
-        if self.cfg_comp.isMC == True:
+        if self.cfg_comp.isMC == True and hasattr(event, 'genParticles'):
             stable_genp  = [pp for pp in event.genParticles if ((pp.status()==23 or pp.status() == 1) and (pp.vertex().z() != 0))]
             stable_genp += [pp for pp in event.genp_packed  if ((pp.status()==23 or pp.status() == 1) and (pp.vertex().z() != 0))] 
             # particle status: http://home.thep.lu.se/~torbjorn/pythia81html/ParticleProperties.html

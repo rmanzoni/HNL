@@ -210,23 +210,23 @@ DYBB = creator.makeMCComponent(
     useAAA  = True
 )
 
-# DYJetsToLL_M10to50 = creator.makeMCComponent(
-    # name    = 'DYJetsToLL_M10to50',
-    # dataset = '/DYJetsToLL_M-10to50_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
-    # user    = 'CMS', 
-    # pattern = '.*root',
-    # xSec    = (1.581e+04)*1.23,# +- 2.890e+01 pb
-    # useAAA  = True
-# )
+DYJetsToLL_M10to50 = creator.makeMCComponent(
+    name    = 'DYJetsToLL_M10to50',
+    dataset = '/DYJetsToLL_M-10to50_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
+    user    = 'CMS', 
+    pattern = '.*root',
+    xSec    = (1.581e+04)*1.23,# +- 2.890e+01 pb
+    useAAA  = True
+)
 
-# DYJetsToLL_M10to50_ext = creator.makeMCComponent(
-    # name    = 'DYJetsToLL_M10to50_ext',
-    # dataset = '/DYJetsToLL_M-10to50_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14_ext1-v1/MINIAODSIM',
-    # user    = 'CMS', 
-    # pattern = '.*root',
-    # xSec    = (1.581e+04)*1.23,# +- 2.890e+01 pb
-    # useAAA  = True
-# )
+DYJetsToLL_M10to50_ext = creator.makeMCComponent(
+    name    = 'DYJetsToLL_M10to50_ext',
+    dataset = '/DYJetsToLL_M-10to50_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14_ext1-v1/MINIAODSIM',
+    user    = 'CMS', 
+    pattern = '.*root',
+    xSec    = (1.581e+04)*1.23,# +- 2.890e+01 pb
+    useAAA  = True
+)
 
 DYJetsToLL_M50 = creator.makeMCComponent(
     name    = 'DYJetsToLL_M50',
@@ -561,8 +561,8 @@ hnl_bkg_noskim = [
     ST_tch_inc, 
     STbar_tW_inc, 
     ST_tW_inc, 
-    # DYJetsToLL_M10to50,
-    # DYJetsToLL_M10to50_ext,
+    DYJetsToLL_M10to50,
+    DYJetsToLL_M10to50_ext,
     DYJetsToLL_M50,
     DYJetsToLL_M50_ext,
     DY1JetsToLL_M50,     

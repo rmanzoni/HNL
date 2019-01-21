@@ -10,9 +10,11 @@ from CMGTools.HNL.hn3l_cfg import *
 # from CMGTools.HNL.samples.samples_data_2017_noskim import Single_mu_2017, Single_mu_2017B, Single_mu_2017C, Single_mu_2017D, Single_mu_2017E, Single_mu_2017F
 # samples = [Single_mu_2017B, Single_mu_2017C, Single_mu_2017D, Single_mu_2017E, Single_mu_2017F]
 # samples = [Single_mu_2017C, Single_mu_2017D, Single_mu_2017E, Single_mu_2017F]
+
 # from CMGTools.HNL.samples.samples_mc_2017 import TTJets_amcat
 from CMGTools.HNL.samples.samples_mc_2017_noskim import WJetsToLNu_ext 
 samples = [WJetsToLNu_ext]
+
 
 # edit the lines here to specify your ntuple production mode 
 production         = True # state whether you're running production mode or not

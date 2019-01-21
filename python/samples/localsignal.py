@@ -5,6 +5,7 @@ from glob import glob
 # from CMGTools.HNL.samples.signal import HN3L_M_2_V_0p00836660026534_e_massiveAndCKM_LO
 from CMGTools.HNL.samples.signal import HN3L_M_2_V_0p0141421356237_mu_massiveAndCKM_LO
 from CMGTools.HNL.samples.samples_mc_2017 import TTJets_amcat
+from CMGTools.HNL.samples.samples_mc_2017_noskim import WJetsToLNu_ext
 from CMGTools.HNL.samples.samples_data_2017_noskim import Single_mu_2017B, Single_ele_2017B
 
 # HN3L_M_2p5_V_0p0173205080757_e_onshell .files = glob('/eos/user/d/dezhu/HNL/miniAOD/20180710_miniAOD/heavyNeutrino*.root')
@@ -18,4 +19,5 @@ Single_mu_2017B.files = glob('/afs/cern.ch/work/d/dezhu/HNL/CMSSW_9_4_6_patch1/s
 Single_ele_2017B.files = glob('/afs/cern.ch/work/d/dezhu/HNL/CMSSW_9_4_6_patch1/src/CMGTools/HNL/0_result/3_MiniAODs/data_SingleEle_2017B.root')
 HN3L_M_2_V_0p0141421356237_mu_massiveAndCKM_LO.files = glob('/afs/cern.ch/work/d/dezhu/HNL/CMSSW_9_4_6_patch1/src/CMGTools/HNL/0_result/3_MiniAODs/HN3L_M_2_V_0p0141421356237_mu_massiveAndCKM_LO.root')
 TTJets_amcat.files = glob('/afs/cern.ch/work/d/dezhu/HNL/CMSSW_9_4_6_patch1/src/CMGTools/HNL/0_result/3_MiniAODs/TTJet_amcat.root')
+WJetsToLNu_ext.files = glob('/afs/cern.ch/work/d/dezhu/HNL/CMSSW_9_4_6_patch1/src/CMGTools/HNL/0_result/3_MiniAODs/WJetsToLNu_ext.root')
 

@@ -262,18 +262,20 @@ particle_vars = [
 
 # gen particle
 gen_particle_vars = [
-    Variable('pt'                        , lambda p: p.pt()                                   ),
-    Variable('eta'                       , lambda p: p.eta()                                  ),
-    Variable('phi'                       , lambda p: p.phi()                                  ),
-    Variable('q'                         , lambda p: p.charge() if hasattr(p, 'charge') else 0), # charge may be non-integer for gen particles
-    Variable('mass'                      , lambda p: p.mass()                                 ),
-    Variable('pdgid'                     , lambda p: p.pdgId()                                ),
-    Variable('fromHardProcessFinalState' , lambda p: p.fromHardProcessFinalState()            ),
-    Variable('isPromptFinalState'        , lambda p: p.isPromptFinalState()                   ),
-    Variable('vtx_x'                     , lambda p: p.vertex().x()                           ),
-    Variable('vtx_y'                     , lambda p: p.vertex().y()                           ),
-    Variable('vtx_z'                     , lambda p: p.vertex().z()                           ),
-    Variable('status'                    , lambda p: p.status()                               ),
+    Variable('pt'                                            , lambda p: p.pt()                                           ),
+    Variable('eta'                                           , lambda p: p.eta()                                          ),
+    Variable('phi'                                           , lambda p: p.phi()                                          ),
+    Variable('q'                                             , lambda p: p.charge() if hasattr(p, 'charge') else 0        ), # charge may be non-integer for gen particles
+    Variable('mass'                                          , lambda p: p.mass()                                         ),
+    Variable('pdgid'                                         , lambda p: p.pdgId()                                        ),
+    Variable('fromHardProcessFinalState'                     , lambda p: p.fromHardProcessFinalState()                    ),
+    Variable('isPromptFinalState'                            , lambda p: p.isPromptFinalState()                           ),
+    Variable('isDirectPromptTauDecayProductFinalState'       , lambda p: p.isDirectPromptTauDecayProductFinalState()      ),      
+    Variable('isDirectHardProcessTauDecayProductFinalState'  , lambda p: p.isDirectHardProcessTauDecayProductFinalState() ),
+    Variable('vtx_x'                                         , lambda p: p.vertex().x()                                   ),
+    Variable('vtx_y'                                         , lambda p: p.vertex().y()                                   ),
+    Variable('vtx_z'                                         , lambda p: p.vertex().z()                                   ),
+    Variable('status'                                        , lambda p: p.status()                                       ),
 ]
 
 # stage-2 L1 object
@@ -339,7 +341,6 @@ electron_vars = [
     Variable('n_hits_miss'         , lambda ele : ele.gsfTrack().hitPattern().numberOfLostHits(1), int),
     Variable('pass_conv_veto'      , lambda ele : ele.passConversionVeto()),
     Variable('reliso05'            , lambda lep : lep.relIsoR(R=0.3, dBetaFactor=0.5, allCharged=0)),
-    Variable('reliso05_04'         , lambda lep : lep.relIsoR(R=0.4, dBetaFactor=0.5, allCharged=0)),
     Variable('reliso05_04'         , lambda lep : lep.relIsoR(R=0.4, dBetaFactor=0.5, allCharged=0)),
 ]
 

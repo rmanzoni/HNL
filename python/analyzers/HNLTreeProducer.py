@@ -327,10 +327,12 @@ class HNLTreeProducer(TreeProducerBase):
 
         # gen match
         if self.cfg_comp.isMC == True and hasattr(event, 'genParticles'):
-            stable_genp  = [pp for pp in event.genParticles if ((pp.status()==23 or pp.status() == 1) and (pp.vertex().z() != 0))]
-            stable_genp += [pp for pp in event.genp_packed  if ((pp.status()==23 or pp.status() == 1) and (pp.vertex().z() != 0))] 
+            stable_genp   =  [pp for pp in event.genParticles if pp.status() == 1] # and pp.vertex().z()!=0)]
+            stable_genp   += [pp for pp in event.genp_packed  if pp.status() == 1] # and pp.vertex().z()!=0)] 
             # particle status: http://home.thep.lu.se/~torbjorn/pythia81html/ParticleProperties.html
             # 1 ... stable; 23 ... from hardest scattering subprocess
+#            stable_genp += [pp for pp in event.genParticles if (pp.status()==23  and pp.vertex().z()!=0)]
+#            stable_genp += [pp for pp in event.genp_packed  if (pp.status()==23  and pp.vertex().z()!=0)] 
         
             tomatch = [(event.the_3lep_cand.l0(), 0.05*0.05),
                        (event.the_3lep_cand.l1(), 0.2 *0.2 ),
@@ -338,7 +340,7 @@ class HNLTreeProducer(TreeProducerBase):
         
             for ilep, idr2 in tomatch:
                 bestmatch, dr2 = bestMatch(ilep, stable_genp)
-                if ( dr2 < idr2 and abs((ilep.pt() - bestmatch.pt())/ilep.pt()) < 0.2 ):
+                if ( dr2 < idr2 and abs((ilep.pt() - bestmatch.pt())/ilep.pt()) < 0.2 ): 
                     ilep.bestmatch = bestmatch
 
             # relevant for signal: check if reco matched with gen, save a bool
@@ -351,6 +353,8 @@ class HNLTreeProducer(TreeProducerBase):
                 if hasattr(event.the_3lep_cand.l0(), 'bestmatch'): self.fill(self.tree, 'l0_is_real', deltaR(event.the_3lep_cand.l0().bestmatch,event.the_hnl.l0()) < 0.01)
                 if hasattr(event.the_3lep_cand.l1(), 'bestmatch'): self.fill(self.tree, 'l1_is_real', deltaR(event.the_3lep_cand.l1().bestmatch,event.the_hnl.l1()) < 0.05)
                 if hasattr(event.the_3lep_cand.l2(), 'bestmatch'): self.fill(self.tree, 'l2_is_real', deltaR(event.the_3lep_cand.l2().bestmatch,event.the_hnl.l2()) < 0.05)
+
+            print('event:', event.eventId, 'lumi:', event.lumi)
 
         # extra lepton veto
         self.fill(self.tree, 'pass_e_veto', len(event.veto_eles)==0)

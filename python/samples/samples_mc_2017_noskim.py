@@ -219,14 +219,14 @@ DYJetsToLL_M10to50 = creator.makeMCComponent(
     useAAA  = True
 )
 
-DYJetsToLL_M10to50_ext = creator.makeMCComponent(
-    name    = 'DYJetsToLL_M10to50_ext',
-    dataset = '/DYJetsToLL_M-10to50_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14_ext1-v1/MINIAODSIM',
-    user    = 'CMS', 
-    pattern = '.*root',
-    xSec    = (1.581e+04)*1.23,# +- 2.890e+01 pb
-    useAAA  = True
-)
+# DYJetsToLL_M10to50_ext = creator.makeMCComponent(
+    # name    = 'DYJetsToLL_M10to50_ext',
+    # dataset = '/DYJetsToLL_M-10to50_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14_ext1-v1/MINIAODSIM',
+    # user    = 'CMS', 
+    # pattern = '.*root',
+    # xSec    = (1.581e+04)*1.23,# +- 2.890e+01 pb
+    # useAAA  = True
+# )
 
 DYJetsToLL_M50 = creator.makeMCComponent(
     name    = 'DYJetsToLL_M50',
@@ -511,7 +511,7 @@ wjets = [W1JetsToLNu, W2JetsToLNu, W3JetsToLNu, W4JetsToLNu]
 # TODO temporary workaround for pu of new samples
 DYBB                                      .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_DYBB.root' 
 DYJetsToLL_M10to50                        .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_DYJets_M10to50.root' 
-DYJetsToLL_M10to50_ext                    .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_DYJets_M10to50.root'  # FIXME
+# DYJetsToLL_M10to50_ext                    .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_DYJets_M10to50.root'  # FIXME
 DYJetsToLL_M50                            .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_DYJetsToLL_M50.root' 
 DYJetsToLL_M50_ext                        .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_DYJetsToLL_M50_ext.root' 
 WJetsToLNu                                .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_WJetsToLNu.root'   # in Albert W3JetsToLNu-LO  /W3JetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM
@@ -562,7 +562,7 @@ hnl_bkg_noskim = [
     STbar_tW_inc, 
     ST_tW_inc, 
     DYJetsToLL_M10to50,
-    DYJetsToLL_M10to50_ext,
+    # DYJetsToLL_M10to50_ext,
     DYJetsToLL_M50,
     DYJetsToLL_M50_ext,
     DY1JetsToLL_M50,     

@@ -78,6 +78,10 @@ class HNLTreeProducer(TreeProducerBase):
         self.var(self.tree, 'l1_is_real')
         self.var(self.tree, 'l2_is_real')
 
+        self.var(self.tree, 'l0_good_match')
+        self.var(self.tree, 'l1_good_match')
+        self.var(self.tree, 'l2_good_match')
+
         # reco primary vertex
         self.var(self.tree, 'pv_x')
         self.var(self.tree, 'pv_y')
@@ -342,9 +346,23 @@ class HNLTreeProducer(TreeProducerBase):
                     ilep.bestmatch = bestmatch
 
             # relevant for signal: check if reco matched with gen, save a bool
-            if hasattr(event.the_3lep_cand.l0(), 'bestmatch'): self.fillSimpleGenParticle(self.tree, 'l0_gen_match', event.the_3lep_cand.l0().bestmatch)
-            if hasattr(event.the_3lep_cand.l1(), 'bestmatch'): self.fillSimpleGenParticle(self.tree, 'l1_gen_match', event.the_3lep_cand.l1().bestmatch)
-            if hasattr(event.the_3lep_cand.l2(), 'bestmatch'): self.fillSimpleGenParticle(self.tree, 'l2_gen_match', event.the_3lep_cand.l2().bestmatch)
+            if hasattr(event.the_3lep_cand.l0(), 'bestmatch'): 
+                uho = event.the_3lep_cand.l0()
+                self.fillSimpleGenParticle(self.tree, 'l0_gen_match', uho.bestmatch)
+                if deltaR(uho.bestmatch, uho) < 0.04 and uho.pdgId() == uho.bestmatch.pdgId():
+                    self.fill(self.tree, 'l0_good_match', 1)
+
+            if hasattr(event.the_3lep_cand.l1(), 'bestmatch'): 
+                uhi = event.the_3lep_cand.l1()
+                self.fillSimpleGenParticle(self.tree, 'l1_gen_match', uhi.bestmatch)
+                if deltaR(uhi.bestmatch, uhi) < 0.04 and uhi.pdgId() == uhi.bestmatch.pdgId():
+                    self.fill(self.tree, 'l1_good_match', 1)
+
+            if hasattr(event.the_3lep_cand.l2(), 'bestmatch'): 
+                uhv = event.the_3lep_cand.l1()
+                self.fillSimpleGenParticle(self.tree, 'l2_gen_match', uhv.bestmatch)
+                if deltaR(uhv.bestmatch, uhv) < 0.04 and uhv.pdgId() == uhv.bestmatch.pdgId():
+                    self.fill(self.tree, 'l2_good_match', 1)
 
             # FIXME! matching by pointer does not work, so let's trick it with deltaR
             if hasattr(event, 'the_hnl'):

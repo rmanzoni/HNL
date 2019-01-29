@@ -361,7 +361,7 @@ class HNLTreeProducer(TreeProducerBase):
                     self.fill(self.tree, 'l1_good_match', 1)
 
             if hasattr(event.the_3lep_cand.l2(), 'bestmatch'): 
-                uhv = event.the_3lep_cand.l1()
+                uhv = event.the_3lep_cand.l2()
                 self.fillSimpleGenParticle(self.tree, 'l2_gen_match', uhv.bestmatch)
                 if deltaR(uhv.bestmatch, uhv) < 0.04 and uhv.pdgId() == uhv.bestmatch.pdgId():
                     self.fill(self.tree, 'l2_good_match', 1)

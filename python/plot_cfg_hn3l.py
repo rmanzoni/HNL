@@ -326,8 +326,8 @@ def createVariables(rebin=None):
     # Taken from Variables.py; can get subset with e.g. getVars(['mt', 'mvis'])
 #    variables = CR_vars
     DoNotRebin = ['_norm_', 'n_vtx', 'nj', 'nbj',] 
-    # variables = hnl_vars
-    variables = test_vars
+    variables = hnl_vars
+    # variables = test_vars
     if rebin>0:
         for ivar in hnl_vars:
             if ivar.name in DoNotRebin: continue
@@ -348,10 +348,10 @@ def makePlots(plotDir,channel_name,variables, cuts, total_weight, sample_dict, h
             shutil.rmtree(cutDir)
             os.mkdir(cutDir)
 
-        # cfg_main = HistogramCfg(name=cut.name, var=None, cfgs=sample_dict['all_samples'], cut=cut.cut, lumi=int_lumi, weight=total_weight)
+        cfg_main = HistogramCfg(name=cut.name, var=None, cfgs=sample_dict['all_samples'], cut=cut.cut, lumi=int_lumi, weight=total_weight)
         # cfg_main = HistogramCfg(name=cut.name, var=None, cfgs=sample_dict['samples_essential'], cut=cut.cut, lumi=int_lumi, weight=total_weight)
         # cfg_main = HistogramCfg(name=cut.name, var=None, cfgs=sample_dict['samples_essential_data'], cut=cut.cut, lumi=int_lumi, weight=total_weight)
-        cfg_main = HistogramCfg(name=cut.name, var=None, cfgs=sample_dict['samples_mc'], cut=cut.cut, lumi=int_lumi, weight=total_weight)
+        # cfg_main = HistogramCfg(name=cut.name, var=None, cfgs=sample_dict['samples_mc'], cut=cut.cut, lumi=int_lumi, weight=total_weight)
         # cfg_main = HistogramCfg(name=cut.name, var=None, cfgs=sample_dict['samples_data'], cut=cut.cut, lumi=int_lumi, weight=total_weight)
     
         cfg_main.vars = variables

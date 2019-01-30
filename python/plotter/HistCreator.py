@@ -242,6 +242,12 @@ class CreateHists(object):
         # set_trace()
         result = pool.map(self.makealltheplots, self.hist_cfg.cfgs) 
         # result = self.makealltheplots(self.hist_cfg.cfgs[0]) 
+        
+        # for i, cfg in enumerate(self.hist_cfg.cfgs):
+            # try:
+                # result = self.makealltheplots(self.hist_cfg.cfgs[i]) 
+            # except:
+                # set_trace()
 #        workers = cpu_count()
 #        result = []
 #        batches = len(self.hist_cfg.cfgs) / workers + 1 if len(self.hist_cfg.cfgs) % workers != 0 else len(self.hist_cfg.cfgs) / workers
@@ -259,7 +265,10 @@ class CreateHists(object):
                 try:
                     hist = result[i][vcfg.name].histos[0].obj # result[0]['CR_hnl_m_12'].histos[0]
                 except:
-                    set_trace()
+                    try:
+                        hist = result[vcfg.name].histos[0].obj # result[0]['CR_hnl_m_12'].histos[0]
+                    except:
+                        set_trace()
 #                hist = hists[vcfg.name]
                 plot = self.plots[vcfg.name]
 

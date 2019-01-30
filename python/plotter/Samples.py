@@ -57,27 +57,41 @@ w_exps = []
 
 
 def createSampleLists(analysis_dir='/eos/user/v/vstampf/ntuples/', 
+                      server='t3',
                       channel='emm',
                       signal_scale=0.09,#27.0,#200.0,#0.09,
                       no_data=True,
                       tree_prod_name='HNLTreeProducer', 
                       add_data_cut=None,
-                      add_mc_cut=None): 
+                      add_mc_cut=None):
     
     if channel == 'emm':
 #        data_dir = '/eos/user/m/manzoni/HNL/singleele_e_23_08_2018/'              # first version
         # data_dir = '/eos/user/v/vstampf/ntuples/data_2017_e_noskim/partial_hadd/'  # 9/13 production including met filters and masses between vetoing leps and 3l
-        data_dir = '/eos/user/v/vstampf/ntuples/data_2017_e_noskim/'
-        bkg_dir = 'bkg_mc_e/'
-        sig_dir = 'sig_mc_e/ntuples/'
-        DY_dir  = '/eos/user/v/vstampf/ntuples/DDE_v0/prompt_e/'
-        dataB = Single_ele_2017B; dataC = Single_ele_2017C; dataD = Single_ele_2017D; dataE = Single_ele_2017E; dataF = Single_ele_2017F; 
+        if server == 'lxplus':
+            data_dir = '/eos/user/v/vstampf/ntuples/data_2017_e_noskim/'
+            bkg_dir = 'bkg_mc_e/'
+            sig_dir = 'sig_mc_e/ntuples/'
+            DY_dir  = '/eos/user/v/vstampf/ntuples/DDE_v0/prompt_e/'
+        if server == 't3':
+            data_dir = analysis_dir + 'data/'
+            bkg_dir = 'background'
+            sig_dir = 'signal'
+            # DY_dir  = '/eos/user/v/vstampf/ntuples/DDE_v0/prompt_e/'
+
     if channel == 'mmm':
-        data_dir = '/eos/user/v/vstampf/ntuples/data_2017_m_noskim/'
-        bkg_dir = 'bkg_mc_m/'
-        sig_dir = 'sig_mc_m/ntuples/'
-        DY_dir = analysis_dir + bkg_dir
-        dataB = Single_mu_2017B; dataC = Single_mu_2017C; dataD = Single_mu_2017D; dataE = Single_mu_2017E; dataF = Single_mu_2017F; 
+        if server == 'lxplus':
+            data_dir = '/eos/user/v/vstampf/ntuples/data_2017_m_noskim/'
+            bkg_dir = 'bkg_mc_m/'
+            sig_dir = 'sig_mc_m/ntuples/'
+            DY_dir = analysis_dir + bkg_dir
+        if server == 't3':
+            data_dir = analysis_dir + 'data/'
+            bkg_dir = 'background'
+            sig_dir = 'signal/ntuples'
+            DY_dir = analysis_dir + bkg_dir
+
+    dataB = Single_mu_2017B; dataC = Single_mu_2017C; dataD = Single_mu_2017D; dataE = Single_mu_2017E; dataF = Single_mu_2017F; 
 
     samples_essential = [
         # SampleCfg(name='DYJetsToLL_M10to50', dir_name=DYJetsToLL_M10to50 .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=DYJetsToLL_M10to50 .xSection, sumweights=DYJetsToLL_M10to50 .nGenEvents),
@@ -125,8 +139,8 @@ def createSampleLists(analysis_dir='/eos/user/v/vstampf/ntuples/',
     ]
 
     samples_additional = [
-        SampleCfg(name='DYJets'           , dir_name=DYJetsToLL_M50    .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=DYJetsToLL_M50    .xSection, sumweights=DYJetsToLL_M50    .nGenEvents),
-        SampleCfg(name='DYBB'           , dir_name=DYBB    .name, ana_dir=DY_dir, tree_prod_name=tree_prod_name, xsec=DYBB    .xSection, sumweights=DYBB    .nGenEvents),
+        SampleCfg(name='DYJets'             , dir_name=DYJetsToLL_M50     .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=DYJetsToLL_M50     .xSection, sumweights=DYJetsToLL_M50     .nGenEvents),
+        SampleCfg(name='DYBB'               , dir_name=DYBB               .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=DYBB               .xSection, sumweights=DYBB               .nGenEvents),
 #        SampleCfg(name='DY1Jets_M50'        , dir_name=DY1JetsToLL_M50      .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=DY1JetsToLL_M50     .xSection, sumweights=DY1JetsToLL_M50     .nGenEvents),
 #        SampleCfg(name='DY2Jets_M50'        , dir_name=DY2JetsToLL_M50      .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=DY2JetsToLL_M50     .xSection, sumweights=DY2JetsToLL_M50     .nGenEvents),
 #        SampleCfg(name='DY2Jets_M50_ext'    , dir_name=DY2JetsToLL_M50_ext  .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=DY2JetsToLL_M50_ext .xSection, sumweights=DY2JetsToLL_M50_ext .nGenEvents),

@@ -308,10 +308,11 @@ def prepareCuts():
 #    cuts.append(Cut('tighter_e_tight', inc_cut + l0_tight + tighter))
     return cuts
 
-def createSamples(channel, analysis_dir, total_weight, qcd_from_same_sign, w_qcd_mssm_method, r_qcd_os_ss, add_data_cut=None):
+def createSamples(channel, analysis_dir, total_weight,server, qcd_from_same_sign, w_qcd_mssm_method, r_qcd_os_ss, add_data_cut=None):
     hist_dict = {}
     sample_dict = {}
-    samples_mc, samples_data, samples, all_samples, sampleDict, samples_essential, samples_essential_data = createSampleLists(analysis_dir=analysis_dir, channel=channel, add_data_cut=add_data_cut)
+    print "creating samples from %s"%(analysis_dir)
+    samples_mc, samples_data, samples, all_samples, sampleDict, samples_essential, samples_essential_data = createSampleLists(analysis_dir=analysis_dir, server = server, channel=channel, add_data_cut=add_data_cut)
 
     sample_dict['all_samples'] = all_samples
     sample_dict['samples_essential'] = samples_essential
@@ -347,8 +348,8 @@ def makePlots(plotDir,channel_name,variables, cuts, total_weight, sample_dict, h
             os.mkdir(cutDir)
 
         # cfg_main = HistogramCfg(name=cut.name, var=None, cfgs=sample_dict['all_samples'], cut=cut.cut, lumi=int_lumi, weight=total_weight)
-        # cfg_main = HistogramCfg(name=cut.name, var=None, cfgs=sample_dict['samples_essential'], cut=cut.cut, lumi=int_lumi, weight=total_weight)
-        cfg_main = HistogramCfg(name=cut.name, var=None, cfgs=sample_dict['samples_essential_data'], cut=cut.cut, lumi=int_lumi, weight=total_weight)
+        cfg_main = HistogramCfg(name=cut.name, var=None, cfgs=sample_dict['samples_essential'], cut=cut.cut, lumi=int_lumi, weight=total_weight)
+        # cfg_main = HistogramCfg(name=cut.name, var=None, cfgs=sample_dict['samples_essential_data'], cut=cut.cut, lumi=int_lumi, weight=total_weight)
         # cfg_main = HistogramCfg(name=cut.name, var=None, cfgs=sample_dict['samples_mc'], cut=cut.cut, lumi=int_lumi, weight=total_weight)
     
         cfg_main.vars = variables
@@ -393,33 +394,39 @@ def makePlots(plotDir,channel_name,variables, cuts, total_weight, sample_dict, h
                     print item, key
 
 
-def producePlots(promptLeptonType, L1L2LeptonType):
+def producePlots(promptLeptonType, L1L2LeptonType, server):
+
+    if server == 't3':
+        plotDirBase = '/shome/dezhu/3_figures/1_DataMC/FinalStates/'
+    if server == 'lxplus':
+        plotDirBase = '/eos/user/d/dezhu/HNL/plots/FinalStates/'
+
     if promptLeptonType == "ele":
         channel_name = 'e'
         if L1L2LeptonType == "ee":
-            plotDir = '/eos/user/d/dezhu/HNL/plots/FinalStates/eee/'
+            plotDir = plotDirBase + 'eee/'
             channel_name += 'ee'
             channel = 'eee'
         if L1L2LeptonType == "em":
-            plotDir = '/eos/user/d/dezhu/HNL/plots/FinalStates/eem/'
+            plotDir = plotDirBase + 'eem/'
             channel_name += 'e#mu'
             channel = 'eem'
         if L1L2LeptonType == "mm":
-            plotDir = '/eos/user/d/dezhu/HNL/plots/FinalStates/emm/'
+            plotDir = plotDirBase + 'emm/'
             channel_name += '#mu#mu'
             channel = 'emm'
     if promptLeptonType == "mu":
         channel_name = '#mu'
         if L1L2LeptonType == "ee":
-            plotDir = '/eos/user/d/dezhu/HNL/plots/FinalStates/eee/'
+            plotDir = plotDirBase + 'mee/'
             channel_name += 'ee'
             channel = 'mee'
         if L1L2LeptonType == "em":
-            plotDir = '/eos/user/d/dezhu/HNL/plots/FinalStates/eem/'
-            channel_name += 'e#mu'
+            plotDir = plotDirBase + 'mem/'
+            channel_name += '#mu'
             channel = 'mem'
         if L1L2LeptonType == "mm":
-            plotDir = '/eos/user/d/dezhu/HNL/plots/FinalStates/emm/'
+            plotDir = plotDirBase + 'mmm/'
             channel_name += '#mu#mu'
             channel = 'mmm'
         friend_func = None
@@ -432,7 +439,12 @@ def producePlots(promptLeptonType, L1L2LeptonType):
     add_ttbar_sys = False
     add_tes_sys = False
 
-    analysis_dir = '/eos/user/v/vstampf/ntuples/'
+    if server == "lxplus":
+        analysis_dir = '/eos/user/v/vstampf/ntuples/'
+   
+    if server == "t3":
+        analysis_dir = 'root://t3dcachedb.psi.ch:1094///pnfs/psi.ch/cms/trivcat/store/user/dezhu/2_ntuples/HN3Lv1.0/' + channel + '/'
+
 
     total_weight = 'weight * lhe_weight'
 
@@ -442,9 +454,9 @@ def producePlots(promptLeptonType, L1L2LeptonType):
 
     variables = createVariables(2.5)
 
-    sample_dict, hist_dict = createSamples(channel,analysis_dir, total_weight, qcd_from_same_sign=False, w_qcd_mssm_method=False, r_qcd_os_ss=None, add_data_cut=met_filtered)
+    sample_dict, hist_dict = createSamples(channel,analysis_dir, total_weight, server=server, qcd_from_same_sign=False, w_qcd_mssm_method=False, r_qcd_os_ss=None, add_data_cut=met_filtered)
 
-   # set_trace()
+    # set_trace()
 
     makePlots(
         plotDir,
@@ -463,5 +475,5 @@ def producePlots(promptLeptonType, L1L2LeptonType):
     )
 
     for i in cuts:
-        copyfile('/afs/cern.ch/work/d/dezhu/HNL/CMSSW_9_4_6_patch1/src/CMGTools/HNL/plotting/plot_cfg_hn3l_'+channel+'.py', plotDir+i.name+'/plot_cfg.py')
+        copyfile('/t3home/dezhu/HNL/CMSSW_9_4_6_patch1/src/CMGTools/HNL/plotting/plot_cfg_hn3l_'+channel+'.py', plotDir+i.name+'/plot_cfg.py')
         print 'cfg file stored in "', plotDir + i.name + '/plot_cfg.py"'

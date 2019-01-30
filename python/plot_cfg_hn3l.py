@@ -318,6 +318,7 @@ def createSamples(channel, analysis_dir, total_weight,server, qcd_from_same_sign
     sample_dict['samples_essential'] = samples_essential
     sample_dict['samples_essential_data'] = samples_essential_data
     sample_dict['samples_mc'] = samples_mc
+    sample_dict['samples_data'] = samples_data
 
     return sample_dict, hist_dict
 
@@ -347,10 +348,11 @@ def makePlots(plotDir,channel_name,variables, cuts, total_weight, sample_dict, h
             shutil.rmtree(cutDir)
             os.mkdir(cutDir)
 
-        # cfg_main = HistogramCfg(name=cut.name, var=None, cfgs=sample_dict['all_samples'], cut=cut.cut, lumi=int_lumi, weight=total_weight)
-        cfg_main = HistogramCfg(name=cut.name, var=None, cfgs=sample_dict['samples_essential'], cut=cut.cut, lumi=int_lumi, weight=total_weight)
+        cfg_main = HistogramCfg(name=cut.name, var=None, cfgs=sample_dict['all_samples'], cut=cut.cut, lumi=int_lumi, weight=total_weight)
+        # cfg_main = HistogramCfg(name=cut.name, var=None, cfgs=sample_dict['samples_essential'], cut=cut.cut, lumi=int_lumi, weight=total_weight)
         # cfg_main = HistogramCfg(name=cut.name, var=None, cfgs=sample_dict['samples_essential_data'], cut=cut.cut, lumi=int_lumi, weight=total_weight)
         # cfg_main = HistogramCfg(name=cut.name, var=None, cfgs=sample_dict['samples_mc'], cut=cut.cut, lumi=int_lumi, weight=total_weight)
+        # cfg_main = HistogramCfg(name=cut.name, var=None, cfgs=sample_dict['samples_data'], cut=cut.cut, lumi=int_lumi, weight=total_weight)
     
         cfg_main.vars = variables
         HISTS = CreateHists(cfg_main)
@@ -452,7 +454,8 @@ def producePlots(promptLeptonType, L1L2LeptonType, server):
 
     cuts = prepareCuts()
 
-    variables = createVariables(2.5)
+    # variables = createVariables(2.5)
+    variables = createVariables()
 
     sample_dict, hist_dict = createSamples(channel,analysis_dir, total_weight, server=server, qcd_from_same_sign=False, w_qcd_mssm_method=False, r_qcd_os_ss=None, add_data_cut=met_filtered)
 

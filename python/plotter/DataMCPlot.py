@@ -418,10 +418,13 @@ class DataMCPlot(object):
             mxsup = self.supportHist.weighted.GetBinContent(
                 self.supportHist.weighted.GetMaximumBin()
             )
-            mxstack = self.BGHist().weighted.GetBinContent(
-                self.BGHist().weighted.GetMaximumBin()
-            )
-            mx = max(mxsup, mxstack)
+            try:
+                mxstack = self.BGHist().weighted.GetBinContent(
+                    self.BGHist().weighted.GetMaximumBin()
+                )
+                mx = max(mxsup, mxstack)
+            except:
+                mx = mxsup
             if ymin is None:
                 ymin = 0.01
             if ymax is None:

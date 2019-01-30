@@ -412,15 +412,23 @@ class DataMCPlot(object):
         self.stack.Draw(opt+same,
                         xmin=xmin, xmax=xmax,
                         ymin=ymin, ymax=ymax)
+        set_trace()
+        bghist = self.BGHist()
         if self.supportHist is None:
             self.supportHist = self.BGHist()
         if not self.axisWasSet:
             mxsup = self.supportHist.weighted.GetBinContent(
                 self.supportHist.weighted.GetMaximumBin()
             )
-            mxstack = self.BGHist().weighted.GetBinContent(
-                self.BGHist().weighted.GetMaximumBin()
-            )
+            try:
+                # mxstack = self.BGHist().weighted.GetBinContent(
+                    # self.BGHist().weighted.GetMaximumBin()
+                # )
+                mxstack = bghist.weighted.GetBinContent(
+                    bghist.weighted.GetMaximumBin()
+                )
+            except:
+                set_trace()
             mx = max(mxsup, mxstack)
             if ymin is None:
                 ymin = 0.01

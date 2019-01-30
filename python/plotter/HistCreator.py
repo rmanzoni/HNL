@@ -236,7 +236,9 @@ class CreateHists(object):
         '''
         
         pool = Pool(processes=len(self.hist_cfg.cfgs))
-        print('number of processes for filling histos (ie. samples): %i'%len(self.hist_cfg.cfgs))
+        print('###########################################################')
+        print('# number of processes for filling histos (ie. samples): %i'%len(self.hist_cfg.cfgs))
+        print('###########################################################')
         # set_trace()
         result = pool.map(self.makealltheplots, self.hist_cfg.cfgs) 
         # result = self.makealltheplots(self.hist_cfg.cfgs[0]) 
@@ -254,7 +256,10 @@ class CreateHists(object):
             stack = not cfg.is_data and not cfg.is_signal
 #            print(cfg.name, stack)
             for vcfg in self.vcfgs:
-                hist = result[i][vcfg.name].histos[0].obj # result[0]['CR_hnl_m_12'].histos[0]
+                try:
+                    hist = result[i][vcfg.name].histos[0].obj # result[0]['CR_hnl_m_12'].histos[0]
+                except:
+                    set_trace()
 #                hist = hists[vcfg.name]
                 plot = self.plots[vcfg.name]
 
@@ -274,12 +279,14 @@ class CreateHists(object):
                     if not cfg.is_data:
                         plot_hist.SetWeight(self.hist_cfg.lumi*cfg.xsec/cfg.sumweights)
 #                print(cfg.name, vcfg.name, len(plot.histos))
-        print('initializing histos done, making stacks...')
-
+        print('###########################################################')
+        print('# initializing histos done, making stacks...')
         for plot in self.plots.itervalues():
             plot._ApplyPrefs()
+        print('# number of processes for drawing (ie. stacks to draw): %i'%len(self.plots))
+        print('###########################################################')
 
-        print('number of processes for drawing (ie. stacks to draw): %i'%len(self.plots))
+
         procs = []
         for i, plot in enumerate(self.plots.itervalues()):
             proc = Process(target=plot.Draw, args=())
@@ -326,7 +333,6 @@ class CreateHists(object):
 
             # Now read the tree
             file_name = '/'.join([cfg.ana_dir, cfg.dir_name, cfg.tree_prod_name, 'tree.root'])
-
             # attach the trees to the first DataMCPlot
             plot = self.plots[self.vcfgs[0].name]
             ttree = plot.readTree(file_name, cfg.tree_name, verbose=verbose, friend_func=friend_func)
@@ -371,6 +377,7 @@ class CreateHists(object):
                 initHist(hist, vcfg)
                 hists[vcfg.name] = hist
 
+
             var_hist_tuples = []
 
             for vcfg in self.vcfgs:
@@ -378,8 +385,8 @@ class CreateHists(object):
     #                pool.map(var_hist_tuples.append,('{var} >> {hist}'.format(var=vcfg.drawname, hist=hists[vcfg.name].GetName())))
                 var_hist_tuples.append('{var} >> {hist}'.format(var=vcfg.drawname, hist=hists[vcfg.name].GetName()))
 
+
             # Implement the multidraw.
-            # set_trace()
             ttree.MultiDraw(var_hist_tuples, norm_cut)
 
             # Do another multidraw here, if needed, and reset the scales in a separate loop
@@ -389,6 +396,8 @@ class CreateHists(object):
                 hist.Scale(scale/hist.Integral())
 
             stack = all_stack or (not cfg.is_data and not cfg.is_signal)
+
+            # set_trace()
 
             # Loop again over the variables and add histograms to self.plots one by one
             for vcfg in self.vcfgs:

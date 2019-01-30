@@ -78,6 +78,7 @@ def createSampleLists(analysis_dir='/eos/user/v/vstampf/ntuples/',
             bkg_dir = 'background'
             sig_dir = 'signal'
             # DY_dir  = '/eos/user/v/vstampf/ntuples/DDE_v0/prompt_e/'
+        dataB = Single_ele_2017B; dataC = Single_ele_2017C; dataD = Single_ele_2017D; dataE = Single_ele_2017E; dataF = Single_ele_2017F; 
 
     if channel == 'mmm':
         if server == 'lxplus':
@@ -91,7 +92,7 @@ def createSampleLists(analysis_dir='/eos/user/v/vstampf/ntuples/',
             sig_dir = 'signal/ntuples'
             DY_dir = analysis_dir + bkg_dir
 
-    dataB = Single_mu_2017B; dataC = Single_mu_2017C; dataD = Single_mu_2017D; dataE = Single_mu_2017E; dataF = Single_mu_2017F; 
+        dataB = Single_mu_2017B; dataC = Single_mu_2017C; dataD = Single_mu_2017D; dataE = Single_mu_2017E; dataF = Single_mu_2017F; 
 
     samples_essential = [
         # SampleCfg(name='DYJetsToLL_M10to50', dir_name=DYJetsToLL_M10to50 .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=DYJetsToLL_M10to50 .xSection, sumweights=DYJetsToLL_M10to50 .nGenEvents),
@@ -283,18 +284,22 @@ def createSampleLists(analysis_dir='/eos/user/v/vstampf/ntuples/',
 #    initial_weights['W4JetsToLNu'        ] = 0.9973
     initial_weights['WLLJJ_WToLNu_EWK'   ] = 0.9928
 
+    print '###########################################################'
+    print '# setting sum weights...'
+    print '###########################################################'
+
     for sample in samples_mc:
 #         print 'A: Set sum weights for sample', sample.name, 'to', sample.sumweights        
         if sample.name in weighted_list:
             sample.sumweights *= initial_weights[sample.name]
-        print 'Set sum weights for sample', sample.name, 'to', sample.sumweights
+            # print 'Set sum weights for sample', sample.name, 'to', sample.sumweights
+            # print 'Sum weights from sample', sample.name, 'in weighted_list: ', sample.sumweights
 
-    for sample in samples_mc:
         if sample.name not in weighted_list:
 #            pass # turn this off later, for NLO or higher order samples
             # print 'Set sum weights for sample', sample.name, 'to', sample.sumweights
             setSumWeights(sample, 'SkimAnalyzerCount', False)
-            print 'Set sum weights for sample', sample.name, 'to', sample.sumweights
+            # print 'Sum weights from sample',sample.name, 'not in weighted_list. Setting it to', sample.sumweights
 
     # sampleDict = {s.name: s for s in all_samples}
     sampleDict = {}

@@ -235,19 +235,21 @@ class CreateHists(object):
         config; this version handles multiple variables via MultiDraw.
         '''
         
-        pool = Pool(processes=len(self.hist_cfg.cfgs))
         print('###########################################################')
-        print('# number of processes for filling histos (ie. samples): %i'%len(self.hist_cfg.cfgs))
+        print('# creating histograms for %i sample(s)'%len(self.hist_cfg.cfgs))
         print('###########################################################')
         # set_trace()
+        #using multiprocess to create the histograms
+        pool = Pool(processes=len(self.hist_cfg.cfgs))
         result = pool.map(self.makealltheplots, self.hist_cfg.cfgs) 
-        # result = self.makealltheplots(self.hist_cfg.cfgs[0]) 
         
         # for i, cfg in enumerate(self.hist_cfg.cfgs):
+            # # result = self.makealltheplots(self.hist_cfg.cfgs[i]) 
             # try:
                 # result = self.makealltheplots(self.hist_cfg.cfgs[i]) 
             # except:
                 # set_trace()
+
 #        workers = cpu_count()
 #        result = []
 #        batches = len(self.hist_cfg.cfgs) / workers + 1 if len(self.hist_cfg.cfgs) % workers != 0 else len(self.hist_cfg.cfgs) / workers
@@ -341,7 +343,13 @@ class CreateHists(object):
             # It's a sample cfg
 
             # Now read the tree
-            file_name = '/'.join([cfg.ana_dir, cfg.dir_name, cfg.tree_prod_name, 'tree.root'])
+            if cfg.dir_name == "DDE":
+                # file_name = '/'.join([cfg.ana_dir, cfg.dir_name, cfg.tree_prod_name, 'tree_fr_DR_data_v2.root'])
+                file_name = '/'.join([cfg.ana_dir, cfg.dir_name, cfg.tree_prod_name, 'tree_fr_DR_data_v2_oldVars.root'])
+
+            else:
+                file_name = '/'.join([cfg.ana_dir, cfg.dir_name, cfg.tree_prod_name, 'tree.root'])
+
             # attach the trees to the first DataMCPlot
             plot = self.plots[self.vcfgs[0].name]
             ttree = plot.readTree(file_name, cfg.tree_name, verbose=verbose, friend_func=friend_func)
@@ -375,6 +383,16 @@ class CreateHists(object):
 
             for vcfg in self.vcfgs:
                 # plot = self.plots[vcfg.name]
+                
+                # #adapt to different tree branch names of mc and dde ntuples
+                # if (('DDE' in cfg.name) and ('reliso05' in self.hist_cfg.cut)):
+                    # self.hist_cfg.cut = self.hist_cfg.cut.replace('reliso05','reliso_rho_05')
+                    # norm_cut = norm_cut.replace('reliso05','reliso_rho_05')
+                    # shape_cut = shape_cut.replace('reliso05','reliso_rho_05')
+                # if ((not 'DDE' in cfg.name) and ('reliso_rho_05' in self.hist_cfg.cut)):
+                    # self.hist_cfg.cut = self.hist_cfg.cut.replace('reliso_rho_05','reliso05')
+                    # norm_cut = norm_cut.replace('reliso_rho_05','reliso05')
+                    # shape_cut = shape_cut.replace('reliso_rho_05','reliso05')
 
                 hname = '_'.join([self.hist_cfg.name, hashlib.md5(self.hist_cfg.cut).hexdigest(), cfg.name, vcfg.name, cfg.dir_name])
                 if any(str(b) == 'xmin' for b in vcfg.binning):
@@ -392,11 +410,27 @@ class CreateHists(object):
             for vcfg in self.vcfgs:
                 # var_hist_tuples.append(('{var} >> {hist}'.format(var=vcfg.drawname, hist=hists[vcfg.name].GetName()), '1.'))
     #                pool.map(var_hist_tuples.append,('{var} >> {hist}'.format(var=vcfg.drawname, hist=hists[vcfg.name].GetName())))
-                var_hist_tuples.append('{var} >> {hist}'.format(var=vcfg.drawname, hist=hists[vcfg.name].GetName()))
+                # if ('DDE' in cfg.name):
+                    # if 'reliso_rho_05' in vcfg.drawname:
+                        # vcfg.drawname = vcfg.drawname.replace('reliso_rho_05','reliso05')
+                    # if 'reliso_rho_05' in hists[vcfg.name].GetName():
+                        # hist=hists[vcfg.name].SetName(hists[vcfg.name].GetName().replace('reliso_rho_05','reliso05'))
+                # if not ('DDE' in cfg.name):
+                    # if 'reliso_rho_05' in vcfg.drawname:
+                        # vcfg.drawname = vcfg.drawname.replace('reliso_rho_05','reliso05')
+                    # if 'reliso_rho_05' in hists[vcfg.name].GetName():
+                        # hist=hists[vcfg.name].SetName(hists[vcfg.name].GetName().replace('reliso_rho_05','reliso05'))
 
+                # if not vcfg.drawname in ['hnl_iso_rel', 'hnl_iso_abs']:
+                    var_hist_tuples.append('{var} >> {hist}'.format(var=vcfg.drawname, hist=hists[vcfg.name].GetName()))
+
+                        
 
             # Implement the multidraw.
-            ttree.MultiDraw(var_hist_tuples, norm_cut)
+            try:
+                ttree.MultiDraw(var_hist_tuples, norm_cut)
+            except:
+                set_trace()
 
             # Do another multidraw here, if needed, and reset the scales in a separate loop
             if shape_cut != norm_cut:

@@ -64,6 +64,7 @@ tribosoncol = kCyan #TColor.GetColor(222,90,106)
 ttvcol = kCyan+2 #TColor.GetColor(222,90,106)
 zzcol = kGreen+2 #TColor.GetColor(222,90,106)
 singleTcol = kCyan 
+DDEcol = kGreen+2 
 
 # Backgrounds
 sHNL_QCD = Style(lineColor=qcdcol, markerColor=qcdcol, fillColor=qcdcol)
@@ -78,6 +79,7 @@ sHNL_TTV = Style(lineColor=ttvcol, markerColor=ttvcol, fillColor=ttvcol)
 sHNL_rare = Style(lineColor=tribosoncol, markerColor=tribosoncol, fillColor=tribosoncol)
 sHNL_ZZ = Style(lineColor=zzcol, markerColor=zzcol, fillColor=zzcol)
 sHNL_SingleT = Style(lineColor = singleTcol, markerColor = singleTcol, fillColor=singleTcol)
+sHNL_DDE = Style(lineColor = DDEcol, markerColor = DDEcol, fillColor=DDEcol)
 
 # Signals
 sHNL_HN  = Style(lineColor=kBlue   , markerColor=0, lineStyle=2, fillColor=0, lineWidth=3)
@@ -164,3 +166,4 @@ histPref['HiggsVBF125'] = {'style':sHNL_HN2, 'layer':1001, 'legend':'H_{125}#rig
 histPref['ggH*'] = {'style':sHNL_HN, 'layer':1001, 'legend':None}
 histPref['bbH*'] = {'style':sHNL_HN, 'layer':1001, 'legend':None}
 histPref['SMS*'] = {'style':sHNL_HN, 'layer':1001, 'legend':None}
+histPref['DDE*'] = {'style':sHNL_DDE, 'layer':1001, 'legend':'nonprompt'}

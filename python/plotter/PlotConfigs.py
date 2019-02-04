@@ -31,7 +31,7 @@ class SampleCfg(object):
     def __init__(self, name='Default', dir_name=None, ana_dir='', 
         tree_prod_name='HNLTreeProducer', tree_name=None,
         scale=1., weight_expr=None, norm_cut=None, shape_cut=None, 
-        xsec=1., sumweights=1., is_signal=False, is_data=False,
+        xsec=1., sumweights=1., is_signal=False, is_data=False, is_dde=False,
         cut_replace_func=None):
         self.name = name
         self.dir_name = name if dir_name is None else dir_name
@@ -51,6 +51,7 @@ class SampleCfg(object):
 
         self.is_signal = is_signal # To e.g. draw as separate curve (not stack)
         self.is_data = is_data # Will be drawn as data
+        self.is_dde = is_dde # Will be drawn as data
 
 
 class HistogramCfg(object):

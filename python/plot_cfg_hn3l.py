@@ -15,7 +15,7 @@ from CMGTools.HNL.plotter.PlotConfigs import HistogramCfg, VariableCfg
 from CMGTools.HNL.plotter.categories_HNL import cat_Inc
 from CMGTools.HNL.plotter.HistCreator import CreateHists, createTrees
 from CMGTools.HNL.plotter.HistDrawer import HistDrawer
-from CMGTools.HNL.plotter.Variables import hnl_vars, test_vars, getVars
+from CMGTools.HNL.plotter.Variables import hnl_vars, test_vars, getVars,dde_vars
 from CMGTools.HNL.samples.samples_mc_2017 import hnl_bkg
 from pdb import set_trace
 # from CMGTools.HNL.plotter.qcdEstimationMSSMltau import estimateQCDWMSSM, createQCDWHistograms
@@ -98,11 +98,13 @@ prompt_e_loose  = '  &  l0_eid_mva_noniso_loose'
 prompt_e_medium = '  &  l0_eid_cut_medium'
 prompt_e_tight  = '  &  l0_eid_cut_tight'
 
-prompt_mu_loose  = '  &  l0_eid_mva_noniso_loose'
-prompt_mu_medium = '  &  l0_eid_cut_medium'
-prompt_mu_tight  = '  &  l0_eid_cut_tight'
+prompt_mu_loose  = '  &&  l0_id_l'
+prompt_mu_medium = '  &&  l0_id_m'
+prompt_mu_tight  = '  &&  l0_id_t'
 
 looser  = '  &  l1_reliso05 < 0.15  &  l2_reliso05 < 0.15  &  l1_id_m  &  l2_id_m'
+# looser_dde  = '  &  l1_reliso_rho_05 < 0.15  &  l2_reliso_rho_05 < 0.15  &  l1_id_m  &  l2_id_m'
+looser_dde  = '  & l1_id_m  &  l2_id_m'
 tighter = '  &  abs(l1_dz) < 0.2  &  abs(l2_dz) < 0.2  &  l1_reliso05 < 0.15  &  l2_reliso05 < 0.15  &  l1_id_t  &  l2_id_t'
 veto    = '  &  pass_e_veto  &  pass_m_veto'
 
@@ -118,19 +120,25 @@ d0p5IDmNoIso   = d0p5noIDnorIso + '  &  l1_id_m  &  l2_id_m'
 d0p5IDlIso15   = d0p5IDlNoIso   + '  &  l1_reliso05 < 0.15  &  l2_reliso05 < 0.15'
 d0p5IDmIso15   = d0p5IDmNoIso   + '  &  l1_reliso05 < 0.15  &  l2_reliso05 < 0.15'
 
-goodVertices                 = '  &  Flag_goodVertices'    
-globalSuperTightHalo2016     = '  &  Flag_globalSuperTightHalo2016Filter'    
-HBHENoise                    = '  &  Flag_HBHENoiseFilter'                   
-HBHENoiseIso                 = '  &  Flag_HBHENoiseIsoFilter'                
-EcalDeadCellTriggerPrimitive = '  &  Flag_EcalDeadCellTriggerPrimitiveFilter'
-BadPFMuon                    = '  &  Flag_BadPFMuonFilter'                   
-BadChargedCandidate          = '  &  Flag_BadChargedCandidateFilter'         
-eeBadSc                      = '  &  Flag_eeBadScFilter'                     
-ecalBadCalib                 = '  &  Flag_ecalBadCalibFilter'                
+def defineDataCut(promptLeptonType):
+    goodVertices                 = '  &  Flag_goodVertices'    
+    globalSuperTightHalo2016     = '  &  Flag_globalSuperTightHalo2016Filter'    
+    HBHENoise                    = '  &  Flag_HBHENoiseFilter'                   
+    HBHENoiseIso                 = '  &  Flag_HBHENoiseIsoFilter'                
+    EcalDeadCellTriggerPrimitive = '  &  Flag_EcalDeadCellTriggerPrimitiveFilter'
+    BadPFMuon                    = '  &  Flag_BadPFMuonFilter'                   
+    BadChargedCandidate          = '  &  Flag_BadChargedCandidateFilter'         
+    eeBadSc                      = '  &  Flag_eeBadScFilter'                     
+    ecalBadCalib                 = '  &  Flag_ecalBadCalibFilter'                
 
-met_filtered   = goodVertices + globalSuperTightHalo2016 + HBHENoise + HBHENoiseIso + EcalDeadCellTriggerPrimitive + BadPFMuon + BadChargedCandidate + eeBadSc + ecalBadCalib 
+    if promptLeptonType == "ele": 
+        met_filtered   = goodVertices + globalSuperTightHalo2016 + HBHENoise + HBHENoiseIso + EcalDeadCellTriggerPrimitive + BadPFMuon + BadChargedCandidate + eeBadSc + ecalBadCalib 
+    if promptLeptonType == "mu": 
+        met_filtered   = ''
 
-def prepareCuts():
+    return met_filtered
+
+def prepareCuts(promptLeptonType):
     cuts = []
     inc_cut =   'l1_pt > 4  &  l2_pt > 4  &  l0_pt > 35' #'.join([cat_Inc])
     inc_cut += '  &  l1_q != l2_q'
@@ -142,9 +150,22 @@ def prepareCuts():
     inc_cut_relxd += '  &  abs(l0_dz) < 0.2'
     inc_cut_relxd += '  &  hnl_dr_01 > 0.05  &  hnl_dr_02 > 0.05' # avoid ele mu mismatching
 
-    l0_loose  = prompt_e_loose
-    l0_medium = prompt_e_medium
-    l0_tight  = prompt_e_tight
+    
+    inc_cut_dde =   'l1_pt > 4  &  l2_pt > 4  &  l0_pt > 35' #'.join([cat_Inc])
+    inc_cut_dde += '  &  l1_q != l2_q'
+    # inc_cut_dde += '  &  l0_reliso_rho_05 < 0.15'
+    inc_cut_dde += '  &  abs(l0_dz) < 0.2'
+    inc_cut_dde += '  &  hnl_dr_01 > 0.05  &  hnl_dr_02 > 0.05' # avoid ele mu mismatching
+
+    
+    if promptLeptonType == "ele":
+        l0_loose  = prompt_e_loose
+        l0_medium = prompt_e_medium
+        l0_tight  = prompt_e_tight
+    if promptLeptonType == "mu":
+        l0_loose  = prompt_mu_loose
+        l0_medium = prompt_mu_medium
+        l0_tight  = prompt_mu_tight
 
 #### 29.10. ## redo SR plots for athens
     # cuts.append(Cut('NaiveSRv8_90fb'       , inc_cut + l0_tight + NaiveSRv2 + '  &  sv_prob > 0.05'))     ### DO THIS WITHOUT DATA! ## SETTING NORM TO 200 # REMOVING SINGAL SCALE^2
@@ -297,8 +318,9 @@ def prepareCuts():
 #    cuts.append(Cut('CR_TTbar_IDmIso15', inc_cut + l0_tight + IDmIso15 + CR_ttbar))
 #    cuts.append(Cut('CR_WZ_IDmIso15'   , inc_cut + l0_tight + IDmIso15 + CR_WZ))
 
-#    cuts.append(Cut('CR_DY', inc_cut + l0_loose + looser + CR_DY))
+    # cuts.append(Cut('CR_DY', inc_cut + l0_loose + looser + CR_DY))
     cuts.append(Cut('CR_TTbar', inc_cut + l0_loose + looser + CR_ttbar))
+    # cuts.append(Cut('CR_TTbar_dde', inc_cut_dde  + l0_loose + looser_dde + CR_ttbar))
 #    cuts.append(Cut('CR_WZ', inc_cut + l0_loose + looser + CR_WZ))
  
 #### 24.8.
@@ -306,19 +328,26 @@ def prepareCuts():
 #    cuts.append(Cut('tighter_e_loose', inc_cut + l0_loose + tighter))
 #    cuts.append(Cut('tighter_e_medium', inc_cut + l0_medium' + tighter))
 #    cuts.append(Cut('tighter_e_tight', inc_cut + l0_tight + tighter))
+    print('###########################################################')
+    print('# setting cuts')
+    print('###########################################################')
+    print cuts
+
     return cuts
 
 def createSamples(channel, analysis_dir, total_weight,server, qcd_from_same_sign, w_qcd_mssm_method, r_qcd_os_ss, add_data_cut=None):
     hist_dict = {}
     sample_dict = {}
     print "creating samples from %s"%(analysis_dir)
-    samples_mc, samples_data, samples, all_samples, sampleDict, samples_essential, samples_essential_data = createSampleLists(analysis_dir=analysis_dir, server = server, channel=channel, add_data_cut=add_data_cut)
+    samples_mc, samples_data, samples, all_samples, sampleDict, samples_essential, samples_essential_data, samples_dde, samples_dde_data = createSampleLists(analysis_dir=analysis_dir, server = server, channel=channel, add_data_cut=add_data_cut)
 
     sample_dict['all_samples'] = all_samples
     sample_dict['samples_essential'] = samples_essential
     sample_dict['samples_essential_data'] = samples_essential_data
     sample_dict['samples_mc'] = samples_mc
     sample_dict['samples_data'] = samples_data
+    sample_dict['samples_dde'] = samples_dde
+    sample_dict['samples_dde_data'] = samples_dde_data
 
     return sample_dict, hist_dict
 
@@ -326,7 +355,8 @@ def createVariables(rebin=None):
     # Taken from Variables.py; can get subset with e.g. getVars(['mt', 'mvis'])
 #    variables = CR_vars
     DoNotRebin = ['_norm_', 'n_vtx', 'nj', 'nbj',] 
-    variables = hnl_vars
+    # variables = hnl_vars
+    variables = dde_vars
     # variables = test_vars
     if rebin>0:
         for ivar in hnl_vars:
@@ -348,13 +378,16 @@ def makePlots(plotDir,channel_name,variables, cuts, total_weight, sample_dict, h
             shutil.rmtree(cutDir)
             os.mkdir(cutDir)
 
-        cfg_main = HistogramCfg(name=cut.name, var=None, cfgs=sample_dict['all_samples'], cut=cut.cut, lumi=int_lumi, weight=total_weight)
+        # cfg_main = HistogramCfg(name=cut.name, var=None, cfgs=sample_dict['all_samples'], cut=cut.cut, lumi=int_lumi, weight=total_weight)
+        # cfg_main = HistogramCfg(name=cut.name, var=None, cfgs=sample_dict['samples_dde'], cut=cut.cut, lumi=int_lumi, weight=total_weight)
         # cfg_main = HistogramCfg(name=cut.name, var=None, cfgs=sample_dict['samples_essential'], cut=cut.cut, lumi=int_lumi, weight=total_weight)
         # cfg_main = HistogramCfg(name=cut.name, var=None, cfgs=sample_dict['samples_essential_data'], cut=cut.cut, lumi=int_lumi, weight=total_weight)
         # cfg_main = HistogramCfg(name=cut.name, var=None, cfgs=sample_dict['samples_mc'], cut=cut.cut, lumi=int_lumi, weight=total_weight)
         # cfg_main = HistogramCfg(name=cut.name, var=None, cfgs=sample_dict['samples_data'], cut=cut.cut, lumi=int_lumi, weight=total_weight)
+        cfg_main = HistogramCfg(name=cut.name, var=None, cfgs=sample_dict['samples_dde_data'], cut=cut.cut, lumi=int_lumi, weight=total_weight)
     
         cfg_main.vars = variables
+        
         HISTS = CreateHists(cfg_main)
 
         # set_trace()
@@ -363,17 +396,25 @@ def makePlots(plotDir,channel_name,variables, cuts, total_weight, sample_dict, h
         for variable in variables:
         # for plot in plots.itervalues():
             plot = plots[variable.name]
-            plot.Group('data_obs', ['data_2017B', 'data_2017C', 'data_2017D', 'data_2017E', 'data_2017F'])
-            plot.Group('single t', ['ST_tW_inc', 'STbar_tW_inc', 'ST_sch_lep', 'STbar_tch_inc', 'ST_tch_inc'])
-            plot.Group('Diboson', ['WZTo3LNu', 'ZZTo4L', 'WWTo2L2Nu'])
-            plot.Group('Triboson', ['ZZZ', 'WWW', 'WGGJets', 'WZZ', 'WWZ'])
-            plot.Group('ttV', ['TTZToLL_M10', 'TTWJetsToLNu', 'TTZToLL_M1to10'])
-            plot.Group('DY', ['DYJetsToLL_M5to50', 'DYJets_ext', 'DYJets', 'DYBB', 'DYJetsToLL_M10to50_ext', 'DYJetsToLL_M10to50'])
-#            plot.Group('QCD',['QCD_pt_15to20_mu', 'QCD_pt_20to30_mu', 'QCD_pt_30to50_mu', 'QCD_pt_50to80_mu', 'QCD_pt_80to120_mu'])
-            plot.Group('QCD',['QCD_pt_15to20_em', 'QCD_pt_20to30_em', 'QCD_pt_30to50_em', 'QCD_pt_50to80_em', 'QCD_pt_120to170_em', 'QCD_pt_300toInf_em', 
-                              'QCD_pt_20to30_bcToE', 'QCD_pt_30to80_bcToE', 'QCD_pt_80to170_bcToE', 'QCD_pt_170to250_bcToE', 'QCD_pt_250toInf_bcToE'])
-            plot.Group('WJets', ['W1JetsToLNu', 'W2JetsToLNu', 'W3JetsToLNu', 'W4JetsToLNu'])
-#            plot.Group('DY', ['DYJetsToLL_M5to50', 'DY2Jets_M50_ext', 'DY2Jets_M50', 'DY3Jets_M50_ext', 'DY3Jets_M50', 'DY1Jets_M50'])
+
+            if channel_name == "e#mu#mu":
+                plot.Group('data_obs', ['data_2017B', 'data_2017C', 'data_2017D', 'data_2017E', 'data_2017F'])
+                plot.Group('single t', ['ST_tW_inc', 'STbar_tW_inc', 'ST_sch_lep', 'STbar_tch_inc', 'ST_tch_inc'])
+                plot.Group('Diboson', ['WZTo3LNu', 'ZZTo4L', 'WWTo2L2Nu'])
+                plot.Group('Triboson', ['ZZZ', 'WWW', 'WGGJets', 'WZZ', 'WWZ'])
+                plot.Group('ttV', ['TTZToLL_M10', 'TTWJetsToLNu', 'TTZToLL_M1to10'])
+                plot.Group('DY', ['DYJets_ext', 'DYJets',  'DYJetsToLL_M10to50'])
+                plot.Group('QCD',['QCD_pt_15to20_em', 'QCD_pt_20to30_em', 'QCD_pt_30to50_em', 'QCD_pt_50to80_em', 'QCD_pt_120to170_em', 'QCD_pt_300toInf_em', 
+                                  'QCD_pt_20to30_bcToE', 'QCD_pt_30to80_bcToE', 'QCD_pt_80to170_bcToE', 'QCD_pt_170to250_bcToE', 'QCD_pt_250toInf_bcToE'])
+                plot.Group('WJets', ['W1JetsToLNu', 'W2JetsToLNu', 'W3JetsToLNu', 'W4JetsToLNu'])
+
+            if channel_name == "#mu#mu#mu":
+                plot.Group('data_obs', ['data_2017B', 'data_2017C', 'data_2017D', 'data_2017E', 'data_2017F'])
+                plot.Group('Diboson', ['WZTo3LNu','ZZTo4L'])
+                # plot.Group('ttV', ['TTWJetsToLNu'])
+                plot.Group('DY', ['DYJets_ext','DYBB','DYJetsToLL_M10to50'])
+                plot.Group('QCD',['QCD_pt_15to20_mu', 'QCD_pt_20to30_mu', 'QCD_pt_30to50_mu', 'QCD_pt_50to80_mu', 'QCD_pt_80to120_mu'])
+                plot.Group('WJets', ['W1JetsToLNu', 'W2JetsToLNu', 'W3JetsToLNu', 'W4JetsToLNu'])
             # createDefaultGroups(plot)
             if make_plots:
                 HistDrawer.draw(plot, channel = channel_name, plot_dir = plotDir+cut.name)
@@ -452,10 +493,13 @@ def producePlots(promptLeptonType, L1L2LeptonType, server):
 
     print total_weight
 
-    cuts = prepareCuts()
+    cuts = prepareCuts(promptLeptonType)
 
     # variables = createVariables(2.5)
     variables = createVariables()
+
+
+    met_filtered = defineDataCut(promptLeptonType)
 
     sample_dict, hist_dict = createSamples(channel,analysis_dir, total_weight, server=server, qcd_from_same_sign=False, w_qcd_mssm_method=False, r_qcd_os_ss=None, add_data_cut=met_filtered)
 

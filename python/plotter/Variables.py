@@ -336,8 +336,8 @@ hnl_vars = [
     VCfg(name='nj' , binning={'nbinsx':12, 'xmin':-0.5, 'xmax':11.5}, unit=None, xtitle='N_{jets}'),
     VCfg(name='nbj', binning={'nbinsx':12, 'xmin':-0.5, 'xmax':11.5}, unit=None, xtitle='N_{b-jets}'),
 
-    VCfg(name='hnl_iso_rel', binning={'nbinsx':40, 'xmin':0., 'xmax':3.} , unit=None, xtitle='rel. dilepton isolation'),
-    VCfg(name='hnl_iso_abs', binning={'nbinsx':40, 'xmin':0., 'xmax':50.}, unit=None, xtitle='abs. dilepton isolation'),
+    # VCfg(name='hnl_iso_rel', binning={'nbinsx':40, 'xmin':0., 'xmax':3.} , unit=None, xtitle='rel. dilepton isolation'),
+    # VCfg(name='hnl_iso_abs', binning={'nbinsx':40, 'xmin':0., 'xmax':50.}, unit=None, xtitle='abs. dilepton isolation'),
 
 ]
 
@@ -351,9 +351,10 @@ PTCONE = '(  ( hnl_hn_vis_pt * (hnl_iso04_rel_rhoArea<0.15) ) + ( (hnl_iso04_rel
 
 dde_vars = [
             VCfg(name='ptCone', drawname='hnl_w_vis_pt',      binning={'nbinsx':14, 'xmin':0, 'xmax':70},    unit='GeV', xtitle='p^{Cone}_{T}'),
-#            VCfg(name='2disp',  drawname='hnl_2d_disp',       binning={'nbinsx':15, 'xmin':0, 'xmax':3},     unit='cm',  xtitle='2D displacement'),
-#            VCfg(name='m_dimu', drawname='hnl_m_12',          binning={'nbinsx':20, 'xmin':0., 'xmax':5},    unit='GeV', xtitle='Di-Muon Mass'),
-#            VCfg(name='m_triL', drawname='hnl_w_vis_m',       binning={'nbinsx':100, 'xmin':0., 'xmax':200}, unit='GeV', xtitle='Tri-Lepton Mass'),
+            # VCfg(name='2disp',  drawname='hnl_2d_disp',       binning={'nbinsx':15, 'xmin':0, 'xmax':3},     unit='cm',  xtitle='2D displacement'),
+            # VCfg(name='m_dimu', drawname='hnl_m_12',          binning={'nbinsx':20, 'xmin':0., 'xmax':5},    unit='GeV', xtitle='Di-Muon Mass'),
+            # VCfg(name='m_triL', drawname='hnl_w_vis_m',       binning={'nbinsx':100, 'xmin':0., 'xmax':200}, unit='GeV', xtitle='Tri-Lepton Mass'),
+            VCfg(name='l2_pt'      , binning={'nbinsx':40, 'xmin':0.  , 'xmax':100.}, unit='GeV', xtitle='2nd muon p_{T}'),
            ]
 
 def getVars(names, channel='all'):

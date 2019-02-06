@@ -236,6 +236,26 @@ def createSampleLists(analysis_dir='/eos/user/v/vstampf/ntuples/',
     all_samples = samples_bkg + samples_data
    
 
+
+    sampleDict = {}
+    for s in all_samples:
+        sampleDict[s.name] = s
+
+#    for sample in all_samples:
+#        if sample.is_signal:
+#            sample.scale = sample.scale * signal_scale
+
+    return samples_mc, samples_data, samples, all_samples, sampleDict, samples_essential, samples_essential_data, samples_dde, samples_dde_data
+
+
+
+
+def setSumWeights(samples, weight_dir='SkimAnalyzerCount', norm=True):
+    print '###########################################################'
+    print '# setting sum weights for the samples...'
+    print '###########################################################'
+
+    
     # RM: this is needed to retrieve the sum of weights *before* any selection
     # FIXME! on hold now until SkimAnalyzerCount is fixed. Otherwise the code runs.
     # to activate it, simply comment out the sample names in weighted_list
@@ -304,16 +324,14 @@ def createSampleLists(analysis_dir='/eos/user/v/vstampf/ntuples/',
     initial_weights['ST_tW_inc'          ] = 0.9923
     initial_weights['ZZTo4L_ext'         ] = 0.9899
     initial_weights['WW_DoubleScattering'] = 1.0000
-#    initial_weights['W3JetsToLNu'        ] = 0.9984
-#    initial_weights['W4JetsToLNu'        ] = 0.9973
+    initial_weights['W3JetsToLNu'        ] = 0.9984
+    initial_weights['W4JetsToLNu'        ] = 0.9973
     initial_weights['WLLJJ_WToLNu_EWK'   ] = 0.9928
+    
+    for sample in samples:
+        if isinstance(sample, HistogramCfg) or sample.is_data:
+            continue
 
-    print '###########################################################'
-    print '# setting sum weights...'
-    print '###########################################################'
-
-    # for sample in samples_mc:
-    for sample in samples_bkg:
 #         print 'A: Set sum weights for sample', sample.name, 'to', sample.sumweights        
         if sample.name in weighted_list:
             sample.sumweights *= initial_weights[sample.name]
@@ -323,35 +341,29 @@ def createSampleLists(analysis_dir='/eos/user/v/vstampf/ntuples/',
         if sample.name not in weighted_list:
 #            pass # turn this off later, for NLO or higher order samples
             # print 'Set sum weights for sample', sample.name, 'to', sample.sumweights
-            setSumWeights(sample, 'SkimAnalyzerCount', False)
+            # setSumWeights(sample, 'SkimAnalyzerCount', False)
+
+            if sample.is_dde == False:
+                pckfile = '/'.join([sample.ana_dir, sample.dir_name, weight_dir, 'SkimReport.pck'])
+                try:
+                    pckobj = pickle.load(open(pckfile, 'r'))
+                    counters = dict(pckobj)
+                    set_trace()
+                    if norm:
+                        if 'Sum Norm Weights' in counters:
+                            sample.sumweights = counters['Sum Weights']
+                    else:
+                        if 'Sum Weights' in counters:
+                            sample.sumweights = counters['Sum Weights']
+                except IOError:
+                    print 'Warning: could not find sum weights information for sample', sample.name
+                    pass
+
+            if sample.is_dde == True:
+                # set_trace()
+                sample.sumweights *=50000 
+                print 'sample ' + sample.dir_name + ' its weight is still under construction...'
+
             print 'Sum weights from sample',sample.name, 'not in weighted_list. Setting it to', sample.sumweights
 
-    set_trace()
-    # sampleDict = {s.name: s for s in all_samples}
-    sampleDict = {}
-    for s in all_samples:
-        sampleDict[s.name] = s
-
-#    for sample in all_samples:
-#        if sample.is_signal:
-#            sample.scale = sample.scale * signal_scale
-
-    return samples_mc, samples_data, samples, all_samples, sampleDict, samples_essential, samples_essential_data, samples_dde, samples_dde_data
-
-def setSumWeights(sample, weight_dir='SkimAnalyzerCount', norm=True):
-    if isinstance(sample, HistogramCfg) or sample.is_data:
-        return
-    
-    pckfile = '/'.join([sample.ana_dir, sample.dir_name, weight_dir, 'SkimReport.pck'])
-    try:
-        pckobj = pickle.load(open(pckfile, 'r'))
-        counters = dict(pckobj)
-        if norm:
-            if 'Sum Norm Weights' in counters:
-                sample.sumweights = counters['Sum Weights']
-        else:
-            if 'Sum Weights' in counters:
-                sample.sumweights = counters['Sum Weights']
-    except IOError:
-        print 'Warning: could not find sum weights information for sample', sample.name
-        pass
+    return samples

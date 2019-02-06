@@ -238,7 +238,7 @@ class CreateHists(object):
         print('###########################################################')
         print('# creating histograms for %i sample(s)'%len(self.hist_cfg.cfgs))
         print('###########################################################')
-        # set_trace()
+
         #using multiprocess to create the histograms
         pool = Pool(processes=len(self.hist_cfg.cfgs))
         result = pool.map(self.makealltheplots, self.hist_cfg.cfgs) 
@@ -277,6 +277,7 @@ class CreateHists(object):
 #                hist.Scale(cfg.scale)
 #                set_trace()
                 if cfg.name in plot:
+                    set_trace()
                     # print 'Histogram', cfg.name, 'already exists; adding...', cfg.dir_name
                     hist_to_add = Histogram(cfg.name, hist)
                     if not cfg.is_data:

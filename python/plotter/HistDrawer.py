@@ -8,6 +8,7 @@ from ROOT import TCanvas, TPaveText, TBox, gStyle
 from CMGTools.RootTools.DataMC.Stack import Stack
 
 from CMGTools.HNL.plotter.CMS_lumi import CMS_lumi
+from pdb import set_trace
 
 from CMGTools.HNL.plotter.officialStyle import officialStyle
 officialStyle(gStyle)
@@ -108,6 +109,7 @@ class HistDrawer:
     def draw(plot, do_ratio=True, channel='e#mu#mu', plot_dir='/plots/', 
              plot_name=None, SetLogy=0, 
              blindxmin=None, blindxmax=None, unit=None):
+        # set_trace()
         print plot
         Stack.STAT_ERRORS = True
 

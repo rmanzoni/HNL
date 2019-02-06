@@ -21,7 +21,7 @@ from pdb import set_trace
 # from CMGTools.HNL.plotter.qcdEstimationMSSMltau import estimateQCDWMSSM, createQCDWHistograms
 from CMGTools.HNL.plotter.defaultGroups import createDefaultGroups
 
-from CMGTools.HNL.plotter.Samples import createSampleLists
+from CMGTools.HNL.plotter.Samples import createSampleLists, setSumWeights
 from CMGTools.HNL.plotter.metrics import ams_hists
 
 
@@ -318,8 +318,7 @@ def prepareCuts(promptLeptonType):
 #    cuts.append(Cut('CR_TTbar_IDmIso15', inc_cut + l0_tight + IDmIso15 + CR_ttbar))
 #    cuts.append(Cut('CR_WZ_IDmIso15'   , inc_cut + l0_tight + IDmIso15 + CR_WZ))
 
-    # cuts.append(Cut('CR_DY', inc_cut + l0_loose + looser + CR_DY))
-    cuts.append(Cut('CR_TTbar', inc_cut + l0_loose + looser + CR_ttbar))
+    cuts.append(Cut('CR_DY', inc_cut + l0_loose + looser + CR_DY))
     # cuts.append(Cut('CR_TTbar_dde', inc_cut_dde  + l0_loose + looser_dde + CR_ttbar))
 #    cuts.append(Cut('CR_WZ', inc_cut + l0_loose + looser + CR_WZ))
  
@@ -328,6 +327,15 @@ def prepareCuts(promptLeptonType):
 #    cuts.append(Cut('tighter_e_loose', inc_cut + l0_loose + tighter))
 #    cuts.append(Cut('tighter_e_medium', inc_cut + l0_medium' + tighter))
 #    cuts.append(Cut('tighter_e_tight', inc_cut + l0_tight + tighter))
+
+#### 20190205 MC + DDE
+
+    DDE1       = '& nbj == 0 & abs(hnl_w_vis_m) > 80 '
+    LooseNotTight  = ' & l1_reliso05 > 0.15 & l2_reliso05 > 0.15 & l1_id_m & l2_id_m & nbj == 0 & abs(hnl_w_vis_m) > 80 & abs(l1_jet_pt-l2_jet_pt) < 1 & hnl_dr_12 < 0.8 & hnl_2d_disp > 0.5 & abs(l1_dz) < 2 & abs(l2_dz) < 2'
+    cuts.append(Cut('AR_DDE1', inc_cut + l0_loose + LooseNotTight))
+
+
+
     print('###########################################################')
     print('# setting cuts')
     print('###########################################################')
@@ -341,13 +349,16 @@ def createSamples(channel, analysis_dir, total_weight,server, qcd_from_same_sign
     print "creating samples from %s"%(analysis_dir)
     samples_mc, samples_data, samples, all_samples, sampleDict, samples_essential, samples_essential_data, samples_dde, samples_dde_data = createSampleLists(analysis_dir=analysis_dir, server = server, channel=channel, add_data_cut=add_data_cut)
 
-    sample_dict['all_samples'] = all_samples
-    sample_dict['samples_essential'] = samples_essential
-    sample_dict['samples_essential_data'] = samples_essential_data
-    sample_dict['samples_mc'] = samples_mc
-    sample_dict['samples_data'] = samples_data
-    sample_dict['samples_dde'] = samples_dde
-    sample_dict['samples_dde_data'] = samples_dde_data
+    #select here the samples you wish to use
+    # working_samples = samples_dde_data
+    # working_samples = samples_essential
+    # working_samples = samples_mc
+    working_samples = all_samples
+
+    working_samples = setSumWeights(working_samples)
+
+    sample_dict['working_samples'] = working_samples
+
 
     return sample_dict, hist_dict
 
@@ -378,19 +389,12 @@ def makePlots(plotDir,channel_name,variables, cuts, total_weight, sample_dict, h
             shutil.rmtree(cutDir)
             os.mkdir(cutDir)
 
-        # cfg_main = HistogramCfg(name=cut.name, var=None, cfgs=sample_dict['all_samples'], cut=cut.cut, lumi=int_lumi, weight=total_weight)
-        # cfg_main = HistogramCfg(name=cut.name, var=None, cfgs=sample_dict['samples_dde'], cut=cut.cut, lumi=int_lumi, weight=total_weight)
-        # cfg_main = HistogramCfg(name=cut.name, var=None, cfgs=sample_dict['samples_essential'], cut=cut.cut, lumi=int_lumi, weight=total_weight)
-        # cfg_main = HistogramCfg(name=cut.name, var=None, cfgs=sample_dict['samples_essential_data'], cut=cut.cut, lumi=int_lumi, weight=total_weight)
-        # cfg_main = HistogramCfg(name=cut.name, var=None, cfgs=sample_dict['samples_mc'], cut=cut.cut, lumi=int_lumi, weight=total_weight)
-        # cfg_main = HistogramCfg(name=cut.name, var=None, cfgs=sample_dict['samples_data'], cut=cut.cut, lumi=int_lumi, weight=total_weight)
-        cfg_main = HistogramCfg(name=cut.name, var=None, cfgs=sample_dict['samples_dde_data'], cut=cut.cut, lumi=int_lumi, weight=total_weight)
+        cfg_main = HistogramCfg(name=cut.name, var=None, cfgs=sample_dict['working_samples'], cut=cut.cut, lumi=int_lumi, weight=total_weight)
     
         cfg_main.vars = variables
         
         HISTS = CreateHists(cfg_main)
 
-        # set_trace()
         plots = HISTS.createHistograms(cfg_main, verbose=False, friend_func=friend_func)
         #plots.legendPos = 'right'
         for variable in variables:

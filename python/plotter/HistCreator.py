@@ -95,14 +95,20 @@ def createHistogram(hist_cfg, all_stack=False, verbose=False, friend_func=None):
             if cfg.name in plot:
                 # print 'Histogram', cfg.name, 'already exists; adding...', cfg.dir_name
                 hist_to_add = Histogram(cfg.name, hist)
-                if not cfg.is_data:
+                if (not cfg.is_data) and (not cfg.is_dde):
                     hist_to_add.SetWeight(hist_cfg.lumi*cfg.xsec/cfg.sumweights)
+                if cfg.is_dde:
+                    # hist_to_add.SetWeight(hist_to_add.obj.GetEntries()/cfg.sumweights)
+                    hist_to_add.SetWeight(cfg.sumweights)
                 plot[cfg.name].Add(hist_to_add)
             else:
                 plot_hist = plot.AddHistogram(cfg.name, hist, stack=stack)
 
-                if not cfg.is_data:
+                if (not cfg.is_data) and (not cfg.is_dde):
                     plot_hist.SetWeight(hist_cfg.lumi*cfg.xsec/cfg.sumweights)
+                if cfg.is_dde:
+                    # plot_hist.SetWeight(plot_hist.obj.GetEntries()/cfg.sumweights)
+                    plot_hist.SetWeight(cfg.sumweights)
 
     plot._ApplyPrefs()
     return plot
@@ -230,25 +236,32 @@ class CreateHists(object):
                 print 'Adding variable with same name twice', vcfg.name, 'not yet foreseen; taking the last'
             self.plots[vcfg.name] = plot
 
-    def createHistograms(self, hist_cfg, all_stack=False, verbose=False, friend_func=None, vcfgs=None):
+    def createHistograms(self, hist_cfg, all_stack=False, verbose=False, friend_func=None, vcfgs=None, multiprocess = True):
         '''Method to create actual histogram (DataMCPlot) instances from histogram 
         config; this version handles multiple variables via MultiDraw.
         '''
         
         print('###########################################################')
-        print('# creating histograms for %i sample(s)'%len(self.hist_cfg.cfgs))
+        print('# creating histograms for %i sample(s)...'%len(self.hist_cfg.cfgs))
+        if multiprocess == True:
+            print('# multiprocess-mode: ON')
+        if multiprocess == False:
+            print('# multiprocess-mode: OFF')
         print('###########################################################')
 
-        #using multiprocess to create the histograms
-        pool = Pool(processes=len(self.hist_cfg.cfgs))
-        result = pool.map(self.makealltheplots, self.hist_cfg.cfgs) 
-        
-        # for i, cfg in enumerate(self.hist_cfg.cfgs):
-            # # result = self.makealltheplots(self.hist_cfg.cfgs[i]) 
-            # try:
+        if multiprocess == True:
+            #using multiprocess to create the histograms
+            pool = Pool(processes=len(self.hist_cfg.cfgs))
+            result = pool.map(self.makealltheplots, self.hist_cfg.cfgs) 
+       
+        # if we don't use multiprocess, we compute the histos one by one - good for debugging.
+        if multiprocess == False:
+            for i, cfg in enumerate(self.hist_cfg.cfgs):
                 # result = self.makealltheplots(self.hist_cfg.cfgs[i]) 
-            # except:
-                # set_trace()
+                try:
+                    result = self.makealltheplots(self.hist_cfg.cfgs[i]) 
+                except:
+                    set_trace()
 
 #        workers = cpu_count()
 #        result = []
@@ -275,26 +288,38 @@ class CreateHists(object):
                 plot = self.plots[vcfg.name]
 
 #                hist.Scale(cfg.scale)
-#                set_trace()
                 if cfg.name in plot:
-                    set_trace()
                     # print 'Histogram', cfg.name, 'already exists; adding...', cfg.dir_name
                     hist_to_add = Histogram(cfg.name, hist)
-                    if not cfg.is_data:
+                    if (not cfg.is_data) and (not cfg.is_dde):
                         hist_to_add.SetWeight(hist_cfg.lumi*cfg.xsec/cfg.sumweights)
                     plot[cfg.name].Add(hist_to_add)
+                    if cfg.is_dde:
+                        try:
+                            # hist_to_add.SetWeight(hist_to_add.obj.GetEntries()/cfg.sumweights)
+                            hist_to_add.SetWeight(cfg.sumweights)
+                        except:
+                            set_trace()
                 else:
 #                    print(cfg.name, hist.GetEntries(), stack)
                     plot_hist = plot.AddHistogram(cfg.name, hist, stack=stack)
 #                    print('added histo %s'%vcfg.name)
 
-                    if not cfg.is_data:
+
+                    if (not cfg.is_data) and (not cfg.is_dde):
                         plot_hist.SetWeight(self.hist_cfg.lumi*cfg.xsec/cfg.sumweights)
+                    if cfg.is_dde:
+                        # plot_hist.SetWeight(plot_hist.obj.GetEntries()/cfg.sumweights)
+                        plot_hist.SetWeight(cfg.sumweights)
 #                print(cfg.name, vcfg.name, len(plot.histos))
+    
         print('###########################################################')
         print('# initializing histos done, making stacks...')
         for plot in self.plots.itervalues():
-            plot._ApplyPrefs()
+            try:
+                plot._ApplyPrefs()
+            except:
+                set_trace()
         print('# number of processes for drawing (ie. stacks to draw): %i'%len(self.plots))
         print('###########################################################')
 
@@ -311,6 +336,7 @@ class CreateHists(object):
 #        for plot in self.plots.itervalues():
 #            plot._ApplyPrefs()
 #            plot.Draw()
+
         return self.plots
 
     def makealltheplots(self, cfg):
@@ -353,7 +379,10 @@ class CreateHists(object):
 
             # attach the trees to the first DataMCPlot
             plot = self.plots[self.vcfgs[0].name]
-            ttree = plot.readTree(file_name, cfg.tree_name, verbose=verbose, friend_func=friend_func)
+            try:
+                ttree = plot.readTree(file_name, cfg.tree_name, verbose=verbose, friend_func=friend_func)
+            except:
+                set_trace()
 
             norm_cut = self.hist_cfg.cut
             shape_cut = self.hist_cfg.cut
@@ -373,28 +402,50 @@ class CreateHists(object):
                 norm_cut = cfg.cut_replace_func(norm_cut)
                 shape_cut = cfg.cut_replace_func(norm_cut)
 
+            # #if needed, apply the tight selection for the data
+            # if cfg.is_data == True:
+                # norm_cut = 'abs(l1_jet_pt - l2_jet_pt) < 1 & hnl_dr_12 < 0.8 & hnl_w_vis_m > 80 & nbj == 0 & hnl_2d_disp > 0.5 & abs(l1_dz) < 2 & abs(l2_dz) < 2 & l1_pt > 3 & l2_pt > 3 & l0_id_t & l0_reliso_rho_04 < 0.15 & l1_id_l & l2_id_l & l1_reliso_rho_04 < 0.15 & l2_reliso_rho_04 < 0.15 & hnl_iso04_rel_rhoArea < 1'
+                # shape_cut = 'abs(l1_jet_pt - l2_jet_pt) < 1 & hnl_dr_12 < 0.8 & hnl_w_vis_m > 80 & nbj == 0 & hnl_2d_disp > 0.5 & abs(l1_dz) < 2 & abs(l2_dz) < 2 & l1_pt > 3 & l2_pt > 3 & l0_id_t & l0_reliso_rho_04 < 0.15 & l1_id_l & l2_id_l & l1_reliso_rho_04 < 0.15 & l2_reliso_rho_04 < 0.15 & hnl_iso04_rel_rhoArea < 1'
+
+            #if needed, apply the loose selection for the non-prompt region
+            if cfg.is_dde == True:
+                norm_cut = norm_cut.replace('l1_reliso_rho_04 < 0.15 & l2_reliso_rho_04 < 0.15 & hnl_iso04_rel_rhoArea < 1','(l1_reliso05 > 0.15 | l2_reliso05 > 0.15) & hnl_iso04_rel_rhoArea < 1')
+                shape_cut = shape_cut.replace('l1_reliso_rho_04 < 0.15 & l2_reliso_rho_04 < 0.15 & hnl_iso04_rel_rhoArea < 1','(l1_reliso05 > 0.15 | l2_reliso05 > 0.15) & hnl_iso04_rel_rhoArea < 1')
+
             if self.hist_cfg.weight:
                 norm_cut = '({c}) * {we}'.format(c=norm_cut, we=weight)
                 shape_cut = '({c}) * {we}'.format(c=shape_cut, we=weight)
 
+            #insert the fake rate weight for doublefakes
+            if cfg.is_dde == True and cfg.is_doublefake == True:
+                norm_cut = '({c}) * {we}'.format(c=norm_cut, we='(weight_fr/(1-weight_fr))')
+                shape_cut = '({c}) * {we}'.format(c=shape_cut, we='(weight_fr/(1-weight_fr))')
+
+            #insert the fake rate weight for singlefakes
+            if cfg.is_dde == True and cfg.is_singlefake == True:
+                norm_cut = '({c}) * {we}'.format(c=norm_cut, we='((weight_fr/(1-weight_fr))-((weight_fr/(1-weight_fr))*(weight_fr/(1-weight_fr))))')
+                shape_cut = '({c}) * {we}'.format(c=shape_cut, we='((weight_fr/(1-weight_fr))-((weight_fr/(1-weight_fr))*(weight_fr/(1-weight_fr))))')
+
             # print '#### FULL CUT ####', norm_cut
+
+            #adapt branch names to different software versions
+            if not ttree.FindBranch("l0_reliso_rho_04"): 
+                norm_cut = norm_cut.replace('l0_reliso_rho_04','l0_reliso05')
+                shape_cut = shape_cut.replace('l0_reliso_rho_04','l0_reliso05')
+                norm_cut = norm_cut.replace('l1_reliso_rho_04','l1_reliso05')
+                shape_cut = shape_cut.replace('l1_reliso_rho_04','l1_reliso05')
+                norm_cut = norm_cut.replace('l2_reliso_rho_04','l2_reliso05')
+                shape_cut = shape_cut.replace('l2_reliso_rho_04','l2_reliso05')
+ 
+            if not ttree.FindBranch("hnl_iso04_rel_rhoArea"): 
+                norm_cut = norm_cut.replace('hnl_iso04_rel_rhoArea','hnl_iso_rel')
+                shape_cut = shape_cut.replace('hnl_iso04_rel_rhoArea','hnl_iso_rel')
+
 
             # Initialise all hists before the multidraw
             hists = {}
 
             for vcfg in self.vcfgs:
-                # plot = self.plots[vcfg.name]
-                
-                # #adapt to different tree branch names of mc and dde ntuples
-                # if (('DDE' in cfg.name) and ('reliso05' in self.hist_cfg.cut)):
-                    # self.hist_cfg.cut = self.hist_cfg.cut.replace('reliso05','reliso_rho_05')
-                    # norm_cut = norm_cut.replace('reliso05','reliso_rho_05')
-                    # shape_cut = shape_cut.replace('reliso05','reliso_rho_05')
-                # if ((not 'DDE' in cfg.name) and ('reliso_rho_05' in self.hist_cfg.cut)):
-                    # self.hist_cfg.cut = self.hist_cfg.cut.replace('reliso_rho_05','reliso05')
-                    # norm_cut = norm_cut.replace('reliso_rho_05','reliso05')
-                    # shape_cut = shape_cut.replace('reliso_rho_05','reliso05')
-
                 hname = '_'.join([self.hist_cfg.name, hashlib.md5(self.hist_cfg.cut).hexdigest(), cfg.name, vcfg.name, cfg.dir_name])
                 if any(str(b) == 'xmin' for b in vcfg.binning):
                     hist = TH1F(hname, '', vcfg.binning['nbinsx'],
@@ -409,21 +460,7 @@ class CreateHists(object):
             var_hist_tuples = []
 
             for vcfg in self.vcfgs:
-                # var_hist_tuples.append(('{var} >> {hist}'.format(var=vcfg.drawname, hist=hists[vcfg.name].GetName()), '1.'))
-    #                pool.map(var_hist_tuples.append,('{var} >> {hist}'.format(var=vcfg.drawname, hist=hists[vcfg.name].GetName())))
-                # if ('DDE' in cfg.name):
-                    # if 'reliso_rho_05' in vcfg.drawname:
-                        # vcfg.drawname = vcfg.drawname.replace('reliso_rho_05','reliso05')
-                    # if 'reliso_rho_05' in hists[vcfg.name].GetName():
-                        # hist=hists[vcfg.name].SetName(hists[vcfg.name].GetName().replace('reliso_rho_05','reliso05'))
-                # if not ('DDE' in cfg.name):
-                    # if 'reliso_rho_05' in vcfg.drawname:
-                        # vcfg.drawname = vcfg.drawname.replace('reliso_rho_05','reliso05')
-                    # if 'reliso_rho_05' in hists[vcfg.name].GetName():
-                        # hist=hists[vcfg.name].SetName(hists[vcfg.name].GetName().replace('reliso_rho_05','reliso05'))
-
-                # if not vcfg.drawname in ['hnl_iso_rel', 'hnl_iso_abs']:
-                    var_hist_tuples.append('{var} >> {hist}'.format(var=vcfg.drawname, hist=hists[vcfg.name].GetName()))
+                var_hist_tuples.append('{var} >> {hist}'.format(var=vcfg.drawname, hist=hists[vcfg.name].GetName()))
 
                         
 
@@ -432,12 +469,16 @@ class CreateHists(object):
                 ttree.MultiDraw(var_hist_tuples, norm_cut)
             except:
                 set_trace()
+            
 
             # Do another multidraw here, if needed, and reset the scales in a separate loop
             if shape_cut != norm_cut:
                 scale = hist.Integral()
                 ttree.Project(hname, vcfg.drawname, shape_cut)
-                hist.Scale(scale/hist.Integral())
+                try:
+                    hist.Scale(scale/hist.Integral())
+                except:
+                    set_trace()
 
             stack = all_stack or (not cfg.is_data and not cfg.is_signal)
 
@@ -453,16 +494,26 @@ class CreateHists(object):
                 if cfg.name in plot:
                     # print 'Histogram', cfg.name, 'already exists; adding...', cfg.dir_name
                     hist_to_add = Histogram(cfg.name, hist)
-                    if not cfg.is_data:
+                    if (not cfg.is_data) and (not cfg.is_dde):
                         hist_to_add.SetWeight(self.hist_cfg.lumi*cfg.xsec/cfg.sumweights)
+                    if cfg.is_dde:
+                        # hist_to_add.SetWeight(hist_to_add.obj.GetEntries()/cfg.sumweights)
+                        hist_to_add.SetWeight(cfg.sumweights)
+    
                     plot[cfg.name].Add(hist_to_add)
                 else:
 #                    print(cfg.name, hist.GetEntries(), stack)
                     plot_hist = plot.AddHistogram(cfg.name, hist, stack=stack)
 #                    print('added histo %s for %s'%(vcfg.name,cfg.name))
 
-                    if not cfg.is_data:
+                    if (not cfg.is_data) and (not cfg.is_dde):
                         plot_hist.SetWeight(self.hist_cfg.lumi*cfg.xsec/cfg.sumweights)
+                    if cfg.is_dde:
+                        try:
+                            # plot_hist.SetWeight(plot_hist.obj.GetEntries()/cfg.sumweights)
+                            plot_hist.SetWeight(cfg.sumweights)
+                        except:
+                            set_trace()
             print('added histograms for %s'%cfg.name)
             PLOTS = self.plots
         return PLOTS

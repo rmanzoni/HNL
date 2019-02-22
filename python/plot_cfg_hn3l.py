@@ -46,7 +46,8 @@ pickle(MethodType, _pickle_method, _unpickle_method)
 gr.SetBatch(True) # NEEDS TO BE SET FOR MULTIPROCESSING OF plot.Draw()
 Cut = namedtuple('Cut', ['name', 'cut'])
 
-int_lumi = 41000.0 # pb #### FIXME 
+# int_lumi = 41000.0 # pb #### FIXME 
+int_lumi = 41000.0 * (30564478/19122658) # [pb]; adapt to the amount of events done for the nonprompt analysis
 #int_lumi = 80000.0 # pb #### FIXME 
 
 
@@ -318,7 +319,7 @@ def prepareCuts(promptLeptonType):
 #    cuts.append(Cut('CR_TTbar_IDmIso15', inc_cut + l0_tight + IDmIso15 + CR_ttbar))
 #    cuts.append(Cut('CR_WZ_IDmIso15'   , inc_cut + l0_tight + IDmIso15 + CR_WZ))
 
-    cuts.append(Cut('CR_DY', inc_cut + l0_loose + looser + CR_DY))
+    # cuts.append(Cut('CR_DY', inc_cut + l0_loose + looser + CR_DY))
     # cuts.append(Cut('CR_TTbar_dde', inc_cut_dde  + l0_loose + looser_dde + CR_ttbar))
 #    cuts.append(Cut('CR_WZ', inc_cut + l0_loose + looser + CR_WZ))
  
@@ -329,11 +330,36 @@ def prepareCuts(promptLeptonType):
 #    cuts.append(Cut('tighter_e_tight', inc_cut + l0_tight + tighter))
 
 #### 20190205 MC + DDE
+    Z_veto_01       = '( (l0_q + l1_q == 0) & (abs(hnl_m_01 - 91.2) > 15) )  &  (l0_q + l2_q != 0)  &  (l1_q + l2_q != 0)'
+    Z_veto_02       = '(l0_q + l1_q != 0)  &  ( (l0_q + l2_q == 0) & (abs(hnl_m_02 - 91.2) > 15) )  &  (l1_q + l2_q != 0)'
+    Z_veto_12       = '(l0_q + l1_q != 0)  &  (l0_q + l2_q != 0)  &  ( (l1_q + l2_q == 0) & (abs(hnl_m_12 - 91.2) > 15) )' 
+
+    Z_veto_01_02    = '( (l0_q + l1_q == 0) & (abs(hnl_m_01 - 91.2) > 15) )  &  ( (l0_q + l2_q == 0) & (abs(hnl_m_02 - 91.2) > 15) )  &  (l1_q + l2_q != 0)'  
+    Z_veto_01_12    = '( (l0_q + l1_q == 0) & (abs(hnl_m_01 - 91.2) > 15) )  &  (l0_q + l2_q != 0)  &  ( (l1_q + l2_q == 0) & (abs(hnl_m_12 - 91.2) > 15) )'  
+    Z_veto_02_12    = '(l0_q + l1_q != 0)  &  ( (l0_q + l2_q == 0) & (abs(hnl_m_02 - 91.2) > 15) )  &  ( (l1_q + l2_q == 0) & (abs(hnl_m_12 - 91.2) > 15) )'  
+
+    Z_veto_01_02_12 = '( (l0_q + l1_q == 0) & (abs(hnl_m_01 - 91.2) > 15) )  &  ( (l0_q + l2_q == 0) & (abs(hnl_m_02 - 91.2) > 15) )  &  ( (l1_q + l2_q == 0) & (abs(hnl_m_12 - 91.2) > 15) )'
+
+    single_Z_veto = '(  ' + Z_veto_01 + '   |   ' + Z_veto_02 + '   |   ' + Z_veto_12 + '  )'
+    double_Z_veto = '(  ' + Z_veto_01_02 + '   |   ' + Z_veto_01_12 + '   |   ' + Z_veto_02_12 + '  )'
+
+    Z_veto = '(   ' + single_Z_veto + '    |    ' + double_Z_veto + '    |    ' + Z_veto_01_02_12 + '   )' 
+
+    tight = 'abs(l1_jet_pt - l2_jet_pt) < 1 & hnl_dr_12 < 0.8 & hnl_w_vis_m > 80 & nbj == 0 & hnl_2d_disp > 0.5 & abs(l1_dz) < 2 & abs(l2_dz) < 2 & l1_pt > 3 & l2_pt > 3 & l0_id_t & l0_reliso_rho_04 < 0.15 & l1_id_l & l2_id_l & l1_reliso_rho_04 < 0.15 & l2_reliso_rho_04 < 0.15 & hnl_iso04_rel_rhoArea < 1'
+
+    tight += ' & ' + Z_veto
 
     DDE1       = '& nbj == 0 & abs(hnl_w_vis_m) > 80 '
-    LooseNotTight  = ' & l1_reliso05 > 0.15 & l2_reliso05 > 0.15 & l1_id_m & l2_id_m & nbj == 0 & abs(hnl_w_vis_m) > 80 & abs(l1_jet_pt-l2_jet_pt) < 1 & hnl_dr_12 < 0.8 & hnl_2d_disp > 0.5 & abs(l1_dz) < 2 & abs(l2_dz) < 2'
-    cuts.append(Cut('AR_DDE1', inc_cut + l0_loose + LooseNotTight))
+    LooseNotTight  = ' & l1_reliso05 > 0.15 & l2_reliso05 > 0.15 & l1_id_m & l2_id_m & nbj == 0 & abs(hnl_w_vis_m) > 80 & abs(l1_jet_pt-l2_jet_pt) < 1 & hnl_dr_12 < 0.8 & hnl_2d_disp > 0.5 & abs(l1_dz) < 2 & abs(l2_dz) < 2 & hnl_iso04_rel_rhoArea < 1'
+    # cuts.append(Cut('AR_DDE1', inc_cut + l0_loose + LooseNotTight))
+    # cuts.append(Cut('AR_DDE2', 'abs(l1_jet_pt - l2_jet_pt) < 1 & hnl_dr_12 < 0.8 & hnl_w_vis_m > 80 & nbj == 0 & hnl_2d_disp > 0.5 & abs(l1_dz) < 2 & abs(l2_dz) < 2 & l1_pt > 3 & l2_pt > 3 & l0_id_t & l0_reliso05 < 0.15 & l1_id_l & l2_id_l & (l1_reliso05 > 0.15 | l2_reliso05 > 0.15) & hnl_iso04_rel_rhoArea < 1'))
+    # cuts.append(Cut('AR_DDE3', 'abs(l1_jet_pt - l2_jet_pt) < 1 & hnl_dr_12 < 0.8 & hnl_w_vis_m > 80 & nbj == 0 & hnl_2d_disp > 0.5 & abs(l1_dz) < 2 & abs(l2_dz) < 2 & l1_pt > 3 & l2_pt > 3 & l0_id_t & l0_reliso05 < 0.15 & l1_id_l & l2_id_l & (l1_reliso05 > 0.15 | l2_reliso05 > 0.15) & hnl_iso04_rel_rhoArea < 1'))
 
+    cuts.append(Cut('AR_DDE2', tight))
+
+    dde_tight  = '  &  l1_reliso05 < 0.15  &  l2_reliso05 < 0.15  &  l1_id_l  &  l2_id_l'
+    # cuts.append(Cut('CR_DY', inc_cut + l0_tight + looser + CR_DY + ' & ' + Z_veto))
+    # cuts.append(Cut('CR_ttbar', inc_cut + l0_tight + dde_tight + CR_ttbar))
 
 
     print('###########################################################')
@@ -347,17 +373,28 @@ def createSamples(channel, analysis_dir, total_weight,server, qcd_from_same_sign
     hist_dict = {}
     sample_dict = {}
     print "creating samples from %s"%(analysis_dir)
-    samples_mc, samples_data, samples, all_samples, sampleDict, samples_essential, samples_essential_data, samples_dde, samples_dde_data = createSampleLists(analysis_dir=analysis_dir, server = server, channel=channel, add_data_cut=add_data_cut)
+    samples_mc, samples_data, samples, all_samples, sampleDict, samples_essential, samples_essential_data, samples_dde, samples_dde_data, samples_bkg = createSampleLists(analysis_dir=analysis_dir, server = server, channel=channel, add_data_cut=add_data_cut)
 
     #select here the samples you wish to use
     # working_samples = samples_dde_data
     # working_samples = samples_essential
     # working_samples = samples_mc
     working_samples = all_samples
+    # working_samples = samples_bkg
+    # working_samples = samples_dde
+    # working_samples = samples_data
 
     working_samples = setSumWeights(working_samples)
 
     sample_dict['working_samples'] = working_samples
+
+    #TODO implement a code to print the samples
+    print('###########################################################')
+    print'# samples to be used:'
+    print('###########################################################')
+    for w in working_samples: print w.name + ', ',
+    print '(%d sample(s))'%(len(working_samples))
+    
 
 
     return sample_dict, hist_dict
@@ -376,7 +413,7 @@ def createVariables(rebin=None):
 
     return variables
 
-def makePlots(plotDir,channel_name,variables, cuts, total_weight, sample_dict, hist_dict, qcd_from_same_sign, w_qcd_mssm_method, mt_cut, friend_func, dc_postfix, make_plots=True, create_trees=False):
+def makePlots(plotDir,channel_name,variables, cuts, total_weight, sample_dict, hist_dict, qcd_from_same_sign, w_qcd_mssm_method, mt_cut, friend_func, dc_postfix, make_plots=True, create_trees=False, multiprocess = True):
     ams_dict = {}
     sample_names = set()
     for cut in cuts:
@@ -395,7 +432,7 @@ def makePlots(plotDir,channel_name,variables, cuts, total_weight, sample_dict, h
         
         HISTS = CreateHists(cfg_main)
 
-        plots = HISTS.createHistograms(cfg_main, verbose=False, friend_func=friend_func)
+        plots = HISTS.createHistograms(cfg_main, verbose=False, friend_func=friend_func,multiprocess = multiprocess)
         #plots.legendPos = 'right'
         for variable in variables:
         # for plot in plots.itervalues():
@@ -507,7 +544,6 @@ def producePlots(promptLeptonType, L1L2LeptonType, server):
 
     sample_dict, hist_dict = createSamples(channel,analysis_dir, total_weight, server=server, qcd_from_same_sign=False, w_qcd_mssm_method=False, r_qcd_os_ss=None, add_data_cut=met_filtered)
 
-    # set_trace()
 
     makePlots(
         plotDir,
@@ -522,7 +558,8 @@ def producePlots(promptLeptonType, L1L2LeptonType, server):
         mt_cut='', 
         friend_func=lambda f: f.replace('TESUp', 'TESUpMultiMVA'), 
         dc_postfix='_CMS_scale_t_mt_13TeVUp', 
-        make_plots=True
+        make_plots=True,
+        multiprocess=True
     )
 
     for i in cuts:

@@ -1,4 +1,4 @@
-from ROOT import TColor, kViolet, kBlue, kRed, kCyan, kAzure, kGreen, kMagenta, kYellow
+from ROOT import TColor, kViolet, kBlue, kRed, kCyan, kAzure, kGreen, kMagenta, kYellow, kOrange
 
 class Style:
 
@@ -64,8 +64,9 @@ tribosoncol = kCyan #TColor.GetColor(222,90,106)
 ttvcol = kCyan+2 #TColor.GetColor(222,90,106)
 zzcol = kGreen+2 #TColor.GetColor(222,90,106)
 singleTcol = kCyan 
-DDEcol_doublefake = kGreen+2 
-DDEcol_singlefake = kMagenta+2 
+DDEcol_doublefake = kGreen-3 
+DDEcol_singlefake = kMagenta-6 
+ConversionCol = kOrange-9
 
 # Backgrounds
 sHNL_QCD = Style(lineColor=qcdcol, markerColor=qcdcol, fillColor=qcdcol)
@@ -79,10 +80,10 @@ sHNL_VV = Style(lineColor=dibosoncol, markerColor=dibosoncol, fillColor=dibosonc
 sHNL_TTV = Style(lineColor=ttvcol, markerColor=ttvcol, fillColor=ttvcol)
 sHNL_rare = Style(lineColor=tribosoncol, markerColor=tribosoncol, fillColor=tribosoncol)
 sHNL_ZZ = Style(lineColor=zzcol, markerColor=zzcol, fillColor=zzcol)
+sHNL_Conversion = Style(lineColor = ConversionCol, markerColor = ConversionCol, fillColor=ConversionCol)
 sHNL_SingleT = Style(lineColor = singleTcol, markerColor = singleTcol, fillColor=singleTcol)
 sHNL_DDE_doublefake = Style(lineColor = DDEcol_doublefake, markerColor = DDEcol_doublefake, fillColor=DDEcol_doublefake)
 sHNL_DDE_singlefake = Style(lineColor = DDEcol_singlefake, markerColor = DDEcol_singlefake, fillColor=DDEcol_singlefake)
-
 # Signals
 sHNL_HN  = Style(lineColor=kBlue   , markerColor=0, lineStyle=2, fillColor=0, lineWidth=3)
 sHNL_HN2 = Style(lineColor=kAzure+8, markerColor=0, lineStyle=3, fillColor=0, lineWidth=3)
@@ -116,6 +117,7 @@ histPref['DYJets'] = {'style':sHNL_DYJets, 'layer':4, 'legend':'DYM50'}
 histPref['DYJets_ext'] = {'style':sHNL_DYJets, 'layer':4, 'legend':'DYM50'}
 histPref['DYJetsToLL_M10to50*'] = {'style':sHNL_DYJets_low, 'layer':4, 'legend':'DYM10'}
 histPref['DYBB'] = {'style':sHNL_DYJets_bb, 'layer':4, 'legend':'DYBB'}
+histPref['Conversion*'] = {'style':sHNL_Conversion, 'layer':5, 'legend':'Conversion'}
 histPref['embed_*'] = {'style':sViolet, 'layer':4.1, 'legend':None}
 histPref['TTJets*'] = {'style':sHNL_TTJets, 'layer':1, 'legend':'t#bar{t}'} 
 histPref['T*tW*'] = {'style':sHNL_SingleT, 'layer':1, 'legend':'Single t'} 

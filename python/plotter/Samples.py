@@ -157,6 +157,24 @@ def createSampleLists(analysis_dir='/eos/user/v/vstampf/ntuples/',
         samples_additional += [
             # SampleCfg(name='DYBB'               , dir_name=DYBB               .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=DYBB               .xSection, sumweights=DYBB               .nGenEvents),
             # SampleCfg(name='DYJetsToLL_M10to50'               , dir_name=DYJetsToLL_M10to50               .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=DYJetsToLL_M10to50               .xSection, sumweights=DYJetsToLL_M10to50               .nGenEvents),
+            # SampleCfg(name='Conversion_DYBB', 
+                # dir_name=DYBB.name, 
+                # ana_dir=analysis_dir+bkg_dir, 
+                # tree_prod_name=tree_prod_name, 
+                # xsec=DYBB.xSection, 
+                # sumweights=DYBB.nGenEvents),
+            # SampleCfg(name='Conversion_DYJetsToLL_M10to50',
+                # dir_name=DYJetsToLL_M10to50.name, 
+                # ana_dir=analysis_dir+bkg_dir, 
+                # tree_prod_name=tree_prod_name, 
+                # xsec=DYJetsToLL_M10to50.xSection, 
+                # sumweights=DYJetsToLL_M10to50.nGenEvents),
+            # SampleCfg(name='Conversion_WJetsToLNu',
+                # dir_name=WJetsToLNu.name, 
+                # ana_dir=analysis_dir+bkg_dir, 
+                # tree_prod_name=tree_prod_name, 
+                # xsec=WJetsToLNu.xSection, 
+                # sumweights=WJetsToLNu.nGenEvents),
             # # SampleCfg(name='WJetsToLNu'               , dir_name=WJetsToLNu               .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=WJetsToLNu               .xSection, sumweights=WJetsToLNu               .nGenEvents),
         ]
 
@@ -223,16 +241,48 @@ def createSampleLists(analysis_dir='/eos/user/v/vstampf/ntuples/',
             is_singlefake=True,
             is_doublefake=False), 
     ]
+
+    SampleCfg(name='DYBB'               , dir_name=DYBB               .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=DYBB               .xSection, sumweights=DYBB               .nGenEvents),
+    # SampleCfg(name='DYJetsToLL_M10to50'               , dir_name=DYJetsToLL_M10to50               .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=DYJetsToLL_M10to50               .xSection, sumweights=DYJetsToLL_M10to50               .nGenEvents),
+
+    samples_conversion = [
+        SampleCfg(name='Conversion_DYBB', 
+            dir_name=DYBB.name, 
+            ana_dir=analysis_dir+bkg_dir, 
+            tree_prod_name=tree_prod_name, 
+            xsec=DYBB.xSection, 
+            sumweights=DYBB.nGenEvents),
+        SampleCfg(name='Conversion_DYJetsToLL_M10to50',
+            dir_name=DYJetsToLL_M10to50.name, 
+            ana_dir=analysis_dir+bkg_dir, 
+            tree_prod_name=tree_prod_name, 
+            xsec=DYJetsToLL_M10to50.xSection, 
+            sumweights=DYJetsToLL_M10to50.nGenEvents),
+        SampleCfg(name='Conversion_WJetsToLNu',
+            dir_name=WJetsToLNu.name, 
+            ana_dir=analysis_dir+bkg_dir, 
+            tree_prod_name=tree_prod_name, 
+            xsec=WJetsToLNu.xSection, 
+            sumweights=WJetsToLNu.nGenEvents),
+    ]
   
+
+    # samples_data_dde = [
+        # SampleCfg(name='data_2017', dir_name=dataB.name, ana_dir=data_dir, tree_prod_name=tree_prod_name, is_data=True, norm_cut=add_data_cut),                                          
+    # ]
+
     samples_data_dde = [
-        SampleCfg(name='data_2017', dir_name=dataB.name, ana_dir=data_dir, tree_prod_name=tree_prod_name, is_data=True, norm_cut=add_data_cut),                                          
+        SampleCfg(name='data_2017', 
+            dir_name='DDE', 
+            ana_dir=analysis_dir+bkg_dir, 
+            tree_prod_name='added_trees', 
+            is_data=True),                                          
     ]
 
 
 
-
-    # define all sample configurations
-    samples_mc  = samples_essential + samples_additional 
+    # # define all sample configurations
+    # samples_mc  = samples_essential + samples_additional 
     samples     = samples_essential + samples_additional # + samples_data
 
     if channel == 'emm':
@@ -241,9 +291,10 @@ def createSampleLists(analysis_dir='/eos/user/v/vstampf/ntuples/',
     if channel == 'mmm':
         # samples_mc = samples_essential + samples_qcd_mu + [samples_additional[1]] # DYBB
         # samples_mc = samples_essential + samples_qcd_mu + samples_additional # DYBB
-        samples_mc = samples_essential + samples_additional 
-        # samples_dde = samples_DDE_mmm_doublefake + samples_DDE_mmm_singlefake
-        samples_dde = samples_DDE_mmm_doublefake 
+        # samples_mc = samples_essential + samples_additional 
+        samples_mc = samples_essential + samples_additional + samples_conversion
+        samples_dde = samples_DDE_mmm_doublefake + samples_DDE_mmm_singlefake
+        # samples_dde = samples_DDE_mmm_doublefake 
     samples_bkg = samples_dde + samples_mc
     samples_essential_data = samples_essential + samples_data
     samples_dde_data = samples_dde + samples_data_dde

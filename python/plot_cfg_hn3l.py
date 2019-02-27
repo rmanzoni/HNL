@@ -343,9 +343,10 @@ def prepareCuts(promptLeptonType):
     single_Z_veto = '(  ' + Z_veto_01 + '   |   ' + Z_veto_02 + '   |   ' + Z_veto_12 + '  )'
     double_Z_veto = '(  ' + Z_veto_01_02 + '   |   ' + Z_veto_01_12 + '   |   ' + Z_veto_02_12 + '  )'
 
-    Z_veto = '(   ' + single_Z_veto + '    |    ' + double_Z_veto + '    |    ' + Z_veto_01_02_12 + '   )' 
+    Z_veto = ' & (   ' + single_Z_veto + '    |    ' + double_Z_veto + '    |    ' + Z_veto_01_02_12 + '   )' 
 
     tight = 'abs(l1_jet_pt - l2_jet_pt) < 1 & hnl_dr_12 < 0.8 & hnl_w_vis_m > 80 & nbj == 0 & hnl_2d_disp > 0.5 & abs(l1_dz) < 2 & abs(l2_dz) < 2 & l1_pt > 3 & l2_pt > 3 & l0_id_t & l0_reliso_rho_04 < 0.15 & l1_id_l & l2_id_l & l1_reliso_rho_04 < 0.15 & l2_reliso_rho_04 < 0.15 & hnl_iso04_rel_rhoArea < 1'
+    loose = 'abs(l1_jet_pt - l2_jet_pt) < 1 & hnl_dr_12 < 0.8 & hnl_w_vis_m > 80 & nbj == 0 & hnl_2d_disp > 0.5 & abs(l1_dz) < 2 & abs(l2_dz) < 2 & l1_pt > 3 & l2_pt > 3 & l0_id_t & l0_reliso_rho_04 < 0.15 & l1_id_l & l2_id_l & l1_reliso_rho_04 > 0.15 & l2_reliso_rho_04 > 0.15 & hnl_iso04_rel_rhoArea < 1'
 
     tight += ' & ' + Z_veto
 
@@ -355,11 +356,17 @@ def prepareCuts(promptLeptonType):
     # cuts.append(Cut('AR_DDE2', 'abs(l1_jet_pt - l2_jet_pt) < 1 & hnl_dr_12 < 0.8 & hnl_w_vis_m > 80 & nbj == 0 & hnl_2d_disp > 0.5 & abs(l1_dz) < 2 & abs(l2_dz) < 2 & l1_pt > 3 & l2_pt > 3 & l0_id_t & l0_reliso05 < 0.15 & l1_id_l & l2_id_l & (l1_reliso05 > 0.15 | l2_reliso05 > 0.15) & hnl_iso04_rel_rhoArea < 1'))
     # cuts.append(Cut('AR_DDE3', 'abs(l1_jet_pt - l2_jet_pt) < 1 & hnl_dr_12 < 0.8 & hnl_w_vis_m > 80 & nbj == 0 & hnl_2d_disp > 0.5 & abs(l1_dz) < 2 & abs(l2_dz) < 2 & l1_pt > 3 & l2_pt > 3 & l0_id_t & l0_reliso05 < 0.15 & l1_id_l & l2_id_l & (l1_reliso05 > 0.15 | l2_reliso05 > 0.15) & hnl_iso04_rel_rhoArea < 1'))
 
-    cuts.append(Cut('AR_DDE2', tight))
+    cuts.append(Cut('AR_DDE2', tight + Z_veto))
+    # cuts.append(Cut('AR_DDE2', loose))
+
 
     dde_tight  = '  &  l1_reliso05 < 0.15  &  l2_reliso05 < 0.15  &  l1_id_l  &  l2_id_l'
-    # cuts.append(Cut('CR_DY', inc_cut + l0_tight + looser + CR_DY + ' & ' + Z_veto))
+    # cuts.append(Cut('CR_DY', inc_cut + l0_tight + looser + CR_DY + Z_veto))
     # cuts.append(Cut('CR_ttbar', inc_cut + l0_tight + dde_tight + CR_ttbar))
+
+    # cuts.append(Cut('AR_DDE2','abs(l1_jet_pt - l2_jet_pt) < 1 & hnl_dr_12 < 0.8 & hnl_w_vis_m > 80 & nbj == 0 & hnl_2d_disp > 0.5 & abs(l1_dz) < 2 & abs(l2_dz) < 2 & l1_pt > 3 & l2_pt > 3 & l0_id_t & l0_reliso_rho_04 < 0.15 & l1_id_l & l2_id_l & l1_reliso_rho_04 < 0.15 & l2_reliso_rho_04 < 0.15 & hnl_iso04_rel_rhoArea < 1 & (   (  ( (l0_q + l1_q == 0) & (abs(hnl_m_01 - 91.2) > 15) )  &  (l0_q + l2_q != 0)&  (l1_q + l2_q != 0)   |   (l0_q + l1_q != 0)  &  ( (l0_q + l2_q == 0) & (abs(hnl_m_02 - 91.2) > 15) )  &  (l1_q + l2_q != 0)   |   (l0_q + l1_q != 0)  &  (l0_q + l2_q != 0)  &  ( (l1_q + l2_q == 0) & (abs(hnl_m_12 - 91.2) > 15) )  )    |    (  ( (l0_q + l1_q == 0) & (abs(hnl_m_01 - 91.2) > 15) )  &  ( (l0_q + l2_q == 0) & (abs(hnl_m_02 - 91.2) > 15) )  &  (l1_q + l2_q != 0)   |   ( (l0_q + l1_q == 0) & (abs(hnl_m_01 - 91.2) > 15) )  &  (l0_q + l2_q != 0)  &  ( (l1_q + l2_q == 0) & (abs(hnl_m_12 - 91.2) > 15) )   |   (l0_q + l1_q !=0)  &  ( (l0_q + l2_q == 0) & (abs(hnl_m_02 - 91.2) > 15) )  &  ( (l1_q + l2_q == 0) & (abs(hnl_m_12 - 91.2) > 15) )  )    |    ( (l0_q + l1_q == 0) & (abs(hnl_m_01 - 91.2) > 15) )  &  ( (l0_q + l2_q == 0) & (abs(hnl_m_02 - 91.2) > 15) )  &  ( (l1_q + l2_q == 0) & (abs(hnl_m_12 - 91.2) > 15) ))'))
+    # cuts.append(Cut('AR_DDE2', 'abs(l1_jet_pt - l2_jet_pt) < 1 & hnl_dr_12 < 0.8 & hnl_w_vis_m > 80 & nbj == 0 & hnl_2d_disp > 0.5 & abs(l1_dz) < 2 & abs(l2_dz) < 2 & l1_pt > 3 & l2_pt > 3 & l0_id_t & l0_reliso_rho_04 < 0.15 & l1_id_l & l2_id_l & (l1_reliso_rho_04 > 0.15 | l2_reliso_rho_04 > 0.15) & hnl_iso04_rel_rhoArea < 1 '))
+    # cuts.append(Cut('AR_DDE2', 'abs(l1_jet_pt - l2_jet_pt) < 1 & hnl_dr_12 < 0.8 & hnl_w_vis_m > 80 & nbj == 0 & hnl_2d_disp > 0.5 & abs(l1_dz) < 2 & abs(l2_dz) < 2 & l1_pt > 3 & l2_pt > 3 & l0_id_t & l0_reliso_rho_04 < 0.15 & l1_id_l & l2_id_l & (l1_reliso_rho_04 > 0.15 | l2_reliso_rho_04 > 0.15) & hnl_iso04_rel_rhoArea < 1'))
 
 
     print('###########################################################')
@@ -454,6 +461,8 @@ def makePlots(plotDir,channel_name,variables, cuts, total_weight, sample_dict, h
                 plot.Group('Diboson', ['WZTo3LNu','ZZTo4L'])
                 # plot.Group('ttV', ['TTWJetsToLNu'])
                 plot.Group('DY', ['DYJets_ext','DYBB','DYJetsToLL_M10to50'])
+                # plot.Group('Conversions',['Conversion_DYBB','Conversion_DYJetsToLL_M10to50'])
+                plot.Group('Conversions',['Conversion_DYBB','Conversion_DYJetsToLL_M10to50','Conversion_WJetsToLNu'])
                 plot.Group('QCD',['QCD_pt_15to20_mu', 'QCD_pt_20to30_mu', 'QCD_pt_30to50_mu', 'QCD_pt_50to80_mu', 'QCD_pt_80to120_mu'])
                 plot.Group('WJets', ['W1JetsToLNu', 'W2JetsToLNu', 'W3JetsToLNu', 'W4JetsToLNu'])
             # createDefaultGroups(plot)
@@ -481,7 +490,7 @@ def makePlots(plotDir,channel_name,variables, cuts, total_weight, sample_dict, h
 def producePlots(promptLeptonType, L1L2LeptonType, server):
 
     if server == 't3':
-        plotDirBase = '/shome/dezhu/3_figures/1_DataMC/FinalStates/'
+        plotDirBase = '/work/dezhu/3_figures/1_DataMC/FinalStates/'
     if server == 'lxplus':
         plotDirBase = '/eos/user/d/dezhu/HNL/plots/FinalStates/'
 
@@ -559,9 +568,11 @@ def producePlots(promptLeptonType, L1L2LeptonType, server):
         friend_func=lambda f: f.replace('TESUp', 'TESUpMultiMVA'), 
         dc_postfix='_CMS_scale_t_mt_13TeVUp', 
         make_plots=True,
-        multiprocess=True
+        multiprocess=False
     )
 
     for i in cuts:
         copyfile('/t3home/dezhu/HNL/CMSSW_9_4_6_patch1/src/CMGTools/HNL/plotting/plot_cfg_hn3l_'+channel+'.py', plotDir+i.name+'/plot_cfg.py')
+        copyfile('/t3home/dezhu/HNL/CMSSW_9_4_6_patch1/src/CMGTools/HNL/python/plot_cfg_hn3l.py', plotDir+i.name+'/plot_cfg_base.py')
         print 'cfg file stored in "', plotDir + i.name + '/plot_cfg.py"'
+        print 'cfg_base file stored in "', plotDir + i.name + '/plot_cfg_base.py"'

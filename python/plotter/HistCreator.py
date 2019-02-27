@@ -319,8 +319,8 @@ class CreateHists(object):
             try:
                 plot._ApplyPrefs()
             except:
-                set_trace()
-        print('# number of processes for drawing (ie. stacks to draw): %i'%len(self.plots))
+                set_trace() #if this error is raised, check in HNLStyle.py whether the style is defined coffectly
+        print('# number of plots to draw: %i'%len(self.plots))
         print('###########################################################')
 
 
@@ -402,15 +402,15 @@ class CreateHists(object):
                 norm_cut = cfg.cut_replace_func(norm_cut)
                 shape_cut = cfg.cut_replace_func(norm_cut)
 
-            # #if needed, apply the tight selection for the data
-            # if cfg.is_data == True:
-                # norm_cut = 'abs(l1_jet_pt - l2_jet_pt) < 1 & hnl_dr_12 < 0.8 & hnl_w_vis_m > 80 & nbj == 0 & hnl_2d_disp > 0.5 & abs(l1_dz) < 2 & abs(l2_dz) < 2 & l1_pt > 3 & l2_pt > 3 & l0_id_t & l0_reliso_rho_04 < 0.15 & l1_id_l & l2_id_l & l1_reliso_rho_04 < 0.15 & l2_reliso_rho_04 < 0.15 & hnl_iso04_rel_rhoArea < 1'
-                # shape_cut = 'abs(l1_jet_pt - l2_jet_pt) < 1 & hnl_dr_12 < 0.8 & hnl_w_vis_m > 80 & nbj == 0 & hnl_2d_disp > 0.5 & abs(l1_dz) < 2 & abs(l2_dz) < 2 & l1_pt > 3 & l2_pt > 3 & l0_id_t & l0_reliso_rho_04 < 0.15 & l1_id_l & l2_id_l & l1_reliso_rho_04 < 0.15 & l2_reliso_rho_04 < 0.15 & hnl_iso04_rel_rhoArea < 1'
 
             #if needed, apply the loose selection for the non-prompt region
             if cfg.is_dde == True:
                 norm_cut = norm_cut.replace('l1_reliso_rho_04 < 0.15 & l2_reliso_rho_04 < 0.15 & hnl_iso04_rel_rhoArea < 1','(l1_reliso05 > 0.15 | l2_reliso05 > 0.15) & hnl_iso04_rel_rhoArea < 1')
                 shape_cut = shape_cut.replace('l1_reliso_rho_04 < 0.15 & l2_reliso_rho_04 < 0.15 & hnl_iso04_rel_rhoArea < 1','(l1_reliso05 > 0.15 | l2_reliso05 > 0.15) & hnl_iso04_rel_rhoArea < 1')
+
+            if 'Conversion' in cfg.name:
+                norm_cut = norm_cut + ' & (l0_gen_match_pdgid == 22 | l1_gen_match_pdgid == 22 | l2_gen_match_pdgid ==22)'
+                shape_cut = shape_cut + ' & (l0_gen_match_pdgid == 22 | l1_gen_match_pdgid == 22 | l2_gen_match_pdgid ==22)'
 
             if self.hist_cfg.weight:
                 norm_cut = '({c}) * {we}'.format(c=norm_cut, we=weight)
@@ -418,8 +418,8 @@ class CreateHists(object):
 
             #insert the fake rate weight for doublefakes
             if cfg.is_dde == True and cfg.is_doublefake == True:
-                norm_cut = '({c}) * {we}'.format(c=norm_cut, we='(weight_fr/(1-weight_fr))')
-                shape_cut = '({c}) * {we}'.format(c=shape_cut, we='(weight_fr/(1-weight_fr))')
+                norm_cut = '({c}) * {we}'.format(c=norm_cut, we='weight_fr/(1-weight_fr)')
+                shape_cut = '({c}) * {we}'.format(c=shape_cut, we='weight_fr/(1-weight_fr)')
 
             #insert the fake rate weight for singlefakes
             if cfg.is_dde == True and cfg.is_singlefake == True:

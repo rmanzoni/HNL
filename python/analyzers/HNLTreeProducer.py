@@ -344,7 +344,7 @@ class HNLTreeProducer(TreeProducerBase):
         
             for ilep, idr2 in tomatch:
                 bestmatch, dr2 = bestMatch(ilep, stable_genp)
-                if ( dr2 < idr2 and abs((ilep.pt() - bestmatch.pt())/ilep.pt()) < 0.2 ): 
+                if (dr2 < idr2 and abs((ilep.pt() - bestmatch.pt())/ilep.pt()) < 0.2 ): 
                     ilep.bestmatch = bestmatch
 
             # relevant for signal: check if reco matched with gen, save a bool

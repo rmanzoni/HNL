@@ -259,6 +259,15 @@ particle_vars = [
     Variable('mass'                      , lambda p: p.mass()                                 ),
     Variable('pdgid'                     , lambda p: p.pdgId()                                ),
 ]
+particleJet_vars = [
+    Variable('pt'                        , lambda p: p.pt()                                   ),
+    Variable('eta'                       , lambda p: p.eta()                                  ),
+    Variable('phi'                       , lambda p: p.phi()                                  ),
+    Variable('q'                         , lambda p: p.charge() if hasattr(p, 'charge') else 0), # charge may be non-integer for gen particles
+    Variable('mass'                      , lambda p: p.mass()                                 ),
+    Variable('pdgid'                     , lambda p: p.pdgId()                                ),
+    Variable('flavour_parton'            , lambda jet : jet.partonFlavour() if hasattr(jet, 'partonFlavour') else -99),
+]
 
 # gen particle
 gen_particle_vars = [

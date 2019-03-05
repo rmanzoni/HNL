@@ -381,15 +381,37 @@ def generateKeyConfigs(samples,production, promptLeptonType, L1L2LeptonType, isD
         comp.fineSplitFactor = 1
         comp.files           = comp.files[:]
 
-    # the following is declared in case this cfg is used in input to the
-    # heppy.py script
+    ###################################################
+    ###            PREPROCESSOR                     ###
+    ###################################################
+    preprocessor = None
+
+    #temporary copy remote files using xrd
     from PhysicsTools.HeppyCore.framework.eventsfwlite import Events
+    from CMGTools.HNL.utils.EOSEventsWithDownload import EOSEventsWithDownload
+    event_class = EOSEventsWithDownload if not preprocessor else Events
+    EOSEventsWithDownload.aggressive = 2 # always fetch if running on Wigner
+    EOSEventsWithDownload.long_cache = getHeppyOption('long_cache', False)
+
+    if preprocessor: preprocessor.prefetch = prefetch
+
+    # if extrap_muons_to_L1:
+        # fname = '$CMSSW_BASE/src/CMGTools/WTau3Mu/prod/muon_extrapolator_cfg.py'
+        # sequence.append(fileCleaner)
+        # preprocessor = CmsswPreprocessor(fname, addOrigAsSecondary=False)
+
+    # if compute_mvamet:
+        # fname = '$CMSSW_BASE/src/CMGTools/WTau3Mu/prod/compute_mva_met_data_cfg.py'
+        # sequence.append(fileCleaner)
+        # preprocessor = CmsswPreprocessor(fname, addOrigAsSecondary=False)
+
+    # the following is declared in case this cfg is used in input to the heppy.py script
     config = cfg.Config(
         components   = selectedComponents,
         sequence     = sequence,
         services     = [],
-        preprocessor = None,
-        events_class = Events
+        preprocessor = preprocessor,
+        events_class = event_class
     )
 
     printComps(config.components, True)

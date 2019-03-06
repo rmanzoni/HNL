@@ -31,10 +31,6 @@
 #include "RecoVertex/VertexTools/interface/VertexDistance3D.h"
 #include "RecoVertex/VertexTools/interface/VertexDistanceXY.h"
 
-//#include "TFile.h"
-//#include "TTree.h"
-//#include "MagneticField/VolumeBasedEngine/interface/VolumeBasedMagneticField.h"
-
 
 class HNLKinematicVertexFitter {
 
@@ -42,12 +38,10 @@ class HNLKinematicVertexFitter {
     HNLKinematicVertexFitter() {};
     virtual ~HNLKinematicVertexFitter() {};
     
-    //std::string L1L2LeptonType;
 
     // constructed by reco::TrackRef
     reco::TransientTrack getTransientTrack(const reco::TrackRef& trackRef) {    
       reco::TransientTrack transientTrack(trackRef, paramField);
-      //reco::TransientTrack transientTrack(trackRef, volumeField);
 
       return transientTrack;
     }
@@ -83,16 +77,16 @@ class HNLKinematicVertexFitter {
       std::vector<RefCountedKinematicParticle> XParticles;
       int i = 0;
       for (std::vector<reco::Track>::const_iterator ilc = candidates.begin(); ilc != candidates.end(); ++ilc){
-        float pmass = 511e-6;
+        float pmass = 5.11e-4;
         if (L1L2LeptonType == "ee"){
-            pmass = 511e-6; 
+            pmass = 5.11e-4; 
         }
         if (L1L2LeptonType == "mm"){
-            pmass = 105658e-6; 
+            pmass = 1.05658e-1; 
         }
         if (L1L2LeptonType == "em"){
-            if (i==0){pmass = 511e-6;}
-            if (i==1){pmass = 105658e-6;}
+            if (i==0){pmass = 5.11e-4;}
+            if (i==1){pmass = 1.05658e-1;}
         }
         float pmasse = 1.e-6 * pmass;
         XParticles.push_back(pFactory.particle(getTransientTrack(*ilc), pmass, chi, ndf, pmasse));
@@ -107,8 +101,6 @@ class HNLKinematicVertexFitter {
     }
 
   private:
-    //TFile *f = new TFile("bfield_bkp.root");
-    //VolumeBasedMagneticField *volumeField; f->GetObject("IdealMagneticFieldRecord/MagneticField__IdealMagneticFieldRecord",volumeField);
     
     OAEParametrizedMagneticField *paramField = new OAEParametrizedMagneticField("3_8T");
     // Insignificant mass sigma to avoid singularities in the covariance matrix.

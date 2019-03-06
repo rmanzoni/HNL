@@ -7,19 +7,12 @@ import os
 from multiprocessing import Process
 from pdb import set_trace
 
+from CMGTools.HNL.samples.samples_mc_2017_noskim import DYJetsToLL_M10to50
+
 
 ROOT.gROOT.SetBatch()        # don't pop up canvases
 
 creator = ComponentCreator()
-
-DYJetsToLL_M10to50 = creator.makeMCComponent(
-    name    = 'DYJetsToLL_M10to50',
-    dataset = '/DYJetsToLL_M-10to50_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
-    user    = 'CMS', 
-    pattern = '.*root',
-    xSec    = (1.581e+04)*1.23,# +- 2.890e+01 pb
-    useAAA  = True
-)
 
 # fill with true interactions
 

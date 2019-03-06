@@ -7,19 +7,12 @@ import os
 from multiprocessing import Process
 from pdb import set_trace
 
+from CMGTools.HNL.samples.samples_mc_2017_noskim import DYBB
 
 ROOT.gROOT.SetBatch()        # don't pop up canvases
 
 creator = ComponentCreator()
 
-DYBB = creator.makeMCComponent(
-    name    = 'DYBB',
-    dataset = '/DYBBJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
-    user    = 'CMS', 
-    pattern = '.*root',
-    xSec    = 1.459e+01,# +- 5.139e-02 pb
-    useAAA  = True
-)
 
 # fill with true interactions
 

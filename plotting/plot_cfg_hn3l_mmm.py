@@ -1,4 +1,5 @@
 from CMGTools.HNL.plot_cfg_hn3l import *
+# from CMGTools.HNL.plot_cfg_hn3l_old import *
 
 promptLeptonType = "mu" # do "ele" or "mu"
 L1L2LeptonType   = "mm" # do "mm", "me", "ee"

@@ -19,10 +19,10 @@ TTJets_mdgrph                   = creator.makeMyPrivateMCComponent('TTJets_madgr
 TTJets_mdgrph       .nGenEvents = 615134
 #.sigma = NOT FOUND pb; .nevents = 158461 
               
-DYJetsToLL_M50                  = creator.makeMyPrivateMCComponent('DYJetsToLL_M50'                , '/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/manzoni-HNLSKIM2017_DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8-115d0bad8e8ff59118d83f903524e0b3/USER'                       , 'PRIVATE', '*.root', 'phys03', xSec=1921.8*3, useAAA=True)
+DYJetsToLL_M50                  = creator.makeMyPrivateMCComponent('DYJetsToLL_M50'                , '/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/manzoni-HNLSKIM2017_DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8-115d0bad8e8ff59118d83f903524e0b3/USER'                       , 'PRIVATE', '*.root', 'phys03', xSec=2075.14*3, useAAA=True)#old xSec: 1921.8*3
 DYJetsToLL_M50      .nGenEvents = 27413121
 #.sigma = 1921.8*3 pb; .nevents = 11074873 
-DYJetsToLL_M50_ext              = creator.makeMyPrivateMCComponent('DYJetsToLL_M50_ext'            , '/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/manzoni-HNLSKIM2017_DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8_ext-115d0bad8e8ff59118d83f903524e0b3/USER'                   , 'PRIVATE', '*.root', 'phys03', xSec=1921.8*3, useAAA=True)
+DYJetsToLL_M50_ext              = creator.makeMyPrivateMCComponent('DYJetsToLL_M50_ext'            , '/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/manzoni-HNLSKIM2017_DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8_ext-115d0bad8e8ff59118d83f903524e0b3/USER'                   , 'PRIVATE', '*.root', 'phys03', xSec=2075.14*3, useAAA=True)#old xSec: 1921.8*3
 DYJetsToLL_M50_ext  .nGenEvents = 158048935
 #.sigma = 1921.8*3 pb; .nevents = 63912552; .L = 11085.536476220212 pb^-1 
 
@@ -153,6 +153,7 @@ hnl_bkg = [
 hnl_bkg_essentials = [
     TTJets_amcat      ,
     DYJetsToLL_M50_ext,
+    WW_DoubleScattering,
     WZTo3LNu          ,
     ZZTo4L            ,
     WJetsToLNu        ,

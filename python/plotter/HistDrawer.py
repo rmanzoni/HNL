@@ -191,24 +191,27 @@ class HistDrawer:
         
         if not os.path.exists(plot_dir + '/pdf/'):
             os.mkdir(plot_dir + '/pdf/')
+            os.mkdir(plot_dir + '/pdf/linear/')
+            os.mkdir(plot_dir + '/pdf/log/')
         if not os.path.exists(plot_dir + '/root/'):
             os.mkdir(plot_dir + '/root/')
+            os.mkdir(plot_dir + '/root/linear/')
+            os.mkdir(plot_dir + '/root/log')
         if not os.path.exists(plot_dir + '/png/'):
             os.mkdir(plot_dir + '/png/')
-        # plotname = plot_dir + '/'
-        # ensureDir(plot_dir)
+            os.mkdir(plot_dir + '/png/linear/')
+            os.mkdir(plot_dir + '/png/log/')
         plotname = plot_name if plot_name else plot.name
-        # can.SaveAs(plotname + '.png')
-        can.SaveAs(plot_dir + '/pdf/'  + plotname  + '.pdf')
-        can.SaveAs(plot_dir + '/root/' + plotname  + '.root')
-        can.SaveAs(plot_dir + '/png/'  + plotname  + '.png')
+        can.SaveAs(plot_dir + '/pdf/linear/'  + plotname  + '.pdf')
+        can.SaveAs(plot_dir + '/root/linear/' + plotname  + '.root')
+        can.SaveAs(plot_dir + '/png/linear/'  + plotname  + '.png')
 
         # Also save with log y
         h.GetYaxis().SetRangeUser(pad.GetUymax() * 5./1000000., pad.GetUymax() * 5.)
         pad.SetLogy(True)
-        can.SaveAs(plot_dir + '/png/'  + plotname + '_log.png')
-        can.SaveAs(plot_dir + '/root/' + plotname + '_log.root')
-        can.SaveAs(plot_dir + '/pdf/'  + plotname + '_log.pdf')
+        can.SaveAs(plot_dir + '/png/log/'  + plotname + '_log.png')
+        can.SaveAs(plot_dir + '/root/log/' + plotname + '_log.root')
+        can.SaveAs(plot_dir + '/pdf/log/'  + plotname + '_log.pdf')
         pad.SetLogy(0)
 #        return ratio
 

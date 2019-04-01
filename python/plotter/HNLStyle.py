@@ -64,9 +64,9 @@ tribosoncol = kCyan #TColor.GetColor(222,90,106)
 ttvcol = kCyan+2 #TColor.GetColor(222,90,106)
 zzcol = kGreen+2 #TColor.GetColor(222,90,106)
 singleTcol = kCyan 
-DDEcol_doublefake = kGreen-3 
-DDEcol_singlefake = kMagenta-6 
-ConversionCol = kOrange-9
+DDEcol_singlefake = kGreen-3 
+DDEcol_doublefake = kBlue-6 
+ConversionCol = kMagenta-9
 
 # Backgrounds
 sHNL_QCD = Style(lineColor=qcdcol, markerColor=qcdcol, fillColor=qcdcol)
@@ -171,5 +171,5 @@ histPref['ggH*'] = {'style':sHNL_HN, 'layer':1001, 'legend':None}
 histPref['bbH*'] = {'style':sHNL_HN, 'layer':1001, 'legend':None}
 histPref['SMS*'] = {'style':sHNL_HN, 'layer':1001, 'legend':None}
 # histPref['DDE*'] = {'style':sHNL_DDE, 'layer':1001, 'legend':'nonprompt'}
-histPref['*doublefake*'] = {'style':sHNL_DDE_doublefake, 'layer':1001, 'legend':'nonprompt, doublefake'}
-histPref['*singlefake*'] = {'style':sHNL_DDE_singlefake, 'layer':1001, 'legend':'nonprompt, singlefake (placeholder)'}
+histPref['*doublefake*'] = {'style':sHNL_DDE_doublefake, 'layer':900, 'legend':'DF'}
+histPref['*singlefake*'] = {'style':sHNL_DDE_singlefake, 'layer':900, 'legend':'SF (placeholder)'}

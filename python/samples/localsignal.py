@@ -13,4 +13,4 @@ from CMGTools.HNL.samples.signal import HN3L_M_2_V_0p00244948974278_e_massiveAnd
 # TTJets_amcat.files = glob('/eos/user/v/vstampf/miniaod/TTJets_amcat/miniAOD_skim*.root')
 
 
-HN3L_M_2_V_0p00244948974278_e_massiveAndCKM_LO.files = glob ('/shome/dezhu/3_MiniAODs/HN3L_M_2_V_0p00244948974278_e_massiveAndCKM_LO.root')
+HN3L_M_2_V_0p00244948974278_e_massiveAndCKM_LO.files = glob ('/work/dezhu/1_MiniAODs/HN3L_M_2_V_0p00244948974278_e_massiveAndCKM_LO.root')

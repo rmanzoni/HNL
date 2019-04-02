@@ -347,26 +347,31 @@ class HNLTreeProducer(TreeProducerBase):
                 if (dr2 < idr2 and abs((ilep.pt() - bestmatch.pt())/ilep.pt()) < 0.2 ): 
                     ilep.bestmatch = bestmatch
 
-            # relevant for signal: check if reco matched with gen, save a bool
-            if hasattr(event.the_3lep_cand.l0(), 'bestmatch'): 
-                uho = event.the_3lep_cand.l0()
-                self.fillSimpleGenParticle(self.tree, 'l0_gen_match', uho.bestmatch)
-                if deltaR(uho.bestmatch, uho) < 0.04 and uho.pdgId() == uho.bestmatch.pdgId():
-                    self.fill(self.tree, 'l0_good_match', 1)
+            # relevant for mc: check if reco matched with gen, save a float
+            if hasattr(event.the_3lep_cand.l0(), 'bestmatch'):
+                LEP0 = event.the_3lep_cand.l0()
+                self.fillSimpleGenParticle(self.tree, 'l0_gen_match', LEP0.bestmatch)
+                self.fill(self.tree, 'l0_good_match', deltaR(LEP0.bestmatch, LEP0))
+#                if deltaR(LEP0.bestmatch, LEP0) < 0.04 and LEP0.pdgId() == LEP0.bestmatch.pdgId():
+#                    self.fill(self.tree, 'l0_good_match', 1)
 
-            if hasattr(event.the_3lep_cand.l1(), 'bestmatch'): 
-                uhi = event.the_3lep_cand.l1()
-                self.fillSimpleGenParticle(self.tree, 'l1_gen_match', uhi.bestmatch)
-                if deltaR(uhi.bestmatch, uhi) < 0.04 and uhi.pdgId() == uhi.bestmatch.pdgId():
-                    self.fill(self.tree, 'l1_good_match', 1)
 
-            if hasattr(event.the_3lep_cand.l2(), 'bestmatch'): 
-                uhv = event.the_3lep_cand.l2()
-                self.fillSimpleGenParticle(self.tree, 'l2_gen_match', uhv.bestmatch)
-                if deltaR(uhv.bestmatch, uhv) < 0.04 and uhv.pdgId() == uhv.bestmatch.pdgId():
-                    self.fill(self.tree, 'l2_good_match', 1)
+            if hasattr(event.the_3lep_cand.l1(), 'bestmatch'):
+                LEP1 = event.the_3lep_cand.l1()
+                self.fillSimpleGenParticle(self.tree, 'l1_gen_match', LEP1.bestmatch)
+                self.fill(self.tree, 'l1_good_match', deltaR(LEP1.bestmatch, LEP1))
+#                if deltaR(LEP1.bestmatch, LEP1) < 0.04 and LEP1.pdgId() == LEP1.bestmatch.pdgId():
+#                    self.fill(self.tree, 'l1_good_match', 1)
 
-            # FIXME! matching by pointer does not work, so let's trick it with deltaR
+
+            if hasattr(event.the_3lep_cand.l2(), 'bestmatch'):
+                LEP2 = event.the_3lep_cand.l2()
+                self.fillSimpleGenParticle(self.tree, 'l2_gen_match', LEP2.bestmatch)
+                self.fill(self.tree, 'l2_good_match', deltaR(LEP2.bestmatch, LEP2))
+#                if deltaR(LEP2.bestmatch, LEP2) < 0.04 and LEP2.pdgId() == LEP2.bestmatch.pdgId():
+#                    self.fill(self.tree, 'l2_good_match', 1)
+
+            # matching by pointer does not work, so let's trick it with deltaR
             if hasattr(event, 'the_hnl'):
                 if hasattr(event.the_3lep_cand.l0(), 'bestmatch'): self.fill(self.tree, 'l0_is_real', deltaR(event.the_3lep_cand.l0().bestmatch,event.the_hnl.l0()) < 0.01)
                 if hasattr(event.the_3lep_cand.l1(), 'bestmatch'): self.fill(self.tree, 'l1_is_real', deltaR(event.the_3lep_cand.l1().bestmatch,event.the_hnl.l1()) < 0.05)
@@ -374,7 +379,7 @@ class HNLTreeProducer(TreeProducerBase):
 
             print('event:', event.eventId, 'lumi:', event.lumi)
 
-        # extra lepton veto
+                     n veto
         self.fill(self.tree, 'pass_e_veto', len(event.veto_eles)==0)
         self.fill(self.tree, 'pass_m_veto', len(event.veto_mus )==0)
 

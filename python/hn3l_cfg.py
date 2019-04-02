@@ -113,7 +113,8 @@ def generateKeyConfigs(samples,production, promptLeptonType, L1L2LeptonType, isD
     metFilter = cfg.Analyzer(
         METFilter,
         name='METFilter',
-        processName='RECO',
+        processName='PAT', #mschoene: Filters very much do exist in MC and most of them should be applied to MC as well, but not all!
+        fallbackProcessName = 'RECO,
         triggers=[
             'Flag_goodVertices',
             'Flag_globalSuperTightHalo2016Filter',

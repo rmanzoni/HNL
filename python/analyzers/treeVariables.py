@@ -271,20 +271,23 @@ particleJet_vars = [
 
 # gen particle
 gen_particle_vars = [
-    Variable('pt'                                            , lambda p: p.pt()                                           ),
-    Variable('eta'                                           , lambda p: p.eta()                                          ),
-    Variable('phi'                                           , lambda p: p.phi()                                          ),
-    Variable('q'                                             , lambda p: p.charge() if hasattr(p, 'charge') else 0        ), # charge may be non-integer for gen particles
-    Variable('mass'                                          , lambda p: p.mass()                                         ),
-    Variable('pdgid'                                         , lambda p: p.pdgId()                                        ),
-    Variable('fromHardProcessFinalState'                     , lambda p: p.fromHardProcessFinalState()                    ),
-    Variable('isPromptFinalState'                            , lambda p: p.isPromptFinalState()                           ),
-    Variable('isDirectPromptTauDecayProductFinalState'       , lambda p: p.isDirectPromptTauDecayProductFinalState()      ),      
-    Variable('isDirectHardProcessTauDecayProductFinalState'  , lambda p: p.isDirectHardProcessTauDecayProductFinalState() ),
-    Variable('vtx_x'                                         , lambda p: p.vertex().x()                                   ),
-    Variable('vtx_y'                                         , lambda p: p.vertex().y()                                   ),
-    Variable('vtx_z'                                         , lambda p: p.vertex().z()                                   ),
-    Variable('status'                                        , lambda p: p.status()                                       ),
+    Variable('pt'                                            , lambda p: p.pt()                                                   ),
+    Variable('eta'                                           , lambda p: p.eta()                                                  ),
+    Variable('phi'                                           , lambda p: p.phi()                                                  ),
+    Variable('q'                                             , lambda p: p.charge() if hasattr(p, 'charge') else 0                ), # charge may be non-integer for gen particles
+    Variable('mass'                                          , lambda p: p.mass()                                                 ),
+    Variable('pdgid'                                         , lambda p: p.pdgId()                                                ),
+    Variable('fromHardProcessFinalState'                     , lambda p: p.fromHardProcessFinalState()                            ),
+    Variable('isPromptFinalState'                            , lambda p: p.isPromptFinalState()                                   ),
+    Variable('isDirectPromptTauDecayProductFinalState'       , lambda p: p.isDirectPromptTauDecayProductFinalState()              ),      
+    Variable('isDirectHardProcessTauDecayProductFinalState'  , lambda p: p.isDirectHardProcessTauDecayProductFinalState()         ),
+    Variable('vtx_x'                                         , lambda p: p.vertex().x()                                           ),
+    Variable('vtx_y'                                         , lambda p: p.vertex().y()                                           ),
+    Variable('vtx_z'                                         , lambda p: p.vertex().z()                                           ),
+    Variable('status'                                        , lambda p: p.status()                                               ),
+    Variable('isPrompt'                                      , lambda p: p.statusFlags().isPrompt()                               ),
+    Variable('isDecayedLeptonHadron'                         , lambda p: p.statusFlags().isDecayedLeptonHadron()                  ),
+    Variable('isPromptDecayed'                               , lambda p: 1 if (p.statusFlags().isPrompt() == 1 and p.statusFlags().isDecayedLeptonHadron() == 1) else 0   ),
 ]
 
 # stage-2 L1 object

@@ -178,8 +178,10 @@ class Region(object):
                      )
         # self.data                       = 'l0_pt > 25 & l1_pt > 15 & l2_pt > 15 & abs(l0_eta) < 2.4 & abs(l2_eta) < 2.4 & '
         # self.data                       = 'l1_pt > 4  &  l2_pt > 4  &  l0_pt > 35  &  l1_q != l2_q  &  l0_reliso05 < 0.15  &  abs(l0_dz) < 0.2  &  hnl_dr_01 > 0.05  &  hnl_dr_02 > 0.05  &&  l0_id_l  &  l1_reliso05 < 0.15  &  l2_reliso05 < 0.15  &  l1_id_m  &  l2_id_m  &  abs(hnl_m_12 - 91.18) < 15  &  abs(hnl_w_vis_m - 91.18) > 15  &  nbj == 0  &  pfmet_pt < 30  &  hnl_mt_0 < 30'
+        # self.MC                         = self.data + '& abs(l2_gen_match_pdgid) != 22 & l2_gen_match_isPromptFinalState == 0 '
+        # self.MC_Conversions             = self.data + '& abs(l2_gen_match_pdgid) == 22 & l2_gen_match_isPromptFinalState == 1 '
         self.MC                         = self.data 
-        self.DY                         = self.data + '& abs(l2_gen_match_pdgid) != 22 '
+        # self.MC                         = self.data + '& abs(l2_gen_match_pdgid) != 22 '
         self.MC_Conversions             = self.data + '& abs(l2_gen_match_pdgid) == 22 '
         # self.MC                         = 'l0_pt>25 & abs(l0_eta)<2.4 & (l0_q != l1_q) & l1_pt > 15 & abs(l1_eta) < 2.4 & abs(l0_dxy) < 0.05 & abs(l0_dz) < 0.2 & abs(l1_dxy) < 0.05 & abs(l1_dz) < 0.2 & nbj == 0 & abs(hnl_m_01 - 91) < 5 '
         # self.signal                     = '(' + ' & '.join([getSelection(channel,'baseline'),getSelection(channel,CR),getSelection(channel,'TT')]) + ')'

@@ -70,20 +70,11 @@ def prepareRegions(channel):
 def createSamples(channel, analysis_dir, total_weight, server, add_data_cut=None):
     sample_dict = {}
     print "creating samples from %s"%(analysis_dir)
-    samples_mc, samples_signal_mc, samples_data, samples, all_samples_dde, all_samples_mc, sampleDict, samples_essential, samples_essential_data, samples_dde, samples_data_dde, samples_dde_data, samples_bkg, samples_DY_data = createSampleLists(analysis_dir=analysis_dir, server = server, channel=channel, add_data_cut=add_data_cut)
+    samples_all = createSampleLists(analysis_dir=analysis_dir, server = server, channel=channel, add_data_cut=add_data_cut)
 
     #select here the samples you wish to use
-    # working_samples = samples_dde_data
-    # working_samples = samples_essential
-    # working_samples = samples_mc
-    # working_samples = all_samples_dde
-    # working_samples = all_samples_mc
-    # working_samples = samples_signal_mc
-    # working_samples = samples_bkg
-    # working_samples = samples_dde
-    # working_samples = samples_data
     # working_samples = samples_data_dde
-    working_samples = samples_DY_data
+    working_samples = samples_all
 
     working_samples = setSumWeights(working_samples)
     sample_dict['working_samples'] = working_samples
@@ -135,26 +126,12 @@ def makePlots(plotDir,channel_name,variables, regions, total_weight, sample_dict
         # for plot in plots.itervalues():
             plot = plots[variable.name]
 
-            if channel_name == "e#mu#mu":
-                plot.Group('data_obs', ['data_2017B', 'data_2017C', 'data_2017D', 'data_2017E', 'data_2017F'])
-                plot.Group('single t', ['ST_tW_inc', 'STbar_tW_inc', 'ST_sch_lep', 'STbar_tch_inc', 'ST_tch_inc'])
-                plot.Group('Diboson', ['WZTo3LNu', 'ZZTo4L', 'WWTo2L2Nu'])
-                plot.Group('Triboson', ['ZZZ', 'WWW', 'WGGJets', 'WZZ', 'WWZ'])
-                plot.Group('ttV', ['TTZToLL_M10', 'TTWJetsToLNu', 'TTZToLL_M1to10'])
-                plot.Group('DY', ['DYJets_ext', 'DYJets',  'DYJetsToLL_M10to50'])
-                plot.Group('QCD',['QCD_pt_15to20_em', 'QCD_pt_20to30_em', 'QCD_pt_30to50_em', 'QCD_pt_50to80_em', 'QCD_pt_120to170_em', 'QCD_pt_300toInf_em', 
-                                  'QCD_pt_20to30_bcToE', 'QCD_pt_30to80_bcToE', 'QCD_pt_80to170_bcToE', 'QCD_pt_170to250_bcToE', 'QCD_pt_250toInf_bcToE'])
-                plot.Group('WJets', ['W1JetsToLNu', 'W2JetsToLNu', 'W3JetsToLNu', 'W4JetsToLNu'])
-
-            if channel_name == "#mu#mu#mu":
-                plot.Group('data_obs', ['data_2017B', 'data_2017C', 'data_2017D', 'data_2017E', 'data_2017F'])
-                plot.Group('Diboson', ['WZTo3LNu','ZZTo4L'])
-                # plot.Group('ttV', ['TTWJetsToLNu'])
-                plot.Group('DY', ['DYJets_ext','DYBB','DYJetsToLL_M10to50'])
-                # plot.Group('Conversions',['Conversion_DYBB','Conversion_DYJetsToLL_M10to50'])
-                plot.Group('Conversions',['Conversion_DYJets_ext','Conversion_DYBB','Conversion_DYJetsToLL_M10to50','Conversion_WJetsToLNu'])
-                plot.Group('QCD',['QCD_pt_15to20_mu', 'QCD_pt_20to30_mu', 'QCD_pt_30to50_mu', 'QCD_pt_50to80_mu', 'QCD_pt_80to120_mu'])
-                plot.Group('WJets', ['W1JetsToLNu', 'W2JetsToLNu', 'W3JetsToLNu', 'W4JetsToLNu'])
+            plot.Group('data_obs', ['data_2017B', 'data_2017C', 'data_2017D', 'data_2017E', 'data_2017F'])
+            plot.Group('Diboson', ['WZTo3LNu','ZZTo4L'])
+            plot.Group('DY', ['DYJets_M50_ext','DYJets_M50','DYJetsToLL_M10to50'])
+            plot.Group('Conversions', ['Conversion_DYJets_M50_ext','Conversion_DYJets_M50','Conversion_DYJetsToLL_M10to50'])
+            plot.Group('QCD',['QCD_pt_15to20_mu', 'QCD_pt_20to30_mu', 'QCD_pt_30to50_mu', 'QCD_pt_50to80_mu', 'QCD_pt_80to120_mu'])
+            plot.Group('WJets', ['W1JetsToLNu', 'W2JetsToLNu', 'W3JetsToLNu', 'W4JetsToLNu'])
             if make_plots:
                 HistDrawer.draw(plot, channel = channel_name, plot_dir = plotDir+region.name)
 

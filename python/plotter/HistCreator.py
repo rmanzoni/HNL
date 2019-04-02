@@ -178,13 +178,13 @@ class CreateHists(object):
                 norm_cut  = self.hist_cfg.region.DF
                 shape_cut = self.hist_cfg.region.DF
 
-            if cfg.is_MC == True:
+            if cfg.is_MC == True and cfg.is_MC_Conversions == False:
                 norm_cut  = self.hist_cfg.region.MC
                 shape_cut = self.hist_cfg.region.MC
 
-            if cfg.is_DY == True:
-                norm_cut  = self.hist_cfg.region.DY
-                shape_cut = self.hist_cfg.region.DY
+            # if cfg.is_DY == True:
+                # norm_cut  = self.hist_cfg.region.DY
+                # shape_cut = self.hist_cfg.region.DY
 
             if cfg.is_MC_Conversions == True:
                 norm_cut  = self.hist_cfg.region.MC_Conversions
@@ -254,7 +254,7 @@ class CreateHists(object):
                 ttree.MultiDraw(var_hist_tuples, norm_cut)
             except:
                 set_trace()
-            
+        
 
             # Do another multidraw here, if needed, and reset the scales in a separate loop
             if shape_cut != norm_cut:

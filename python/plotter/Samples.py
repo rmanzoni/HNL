@@ -9,7 +9,8 @@ from pdb import set_trace
 
 from CMGTools.HNL.plotter.PlotConfigs import SampleCfg, HistogramCfg
 
-from CMGTools.HNL.samples.samples_mc_2017_noskim   import TTJets, WJetsToLNu, WJetsToLNu_ext, ZZZ, WZZ, WWZ, WWW, WWTo2L2Nu, WGGJets, TTWJetsToLNu, TTZToLL_M10, TTZToLL_M1to10, ST_sch_lep, STbar_tch_inc, ST_tch_inc, STbar_tW_inc, ST_tW_inc, DYBB, DYJetsToLL_M10to50,DYJetsToLL_M50, DYJetsToLL_M50_ext, DY1JetsToLL_M50, DY2JetsToLL_M50, DY2JetsToLL_M50_ext, DY3JetsToLL_M50, DY3JetsToLL_M50_ext
+from CMGTools.HNL.samples.samples_mc_2017_noskim   import TTJets, WJetsToLNu, WJetsToLNu_ext, ZZZ, WZZ, WWZ, WWW, WWTo2L2Nu, WGGJets, TTWJetsToLNu, TTZToLL_M10, TTZToLL_M1to10, ST_sch_lep, STbar_tch_inc, ST_tch_inc, STbar_tW_inc, ST_tW_inc, DYBB, DYJetsToLL_M10to50,DYJetsToLL_M50, DYJetsToLL_M50_ext, DY1JetsToLL_M50, DY2JetsToLL_M50, DY2JetsToLL_M50_ext, DY3JetsToLL_M50, DY3JetsToLL_M50_ext, WW, WZ, ZZ
+
 from CMGTools.HNL.samples.samples_data_2017_noskim import Single_ele_2017B, Single_ele_2017C, Single_ele_2017D, Single_ele_2017E, Single_ele_2017F, Single_mu_2017B,  Single_mu_2017C,  Single_mu_2017D,  Single_mu_2017E,  Single_mu_2017F
 
 from CMGTools.HNL.samples.samples_mc_2017_noskim   import W1JetsToLNu, W2JetsToLNu
@@ -48,7 +49,8 @@ def createSampleLists(analysis_dir='',
         if server == 't3':
             # data_dir = analysis_dir + 'data/'
             data_dir = 'root://t3dcachedb.psi.ch:1094///pnfs/psi.ch/cms/trivcat/store/user/dezhu/2_ntuples/HN3Lv2.0/mmm/data/'
-            bkg_dir = 'background'
+            bkg_dir = 'production_20190402_BkgMC/mmm/ntuples/'
+            # bkg_dir = 'production_20190306_BkgMC/mmm/ntuples/'
             sig_dir = 'signal/ntuples'
             DY_dir = analysis_dir + bkg_dir
 
@@ -76,13 +78,13 @@ def createSampleLists(analysis_dir='',
             ]
 
     samples_WJets = [
-            SampleCfg(name='WJetsToLNu', 
-                dir_name=WJetsToLNu.name, 
-                ana_dir=analysis_dir+bkg_dir, 
-                tree_prod_name=tree_prod_name, 
-                xsec=WJetsToLNu.xSection, 
-                sumweights=WJetsToLNu.nGenEvents, 
-                is_MC=True),
+            # SampleCfg(name='WJetsToLNu', 
+                # dir_name=WJetsToLNu.name, 
+                # ana_dir=analysis_dir+bkg_dir, 
+                # tree_prod_name=tree_prod_name, 
+                # xsec=WJetsToLNu.xSection, 
+                # sumweights=WJetsToLNu.nGenEvents, 
+                # is_MC=True),
             SampleCfg(name='WJetsToLNu_ext', 
                 dir_name=WJetsToLNu_ext.name, 
                 ana_dir=analysis_dir+bkg_dir, 
@@ -103,17 +105,18 @@ def createSampleLists(analysis_dir='',
             ]
 
     samples_DY = [
-            # SampleCfg(name='DYJetsToLL_M10to50',
-                # dir_name=DYJetsToLL_M10to50.name, 
-                # ana_dir='/work/dezhu/4_production/production_20190306_BkgMC/mmm/ntuples/', 
-                # tree_prod_name=tree_prod_name, 
-                # xsec=DYJetsToLL_M10to50.xSection, 
-                # sumweights=DYJetsToLL_M10to50.nGenEvents, 
-                # is_MC=True,
-                # is_DY=True),
+            SampleCfg(name='DYJetsToLL_M10to50',
+                dir_name=DYJetsToLL_M10to50.name, 
+                # ana_dir=analysis_dir+bkg_dir, 
+                ana_dir='/work/dezhu/4_production/production_20190306_BkgMC/mmm/ntuples', 
+                tree_prod_name=tree_prod_name, 
+                xsec=DYJetsToLL_M10to50.xSection, 
+                sumweights=DYJetsToLL_M10to50.nGenEvents, 
+                is_MC=True,
+                is_DY=True),
             # SampleCfg(name='DYJets_M50', 
                 # dir_name=DYJetsToLL_M50.name, 
-                # ana_dir='/work/dezhu/4_production/production_20190306_BkgMC/mmm/ntuples/', 
+                # ana_dir=analysis_dir+bkg_dir, 
                 # tree_prod_name=tree_prod_name, 
                 # xsec=DYJetsToLL_M50.xSection, 
                 # sumweights=DYJetsToLL_M50.nGenEvents, 
@@ -121,7 +124,8 @@ def createSampleLists(analysis_dir='',
                 # is_DY=True),
             SampleCfg(name='DYJets_M50_ext', 
                 dir_name=DYJetsToLL_M50_ext.name, 
-                ana_dir='/work/dezhu/4_production/production_20190306_BkgMC/mmm/ntuples/', 
+                # ana_dir=analysis_dir+bkg_dir, 
+                ana_dir='/work/dezhu/4_production/production_20190306_BkgMC/mmm/ntuples', 
                 tree_prod_name=tree_prod_name, 
                 xsec=DYJetsToLL_M50_ext.xSection, 
                 sumweights=DYJetsToLL_M50_ext.nGenEvents, 
@@ -129,22 +133,29 @@ def createSampleLists(analysis_dir='',
                 is_DY=True),
             ]
 
-    # samples_Diboson = [
-            # SampleCfg(name='ZZTo4L', 
-                # dir_name=ZZTo4L.name, 
-                # ana_dir=analysis_dir+bkg_dir, 
-                # tree_prod_name=tree_prod_name, 
-                # xsec=ZZTo4L.xSection, 
-                # sumweights=ZZTo4L.nGenEvents, 
-                # is_MC=True),
-            # SampleCfg(name='WZTo3LNu', 
-                # dir_name=WZTo3LNu.name, 
-                # ana_dir=analysis_dir+bkg_dir, 
-                # tree_prod_name=tree_prod_name, 
-                # xsec=WZTo3LNu.xSection, 
-                # sumweights=WZTo3LNu.nGenEvents, 
-                # is_MC=True),
-            # ]
+    samples_Diboson = [
+            SampleCfg(name='ZZ', 
+                dir_name=ZZ.name, 
+                ana_dir=analysis_dir+bkg_dir, 
+                tree_prod_name=tree_prod_name, 
+                xsec=ZZ.xSection, 
+                sumweights=ZZ.nGenEvents, 
+                is_MC=True),
+            SampleCfg(name='WZ', 
+                dir_name=WZ.name, 
+                ana_dir=analysis_dir+bkg_dir, 
+                tree_prod_name=tree_prod_name, 
+                xsec=WZ.xSection, 
+                sumweights=WZ.nGenEvents, 
+                is_MC=True),
+            SampleCfg(name='WW', 
+                dir_name=WW.name, 
+                ana_dir=analysis_dir+bkg_dir, 
+                tree_prod_name=tree_prod_name, 
+                xsec=WW.xSection, 
+                sumweights=WW.nGenEvents, 
+                is_MC=True),
+            ]
 
     samples_conversion = [
         SampleCfg(name='Conversion_DYJetsToLL_M10to50',
@@ -211,8 +222,11 @@ def createSampleLists(analysis_dir='',
 
 
     # samples_mc = samples_TTJets + samples_WJets + samples_DY + samples_conversion  
-    samples_mc = samples_DY + samples_conversion  
+    # samples_mc = samples_TTJets + samples_WJets + samples_DY 
+    # samples_mc = samples_DY 
+    samples_mc = samples_DY +samples_WJets + samples_TTJets + samples_Diboson  
     samples_all = samples_mc + samples_data
+    # samples_all = samples_mc
 
 
     return samples_all

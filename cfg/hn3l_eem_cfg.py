@@ -2,13 +2,15 @@ from CMGTools.HNL.hn3l_cfg import *
 
 # specify the samples considered
 # from CMGTools.HNL.samples.signal import all_signals_e as samples
+# from CMGTools.HNL.samples.signal import HN3L_M_2_V_0p00244948974278_e_massiveAndCKM_LO
+# from CMGTools.HNL.samples.signal import HN3L_M_8_V_0p00244948974278_e_massiveAndCKM_LO as sample
+# from CMGTools.HNL.samples.signal import HN3L_M_2_V_0p00244948974278_e_massiveAndCKM_LO as sample
+# from CMGTools.HNL.samples.signal import HN3L_M_2_V_0p00282842712475_e_massiveAndCKM_LO as sample
 # from CMGTools.HNL.samples.signal_new import signals_e as samples
 # from CMGTools.HNL.samples.signal_13sept18 import all_signals_e as samples
-# from CMGTools.HNL.samples.signal import HN3L_M_5_V_0p01_e_massiveAndCKM_LO as sample
-# from CMGTools.HNL.samples.samples_data_2017_noskim import Single_ele_2017, Single_ele_2017B, Single_ele_2017C, Single_ele_2017D, Single_ele_2017E, Single_ele_2017F
-from CMGTools.HNL.samples.samples_mc_2017_noskim import WJetsToLNu_ext 
-samples = [WJetsToLNu_ext]
-# samples =[sample]
+from CMGTools.HNL.samples.samples_mc_2017_noskim import TTJets, WJetsToLNu, WJetsToLNu_ext, DYBB, DYJetsToLL_M10to50, DYJetsToLL_M50, DYJetsToLL_M50_ext 
+from CMGTools.HNL.samples.samples_mc_2017 import WW_DoubleScattering, WZTo3LNu, ZZTo4L, WJetsToLNu
+samples = [TTJets, WJetsToLNu, WJetsToLNu_ext, DYBB, DYJetsToLL_M10to50, DYJetsToLL_M50, DYJetsToLL_M50_ext, WW_DoubleScattering, WZTo3LNu, ZZTo4L, WJetsToLNu]
 
 # edit the lines here to specify your ntuple production mode 
 production         = True # state whether you're running production mode or not

@@ -53,13 +53,13 @@ def generateKeyConfigs(samples,production, promptLeptonType, L1L2LeptonType, isD
             sample.triggers += ['HLT_Ele35_WPTight_Gsf_v%d'          %i for i in range(1, 15)] #electron trigger
             sample.triggers += ['HLT_Ele115_CaloIdVT_GsfTrkIdT_v%d'  %i for i in range(1, 15)] #electron trigger
             sample.triggers += ['HLT_Ele135_CaloIdVT_GsfTrkIdT_v%d'  %i for i in range(1, 15)] #electron trigger
-            sample.splitFactor = splitFactor(sample, 1e5)
+            sample.splitFactor = splitFactor(sample, 5e5)
     if promptLeptonType == 'mu':
         for sample in samples:
             sample.triggers  = ['HLT_IsoMu24_v%d' %i for i in range(1, 15)] #muon trigger
             sample.triggers += ['HLT_IsoMu27_v%d' %i for i in range(1, 15)] #muon trigger
             sample.triggers += ['HLT_Mu50_v%d'    %i for i in range(1, 15)] #muon trigger
-            sample.splitFactor = splitFactor(sample, 1e5)
+            sample.splitFactor = splitFactor(sample, 5e5)
 
     selectedComponents = samples
 
@@ -114,7 +114,7 @@ def generateKeyConfigs(samples,production, promptLeptonType, L1L2LeptonType, isD
         METFilter,
         name='METFilter',
         processName='PAT', #mschoene: Filters very much do exist in MC and most of them should be applied to MC as well, but not all!
-        fallbackProcessName = 'RECO,
+        fallbackProcessName = 'RECO',
         triggers=[
             'Flag_goodVertices',
             'Flag_globalSuperTightHalo2016Filter',
@@ -382,7 +382,7 @@ def generateKeyConfigs(samples,production, promptLeptonType, L1L2LeptonType, isD
         selectedComponents   = [comp]
         comp.splitFactor     = 1
         comp.fineSplitFactor = 1
-        comp.files           = comp.files[:]
+        comp.files           = comp.files[:1]
 
     ###################################################
     ###            PREPROCESSOR                     ###

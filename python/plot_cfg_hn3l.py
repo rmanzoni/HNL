@@ -92,8 +92,8 @@ def createVariables(rebin=None):
     # Taken from Variables.py; can get subset with e.g. getVars(['mt', 'mvis'])
 #    variables = CR_vars
     DoNotRebin = ['_norm_', 'n_vtx', 'nj', 'nbj',] 
-    # variables = hnl_vars
-    variables = dde_vars
+    variables = hnl_vars
+    # variables = dde_vars
     # variables = test_vars
     if rebin>0:
         for ivar in hnl_vars:
@@ -127,11 +127,11 @@ def makePlots(plotDir,channel_name,variables, regions, total_weight, sample_dict
             plot = plots[variable.name]
 
             plot.Group('data_obs', ['data_2017B', 'data_2017C', 'data_2017D', 'data_2017E', 'data_2017F'])
-            plot.Group('Diboson', ['WZTo3LNu','ZZTo4L'])
+            plot.Group('Diboson', ['WZTo3LNu','ZZTo4L','WW','WZ','ZZ'])
             plot.Group('DY', ['DYJets_M50_ext','DYJets_M50','DYJetsToLL_M10to50'])
             plot.Group('Conversions', ['Conversion_DYJets_M50_ext','Conversion_DYJets_M50','Conversion_DYJetsToLL_M10to50'])
             plot.Group('QCD',['QCD_pt_15to20_mu', 'QCD_pt_20to30_mu', 'QCD_pt_30to50_mu', 'QCD_pt_50to80_mu', 'QCD_pt_80to120_mu'])
-            plot.Group('WJets', ['W1JetsToLNu', 'W2JetsToLNu', 'W3JetsToLNu', 'W4JetsToLNu'])
+            plot.Group('WJets', ['WJetsToLNu','WJetsToLNu_ext','W1JetsToLNu', 'W2JetsToLNu', 'W3JetsToLNu', 'W4JetsToLNu'])
             if make_plots:
                 HistDrawer.draw(plot, channel = channel_name, plot_dir = plotDir+region.name)
 
@@ -193,7 +193,8 @@ def producePlots(promptLeptonType, L1L2LeptonType, server):
         analysis_dir = '/eos/user/v/vstampf/ntuples/'
    
     if server == "t3":
-        analysis_dir = 'root://t3dcachedb.psi.ch:1094///pnfs/psi.ch/cms/trivcat/store/user/dezhu/2_ntuples/HN3Lv1.0/' + channel + '/'
+        # analysis_dir = 'root://t3dcachedb.psi.ch:1094///pnfs/psi.ch/cms/trivcat/store/user/dezhu/2_ntuples/HN3Lv1.0/' + channel + '/'
+        analysis_dir = '/work/dezhu/4_production/'
 
     total_weight = 'weight * lhe_weight'
     # total_weight = '1'

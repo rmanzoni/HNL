@@ -7,6 +7,7 @@ from ROOT import TLegend, TLine, TPad, TFile, gROOT
 from CMGTools.RootTools.DataMC.Histogram import Histogram
 from CMGTools.RootTools.DataMC.Stack import Stack
 
+from ROOT import THStack, gPad, kGray
 from CMGTools.HNL.plotter.HNLStyle import histPref, Style
 from pdb import set_trace
 
@@ -274,21 +275,47 @@ class DataMCPlot(object):
             stackedHists.append(hist)
         self._BuildStack(stackedHists, ytitle='Data/MC')
         mcHist = self.BGHist()
+
         if dataHist == None: dataHist = mcHist              # this was added to avoid crashes for SR plots (without data)
         self.dataOverMCHist = copy.deepcopy(dataHist)
-        # self.dataOverMCHist.Add(mcHist, -1)   
         self.dataOverMCHist.Divide(mcHist)
-        self.dataOverMCHist.Draw()
-        yaxis = self.dataOverMCHist.GetYaxis()
+
+        self.mcHist_err = copy.deepcopy(mcHist)
+        self.mcHist_err.Divide(mcHist)
+        self.mcHist_err.weighted.SetFillColor(kGray)
+        self.mcHist_err.weighted.SetMarkerStyle(0)
+        self.mcHist_err.weighted.SetFillStyle(1001) #standard 3244, check out at https://root.cern.ch/root/html402/TAttFill.html
+        # self.mcHist_err.weighted.SetFillStyle(3544) #standard 3244, check out at https://root.cern.ch/root/html402/TAttFill.html
+        self.mcHist_err.Draw('e2')
+
+        self.dataOverMCHist.Draw('same')
+        yaxis = self.mcHist_err.GetYaxis()
         yaxis.SetRangeUser(ymin + 1., ymax + 1.)
         yaxis.SetTitle('Data/MC')
         yaxis.SetNdivisions(5)
+        yaxis.SetLabelSize(0.1)
+        yaxis.SetTitleSize(0.1)
+        yaxis.SetTitleOffset(0.7)
+        xaxis = self.mcHist_err.GetXaxis()
+        xaxis.SetLabelSize(0.1)
+        xaxis.SetTitleSize(0.1)
         fraclines = 0.2
         if ymax <= 0.2 or ymin >= -0.2:
             fraclines = 0.1
         self.DrawRatioLines(self.dataOverMCHist, fraclines, 1.)
         if TPad.Pad():
             TPad.Pad().Update()
+
+    # def _DrawStatErrors(self):
+        # '''Draw statistical errors if statErrors is True.'''
+        # if self.statErrors is False:
+            # return
+        # self.totalHist.weighted.SetFillColor(kGray+1)
+        # # self.totalHist.weighted.SetFillColor(1)
+        # self.totalHist.weighted.SetFillStyle(3244) #originally 3544, check out at https://root.cern.ch/root/html402/TAttFill.html
+        # self.totalHist.Draw('samee2')
+
+
 
     def DrawRatioStack(self, opt='',
                        xmin=None, xmax=None, ymin=None, ymax=None):

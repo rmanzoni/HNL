@@ -379,7 +379,7 @@ class HNLTreeProducer(TreeProducerBase):
 
             print('event:', event.eventId, 'lumi:', event.lumi)
 
-                     n veto
+        # extra lepton veto
         self.fill(self.tree, 'pass_e_veto', len(event.veto_eles)==0)
         self.fill(self.tree, 'pass_m_veto', len(event.veto_mus )==0)
 

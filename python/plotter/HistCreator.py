@@ -88,6 +88,7 @@ class CreateHists(object):
                     hist_to_add = Histogram(cfg.name, hist)
                     if (not cfg.is_data) and (not cfg.is_dde):
                         hist_to_add.SetWeight(hist_cfg.lumi*cfg.xsec/cfg.sumweights)
+                        # hist_to_add.SetWeight(1)
                     plot[cfg.name].Add(hist_to_add)
                 else:
 #                    print(cfg.name, hist.GetEntries(), stack)
@@ -97,6 +98,7 @@ class CreateHists(object):
 
                     if (not cfg.is_data) and (not cfg.is_dde):
                         plot_hist.SetWeight(self.hist_cfg.lumi*cfg.xsec/cfg.sumweights)
+                        # plot_hist.SetWeight(1)
 #                print(cfg.name, vcfg.name, len(plot.histos))
     
         print('###########################################################')

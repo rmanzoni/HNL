@@ -7,10 +7,11 @@ import os
 from multiprocessing import Process
 from pdb import set_trace
 
-from CMGTools.HNL.samples.samples_mc_2017_noskim import DYBB
+from CMGTools.HNL.samples.samples_mc_2017_noskim import TTJets, WJetsToLNu, WJetsToLNu_ext, DYBB, DYJetsToLL_M10to50, DYJetsToLL_M50, DYJetsToLL_M50_ext
+
+
 
 ROOT.gROOT.SetBatch()        # don't pop up canvases
-
 creator = ComponentCreator()
 
 

@@ -536,7 +536,64 @@ W4JetsToLNu.nGenEvents = W4JetsToLNu.dataset_entries
 
 wjets = [W1JetsToLNu, W2JetsToLNu, W3JetsToLNu, W4JetsToLNu]
 
-# LINK for crosssections: https://twiki.cern.ch/twiki/bin/viewauth/CMS/SummaryTable1G25ns
+#from fall17 samples of https://twiki.cern.ch/twiki/bin/viewauth/CMS/TauIDMeasurementsHelp#2017_measurements_MC2017_v2_samp
+WW = creator.makeMCComponent(
+    name    = 'WW',
+    dataset = '/WW_TuneCP5_13TeV-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
+    user    = 'CMS',
+    pattern = '.*root', 
+    xSec    = 75.88, 
+    useAAA  = True
+)
+WW.nGenEvents = WW.dataset_entries
+
+#from fall17 samples of https://twiki.cern.ch/twiki/bin/viewauth/CMS/TauIDMeasurementsHelp#2017_measurements_MC2017_v2_samp
+WZ = creator.makeMCComponent(
+    name    = 'WZ',
+    dataset = '/WZ_TuneCP5_13TeV-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
+    user    = 'CMS',
+    pattern = '.*root', 
+    xSec    = 27.6, 
+    useAAA  = True
+)
+WZ.nGenEvents = WZ.dataset_entries
+
+#from fall17 samples of https://twiki.cern.ch/twiki/bin/viewauth/CMS/TauIDMeasurementsHelp#2017_measurements_MC2017_v2_samp
+ZZ = creator.makeMCComponent(
+    name    = 'ZZ',
+    dataset = '/ZZ_TuneCP5_13TeV-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
+    user    = 'CMS',
+    pattern = '.*root', 
+    xSec    = 12.14, 
+    useAAA  = True
+)
+ZZ.nGenEvents = ZZ.dataset_entries
+
+WZTo3LNu = creator.makeMCComponent(
+    name    = 'WZTo3LNu',
+    dataset = '/WZTo3LNu_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM ',
+    user    = 'CMS',
+    pattern = '.*root', 
+    xSec    = 4.4297, 
+    useAAA  = True
+)
+WZTo3LNu.nGenEvents = WZTo3LNu.dataset_entries
+
+ZZTo4L = creator.makeMCComponent(
+    name    = 'ZZTo4L',
+    dataset = '/ZZTo4L_13TeV_powheg_pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
+    user    = 'CMS',
+    pattern = '.*root', 
+    xSec    = 1.256, 
+    useAAA  = True
+)
+ZZTo4L.nGenEvents = ZZTo4L.dataset_entries
+
+
+# LINK for crosssections: 
+#https://twiki.cern.ch/twiki/bin/viewauth/CMS/SummaryTable1G25ns
+#https://twiki.cern.ch/twiki/bin/viewauth/CMS/StandardModelCrossSectionsat13TeV
+#https://twiki.cern.ch/twiki/bin/viewauth/CMS/TauIDMeasurementsHelp#2017_measurements_MC2017_v2_samp
 
 ##########################################################################################
 # assign to each sample its own PU profile file. For 2017 it is important to do it per-sample
@@ -579,6 +636,9 @@ hnl_bkg_noskim = [
     TTJets,
     WJetsToLNu,
     WJetsToLNu_ext,
+    WW,
+    WZ,
+    ZZ,
     ZZZ, 
     WZZ, 
     WWZ, 

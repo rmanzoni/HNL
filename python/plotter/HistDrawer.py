@@ -109,7 +109,6 @@ class HistDrawer:
     def draw(plot, do_ratio=True, channel='e#mu#mu', plot_dir='/plots/', 
              plot_name=None, SetLogy=0, 
              blindxmin=None, blindxmax=None, unit=None):
-        # set_trace()
         print plot
         Stack.STAT_ERRORS = True
 
@@ -136,13 +135,14 @@ class HistDrawer:
             ytitle += round_to_n(unitsperbin, 3)
 
         h.GetYaxis().SetTitle('Events')
-        h.GetYaxis().SetTitleOffset(1.0)
+        h.GetYaxis().SetTitleOffset(1.4)
         h.GetXaxis().SetTitleOffset(2.0)
 
         if do_ratio:
             padr.cd()
             ratio = copy.deepcopy(plot)
-            ratio.legendOn = False
+            ratio.legendOn = True
+            ratio.STAT_ERRORS = True
 
         if blindxmin or blindxmax:
             if not blindxmin:

@@ -19,10 +19,10 @@ TTJets_mdgrph                   = creator.makeMyPrivateMCComponent('TTJets_madgr
 TTJets_mdgrph       .nGenEvents = 615134
 #.sigma = NOT FOUND pb; .nevents = 158461 
               
-DYJetsToLL_M50                  = creator.makeMyPrivateMCComponent('DYJetsToLL_M50'                , '/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/manzoni-HNLSKIM2017_DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8-115d0bad8e8ff59118d83f903524e0b3/USER'                       , 'PRIVATE', '*.root', 'phys03', xSec=1921.8*3, useAAA=True)
+DYJetsToLL_M50                  = creator.makeMyPrivateMCComponent('DYJetsToLL_M50'                , '/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/manzoni-HNLSKIM2017_DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8-115d0bad8e8ff59118d83f903524e0b3/USER'                       , 'PRIVATE', '*.root', 'phys03', xSec=2075.14*3, useAAA=True)#old xSec: 1921.8*3
 DYJetsToLL_M50      .nGenEvents = 27413121
 #.sigma = 1921.8*3 pb; .nevents = 11074873 
-DYJetsToLL_M50_ext              = creator.makeMyPrivateMCComponent('DYJetsToLL_M50_ext'            , '/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/manzoni-HNLSKIM2017_DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8_ext-115d0bad8e8ff59118d83f903524e0b3/USER'                   , 'PRIVATE', '*.root', 'phys03', xSec=1921.8*3, useAAA=True)
+DYJetsToLL_M50_ext              = creator.makeMyPrivateMCComponent('DYJetsToLL_M50_ext'            , '/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/manzoni-HNLSKIM2017_DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8_ext-115d0bad8e8ff59118d83f903524e0b3/USER'                   , 'PRIVATE', '*.root', 'phys03', xSec=2075.14*3, useAAA=True)#old xSec: 1921.8*3
 DYJetsToLL_M50_ext  .nGenEvents = 158048935
 #.sigma = 1921.8*3 pb; .nevents = 63912552; .L = 11085.536476220212 pb^-1 
 
@@ -34,11 +34,12 @@ WW_DoubleScattering             = creator.makeMyPrivateMCComponent('WW_DoubleSca
 WW_DoubleScattering .nGenEvents = 1000000 
 #.sigma = NOT FOUND pb
  
-WZTo3LNu                        = creator.makeMyPrivateMCComponent('WZTo3LNu'                      , '/WZTo3LNu_TuneCP5_13TeV-amcatnloFXFX-pythia8/manzoni-HNLSKIM2017_WZTo3LNu_TuneCP5_13TeV-amcatnloFXFX-pythia8-115d0bad8e8ff59118d83f903524e0b3/USER'                                     , 'PRIVATE', '*.root', 'phys03', useAAA=True)
+WZTo3LNu                        = creator.makeMyPrivateMCComponent('WZTo3LNu'                      , '/WZTo3LNu_TuneCP5_13TeV-amcatnloFXFX-pythia8/manzoni-HNLSKIM2017_WZTo3LNu_TuneCP5_13TeV-amcatnloFXFX-pythia8-115d0bad8e8ff59118d83f903524e0b3/USER'                                     , 'PRIVATE', '*.root', 'phys03', xSec=4.4297, useAAA=True)
 WZTo3LNu            .nGenEvents = 10881896 
-#.sigma = NOT FOUND pb
+#.sigma = 4.4297 pb
 
-ZZTo4L                          = creator.makeMyPrivateMCComponent('ZZTo4L'                        , '/ZZTo4L_13TeV_powheg_pythia8/manzoni-HNLSKIM2017_ZZTo4L_13TeV_powheg_pythia8-115d0bad8e8ff59118d83f903524e0b3/USER'                                                                     , 'PRIVATE', '*.root', 'phys03', xSec=1.256, useAAA=True)
+# ZZTo4L                          = creator.makeMyPrivateMCComponent('ZZTo4L'                        , '/ZZTo4L_13TeV_powheg_pythia8/manzoni-HNLSKIM2017_ZZTo4L_13TeV_powheg_pythia8-115d0bad8e8ff59118d83f903524e0b3/USER'                                                                     , 'PRIVATE', '*.root', 'phys03', xSec=1.256, useAAA=True)
+ZZTo4L                          = creator.makeMyPrivateMCComponent('ZZTo4L'                        , '/ZZTo4L_13TeV_powheg_pythia8/manzoni-HNLSKIM2017_ZZTo4L_13TeV_powheg_pythia8-115d0bad8e8ff59118d83f903524e0b3/USER'                                                                     , 'PRIVATE', '*.root', 'phys03', xSec=1.325, useAAA=True)
 ZZTo4L              .nGenEvents = 6835701 
 #.sigma = 1.256 pb
 
@@ -49,7 +50,7 @@ ZZTo4L_ext          .nGenEvents = 98009599
 
 WJetsToLNu                      = creator.makeMyPrivateMCComponent('WJetsToLNu'                    , '/WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8/lshchuts-HNLSKIM2017_WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8-115d0bad8e8ff59118d83f903524e0b3/USER'                                  , 'PRIVATE', '*.root', 'phys03', xSec=59850., useAAA=True)
 WJetsToLNu          .nGenEvents = 44652002 # check the production efficiency in Lesya's crab job
-#.sigma = (8580+11370)*0.1063*3 pb ==> xs W+ + xs W- * BR -->l nu *3  
+#.sigma = (8580+11370)*3 pb ==> xs W+ + xs W- * BR -->l nu *3  
 
 
 
@@ -91,7 +92,7 @@ W4JetsToLNu                     = creator.makeMyPrivateMCComponent('W4JetsToLNu'
 ##########################################################################################
 # assign to each sample its own PU profile file. For 2017 it is important to do it per-sample
 ##########################################################################################
-TTJets_amcat                   .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_TTJets_amcat.root'                   # not in Albert, derived manually
+TTJets_amcat                   .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_TTJets_amcat_full.root'                   # not in Albert, derived manually
 # TTJets_mdgrph                  .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_TTJets_mdgrph.root'                  # not in Albert
 DYJetsToLL_M50                 .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_DYJetsToLL_M50.root'                 # in Albert DYJetsToLL  /DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM
 DYJetsToLL_M50_ext             .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_DYJetsToLL_M50_ext.root'             # in Albert DYJetsToLL-ext  /DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14_ext1-v1/MINIAODSIM
@@ -152,6 +153,7 @@ hnl_bkg = [
 hnl_bkg_essentials = [
     TTJets_amcat      ,
     DYJetsToLL_M50_ext,
+    WW_DoubleScattering,
     WZTo3LNu          ,
     ZZTo4L            ,
     WJetsToLNu        ,

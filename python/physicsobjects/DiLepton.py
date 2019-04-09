@@ -13,7 +13,9 @@ class DiLepton(object):
     '''
     '''
     def __init__(self, pair, sv, pv, bs):
-        self._leptons = sorted(pair, key = lambda x : x.pt(), reverse = True)
+        # self._leptons = sorted(pair, key = lambda lep : (-abs(lep.pdgId()),lep.pt()), reverse = True)
+        self._leptons = pair
+
         self._vtx = sv
         self._pv  = pv
         self._bs  = bs
@@ -69,7 +71,7 @@ class DiLepton(object):
         return self.p4().mass()
 
     def vtx(self):
-        return self.vtx
+        return self._vtx
 
     def deta(self):
         return abs(self.lep1().eta() - self.lep2().eta()) 
@@ -84,13 +86,13 @@ class DiLepton(object):
         return self._vtx
 
     def chi2(self):
-        return self.vtx().chi2()
+        return self._vtx().chi2()
 
     def isSS(self):
         return int(self.lep1().charge()==self.lep2().charge())
 
     def _disp3DFromPV(self):
-        return ROOT.VertexDistance3D().distance(self.vtx(), self._pv)
+        return ROOT.VertexDistance4D().distance(self._vtx(), self._pv)
 
     def disp3DFromPV(self):
         return self._disp3DFromPV().value()
@@ -99,7 +101,7 @@ class DiLepton(object):
         return self._disp3DFromPV().significance()
 
     def _disp2DFromBS(self):
-        return ROOT.VertexDistanceXY().distance(self.vtx(), self._bsvtx)
+        return ROOT.VertexDistanceXY().distance(self._vtx(), self._bsvtx)
 
     def disp2DFromBS(self):
         return self._disp2DFromBS().value()
@@ -108,7 +110,7 @@ class DiLepton(object):
         return self._disp2DFromBS().significance()
 
     def _disp2DFromPV(self):
-        return ROOT.VertexDistanceXY().distance(self.vtx(), self._pv)
+        return ROOT.VertexDistanceXY().distance(self._vtx(), self._pv)
 
     def disp2DFromPV(self):
         return self._disp2DFromPV().value()
@@ -124,8 +126,8 @@ class DiLepton(object):
                                        self.py(),
                                        0.)
         
-            dxybs = ROOT.GlobalPoint(-1*((self._bs.x0() - self.vtx().x()) + (self.vtx().z() - self._bs.z0()) * self._bs.dxdz()), 
-                                     -1*((self._bs.y0() - self.vtx().y()) + (self.vtx().z() - self._bs.z0()) * self._bs.dydz()),
+            dxybs = ROOT.GlobalPoint(-1*((self._bs.x0() - self._vtx().x()) + (self._vtx().z() - self._bs.z0()) * self._bs.dxdz()), 
+                                     -1*((self._bs.y0() - self._vtx().y()) + (self._vtx().z() - self._bs.z0()) * self._bs.dydz()),
                                       0)
         
             vperp = ROOT.math.XYZVector(dxybs.x(), dxybs.y(), 0.)
@@ -137,21 +139,35 @@ class DiLepton(object):
         return self._cos
 
     def __str__(self):
-        return '\n'.join(['',
-                          self.lep1().__str__(),
-                          self.lep2().__str__(),
-                          '\t pt       %.2f' %self.pt(),
-                          '\t eta      %.2f' %self.eta(),
-                          '\t phi      %.2f' %self.phi(),
-                          '\t mass     %.3f' %self.mass(),
-                          '\t deltaR   %.5f' %self.dr(),
-                          '\t deltaPhi %.5f' %self.dphi(),
-                          '\t deltaEta %.5f' %self.deta(),
-                          '\t vertex x=%.2f y=%.2f z=%.2f' %(self.vtx().x(), self.vtx().y(), self.vtx().z()),
-                          '\t vertex chi2 %.5f' %self.chi2(),
-                          '\t 2d displacement from BS %.3f with L/sigma %.3f' %(self.disp2DFromBS(), self.disp2DFromBSSignificance()),
-                          '\t 2d displacement from PV %.3f with L/sigma %.3f' %(self.disp2DFromPV(), self.disp2DFromPVSignificance()),
-                          '\t 3d displacement from PV %.3f with L/sigma %.3f' %(self.disp3DFromPV(), self.disp3DFromPVSignificance()),
-                          '\t pointing angle cosine %.7f' %self.cosTransversePointingAngleBS(),
-                          '',
-                        ])                          
+        try:
+            return '\n'.join(['',
+                              self.lep1().__str__(),
+                              self.lep2().__str__(),
+                              '\t pt       %.2f' %self.pt(),
+                              '\t eta      %.2f' %self.eta(),
+                              '\t phi      %.2f' %self.phi(),
+                              '\t mass     %.3f' %self.mass(),
+                              '\t deltaR   %.5f' %self.dr(),
+                              '\t deltaPhi %.5f' %self.dphi(),
+                              '\t deltaEta %.5f' %self.deta(),
+                              '\t vertex x=%.2f y=%.2f z=%.2f' %(self.vtx().x(), self.vtx().y(), self.vtx().z()),
+                              '\t vertex chi2 %.5f' %self.chi2(),
+                              '\t 2d displacement from BS %.3f with L/sigma %.3f' %(self.disp2DFromBS(), self.disp2DFromBSSignificance()),
+                              '\t 2d displacement from PV %.3f with L/sigma %.3f' %(self.disp2DFromPV(), self.disp2DFromPVSignificance()),
+                              '\t 3d displacement from PV %.3f with L/sigma %.3f' %(self.disp3DFromPV(), self.disp3DFromPVSignificance()),
+                              '\t pointing angle cosine %.7f' %self.cosTransversePointingAngleBS(),
+                              '',
+                            ])                          
+        except:
+            return '\n'.join(['',
+                              self.lep1().__str__(),
+                              self.lep2().__str__(),
+                              '\t pt       %.2f' %self.pt(),
+                              '\t eta      %.2f' %self.eta(),
+                              '\t phi      %.2f' %self.phi(),
+                              '\t mass     %.3f' %self.mass(),
+                              '\t deltaR   %.5f' %self.dr(),
+                              '\t deltaPhi %.5f' %self.dphi(),
+                              '\t deltaEta %.5f' %self.deta(),
+                              '',
+                            ])                          

@@ -16,9 +16,6 @@
 //
 //
 
-//
-#include "TH1F.h"
-
 // system include files
 #include <iostream>
 #include <memory>
@@ -82,10 +79,16 @@ DumpBFieldRecord::~DumpBFieldRecord(){}
 void DumpBFieldRecord::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
 
-    std::cout << __LINE__ << "]\tHello from DumpBFieldRecord!" << std::endl;
+    std::cout << "Hello from DumpBFieldRecord!" << std::endl;
+    std::cout << __LINE__ << "]\t" << std::endl;
 
     if(recWatcher_.check(iSetup)) {
+//         const MagneticField& r = iSetup.get<MagFieldConfigRcd>();
+//         const IdealMagneticFieldRecord& ideal = iSetup.get<IdealMagneticFieldRecord>();
         const IdealMagneticFieldRecord& record = iSetup.get<IdealMagneticFieldRecord>();
+//         const MagFieldConfigRcd& record = iSetup.get<IdealMagneticFieldRecord>();
+//         const MagFieldConfigRcd& record = iSetup.get<MagFieldConfigRcd>();
+//         const MagFieldConfig& record = iSetup.get<MagFieldConfig>();
 
         std::cout << __LINE__ << "]\t" << std::endl;
         if(! writer_.get()) {
@@ -109,26 +112,40 @@ void DumpBFieldRecord::analyze(const edm::Event& iEvent, const edm::EventSetup& 
 
         std::cout << __LINE__ << "]\t" << std::endl;
 
+//         edm::ESHandle<MagFieldConfigRcd> BField;
         edm::ESHandle<MagneticField> BField;
+//         edm::ESHandle<MagFieldConfig> BField;
 
         std::cout << __LINE__ << "]\t" << std::endl;
 
+
+//         OAE_1103l_071212
+//         MagFieldConfig_RI90322_RII130503_3_8T
+//         grid_130503_3_8t_v9_large
+//         grid_160812_3_8t_Run1
+
+//         record.get( "grid_130503_3_8t_v9_large", BField );
+//         record.get( "3_8t_v9_large", BField );
         record.get( fieldLabel_, BField );
-
+//         record.get( "3.8T", BField );
+//         record.get( BField );
+//         record.get( "grid_160812_3_8t_Run1", BField );
         std::cout << __LINE__ << "]\t" << std::endl;
-
-//         const MagneticField * theField = BField.product();
         const MagneticField & theField = *(BField.product());
-//         const MagneticField theField = *(BField.product());
-
+//         const MagneticField & theField = *(BField.product()->produce());
+//         const MagFieldConfig & theField = *(BField.product());
+//         const MagFieldConfig & theFieldCfg = *(BField.product());
+//         const MagneticField & theField = theFieldCfg.produce(ideal);
+//         const MagFieldConfigRcd & theField = *(BField.product());
         std::cout << __LINE__ << "]\t" << std::endl;
+        std::cout << __LINE__ << "]\tnominal B value " << theField.nominalValue() << std::endl;
+//         std::cout << __LINE__ << "]\tnominal B value " << theField.produce() << std::endl;
 
         double x,y,z;
 
         x = 0.; y = 0.; z = 0.;
         GlobalPoint g(x,y,z);          
         std::cout << __LINE__ << "]\tAt R=" << g.perp() << " phi=" << g.phi()<< " B=" << theField.inTesla(g) << std::endl;
-//         std::cout << __LINE__ << "]\tAt R=" << g.perp() << " phi=" << g.phi()<< " B=" << theField->inTesla(g) << std::endl;
 
         x = 50.; y = 50.; z = 0.;
         GlobalPoint gg(x,y,z);          
@@ -146,40 +163,27 @@ void DumpBFieldRecord::analyze(const edm::Event& iEvent, const edm::EventSetup& 
         GlobalPoint ggggg(x,y,z);          
         std::cout << __LINE__ << "]\tAt R=" << ggggg.perp() << " phi=" << ggggg.phi()<< " B=" << theField.inTesla(ggggg) << std::endl;
      
-//         writer_->update(&(theField), typeid(MagneticField), record.key().name());
-//         writer_->update(&(theField), typeid(MagneticField), "HeppyMagField");
-//         writer_->update(&(theField), typeid(VolumeBasedMagneticField), "VolumeBasedMagneticField");
-//         writer_->update(theField, typeid(MagneticField), "MagneticField");
-//         writer_->update(&(theField), typeid(MagneticField), "MagneticField");
-        writer_->update(&(theField), typeid(VolumeBasedMagneticField), "MagneticField");
-//         writer_->update(&(theField), typeid(IdealMagneticFieldRecord), "HeppyMagField");
-
-//         Double_t test = 33.;
-//         TH1F * test = new TH1F("test", "test", 20, 0, 100);
-//         test->Fill(10.);
-//         writer_->update(&(test), typeid(double), "double");
-//         writer_->update(&test, typeid(Double_t), "Double_t");
-//         writer_->update(test, typeid(TH1F), "TH1F");
+        writer_->update(&(theField), typeid(MagneticField)    , record.key().name());
 
 //         writer_->update(&(theField), typeid(MagFieldConfig)    , record.key().name());
 //         writer_->update(&(theField), typeid(MagFieldConfigRcd), record.key().name());
 //         writer_->update(&(record)  , typeid(MagFieldConfigRcd), record.key().name());
 //         writer_->update(&(record)  , typeid(IdealMagneticFieldRecord), record.key().name());
-//         writer_->update(&(record)  , typeid(IdealMagneticFieldRecord), "IdealMagneticFieldRecord");
 
         std::cout << __LINE__ << "]\t" << std::endl;
 
-//         writer_->fill(edm::ESRecordAuxiliary(edm::EventID(1,10,100),edm::Timestamp()));
-        
-        // debug this shit
-        // valgrind --tool=memcheck cmsRun dump_B_field_cfg.py
-        // https://derickrethans.nl/valgrind-null.html
-        // https://root-forum.cern.ch/t/segmentation-violation-occurs-in-tree-fill-only-in-some-events-how-find-the-problem/31489
-        // https://root.cern.ch/doc/master/classTTree.html   ==> Case B,Note: The pointer whose address is passed to TTree::Branch must not be destroyed (i.e. go out of scope) until the TTree is deleted or TTree::ResetBranchAddress is called.
-        // http://www.muenster.de/~naumana/rootgdb.html
-        // https://stackoverflow.com/questions/23791398/is-not-stackd-mallocd-or-recently-freed-when-all-the-variables-is-used
-        
-        writer_->fill(edm::ESRecordAuxiliary(firstValue_.eventID(),firstValue_.time()));
+
+        std::cout << firstValue_.eventID().run() << std::endl;
+        std::cout << firstValue_.time().value() << std::endl;
+
+        std::cout << __LINE__ << "]\t" << std::endl;
+
+        //writer_->fill(edm::ESRecordAuxiliary(edm::EventID(0,0,0),edm::Timestamp()));
+        edm::ESRecordAuxiliary(edm::EventID(0,0,0),edm::Timestamp());
+        //writer_->fill(edm::ESRecordAuxiliary(firstValue_.eventID(),firstValue_.time()));
+        //writer_->fill();
+        //std::cout<<edm::ESRecordAuxiliary(firstValue_.eventID(),firstValue_.time())<<std::endl;
+        //edm::ESRecordAuxiliary(firstValue_.eventID(),firstValue_.time());
         
 //         writer_->update(&(theField), typeid(MagneticField)    , record.key().name());
 
@@ -189,7 +193,7 @@ void DumpBFieldRecord::analyze(const edm::Event& iEvent, const edm::EventSetup& 
 
         std::cout << __LINE__ << "]\t" << std::endl;
 
-//         writer_->write();
+        writer_->write();
 
         std::cout << __LINE__ << "]\t" << std::endl;
 
@@ -203,10 +207,9 @@ void DumpBFieldRecord::endJob() {
   std::cout << __LINE__ << "]\t" << std::endl;
   if(writer_.get()) {
     std::cout << __LINE__ << "]\t" << std::endl;
-    writer_->fill(edm::ESRecordAuxiliary(lastValue_.eventID(),
-                                         lastValue_.time()));
+    //writer_->fill(edm::ESRecordAuxiliary(lastValue_.eventID(),lastValue_.time()));
     std::cout << __LINE__ << "]\t" << std::endl;
-//     writer_->write();
+     writer_->write();
     std::cout << __LINE__ << "]\t" << std::endl;
   } //*/
   std::cout << __LINE__ << "]\t" << std::endl;

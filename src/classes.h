@@ -7,8 +7,9 @@
 #include "DataFormats/MuonReco/interface/MuonSelectors.h"
 #include "CMGTools/HNL/interface/HNLKinematicVertexFitter.h"
 #include "CMGTools/HNL/interface/HNLKalmanVertexFitter.h"
-
+#include "CMGTools/HNL/plugins/AddElectronTransientTrack.h"
 #include "MagneticField/Layers/src/MagBinFinders.h"
+#include "TrackingTools/Records/interface/TransientTrackRecord.h"
 #include "CondFormats/DataRecord/interface/MagFieldConfigRcd.h"
 #include "MagneticField/Engine/interface/MagneticField.h"
 #include "MagneticField/VolumeGeometry/interface/MagVolume.h"
@@ -37,23 +38,29 @@
 
 namespace {
   struct CMG_HNL {
+    std::pair<edm::Ptr<pat::Electron>,reco::Track> pppettk;
+    edm::Wrapper<std::pair<edm::Ptr<pat::Electron>,reco::Track> > wpppettk;
+    std::vector<std::pair<edm::Ptr<pat::Electron>,reco::Track> > vpppettk;
+    edm::Wrapper<std::vector<std::pair<edm::Ptr<pat::Electron>,reco::Track> > > wvpppettk;
     HNLKinematicVertexFitter hnlKinVtx_;
     HNLKalmanVertexFitter hnlKalVtx_;
+    TransientTrackRecord hnlTransientTrackRecord;
     MagneticField* hnlMagneticFieldPtr_;
     MagFieldConfigRcd hnlMagFieldRcd_;
     VolumeBasedMagneticField hnlVolumeBasedMagneticField_;
     atomic<bool> hnlAtomicBool_;
 //     std::atomic<char> hnlAtomicChar_;
-//     MagVolume hnlMagVolume_;
-//     MagVolume * hnlMagVolumePtr_;
+    //MagVolume hnlMagVolume_;
+    MagVolume * hnlMagVolumePtr_;
 //     std::atomic<MagVolume> hnla_;
-//     std::atomic<MagVolume*> hnlb_;
+     //std::atomic<MagVolume*> hnlb_;
 //     std::atomic<const MagVolume> hnlc_;
-//     std::atomic<const MagVolume*> hnld_;
-//     atomic<const MagVolume*> hnld_;
-//     atomic<MagVolume const *> hnle_;
-//     MagGeometry hnlMagGeometry_;
-//     MagGeometry * hnlMagGeometryPtr_;
+     //std::atomic<const MagVolume*> hnld_;
+    atomic<const MagVolume*> hnld_;
+     //atomic<MagVolume const *> hnle_;
+    __atomic_base<const MagVolume*> hnlf_;
+    MagGeometry hnlMagGeometry_;
+    MagGeometry * hnlMagGeometryPtr_;
     
     edm::eventsetup::EventSetupRecord * hnlEventSetupRecordPtr_;
     edm::eventsetup::EventSetupRecordImplementation<IdealMagneticFieldRecord> hnlEventSetupRecordImplementation_;

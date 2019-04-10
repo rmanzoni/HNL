@@ -43,7 +43,9 @@ pickle(MethodType, _pickle_method, _unpickle_method)
 
 gr.SetBatch(True) # NEEDS TO BE SET FOR MULTIPROCESSING OF plot.Draw()
 
-int_lumi = 41000.0 # pb #### FIXME 
+# get the lumis from here: https://twiki.cern.ch/twiki/bin/viewauth/CMS/PdmV2017Analysis
+# int_lumi = 41000.0 # pb #### FIXME (all eras) 
+int_lumi =  4792.0 # pb (era B)
 # int_lumi = 1000.0 # pb #### FIXME 
 # int_lumi = 41000.0 * (3829353/49666988) # serves only for era B and mmm
 # int_lumi = 41000.0 * (30564478/19122658) # [pb]; adapt to the amount of events done for the nonprompt analysis
@@ -57,7 +59,6 @@ def prepareRegions(channel):
     # regions.append(Region('CR_ttbar','mmm','CR_ttbar'))
     # regions.append(Region('DY','mmm','CR_DY'))
     regions.append(Region('DY_test','mmm','CR_DY_test'))
-    # regions.append(Region('DY_test_l2Iso','mmm','CR_DY_test'))
 
     print('###########################################################')
     print('# setting analysis regions')
@@ -92,8 +93,8 @@ def createVariables(rebin=None):
     # Taken from Variables.py; can get subset with e.g. getVars(['mt', 'mvis'])
 #    variables = CR_vars
     DoNotRebin = ['_norm_', 'n_vtx', 'nj', 'nbj',] 
-    variables = hnl_vars
-    # variables = dde_vars
+    # variables = hnl_vars
+    variables = dde_vars
     # variables = test_vars
     if rebin>0:
         for ivar in hnl_vars:

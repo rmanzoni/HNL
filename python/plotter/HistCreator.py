@@ -144,7 +144,7 @@ class CreateHists(object):
                 total_hist = plot.AddHistogram(cfg.name, hist.stack.totalHist.weighted, stack=True)
 
                 if cfg.norm_cfg is not None:
-                    norm_hist = createHistogram(cfg.norm_cfg, all_stack=True)
+        sinstance(cfg, HistogramCfg)            norm_hist = createHistogram(cfg.norm_cfg, all_stack=True)
                     norm_hist._BuildStack(norm_hist._SortedHistograms(), ytitle='Events')
                     total_hist.Scale(hist.stack.integral/total_hist.Yield())
 
@@ -173,8 +173,10 @@ class CreateHists(object):
 
             #define the cuts for different stackplots
             if cfg.is_dde == True and cfg.is_singlefake == True:
-                norm_cut  = self.hist_cfg.region.SF
-                shape_cut = self.hist_cfg.region.SF
+                # norm_cut  = self.hist_cfg.region.SF
+                # shape_cut = self.hist_cfg.region.SF
+                norm_cut  = self.hist_cfg.region.data
+                shape_cut = self.hist_cfg.region.data
 
             if cfg.is_dde == True and cfg.is_doublefake == True:
                 norm_cut  = self.hist_cfg.region.DF

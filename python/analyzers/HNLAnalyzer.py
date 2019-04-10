@@ -37,8 +37,8 @@ class HNLAnalyzer(Analyzer):
 
         self.handles['electrons'] = AutoHandle(('slimmedElectrons'             ,'','PAT' ), 'std::vector<pat::Electron>'                    )
         self.handles['muons'    ] = AutoHandle(('slimmedMuons'                 ,'','PAT' ), 'std::vector<pat::Muon>'                        )
-        self.handles['dsamuons' ] = AutoHandle(('displacedStandAloneMuons'     ,'','RECO'), 'std::vector<reco::Track>'                      )
-        self.handles['dgmuons'  ] = AutoHandle(('displacedGlobalMuons'         ,'','RECO'), 'std::vector<reco::Track>'                      )
+        self.handles['dsamuons' ] = AutoHandle(('displacedStandAloneMuons'     ,'','RECO'), 'std::vector<reco::Track>', mayFail=True        )
+        self.handles['dgmuons'  ] = AutoHandle(('displacedGlobalMuons'         ,'','RECO'), 'std::vector<reco::Track>', mayFail=True        )
         self.handles['photons'  ] = AutoHandle(('slimmedPhotons'               ,'','PAT' ), 'std::vector<pat::Photon>'                      )
         self.handles['taus'     ] = AutoHandle(('slimmedTaus'                  ,'','PAT' ), 'std::vector<pat::Tau>'                         )
         self.handles['jets'     ] = AutoHandle( 'slimmedJets'                             , 'std::vector<pat::Jet>'                         )
@@ -550,6 +550,7 @@ def totIso(event, offset_mode, dRCone):
         # print '2M dr %.1f: ch_pv_iso: %.2f, neu_iso: %.2f, ph_iso: %.2f, ch_pu_iso: %.2f, l1+l2pt: %.2f, id: %i'%(dRCone, ch_pv_iso, neu_iso, ph_iso, ch_pu_iso, event.the_3lep_cand.l1().pt()+event.the_3lep_cand.l2().pt(), event.eventId)
     return tot_iso
 
+# This is taken from src/PhysicsTools/Heppy/python/physicsobjects/Lepton.py   AND   src/PhysicsTools/Heppy/python/physicsobjects/Electron.py
 def offset_rhoArea(rho, dRCone, eta):
     area = 0.0
     if abs(eta) < 0.8000: area = 0.0566

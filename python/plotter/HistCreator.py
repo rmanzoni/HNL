@@ -165,16 +165,16 @@ class CreateHists(object):
             except:
                 set_trace()
 
-            set_trace()
             if cfg.is_dde == True:
                 ttree.AddFriend('tree',cfg.fr_tree_path)
+                #to test the friendtree, you can set trace here and do ttree.GetEntries('tree.fover1minusf021 > 0.01')
 
             #define the cuts for different stackplots
             if cfg.is_dde == True and cfg.is_singlefake == True:
-                # norm_cut  = self.hist_cfg.region.SF
-                # shape_cut = self.hist_cfg.region.SF
-                norm_cut  = self.hist_cfg.region.data
-                shape_cut = self.hist_cfg.region.data
+                norm_cut  = self.hist_cfg.region.SF
+                shape_cut = self.hist_cfg.region.SF
+                norm_cut = '({c}) * {we}'.format(c=norm_cut, we='tree.fover1minusf021')
+                shape_cut = '({c}) * {we}'.format(c=shape_cut, we='tree.fover1minusf021')
 
             if cfg.is_dde == True and cfg.is_doublefake == True:
                 norm_cut  = self.hist_cfg.region.DF

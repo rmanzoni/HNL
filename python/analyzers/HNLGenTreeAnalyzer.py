@@ -32,8 +32,6 @@ class HNLGenTreeAnalyzer(Analyzer):
         self.counters.addCounter('HNLGenTree')
         count = self.counters.counter('HNLGenTree')
         count.register('all events')
-        count.register('bad event: failed saving prompt lepton')
-        count.register('bad event: failed saving neutrino')
         
     def process(self, event):
         self.readCollections(event.input)

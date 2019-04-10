@@ -195,22 +195,22 @@ class HNLAnalyzer(Analyzer):
 
         return dileptons
         
-    def selectDiLepton(self, event, dileptonvtx):
+    def selectDiLepton(self, event, dileptonsvtx):
         which_candidate = getattr(self.cfg_ana, 'candidate_selection', 'maxpt')
         
-        if which_candidate == 'minmass'    : event.displaced_dilepton_reco_cand = None if not len(dileptonvtx) else sorted(dileptonvtx, key = lambda x : (x.isSS(),  x.mass()                        ), reverse=False)[0]
-        if which_candidate == 'minchi2'    : event.displaced_dilepton_reco_cand = None if not len(dileptonvtx) else sorted(dileptonvtx, key = lambda x : (x.isSS(),  x.chi2()                        ), reverse=False)[0]
-        if which_candidate == 'mindr'      : event.displaced_dilepton_reco_cand = None if not len(dileptonvtx) else sorted(dileptonvtx, key = lambda x : (x.isSS(),  x.dr()                          ), reverse=False)[0]
-        if which_candidate == 'maxdphi'    : event.displaced_dilepton_reco_cand = None if not len(dileptonvtx) else sorted(dileptonvtx, key = lambda x : (x.isSS(), -x.dphi()                        ), reverse=False)[0]
-        if which_candidate == 'mindeta'    : event.displaced_dilepton_reco_cand = None if not len(dileptonvtx) else sorted(dileptonvtx, key = lambda x : (x.isSS(),  x.deta()                        ), reverse=False)[0]
-        if which_candidate == 'maxdisp2dbs': event.displaced_dilepton_reco_cand = None if not len(dileptonvtx) else sorted(dileptonvtx, key = lambda x : (x.isSS(), -x.disp2DFromBS()                ), reverse=False)[0]
-        if which_candidate == 'maxdisp2dpv': event.displaced_dilepton_reco_cand = None if not len(dileptonvtx) else sorted(dileptonvtx, key = lambda x : (x.isSS(), -x.disp2DFromPV()                ), reverse=False)[0]
-        if which_candidate == 'maxdisp3dpv': event.displaced_dilepton_reco_cand = None if not len(dileptonvtx) else sorted(dileptonvtx, key = lambda x : (x.isSS(), -x.disp3DFromPV()                ), reverse=False)[0]
-        if which_candidate == 'maxdls2dbs' : event.displaced_dilepton_reco_cand = None if not len(dileptonvtx) else sorted(dileptonvtx, key = lambda x : (x.isSS(), -x.disp2DFromBSSignificance()    ), reverse=False)[0]
-        if which_candidate == 'maxdls2dpv' : event.displaced_dilepton_reco_cand = None if not len(dileptonvtx) else sorted(dileptonvtx, key = lambda x : (x.isSS(), -x.disp2DFromPVSignificance()    ), reverse=False)[0]
-        if which_candidate == 'maxdls3dpv' : event.displaced_dilepton_reco_cand = None if not len(dileptonvtx) else sorted(dileptonvtx, key = lambda x : (x.isSS(), -x.disp3DFromPVSignificance()    ), reverse=False)[0]
-        if which_candidate == 'maxcos'     : event.displaced_dilepton_reco_cand = None if not len(dileptonvtx) else sorted(dileptonvtx, key = lambda x : (x.isSS(), -x.cosTransversePointingAngleBS()), reverse=False)[0]
-        if which_candidate == 'maxpt'      : event.displaced_dilepton_reco_cand = None if not len(dileptonvtx) else sorted(dileptonvtx, key = lambda x : (x.isSS(), -x.pt()                          ), reverse=False)[0]
+        if which_candidate == 'minmass'    : event.displaced_dilepton_reco_cand = None if not len(dileptonsvtx) else sorted(dileptonsvtx, key = lambda x : (x.isSS(),  x.mass()                        ), reverse=False)[0]
+        if which_candidate == 'minchi2'    : event.displaced_dilepton_reco_cand = None if not len(dileptonsvtx) else sorted(dileptonsvtx, key = lambda x : (x.isSS(),  x.chi2()                        ), reverse=False)[0]
+        if which_candidate == 'mindr'      : event.displaced_dilepton_reco_cand = None if not len(dileptonsvtx) else sorted(dileptonsvtx, key = lambda x : (x.isSS(),  x.dr()                          ), reverse=False)[0]
+        if which_candidate == 'maxdphi'    : event.displaced_dilepton_reco_cand = None if not len(dileptonsvtx) else sorted(dileptonsvtx, key = lambda x : (x.isSS(), -x.dphi()                        ), reverse=False)[0]
+        if which_candidate == 'mindeta'    : event.displaced_dilepton_reco_cand = None if not len(dileptonsvtx) else sorted(dileptonsvtx, key = lambda x : (x.isSS(),  x.deta()                        ), reverse=False)[0]
+        if which_candidate == 'maxdisp2dbs': event.displaced_dilepton_reco_cand = None if not len(dileptonsvtx) else sorted(dileptonsvtx, key = lambda x : (x.isSS(), -x.disp2DFromBS()                ), reverse=False)[0]
+        if which_candidate == 'maxdisp2dpv': event.displaced_dilepton_reco_cand = None if not len(dileptonsvtx) else sorted(dileptonsvtx, key = lambda x : (x.isSS(), -x.disp2DFromPV()                ), reverse=False)[0]
+        if which_candidate == 'maxdisp3dpv': event.displaced_dilepton_reco_cand = None if not len(dileptonsvtx) else sorted(dileptonsvtx, key = lambda x : (x.isSS(), -x.disp3DFromPV()                ), reverse=False)[0]
+        if which_candidate == 'maxdls2dbs' : event.displaced_dilepton_reco_cand = None if not len(dileptonsvtx) else sorted(dileptonsvtx, key = lambda x : (x.isSS(), -x.disp2DFromBSSignificance()    ), reverse=False)[0]
+        if which_candidate == 'maxdls2dpv' : event.displaced_dilepton_reco_cand = None if not len(dileptonsvtx) else sorted(dileptonsvtx, key = lambda x : (x.isSS(), -x.disp2DFromPVSignificance()    ), reverse=False)[0]
+        if which_candidate == 'maxdls3dpv' : event.displaced_dilepton_reco_cand = None if not len(dileptonsvtx) else sorted(dileptonsvtx, key = lambda x : (x.isSS(), -x.disp3DFromPVSignificance()    ), reverse=False)[0]
+        if which_candidate == 'maxcos'     : event.displaced_dilepton_reco_cand = None if not len(dileptonsvtx) else sorted(dileptonsvtx, key = lambda x : (x.isSS(), -x.cosTransversePointingAngleBS()), reverse=False)[0]
+        if which_candidate == 'maxpt'      : event.displaced_dilepton_reco_cand = None if not len(dileptonsvtx) else sorted(dileptonsvtx, key = lambda x : (x.isSS(), -x.pt()                          ), reverse=False)[0]
 
 
     def process(self, event):
@@ -250,7 +250,6 @@ class HNLAnalyzer(Analyzer):
 
         # save a flag to know whether the muons is likely OOT
         # FIXME! for displaced too?
-        #TODO filter rather saving the flag
         for imu in event.muons:
             imu.isoot = self.isOotMuon(imu)
 
@@ -305,7 +304,8 @@ class HNLAnalyzer(Analyzer):
         #####################################################################################
         # Preselect electrons
         #####################################################################################
-        event.electrons  = [iele for iele in event.electrons if iele.pt()>3. and abs(iele.eta())<2.5]
+        #FIXME: make min electron pt configurable and set the default at 5 GeV
+        event.electrons  = [iele for iele in event.electrons if iele.pt()>5. and abs(iele.eta())<2.5]
 
         #check there are enough leptons in the resp. flavor combination
         if not self.checkLeptonFlavors(event.electrons, event.muons):
@@ -402,7 +402,7 @@ class HNLAnalyzer(Analyzer):
         event.muons      = [imu for imu in event.filtered_muons if imu.pt()>3. and abs(imu.eta())<2.4]
         # event.dsamuons   = [imu for imu in event.dsamuons       if imu.pt()>3. and abs(imu.eta())>2.4]
         # event.dgmuons    = [imu for imu in event.dgmuons        if imu.pt()>3. and abs(imu.eta())>2.4]
-        event.electrons  = [iele for iele in event.filtered_electrons if iele.pt()>3. and abs(iele.eta())<2.5]
+        event.electrons  = [iele for iele in event.filtered_electrons if iele.pt()>5. and abs(iele.eta())<2.5]
 
         # create all the possible di-lepton pairs out of the different collections
         dileptons = self.makeLeptonPairs(event,event.electrons,event.muons)
@@ -415,16 +415,16 @@ class HNLAnalyzer(Analyzer):
         ########################################################################################
         # Vertex Fit: Select only dilepton pairs with mutual vertices
         ########################################################################################
-        dileptonvtx = []
+        dileptonsvtx = []
         for index, pair in enumerate(dileptons):
             if pair[0]==pair[1]: continue
             sv = fitVertex(pair,self.cfg_ana.L1L2LeptonType)
             if not sv: continue
-            dileptonvtx.append(DiLepton(pair, sv, pv, event.beamspot))
+            dileptonsvtx.append(DiLepton(pair, sv, pv, event.beamspot))
 
-        event.dileptonvtx = dileptonvtx
+        event.dileptonsvtx = dileptonsvtx
         
-        if not len(event.dileptonvtx):
+        if not len(event.dileptonsvtx):
             return False 
         
         self.counters.counter('HNL').inc('> 0 di-lepton + vtx')
@@ -432,7 +432,7 @@ class HNLAnalyzer(Analyzer):
         ########################################################################################
         # Select the most promising dilepton candidate
         ########################################################################################
-        self.selectDiLepton(event, dileptonvtx)
+        self.selectDiLepton(event, dileptonsvtx)
 
         ########################################################################################
         # Create a reco HNL3L object and "harvest" all the relevant eventinfos
@@ -500,9 +500,10 @@ class HNLAnalyzer(Analyzer):
         ########################################################################################
         # Extra prompt and isolated lepton veto
         ########################################################################################        
-        event.veto_mus   = [ele for ele in event.selMuons     if ele.physObj not in [event.the_3lep_cand.l0().physObj, event.the_3lep_cand.l1().physObj, event.the_3lep_cand.l2().physObj] ]
-        event.veto_eles  = [mu  for mu  in event.selElectrons if mu .physObj not in [event.the_3lep_cand.l0().physObj, event.the_3lep_cand.l1().physObj, event.the_3lep_cand.l2().physObj] ]
+        event.veto_mus   = [mu for mu in event.selMuons     if mu.physObj not in [event.the_3lep_cand.l0().physObj, event.the_3lep_cand.l1().physObj, event.the_3lep_cand.l2().physObj] ]
+        event.veto_eles  = [ele  for ele  in event.selElectrons if ele .physObj not in [event.the_3lep_cand.l0().physObj, event.the_3lep_cand.l1().physObj, event.the_3lep_cand.l2().physObj] ]
 
+        #FIXME: Is this step really needed?
         if len(event.veto_eles): event.veto_save_ele = sorted([ele for ele in event.veto_eles], key = lambda x : x.pt, reverse = True)[0] 
         if len(event.veto_mus ): event.veto_save_mu  = sorted([mu  for mu  in event.veto_mus ], key = lambda x : x.pt, reverse = True)[0] 
 
@@ -577,7 +578,7 @@ def chargedHadronIso(event, dRCone, PU = False):
     return ch_iso
 
 def neutralHadronIso(event, dRCone): 
-    neutral_pfs = [ipf for ipf in event.pfs if ( ipf.charge() == 0 and abs(ipf.pdgId()) != 11 and abs(ipf.pdgId()) != 13 and abs(ipf.pdgId()) != 22 )]
+    neutral_pfs = [ipf for ipf in event.pfs if ( ipf.charge() == 0 and abs(ipf.pdgId()) != 22 )]
     neutral_pfs = [ipf for ipf in neutral_pfs if ipf.pt() > 0.5]
     neutral_pfs = [ipf for ipf in neutral_pfs if deltaR(ipf, event.the_3lep_cand.hnVisP4()) < dRCone ]
     neu_iso     = sum([ipf.pt() for ipf in neutral_pfs])

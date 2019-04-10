@@ -21,7 +21,7 @@ def default():
 event_vars = [
     Variable('run', type=int),
     Variable('lumi', lambda ev : ev.lumi, type=int),
-    Variable('event', lambda ev : ev.eventId, type=int),
+    Variable('event', lambda ev : ev.eventId, type=long int),
     Variable('bx', lambda ev : (ev.input.eventAuxiliary().bunchCrossing() * ev.input.eventAuxiliary().isRealData()), type=int),
     Variable('orbit_number', lambda ev : (ev.input.eventAuxiliary().orbitNumber() * ev.input.eventAuxiliary().isRealData()), type=int),
     Variable('is_data', lambda ev: ev.input.eventAuxiliary().isRealData(), type=int),

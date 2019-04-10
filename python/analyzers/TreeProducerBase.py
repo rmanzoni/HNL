@@ -172,13 +172,13 @@ class TreeProducerBase(TreeAnalyzerNumpy):
     # lepton
     def bookLepton(self, tree, p_name):
         self.bookParticle(tree, p_name)
-        self.bookParticleJet(tree, p_name + '_jet')
+        self.bookJet(tree, p_name + '_jet')
         self.bookGeneric(tree, lepton_vars, p_name)
 
     def fillLepton(self, tree, p_name, lepton):
         self.fillParticle(tree, p_name, lepton)
         if hasattr(lepton, 'jet'):
-            self.fillParticleJet(tree, p_name + '_jet', lepton.jet)
+            self.fillJet(tree, p_name + '_jet', lepton.jet)
         self.fillGeneric(tree, lepton_vars, lepton, p_name)
 
     # muon

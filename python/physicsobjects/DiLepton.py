@@ -88,7 +88,7 @@ class DiLepton(object):
         return int(self.lep1().charge()==self.lep2().charge())
 
     def _disp3DFromPV(self):
-        return ROOT.VertexDistance4D().distance(self.vtx(), self._pv)
+        return ROOT.VertexDistance3D().distance(self.vtx(), self._pv)
 
     def disp3DFromPV(self):
         return self._disp3DFromPV().value()

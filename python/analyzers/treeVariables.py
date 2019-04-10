@@ -529,7 +529,6 @@ for tau_id in tauIDs_extra:
         tau_vars_extra.append(Variable(tau_id[0].format(wp=''), 
             eval('lambda tau : ' + sum_id_str), int))
 
-
 # jet
 jet_vars = [
     Variable('mva_pu', lambda jet : jet.puMva('pileupJetId:fullDiscriminant')),

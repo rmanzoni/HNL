@@ -144,7 +144,7 @@ class CreateHists(object):
                 total_hist = plot.AddHistogram(cfg.name, hist.stack.totalHist.weighted, stack=True)
 
                 if cfg.norm_cfg is not None:
-        sinstance(cfg, HistogramCfg)            norm_hist = createHistogram(cfg.norm_cfg, all_stack=True)
+                    norm_hist = createHistogram(cfg.norm_cfg, all_stack=True)
                     norm_hist._BuildStack(norm_hist._SortedHistograms(), ytitle='Events')
                     total_hist.Scale(hist.stack.integral/total_hist.Yield())
 
@@ -156,12 +156,7 @@ class CreateHists(object):
             # It's a sample cfg
 
             # Now read the tree
-            if cfg.dir_name == "DDE":
-                # file_name = '/'.join([cfg.ana_dir, cfg.dir_name, cfg.tree_prod_name, 'tree_fr_DR_data_v2.root'])
-                file_name = '/'.join([cfg.ana_dir, cfg.dir_name, cfg.tree_prod_name, 'tree_fr_DR_data_v2_oldVars.root'])
-
-            else:
-                file_name = '/'.join([cfg.ana_dir, cfg.dir_name, cfg.tree_prod_name, 'tree.root'])
+            file_name = '/'.join([cfg.ana_dir, cfg.dir_name, cfg.tree_prod_name, 'tree.root'])
 
             # attach the trees to the first DataMCPlot
             plot = self.plots[self.vcfgs[0].name]
@@ -170,6 +165,9 @@ class CreateHists(object):
             except:
                 set_trace()
 
+            set_trace()
+            if cfg.is_dde == True:
+                ttree.AddFriend('tree',cfg.fr_tree_path)
 
             #define the cuts for different stackplots
             if cfg.is_dde == True and cfg.is_singlefake == True:

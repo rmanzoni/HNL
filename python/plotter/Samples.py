@@ -124,17 +124,17 @@ def createSampleLists(analysis_dir='',
                 # sumweights=DYJetsToLL_M50.nGenEvents, 
                 # is_MC=True,
                 # is_DY=True),
-            # SampleCfg(name='DYJets_M50_ext', 
-                # dir_name=DYJetsToLL_M50_ext.name, 
-                # # ana_dir=analysis_dir+bkg_dir, 
-                # # ana_dir='/work/dezhu/4_production/production_20190306_BkgMC/mmm/ntuples', 
-                # ana_dir='root://t3dcachedb.psi.ch:1094///pnfs/psi.ch/cms/trivcat/store/user/dezhu/2_ntuples/HN3Lv2.0/mmm/background/montecarlo/production_20190318_BkgMC', 
-                # tree_prod_name=tree_prod_name, 
-                # xsec=DYJetsToLL_M50_ext.xSection, 
-                # # sumweights=DYJetsToLL_M50_ext.nGenEvents, 
-                # sumweights=5939397.0, 
-                # is_MC=True,
-                # is_DY=True),
+            SampleCfg(name='DYJets_M50_ext', 
+                dir_name=DYJetsToLL_M50_ext.name, 
+                # ana_dir=analysis_dir+bkg_dir, 
+                # ana_dir='/work/dezhu/4_production/production_20190306_BkgMC/mmm/ntuples', 
+                ana_dir='root://t3dcachedb.psi.ch:1094///pnfs/psi.ch/cms/trivcat/store/user/dezhu/2_ntuples/HN3Lv2.0/mmm/background/montecarlo/production_20190318_BkgMC', 
+                tree_prod_name=tree_prod_name, 
+                xsec=DYJetsToLL_M50_ext.xSection, 
+                # sumweights=DYJetsToLL_M50_ext.nGenEvents, 
+                sumweights=5939397.0, 
+                is_MC=True,
+                is_DY=True),
             ]
 
     samples_Diboson = [
@@ -215,15 +215,6 @@ def createSampleLists(analysis_dir='',
                 is_MC=True),
             ]
 
-
-    #Temporal data 
-    samples_data = [
-        SampleCfg(name='data_2017B', dir_name=dataB.name, ana_dir=data_dir, tree_prod_name=tree_prod_name, is_data=True, norm_cut=add_data_cut),                                         #nevents =  5265969 
-        # SampleCfg(name='data_2017C', dir_name=dataC.name, ana_dir=data_dir, tree_prod_name=tree_prod_name, is_data=True, norm_cut=add_data_cut),                                         #nevents = 10522062 
-        # SampleCfg(name='data_2017D', dir_name=dataD.name, ana_dir=data_dir, tree_prod_name=tree_prod_name, is_data=True, norm_cut=add_data_cut),                                           #nevents =  3829353
-        # SampleCfg(name='data_2017E', dir_name=dataE.name, ana_dir=data_dir, tree_prod_name=tree_prod_name, is_data=True, norm_cut=add_data_cut),                                         #nevents = 10926946 
-        # SampleCfg(name='data_2017F', dir_name=dataF.name, ana_dir=data_dir, tree_prod_name=tree_prod_name, is_data=True, norm_cut=add_data_cut),                                         #nevents = 19122658 ; SUM of BCDEF = 49'666'988
-    ]
     samples_dde = [
         SampleCfg(name='DDE_data_2017B_singlefake', 
             dir_name=dataB.name, 
@@ -231,7 +222,8 @@ def createSampleLists(analysis_dir='',
             tree_prod_name=tree_prod_name, 
             is_data=False,
             is_singlefake=True,
-            is_dde = True),                                          
+            is_dde = True,
+            fr_tree_path = '/work/dezhu/5_Miscellaneous/20190320_FRStudies/SFR/data/20190405_MakeSFRTree/fr_021_mmm_sfr_190403_17h_41m.root'),                                          
     ]
 
 

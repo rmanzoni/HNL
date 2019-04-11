@@ -162,8 +162,7 @@ def generateKeyConfigs(samples,production, promptLeptonType, L1L2LeptonType, isD
         triggers_and_filters['HLT_IsoMu24'] = 'hltL3crIsoL1sSingleMu22L1f0L2f10QL3f24QL3trkIsoFiltered0p07'
         triggers_and_filters['HLT_IsoMu27'] = 'hltL3crIsoL1sMu22Or25L1f0L2f10QL3f27QL3trkIsoFiltered0p07'
         triggers_and_filters['HLT_Mu50']    = 'hltL3fL1sMu22Or25L1f0L2f10QL3Filtered50Q'
-
-    # TODO: add (HLT_IsoTkMu24_v*) and (HLT_TkMu50_v*)
+    # TODO: add (HLT_IsoTkMu24_v*) and (HLT_TkMu50_v*); but only later for 2016 dataset
 
     HNLAnalyzer = cfg.Analyzer(
         HNLAnalyzer,

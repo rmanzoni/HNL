@@ -14,8 +14,8 @@ class TreeProducerBase(TreeAnalyzerNumpy):
         if hasattr(self.cfg_ana, 'skimFunction'):
             self.skimFunction = self.cfg_ana.skimFunction
 
-    def var(self, tree, varName, type=float):
-        tree.var(varName, type)
+    def var(self, tree, varName, type=float, storageType="default"):
+        tree.var(varName, type, storageType=storageType)
 
     def vars(self, tree, varNames, type=float):
         for varName in varNames:
@@ -37,7 +37,7 @@ class TreeProducerBase(TreeAnalyzerNumpy):
     def bookGeneric(self, tree, var_list, obj_name=None):
         for var in var_list:
             names = [obj_name, var.name] if obj_name else [var.name]
-            self.var(tree, '_'.join(names), var.type)
+            self.var(tree, '_'.join(names), var.type, storageType = var.storageType)
 
     def fillGeneric(self, tree, var_list, obj, obj_name=None):
         for var in var_list:

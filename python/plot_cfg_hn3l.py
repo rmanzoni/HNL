@@ -45,7 +45,8 @@ gr.SetBatch(True) # NEEDS TO BE SET FOR MULTIPROCESSING OF plot.Draw()
 
 # get the lumis from here: https://twiki.cern.ch/twiki/bin/viewauth/CMS/PdmV2017Analysis
 # int_lumi = 41000.0 # pb #### FIXME (all eras) 
-int_lumi =  4792.0 # pb (era B)
+int_lumi = 41530.0 # pb ### (all eras), Golden JSON Int.Lumi: from https://twiki.cern.ch/twiki/bin/viewauth/CMS/PdmVAnalysisSummaryTable 
+# int_lumi =  4792.0 # pb (era B)
 # int_lumi = 1000.0 # pb #### FIXME 
 # int_lumi = 41000.0 * (3829353/49666988) # serves only for era B and mmm
 # int_lumi = 41000.0 * (30564478/19122658) # [pb]; adapt to the amount of events done for the nonprompt analysis
@@ -86,6 +87,7 @@ def createSamples(channel, analysis_dir, total_weight, server, add_data_cut=None
     print('###########################################################')
     for w in working_samples: print w.name + ', ',
     print '(%d sample(s))'%(len(working_samples))
+    for w in working_samples: print w.name + '\t location: ' +  w.ana_dir 
 
     return sample_dict
 
@@ -219,7 +221,7 @@ def producePlots(promptLeptonType, L1L2LeptonType, server):
         total_weight, 
         sample_dict, 
         make_plots=True,
-        multiprocess=True
+        multiprocess=False
     )
 
     for i in regions:
@@ -229,5 +231,5 @@ def producePlots(promptLeptonType, L1L2LeptonType, server):
         print 'cfg file stored in "', plotDir + i.name + '/plot_cfg.py"'
         print 'cfg_base file stored in "', plotDir + i.name + '/plot_cfg_base.py"'
         # copytree(plotDir+i.name,'/t3home/dezhu/eos/t3/figures/1_DataMC/FinalStates/mmm/'+i.name)
-        os.system("cp -rf %s %s"%(plotDir+i.name,'/t3home/dezhu/eos/t3/figures/1_DataMC/FinalStates/mmm/'+i.name)) 
-        print 'directory %s copied to /t3home/dezhu/eos/t3/figures/1_DataMC/FinalStates/mmm!'%(i.name)
+        # os.system("cp -rf %s %s"%(plotDir+i.name,'/t3home/dezhu/eos/t3/figures/1_DataMC/FinalStates/mmm/'+i.name)) 
+        # print 'directory %s copied to /t3home/dezhu/eos/t3/figures/1_DataMC/FinalStates/mmm!'%(i.name)

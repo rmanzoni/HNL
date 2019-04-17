@@ -174,6 +174,10 @@ class Region(object):
                      '& l0_reliso_rho_03 < 0.20 '
                      '& l1_reliso_rho_03 < 0.20 '
                      '& l2_reliso_rho_03 < 0.20 '
+                     '& l2_reliso_rho_03 < 0.20 '
+                     # '& abs(hnl_m_01 - 91.2) < 15 '
+                     # '& abs(hnl_dphi_hnvis0) > 2.0 '
+                     # '& abs(hnl_dphi_hnvis0) < 3.0 '
                      )
         # self.data                       = 'l0_pt > 25 & l1_pt > 15 & l2_pt > 15 & abs(l0_eta) < 2.4 & abs(l2_eta) < 2.4 & '
         # self.data                       = 'l1_pt > 4  &  l2_pt > 4  &  l0_pt > 35  &  l1_q != l2_q  &  l0_reliso_rho_03 < 0.15  &  abs(l0_dz) < 0.2  &  hnl_dr_01 > 0.05  &  hnl_dr_02 > 0.05  &&  l0_id_l  &  l1_reliso_rho_03 < 0.15  &  l2_reliso_rho_03 < 0.15  &  l1_id_m  &  l2_id_m  &  abs(hnl_m_12 - 91.18) < 15  &  abs(hnl_w_vis_m - 91.18) > 15  &  nbj == 0  &  pfmet_pt < 30  &  hnl_mt_0 < 30'

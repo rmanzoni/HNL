@@ -55,6 +55,21 @@ def createSampleLists(analysis_dir='',
             sig_dir = 'signal/ntuples'
             DY_dir = analysis_dir + bkg_dir
 
+    if channel == 'mem':
+        if server == 'lxplus':
+            data_dir = '/eos/user/v/vstampf/ntuples/data_2017_m_noskim/'
+            bkg_dir = 'bkg_mc_m/'
+            sig_dir = 'sig_mc_m/ntuples/'
+            DY_dir = analysis_dir + bkg_dir
+        if server == 't3':
+            # data_dir = analysis_dir + 'data/'
+            # data_dir = 'root://t3dcachedb.psi.ch:1094///pnfs/psi.ch/cms/trivcat/store/user/dezhu/2_ntuples/HN3Lv2.0/mmm/data/'
+            data_dir = '/work/dezhu/4_production/vinz'
+            bkg_dir = 'vinz'
+            # bkg_dir = 'production_20190306_BkgMC/mmm/ntuples/'
+            sig_dir = 'signal/ntuples'
+            DY_dir = analysis_dir + bkg_dir
+
         dataB = Single_mu_2017B; dataC = Single_mu_2017C; dataD = Single_mu_2017D; dataE = Single_mu_2017E; dataF = Single_mu_2017F; 
 
 
@@ -62,10 +77,10 @@ def createSampleLists(analysis_dir='',
     #Temporal data 
     samples_data = [
         SampleCfg(name='data_2017B', dir_name=dataB.name, ana_dir=data_dir, tree_prod_name=tree_prod_name, is_data=True, norm_cut=add_data_cut),                                         #nevents =  5265969 
-        SampleCfg(name='data_2017C', dir_name=dataC.name, ana_dir=data_dir, tree_prod_name=tree_prod_name, is_data=True, norm_cut=add_data_cut),                                         #nevents = 10522062 
-        SampleCfg(name='data_2017D', dir_name=dataD.name, ana_dir=data_dir, tree_prod_name=tree_prod_name, is_data=True, norm_cut=add_data_cut),                                           #nevents =  3829353
-        SampleCfg(name='data_2017E', dir_name=dataE.name, ana_dir=data_dir, tree_prod_name=tree_prod_name, is_data=True, norm_cut=add_data_cut),                                         #nevents = 10926946 
-        SampleCfg(name='data_2017F', dir_name=dataF.name, ana_dir=data_dir, tree_prod_name=tree_prod_name, is_data=True, norm_cut=add_data_cut),                                         #nevents = 19122658 ; SUM of BCDEF = 49'666'988
+        # SampleCfg(name='data_2017C', dir_name=dataC.name, ana_dir=data_dir, tree_prod_name=tree_prod_name, is_data=True, norm_cut=add_data_cut),                                         #nevents = 10522062 
+        # SampleCfg(name='data_2017D', dir_name=dataD.name, ana_dir=data_dir, tree_prod_name=tree_prod_name, is_data=True, norm_cut=add_data_cut),                                           #nevents =  3829353
+        # SampleCfg(name='data_2017E', dir_name=dataE.name, ana_dir=data_dir, tree_prod_name=tree_prod_name, is_data=True, norm_cut=add_data_cut),                                         #nevents = 10926946 
+        # SampleCfg(name='data_2017F', dir_name=dataF.name, ana_dir=data_dir, tree_prod_name=tree_prod_name, is_data=True, norm_cut=add_data_cut),                                         #nevents = 19122658 ; SUM of BCDEF = 49'666'988
     ]
 
     samples_TTJets = [
@@ -86,16 +101,17 @@ def createSampleLists(analysis_dir='',
                 tree_prod_name=tree_prod_name, 
                 xsec=WJetsToLNu.xSection, 
                 # sumweights=WJetsToLNu.nGenEvents, 
-                sumweights=76666716, 
+                # sumweights=76666716, 
+                sumweights=None, 
                 is_MC=True),
-            SampleCfg(name='WJetsToLNu_ext', 
-                dir_name=WJetsToLNu_ext.name, 
-                ana_dir=analysis_dir+bkg_dir, 
-                tree_prod_name=tree_prod_name, 
-                xsec=WJetsToLNu_ext.xSection, 
-                # sumweights=WJetsToLNu_ext.nGenEvents, 
-                sumweights=76666716, 
-                is_MC=True),
+            # SampleCfg(name='WJetsToLNu_ext', 
+                # dir_name=WJetsToLNu_ext.name, 
+                # ana_dir=analysis_dir+bkg_dir, 
+                # tree_prod_name=tree_prod_name, 
+                # xsec=WJetsToLNu_ext.xSection, 
+                # # sumweights=WJetsToLNu_ext.nGenEvents, 
+                # sumweights=76666716, 
+                # is_MC=True),
             ]
 
     samples_DYBB = [
@@ -109,37 +125,38 @@ def createSampleLists(analysis_dir='',
             ]
 
     samples_DY = [
-            SampleCfg(name='DYJetsToLL_M10to50',
-                dir_name=DYJetsToLL_M10to50.name, 
-                # ana_dir=analysis_dir+bkg_dir, 
-                ana_dir='/work/dezhu/4_production/production_20190411_Bkg_mmm/ntuples', 
-                # ana_dir='root://t3dcachedb.psi.ch:1094///pnfs/psi.ch/cms/trivcat/store/user/dezhu/2_ntuples/HN3Lv2.0/mmm/background/montecarlo/production_20190318_BkgMC', 
-                tree_prod_name=tree_prod_name, 
-                xsec=DYJetsToLL_M10to50.xSection, 
-                # sumweights=DYJetsToLL_M10to50.nGenEvents, 
-                sumweights=None, 
-                # sumweights=1652621.0, 
-                is_MC=True,
-                is_DY=True),
-            SampleCfg(name='DYJets_M50', 
-                dir_name=DYJetsToLL_M50.name, 
-                # ana_dir=analysis_dir+bkg_dir, 
-                ana_dir='/work/dezhu/4_production/production_20190411_Bkg_mmm/ntuples', 
-                tree_prod_name=tree_prod_name, 
-                xsec=DYJetsToLL_M50.xSection, 
-                # sumweights=DYJetsToLL_M50.nGenEvents, 
-                sumweights=133395135, 
-                is_MC=True,
-                is_DY=True),
+            # SampleCfg(name='DYJetsToLL_M10to50',
+                # dir_name=DYJetsToLL_M10to50.name, 
+                # # ana_dir=analysis_dir+bkg_dir, 
+                # ana_dir='/work/dezhu/4_production/production_20190411_Bkg_mmm/ntuples', 
+                # # ana_dir='root://t3dcachedb.psi.ch:1094///pnfs/psi.ch/cms/trivcat/store/user/dezhu/2_ntuples/HN3Lv2.0/mmm/background/montecarlo/production_20190318_BkgMC', 
+                # tree_prod_name=tree_prod_name, 
+                # xsec=DYJetsToLL_M10to50.xSection, 
+                # # sumweights=DYJetsToLL_M10to50.nGenEvents, 
+                # sumweights=None, 
+                # # sumweights=1652621.0, 
+                # is_MC=True,
+                # is_DY=True),
+            # SampleCfg(name='DYJets_M50', 
+                # dir_name=DYJetsToLL_M50.name, 
+                # # ana_dir=analysis_dir+bkg_dir, 
+                # ana_dir='/work/dezhu/4_production/production_20190411_Bkg_mmm/ntuples', 
+                # tree_prod_name=tree_prod_name, 
+                # xsec=DYJetsToLL_M50.xSection, 
+                # # sumweights=DYJetsToLL_M50.nGenEvents, 
+                # sumweights=133395135, 
+                # is_MC=True,
+                # is_DY=True),
             SampleCfg(name='DYJets_M50_ext', 
                 dir_name=DYJetsToLL_M50_ext.name, 
-                # ana_dir=analysis_dir+bkg_dir, 
-                ana_dir='/work/dezhu/4_production/production_20190411_Bkg_mmm/ntuples', 
+                ana_dir=analysis_dir+bkg_dir, 
+                # ana_dir='/work/dezhu/4_production/production_20190411_Bkg_mmm/ntuples', 
                 # ana_dir='root://t3dcachedb.psi.ch:1094///pnfs/psi.ch/cms/trivcat/store/user/dezhu/2_ntuples/HN3Lv2.0/mmm/background/montecarlo/production_20190318_BkgMC', 
                 tree_prod_name=tree_prod_name, 
                 xsec=DYJetsToLL_M50_ext.xSection, 
                 # sumweights=DYJetsToLL_M50_ext.nGenEvents, 
-                sumweights=133395135, 
+                # sumweights=133395135, 
+                sumweights=None, 
                 is_MC=True,
                 is_DY=True),
             ]
@@ -199,27 +216,42 @@ def createSampleLists(analysis_dir='',
             ]
 
     samples_conversion = [
-        SampleCfg(name='Conversion_DYJetsToLL_M10to50',
-            dir_name=DYJetsToLL_M10to50.name, 
-            ana_dir='/work/dezhu/4_production/production_20190306_BkgMC/mmm/ntuples/', 
-            tree_prod_name=tree_prod_name, 
-            xsec=DYJetsToLL_M10to50.xSection, 
-            sumweights=DYJetsToLL_M10to50.nGenEvents, is_MC_Conversions=True),
-        SampleCfg(name='Conversion_DYJets_M50', 
-            dir_name=DYJetsToLL_M50.name, 
-            ana_dir='/work/dezhu/4_production/production_20190306_BkgMC/mmm/ntuples/', 
-            tree_prod_name=tree_prod_name, 
-            xsec=DYJetsToLL_M50.xSection, 
-            sumweights=DYJetsToLL_M50.nGenEvents, 
-            is_MC_Conversions=True),
-        SampleCfg(name='Conversion_DYJets_M50_ext', 
-            dir_name=DYJetsToLL_M50_ext.name, 
-            ana_dir='/work/dezhu/4_production/production_20190306_BkgMC/mmm/ntuples/', 
-            tree_prod_name=tree_prod_name, 
-            xsec=DYJetsToLL_M50_ext.xSection, 
-            sumweights=DYJetsToLL_M50_ext.nGenEvents, 
-            is_MC_Conversions=True),
-        ]
+            SampleCfg(name='Conversion_DYJets_M50_ext', 
+                dir_name=DYJetsToLL_M50_ext.name, 
+                ana_dir=analysis_dir+bkg_dir, 
+                # ana_dir='/work/dezhu/4_production/production_20190411_Bkg_mmm/ntuples', 
+                # ana_dir='root://t3dcachedb.psi.ch:1094///pnfs/psi.ch/cms/trivcat/store/user/dezhu/2_ntuples/HN3Lv2.0/mmm/background/montecarlo/production_20190318_BkgMC', 
+                tree_prod_name=tree_prod_name, 
+                xsec=DYJetsToLL_M50_ext.xSection, 
+                # sumweights=DYJetsToLL_M50_ext.nGenEvents, 
+                # sumweights=133395135, 
+                sumweights=None, 
+                is_MC=True,
+                is_MC_Conversions=True),
+            ]
+
+    # samples_conversion = [
+        # SampleCfg(name='Conversion_DYJetsToLL_M10to50',
+            # dir_name=DYJetsToLL_M10to50.name, 
+            # ana_dir='/work/dezhu/4_production/production_20190306_BkgMC/mmm/ntuples/', 
+            # tree_prod_name=tree_prod_name, 
+            # xsec=DYJetsToLL_M10to50.xSection, 
+            # sumweights=DYJetsToLL_M10to50.nGenEvents, is_MC_Conversions=True),
+        # SampleCfg(name='Conversion_DYJets_M50', 
+            # dir_name=DYJetsToLL_M50.name, 
+            # ana_dir='/work/dezhu/4_production/production_20190306_BkgMC/mmm/ntuples/', 
+            # tree_prod_name=tree_prod_name, 
+            # xsec=DYJetsToLL_M50.xSection, 
+            # sumweights=DYJetsToLL_M50.nGenEvents, 
+            # is_MC_Conversions=True),
+        # SampleCfg(name='Conversion_DYJets_M50_ext', 
+            # dir_name=DYJetsToLL_M50_ext.name, 
+            # ana_dir='/work/dezhu/4_production/production_20190306_BkgMC/mmm/ntuples/', 
+            # tree_prod_name=tree_prod_name, 
+            # xsec=DYJetsToLL_M50_ext.xSection, 
+            # sumweights=DYJetsToLL_M50_ext.nGenEvents, 
+            # is_MC_Conversions=True),
+        # ]
 
     samples_Triboson = [
             SampleCfg(name='ZZZ', 
@@ -267,7 +299,8 @@ def createSampleLists(analysis_dir='',
     # samples_mc = samples_TTJets + samples_WJets + samples_DY + samples_conversion  
     # samples_mc = samples_TTJets + samples_WJets + samples_DY 
     # samples_mc = samples_DY 
-    samples_mc = samples_DY +samples_WJets + samples_TTJets + samples_Diboson + samples_SingleTop 
+    # samples_mc = samples_DY +samples_WJets + samples_TTJets + samples_Diboson + samples_SingleTop 
+    samples_mc = samples_DY +samples_WJets + samples_TTJets + samples_conversion 
     samples_bkg = samples_mc 
     # samples_bkg = samples_dde
     samples_all = samples_bkg + samples_data

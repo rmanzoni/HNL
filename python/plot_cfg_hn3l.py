@@ -45,8 +45,8 @@ gr.SetBatch(True) # NEEDS TO BE SET FOR MULTIPROCESSING OF plot.Draw()
 
 # get the lumis from here: https://twiki.cern.ch/twiki/bin/viewauth/CMS/PdmV2017Analysis
 # int_lumi = 41000.0 # pb #### FIXME (all eras) 
-int_lumi = 41530.0 # pb ### (all eras), Golden JSON Int.Lumi: from https://twiki.cern.ch/twiki/bin/viewauth/CMS/PdmVAnalysisSummaryTable 
-# int_lumi =  4792.0 # pb (era B)
+# int_lumi = 41530.0 # pb ### (all eras), Golden JSON Int.Lumi: from https://twiki.cern.ch/twiki/bin/viewauth/CMS/PdmVAnalysisSummaryTable 
+int_lumi =  4792.0 # pb (era B)
 # int_lumi = 1000.0 # pb #### FIXME 
 # int_lumi = 41000.0 * (3829353/49666988) # serves only for era B and mmm
 # int_lumi = 41000.0 * (30564478/19122658) # [pb]; adapt to the amount of events done for the nonprompt analysis
@@ -57,9 +57,9 @@ int_lumi = 41530.0 # pb ### (all eras), Golden JSON Int.Lumi: from https://twiki
 def prepareRegions(channel):
     regions = []
     # regions.append(Region('SR','mmm','SR'))
-    # regions.append(Region('CR_ttbar','mmm','CR_ttbar'))
     # regions.append(Region('DY','mmm','CR_DY'))
-    regions.append(Region('DY_test','mmm','CR_DY_test'))
+    # regions.append(Region('DY_test','mmm','CR_DY_test'))
+    regions.append(Region('ttbar','mem','CR_ttbar'))
 
     print('###########################################################')
     print('# setting analysis regions')
@@ -96,8 +96,8 @@ def createVariables(rebin=None):
 #    variables = CR_vars
     DoNotRebin = ['_norm_', 'n_vtx', 'nj', 'nbj',] 
     # variables = hnl_vars
-    variables = dde_vars
-    # variables = test_vars
+    # variables = dde_vars
+    variables = test_vars
     if rebin>0:
         for ivar in hnl_vars:
             if ivar.name in DoNotRebin: continue
@@ -130,10 +130,10 @@ def makePlots(plotDir,channel_name,variables, regions, total_weight, sample_dict
             plot = plots[variable.name]
 
             plot.Group('data_obs', ['data_2017B', 'data_2017C', 'data_2017D', 'data_2017E', 'data_2017F'])
-            plot.Group('Diboson', ['WZTo3LNu','ZZTo4L','WW','WZ','ZZ'])
+            # plot.Group('Diboson', ['WZTo3LNu','ZZTo4L','WW','WZ','ZZ'])
             plot.Group('DY', ['DYJets_M50_ext','DYJets_M50','DYJetsToLL_M10to50'])
-            plot.Group('Conversions', ['Conversion_DYJets_M50_ext','Conversion_DYJets_M50','Conversion_DYJetsToLL_M10to50'])
-            plot.Group('QCD',['QCD_pt_15to20_mu', 'QCD_pt_20to30_mu', 'QCD_pt_30to50_mu', 'QCD_pt_50to80_mu', 'QCD_pt_80to120_mu'])
+            # plot.Group('Conversions', ['Conversion_DYJets_M50_ext','Conversion_DYJets_M50','Conversion_DYJetsToLL_M10to50'])
+            # plot.Group('QCD',['QCD_pt_15to20_mu', 'QCD_pt_20to30_mu', 'QCD_pt_30to50_mu', 'QCD_pt_50to80_mu', 'QCD_pt_80to120_mu'])
             plot.Group('WJets', ['WJetsToLNu','WJetsToLNu_ext','W1JetsToLNu', 'W2JetsToLNu', 'W3JetsToLNu', 'W4JetsToLNu'])
             if make_plots:
                 HistDrawer.draw(plot, channel = channel_name, plot_dir = plotDir+region.name)
@@ -185,7 +185,7 @@ def producePlots(promptLeptonType, L1L2LeptonType, server):
             channel = 'mee'
         if L1L2LeptonType == "em":
             plotDir = plotDirBase + 'mem/'
-            channel_name += '#mu'
+            channel_name += 'e#mu'
             channel = 'mem'
         if L1L2LeptonType == "mm":
             plotDir = plotDirBase + 'mmm/'
@@ -221,7 +221,7 @@ def producePlots(promptLeptonType, L1L2LeptonType, server):
         total_weight, 
         sample_dict, 
         make_plots=True,
-        multiprocess=False
+        multiprocess=True
     )
 
     for i in regions:

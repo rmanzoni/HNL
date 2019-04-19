@@ -287,9 +287,9 @@ hnl_vars = [
     VCfg(name='l2_dxy_coarse', drawname='l2_dxy', binning={'nbinsx':40, 'xmin':-1. , 'xmax':1. }, unit='cm', xtitle='2nd muon d_{xy}'),
     VCfg(name='l2_dz' , binning={'nbinsx':100, 'xmin':-20., 'xmax':20.}, unit='cm', xtitle='2nd muon d_{z}'),
 
-    VCfg(name='l0_reliso_rho_03', binning={'nbinsx':20, 'xmin':0., 'xmax':0.5}, unit=None, xtitle='prompt lepton relative isolation cone 0.4'),
-    VCfg(name='l1_reliso_rho_03', binning={'nbinsx':20, 'xmin':0., 'xmax':0.5}, unit=None, xtitle='1st muon relative isolation cone 0.4'),
-    VCfg(name='l2_reliso_rho_03', binning={'nbinsx':20, 'xmin':0., 'xmax':0.5}, unit=None, xtitle='2nd muon relative isolation cone 0.4'),
+    VCfg(name='l0_reliso_rho_03', binning={'nbinsx':20, 'xmin':0., 'xmax':0.5}, unit=None, xtitle='prompt lepton relative isolation cone 0.3'),
+    VCfg(name='l1_reliso_rho_03', binning={'nbinsx':20, 'xmin':0., 'xmax':0.5}, unit=None, xtitle='1st muon relative isolation cone 0.3'),
+    VCfg(name='l2_reliso_rho_03', binning={'nbinsx':20, 'xmin':0., 'xmax':0.5}, unit=None, xtitle='2nd muon relative isolation cone 0.3'),
 
     VCfg(name='hnl_m_01', binning={'nbinsx':40, 'xmin':0   , 'xmax':200 }, unit='GeV', xtitle='mass(l_{0},#mu_{1})'),
     VCfg(name='hnl_m_01_Z', drawname = 'hnl_m_01', binning={'nbinsx':40, 'xmin':70.   , 'xmax':110 }, unit='GeV', xtitle='mass(l_{0},#mu_{1})'),
@@ -348,10 +348,16 @@ hnl_vars = [
 
 test_vars = [
             VCfg(name='_norm_'     , drawname='1.', binning={'nbinsx':5, 'xmin':-1.5, 'xmax':3.5}, unit='', xtitle='Normalisation'),
-            VCfg(name='hnl_m_01', binning={'nbinsx':40, 'xmin':0   , 'xmax':200 }, unit='GeV', xtitle='mass(l_{0},#mu_{1})'),
-            VCfg(name='hnl_dphi_hnvis0_wide'  ,drawname='abs(hnl_dphi_hnvis0)', binning={'nbinsx':40, 'xmin': 0, 'xmax':pi}, unit=None, xtitle='|#Delta#phi (dimuon, l_{0})|'),
-            VCfg(name='hnl_dphi_hnvis0_small'  ,drawname='abs(hnl_dphi_hnvis0)', binning={'nbinsx':40, 'xmin': 0, 'xmax':1.}, unit=None, xtitle='|#Delta#phi (dimuon, l_{0})|'),
-            VCfg(name='hnl_dphi_hnvis0_lare'  ,drawname='abs(hnl_dphi_hnvis0)', binning={'nbinsx':40, 'xmin':2.5 , 'xmax':pi}, unit=None, xtitle='|#Delta#phi (dimuon, l_{0})|'),
+            VCfg(name='nbj', binning={'nbinsx':12, 'xmin':-0.5, 'xmax':11.5}, unit=None, xtitle='N_{b-jets}'),
+            VCfg(name='hnl_m_01', binning={'nbinsx':40, 'xmin':0   , 'xmax':200 }, unit='GeV', xtitle='mass(l_{0},l_{1})'),
+            VCfg(name='hnl_m_02', binning={'nbinsx':40, 'xmin':0   , 'xmax':200 }, unit='GeV', xtitle='mass(l_{0},l_{2})'),
+            VCfg(name='hnl_m_12', binning={'nbinsx':40, 'xmin':0   , 'xmax':200 }, unit='GeV', xtitle='mass(l_{1},l_{2})'),
+            VCfg(name='l0_reliso_rho_03', binning={'nbinsx':20, 'xmin':0., 'xmax':0.0001}, unit=None, xtitle='prompt lepton relative isolation cone 0.3'),
+            VCfg(name='l1_reliso_rho_03', binning={'nbinsx':20, 'xmin':0., 'xmax':0.0001}, unit=None, xtitle='1st muon relative isolation cone 0.3'),
+            VCfg(name='l2_reliso_rho_03', binning={'nbinsx':20, 'xmin':0., 'xmax':0.0001}, unit=None, xtitle='2nd muon relative isolation cone 0.3'),
+            # VCfg(name='hnl_dphi_hnvis0_wide'  ,drawname='abs(hnl_dphi_hnvis0)', binning={'nbinsx':40, 'xmin': 0, 'xmax':pi}, unit=None, xtitle='|#Delta#phi (dimuon, l_{0})|'),
+            # VCfg(name='hnl_dphi_hnvis0_small'  ,drawname='abs(hnl_dphi_hnvis0)', binning={'nbinsx':40, 'xmin': 0, 'xmax':1.}, unit=None, xtitle='|#Delta#phi (dimuon, l_{0})|'),
+            # VCfg(name='hnl_dphi_hnvis0_lare'  ,drawname='abs(hnl_dphi_hnvis0)', binning={'nbinsx':40, 'xmin':2.5 , 'xmax':pi}, unit=None, xtitle='|#Delta#phi (dimuon, l_{0})|'),
             VCfg(name='hnl_2d_smaller_disp', drawname='hnl_2d_disp', binning={'nbinsx':10, 'xmin':0   , 'xmax':10 }, unit='cm' , xtitle='2D displacement'),
             VCfg(name='hnl_w_vis_m', binning={'nbinsx':40, 'xmin':0   , 'xmax':250 }, unit='GeV', xtitle='3 lepton mass'),
              # VCfg(name='hnl_m_12_low' , drawname='hnl_m_12', binning={'nbinsx':10, 'xmin':0   , 'xmax':10  }, unit='GeV', xtitle='dimuon mass'),

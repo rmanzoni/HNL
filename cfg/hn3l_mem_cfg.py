@@ -9,7 +9,7 @@ samples = [Single_mu_2017B, Single_mu_2017C, Single_mu_2017D, Single_mu_2017E, S
 
 # edit the lines here to specify your ntuple production mode 
 production         = True # state whether you're running production mode or not
-isData             = False
+isData             = True
 isSignal           = False
 promptLeptonType   = "mu" # choose from 'ele', 'mu'
 L1L2LeptonType     = "em"  # choose from 'ee', 'mm', 'em'

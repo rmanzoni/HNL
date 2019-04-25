@@ -4,9 +4,9 @@ from collections import namedtuple
 from operator import itemgetter
 from ROOT import gROOT as gr
 
-import shutil
 from shutil import copyfile, copytree
 from numpy import array
+from getpass import getuser
 
 from copy_reg import pickle       # to pickle methods for multiprocessing
 from types    import MethodType   # to pickle methods for multiprocessing
@@ -158,10 +158,15 @@ def makePlots(plotDir,channel_name,variables, regions, total_weight, sample_dict
 
 def producePlots(promptLeptonType, L1L2LeptonType, server):
 
+    usr = getuser()
+
     if server == 't3':
-        plotDirBase = '/work/dezhu/3_figures/1_DataMC/FinalStates/'
+        if usr == 'dezhu':   plotDirBase = '/work/dezhu/3_figures/1_DataMC/FinalStates/'
+        if usr == 'vstampf': plotDirBase = '/t3home/vstampf/eos/plots/'
+
     if server == 'lxplus':
-        plotDirBase = '/eos/user/d/dezhu/HNL/plots/FinalStates/'
+        if usr == 'dezhu':   plotDirBase = '/eos/user/d/dezhu/HNL/plots/FinalStates/'
+        if usr == 'vstampf': plotDirBase = '/eos/user/v/vstampf/plots/'
 
     if promptLeptonType == "ele":
         channel_name = 'e'
@@ -212,7 +217,25 @@ def producePlots(promptLeptonType, L1L2LeptonType, server):
 
     sample_dict = createSamples(channel,analysis_dir, total_weight, server=server)
 
+    handle = os.popen('echo $CMSSW_BASE')
+    line = handle.read()
+    handle.close()
+    cmsBaseDir = line.strip('\n')
 
+    for i in regions:
+        copyfile(cmsBaseDir+'/src/CMGTools/HNL/plotting/plot_cfg_hn3l_'+channel+'.py', plotDir+i.name+'/plot_cfg.py')
+        copyfile(cmsBaseDir+'/src/CMGTools/HNL/python/plot_cfg_hn3l.py', plotDir+i.name+'/plot_cfg_base.py')
+        copyfile(cmsBaseDir+'/src/CMGTools/HNL/python/plotter/Selections.py', plotDir+i.name+'/Selections.py')
+
+        copyfile(cmsBaseDir+'/src/CMGTools/HNL/plotting/plot_cfg_hn3l_'+channel+'.py', plotDir+i.name+'/plot_cfg.py')
+        copyfile(cmsBaseDir+'/src/CMGTools/HNL/python/plot_cfg_hn3l.py', plotDir+i.name+'/plot_cfg_base.py')
+        copyfile(cmsBaseDir+'/src/CMGTools/HNL/python/plotter/Selections.py', plotDir+i.name+'/Selections.py')
+        print 'cfg file stored in "', plotDir + i.name + '/plot_cfg.py"'
+        print 'cfg_base file stored in "', plotDir + i.name + '/plot_cfg_base.py"'
+        # copytree(plotDir+i.name,'/t3home/dezhu/eos/t3/figures/1_DataMC/FinalStates/mmm/'+i.name)
+        # os.system("cp -rf %s %s"%(plotDir+i.name,'/t3home/dezhu/eos/t3/figures/1_DataMC/FinalStates/mmm/'+i.name)) 
+        # print 'directory %s copied to /t3home/dezhu/eos/t3/figures/1_DataMC/FinalStates/mmm!'%(i.name)
+    
     makePlots(
         plotDir,
         channel_name,
@@ -223,13 +246,3 @@ def producePlots(promptLeptonType, L1L2LeptonType, server):
         make_plots=True,
         multiprocess=False
     )
-
-    for i in regions:
-        copyfile('/t3home/dezhu/HNL/CMSSW_9_4_6_patch1/src/CMGTools/HNL/plotting/plot_cfg_hn3l_'+channel+'.py', plotDir+i.name+'/plot_cfg.py')
-        copyfile('/t3home/dezhu/HNL/CMSSW_9_4_6_patch1/src/CMGTools/HNL/python/plot_cfg_hn3l.py', plotDir+i.name+'/plot_cfg_base.py')
-        copyfile('/t3home/dezhu/HNL/CMSSW_9_4_6_patch1/src/CMGTools/HNL/python/plotter/Selections.py', plotDir+i.name+'/Selections.py')
-        print 'cfg file stored in "', plotDir + i.name + '/plot_cfg.py"'
-        print 'cfg_base file stored in "', plotDir + i.name + '/plot_cfg_base.py"'
-        # copytree(plotDir+i.name,'/t3home/dezhu/eos/t3/figures/1_DataMC/FinalStates/mmm/'+i.name)
-        # os.system("cp -rf %s %s"%(plotDir+i.name,'/t3home/dezhu/eos/t3/figures/1_DataMC/FinalStates/mmm/'+i.name)) 
-        # print 'directory %s copied to /t3home/dezhu/eos/t3/figures/1_DataMC/FinalStates/mmm!'%(i.name)

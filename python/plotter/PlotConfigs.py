@@ -1,3 +1,5 @@
+from pdb import set_trace
+
 class VariableCfg(object):
     '''Configuration object for a variable.
 
@@ -29,8 +31,9 @@ class SampleCfg(object):
     def __init__(self, name='Default', dir_name=None, ana_dir='', 
         tree_prod_name='HNLTreeProducer', tree_name=None,
         scale=1., weight_expr=None, norm_cut=None, shape_cut=None, 
-        xsec=1., sumweights=1., is_signal=False, is_data=False,
-        cut_replace_func=None):
+        xsec=1., sumweights=1., is_signal=False, is_MC=False, is_DY=False, is_MC_Conversions=False , is_data=False, is_dde=False,
+        is_doublefake=False, is_singlefake=False,
+        cut_replace_func=None,fr_tree_path=''):
         self.name = name
         self.dir_name = name if dir_name is None else dir_name
         self.ana_dir = ana_dir
@@ -48,7 +51,14 @@ class SampleCfg(object):
         self.sumweights = sumweights
 
         self.is_signal = is_signal # To e.g. draw as separate curve (not stack)
+        self.is_MC = is_MC 
+        self.is_DY = is_DY 
+        self.is_MC_Conversions = is_MC_Conversions 
         self.is_data = is_data # Will be drawn as data
+        self.is_dde = is_dde # Will be drawn as dde
+        self.is_doublefake = is_doublefake
+        self.is_singlefake = is_singlefake
+        self.fr_tree_path = fr_tree_path 
 
 
 class HistogramCfg(object):
@@ -56,14 +66,14 @@ class HistogramCfg(object):
 
     A histogram can in turn have a sub-contribution from another histogram cfg. 
     '''
-    def __init__(self, name='Default', var=None, vars=None, cfgs=None, cut='', lumi=1.,
+    def __init__(self, name='Default', var=None, vars=None, cfgs=None, region='', lumi=1.,
                  weight='weight', norm_cfg=None, use_signal_for_stack=False,
                  total_scale=None):
         self.name = name # e.g. 'vbf tight'
         self.var = var # Single variable
         self.vars = [] if vars is None else vars # List of variable cfgs
         self.cfgs = [] if cfgs is None else cfgs # List of sample and/or histogram cfgs
-        self.cut = cut
+        self.region = region
         self.lumi = lumi
         self.weight = weight
         self.use_signal_for_stack = use_signal_for_stack

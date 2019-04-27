@@ -8,6 +8,7 @@ from ROOT import TCanvas, TPaveText, TBox, gStyle
 from CMGTools.RootTools.DataMC.Stack import Stack
 
 from CMGTools.HNL.plotter.CMS_lumi import CMS_lumi
+from pdb import set_trace
 
 from CMGTools.HNL.plotter.officialStyle import officialStyle
 officialStyle(gStyle)
@@ -134,13 +135,14 @@ class HistDrawer:
             ytitle += round_to_n(unitsperbin, 3)
 
         h.GetYaxis().SetTitle('Events')
-        h.GetYaxis().SetTitleOffset(1.0)
+        h.GetYaxis().SetTitleOffset(1.4)
         h.GetXaxis().SetTitleOffset(2.0)
 
         if do_ratio:
             padr.cd()
             ratio = copy.deepcopy(plot)
-            ratio.legendOn = False
+            ratio.legendOn = True
+            ratio.STAT_ERRORS = True
 
         if blindxmin or blindxmax:
             if not blindxmin:
@@ -186,19 +188,30 @@ class HistDrawer:
 
         HistDrawer.CMSPrelim(plot, pad, channel, legend=plot.legendPos)
         can.cd()
-
-        plotname = plot_dir + '/'
-        ensureDir(plot_dir)
-        plotname += plot_name if plot_name else plot.name
-        can.SaveAs(plotname + '.png')
-        can.SaveAs(plotname + '.pdf')
-        can.SaveAs(plotname + '.root')
+        
+        if not os.path.exists(plot_dir + '/pdf/'):
+            os.mkdir(plot_dir + '/pdf/')
+            os.mkdir(plot_dir + '/pdf/linear/')
+            os.mkdir(plot_dir + '/pdf/log/')
+        if not os.path.exists(plot_dir + '/root/'):
+            os.mkdir(plot_dir + '/root/')
+            os.mkdir(plot_dir + '/root/linear/')
+            os.mkdir(plot_dir + '/root/log')
+        if not os.path.exists(plot_dir + '/png/'):
+            os.mkdir(plot_dir + '/png/')
+            os.mkdir(plot_dir + '/png/linear/')
+            os.mkdir(plot_dir + '/png/log/')
+        plotname = plot_name if plot_name else plot.name
+        can.SaveAs(plot_dir + '/pdf/linear/'  + plotname  + '.pdf')
+        can.SaveAs(plot_dir + '/root/linear/' + plotname  + '.root')
+        can.SaveAs(plot_dir + '/png/linear/'  + plotname  + '.png')
 
         # Also save with log y
         h.GetYaxis().SetRangeUser(pad.GetUymax() * 5./1000000., pad.GetUymax() * 5.)
         pad.SetLogy(True)
-        can.SaveAs(plotname + '_log.png')
-        can.SaveAs(plotname + '_log.pdf')
+        can.SaveAs(plot_dir + '/png/log/'  + plotname + '_log.png')
+        can.SaveAs(plot_dir + '/root/log/' + plotname + '_log.root')
+        can.SaveAs(plot_dir + '/pdf/log/'  + plotname + '_log.pdf')
         pad.SetLogy(0)
 #        return ratio
 

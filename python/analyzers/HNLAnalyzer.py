@@ -250,6 +250,7 @@ class HNLAnalyzer(Analyzer):
 
         # save a flag to know whether the muons is likely OOT
         # FIXME! for displaced too?
+        #TODO filter rather saving the flag
         for imu in event.muons:
             imu.isoot = self.isOotMuon(imu)
 

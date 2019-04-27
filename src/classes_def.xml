@@ -16,6 +16,8 @@
 <!--  <class name="edm::eventsetup::DependentRecordImplementation<IdealMagneticFieldRecord,boost::mpl::vector<MFGeometryFileRcd,RunInfoRcd,MagFieldConfigRcd,mpl_::na,mpl_::na,mpl_::na,mpl_::na,mpl_::na,mpl_::na,mpl_::na,mpl_::na,mpl_::na,mpl_::na,mpl_::na,mpl_::na,mpl_::na,mpl_::na,mpl_::na,mpl_::na,mpl_::na> >"/> -->
 <!--  <class name="edm::EventSetup"/> -->
  <class name="MagGeometry"/>
+ <class name="atomic<const MagVolume*>"/>
+ <class name="__atomic_base<const MagVolume*>"/>
  <class name="MagVolume"/>
 <!--  <class name="MagFieldConfigRcd"/> -->
  <class name="VolumeBasedMagneticField"/>

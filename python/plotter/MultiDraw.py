@@ -10,6 +10,8 @@ import os
 from ROOT import gROOT, gSystem, gDirectory, TObject, TTree, TObjArray, TTreeFormula,\
     TH1D, SetOwnership, TTreeFormulaManager
 
+from pdb import set_trace
+
 
 def MakeTObjArray(theList):
     """Turn a python iterable into a ROOT TObjArray"""
@@ -141,11 +143,12 @@ def MultiDraw(self, Formulae, CommonWeight="1"):
 
     # Only compile MultiDraw once
     try:
+        # set_trace()
         from ROOT import MultiDraw as _MultiDraw
     except ImportError:
         # gROOT.ProcessLine(".L %sMultiDraw.cxx+O" % "./")
         if "/sMultiDraw_cc.so" not in gSystem.GetLibraries(): 
-            gROOT.ProcessLine(".L %s/src/CMGTools/H2TauTau/python/proto/plotter/MultiDraw.cc+" % os.environ['CMSSW_BASE']);
+            gROOT.ProcessLine(".L %s/src/CMGTools/HNL/python/plotter/MultiDraw.cc" % os.environ['CMSSW_BASE']);
         from ROOT import MultiDraw as _MultiDraw
 
     # from time import time

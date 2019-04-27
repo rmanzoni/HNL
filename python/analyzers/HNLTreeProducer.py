@@ -188,10 +188,9 @@ class HNLTreeProducer(TreeProducerBase):
         '''
         self.readCollections(event.input)
         self.tree.reset()
-        self.event = event
         # event variables 
         self.fillEvent(self.tree, event)
-        self.fill     (self.tree, 'n_cands', len(event.dileptonvtx))
+        self.fill     (self.tree, 'n_cands', len(event.dileptonsvtx))
         self.fill     (self.tree, 'rho'    , event.rho)
         self.fill     (self.tree, 'nLeptons'    , event.nLeptons)
         self.fill     (self.tree, 'nElectrons'  , event.nElectrons)
@@ -199,6 +198,7 @@ class HNLTreeProducer(TreeProducerBase):
 
         # reco HNL
         self.fillHNL (self.tree, 'hnl'                  , event.the_3lep_cand                 )
+        # FIXME: one day, move all those single variables into groups like bookHNL/fillHNL
         self.fill    (self.tree, 'hnl_iso03_abs_rhoArea', event.the_3lep_cand.abs_tot_iso03_rhoArea)
         self.fill    (self.tree, 'hnl_iso04_abs_rhoArea', event.the_3lep_cand.abs_tot_iso04_rhoArea)
         self.fill    (self.tree, 'hnl_iso05_abs_rhoArea', event.the_3lep_cand.abs_tot_iso05_rhoArea)

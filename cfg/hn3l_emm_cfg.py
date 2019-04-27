@@ -1,24 +1,12 @@
 from CMGTools.HNL.hn3l_cfg import *
 
 # specify the samples considerea
-# from CMGTools.HNL.samples.signal import all_signals_e as samples
-# from CMGTools.HNL.samples.localsignal import HN3L_M_2_V_0p00244948974278_e_massiveAndCKM_LO
-# from CMGTools.HNL.samples.signal import HN3L_M_2_V_0p00244948974278_e_massiveAndCKM_LO
-# samples = [HN3L_M_2_V_0p00244948974278_e_massiveAndCKM_LO]
+from CMGTools.HNL.samples.samples_data_2017_noskim import Single_ele_2017, Single_ele_2017B, Single_ele_2017C, Single_ele_2017D, Single_ele_2017E, Single_ele_2017F
+from CMGTools.HNL.samples.samples_mc_2017_noskim import TTJets, WJetsToLNu, WJetsToLNu_ext, DYBB, DYJetsToLL_M10to50, DYJetsToLL_M50, DYJetsToLL_M50_ext, WW, WZ, ZZ, ST_sch_lep, STbar_tch_inc, ST_tch_inc, STbar_tW_inc, ST_tW_inc, QCD_pt_15to20_mu, QCD_pt_20to30_mu, QCD_pt_30to50_mu, QCD_pt_50to80_mu, QCD_pt_80to120_mu
 
-# from CMGTools.HNL.samples.signal import HN3L_M_2_V_0p00836660026534_e_massiveAndCKM_LO
-# from CMGTools.HNL.samples.signal_new import HN3L_M_2_V_0p00836660026534_e_onshell
-# from CMGTools.HNL.samples.signal_new import signals_e as samples
-# from CMGTools.HNL.samples.signal_13sept18 import all_signals_e as samples
-# from CMGTools.HNL.samples.samples_mc_2017 import hnl_bkg as samples
-# from CMGTools.HNL.samples.samples_mc_2017_noskim import hnl_bkg_noskim as samples
-# from CMGTools.HNL.samples.signal import HN3L_M_2_V_0p00244948974278_e_massiveAndCKM_LO as sample
-# from CMGTools.HNL.samples.signal import HN3L_M_5_V_0p01_e_massiveAndCKM_LO as sample
-# from CMGTools.HNL.samples.samples_data_2017_noskim import Single_ele_2017, Single_ele_2017B, Single_ele_2017C, Single_ele_2017D, Single_ele_2017E, Single_ele_2017F
-# from CMGTools.HNL.samples.samples_data_2017_noskim import Single_ele_2017, Single_ele_2017B, Single_ele_2017C, Single_ele_2017D, Single_ele_2017E, Single_ele_2017F
-from CMGTools.HNL.samples.samples_mc_2017_noskim import TTJets, WJetsToLNu, WJetsToLNu_ext, DYBB, DYJetsToLL_M10to50, DYJetsToLL_M50, DYJetsToLL_M50_ext 
-from CMGTools.HNL.samples.samples_mc_2017 import WW_DoubleScattering, WZTo3LNu, ZZTo4L, WJetsToLNu
-samples = [TTJets, WJetsToLNu, WJetsToLNu_ext, DYBB, DYJetsToLL_M10to50, DYJetsToLL_M50, DYJetsToLL_M50_ext, WW_DoubleScattering, WZTo3LNu, ZZTo4L, WJetsToLNu]
+# samples = [Single_ele_2017B, Single_ele_2017C, Single_ele_2017D, Single_ele_2017E, Single_ele_2017F]
+samples = [TTJets, WJetsToLNu, WJetsToLNu_ext, DYBB, DYJetsToLL_M10to50, DYJetsToLL_M50, DYJetsToLL_M50_ext, WW, WZ, ZZ, ST_sch_lep, STbar_tch_inc, ST_tch_inc, STbar_tW_inc, ST_tW_inc, QCD_pt_15to20_mu, QCD_pt_20to30_mu, QCD_pt_30to50_mu, QCD_pt_50to80_mu, QCD_pt_80to120_mu]
+# samples = [DYJetsToLL_M10to50]
 
 
 # edit the lines here to specify your ntuple production mode 

@@ -1,6 +1,7 @@
 import numpy as np
 from PhysicsTools.Heppy.analyzers.core.TreeAnalyzerNumpy import TreeAnalyzerNumpy
 from CMGTools.HNL.analyzers.treeVariables import event_vars, reco_hn_vars, vertex_vars, hnl_vars, particle_vertex_vars, particle_vars, lepton_vars, photon_vars, electron_vars, muon_vars, muon_track_extra_vars, tau_vars, tau_vars_extra, jet_vars, jet_vars_extra, geninfo_vars, l1obj_vars, hnlreco_vars, dimuon_vars, check_hnlreco_vars, displacedmuon_vars, gen_particle_vars, particleJet_vars
+from pdb import set_trace
 
 class TreeProducerBase(TreeAnalyzerNumpy):
 
@@ -13,8 +14,8 @@ class TreeProducerBase(TreeAnalyzerNumpy):
         if hasattr(self.cfg_ana, 'skimFunction'):
             self.skimFunction = self.cfg_ana.skimFunction
 
-    def var(self, tree, varName, type=float):
-        tree.var(varName, type)
+    def var(self, tree, varName, type=float, storageType="default"):
+        tree.var(varName, type, storageType=storageType)
 
     def vars(self, tree, varNames, type=float):
         for varName in varNames:
@@ -36,7 +37,7 @@ class TreeProducerBase(TreeAnalyzerNumpy):
     def bookGeneric(self, tree, var_list, obj_name=None):
         for var in var_list:
             names = [obj_name, var.name] if obj_name else [var.name]
-            self.var(tree, '_'.join(names), var.type)
+            self.var(tree, '_'.join(names), var.type, storageType = var.storageType)
 
     def fillGeneric(self, tree, var_list, obj, obj_name=None):
         for var in var_list:
@@ -172,13 +173,13 @@ class TreeProducerBase(TreeAnalyzerNumpy):
     # lepton
     def bookLepton(self, tree, p_name):
         self.bookParticle(tree, p_name)
-        self.bookParticleJet(tree, p_name + '_jet')
+        self.bookJet(tree, p_name + '_jet')
         self.bookGeneric(tree, lepton_vars, p_name)
 
     def fillLepton(self, tree, p_name, lepton):
         self.fillParticle(tree, p_name, lepton)
-        if hasattr(lepton, 'jet'):
-            self.fillParticleJet(tree, p_name + '_jet', lepton.jet)
+        if (hasattr(lepton, 'jet') and lepton != lepton.jet):
+            self.fillJet(tree, p_name + '_jet', lepton.jet)
         self.fillGeneric(tree, lepton_vars, lepton, p_name)
 
     # muon

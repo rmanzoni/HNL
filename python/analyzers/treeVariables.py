@@ -6,13 +6,14 @@ from PhysicsTools.HeppyCore.utils.deltar import deltaR, deltaPhi
 from CMGTools.H2TauTau.proto.analyzers.tauIDs import tauIDs, tauIDs_extra
 
 class Variable():
-    def __init__(self, name, function=None, type=float):
+    def __init__(self, name, function=None, type=float, storageType="default"):
         self.name = name
         self.function = function
         if function is None:
             # Note: works for attributes, not member functions
             self.function = lambda x : getattr(x, self.name, np.nan) 
         self.type = type
+        self.storageType = storageType
 
 def default():
     return np.nan
@@ -21,7 +22,7 @@ def default():
 event_vars = [
     Variable('run', type=int),
     Variable('lumi', lambda ev : ev.lumi, type=int),
-    Variable('event', lambda ev : ev.eventId, type=int),
+    Variable('event', lambda ev : ev.eventId, type=int, storageType='l'), 
     Variable('bx', lambda ev : (ev.input.eventAuxiliary().bunchCrossing() * ev.input.eventAuxiliary().isRealData()), type=int),
     Variable('orbit_number', lambda ev : (ev.input.eventAuxiliary().orbitNumber() * ev.input.eventAuxiliary().isRealData()), type=int),
     Variable('is_data', lambda ev: ev.input.eventAuxiliary().isRealData(), type=int),
@@ -528,7 +529,6 @@ for tau_id in tauIDs_extra:
         sum_id_str = ' + '.join('tau.tauID("{id}")'.format(id=tau_id[0].format(wp=wp)) for wp in tau_id[1])
         tau_vars_extra.append(Variable(tau_id[0].format(wp=''), 
             eval('lambda tau : ' + sum_id_str), int))
-
 
 # jet
 jet_vars = [

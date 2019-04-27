@@ -1,13 +1,14 @@
 #define G__DICTIONARY
 
+
 #include <atomic>
 // #include <art>
+
 
 #include "DataFormats/Common/interface/Wrapper.h"
 #include "DataFormats/MuonReco/interface/MuonSelectors.h"
 #include "CMGTools/HNL/interface/HNLKinematicVertexFitter.h"
 #include "CMGTools/HNL/interface/HNLKalmanVertexFitter.h"
-#include "CMGTools/HNL/plugins/AddElectronTransientTrack.h"
 #include "MagneticField/Layers/src/MagBinFinders.h"
 #include "TrackingTools/Records/interface/TransientTrackRecord.h"
 #include "CondFormats/DataRecord/interface/MagFieldConfigRcd.h"
@@ -35,6 +36,7 @@
 #include "MagneticField/VolumeGeometry/interface/MagVolume6Faces.h"
 #include "DataFormats/GeometrySurface/interface/GloballyPositioned.h"
 #include "DataFormats/GeometrySurface/interface/TkRotation.h"
+
 
 namespace {
   struct CMG_HNL {
@@ -86,6 +88,7 @@ namespace {
     MagVolume6Faces hnlMag1_;
     MagneticFieldProvider<float>* hnlMagggg_;
 
+
     MagBLayer   hnlMag2_;
     MagBRod     hnlMag3_;
     MagBSector  hnlMag4_;
@@ -96,9 +99,10 @@ namespace {
     GloballyPositioned<float> hnlMag8_;
     TkRotation<float> hnlMag9_;
 
+
 //     std::vector<art::ProductID> hnlVecArtPID;
 //     std::pair<art::ProductID, std::set<art::ProductID>> hnlPairArt;
 
+
   };
 }
-

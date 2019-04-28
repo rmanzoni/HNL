@@ -54,6 +54,7 @@ def createSampleLists(analysis_dir='',
             # bkg_dir = 'production_20190306_BkgMC/mmm/ntuples/'
             sig_dir = 'signal/ntuples'
             DY_dir = analysis_dir + bkg_dir
+        dataB = Single_mu_2017B; dataC = Single_mu_2017C; dataD = Single_mu_2017D; dataE = Single_mu_2017E; dataF = Single_mu_2017F; 
 
     if channel == 'mem':
         if server == 'lxplus':
@@ -72,15 +73,14 @@ def createSampleLists(analysis_dir='',
 
         dataB = Single_mu_2017B; dataC = Single_mu_2017C; dataD = Single_mu_2017D; dataE = Single_mu_2017E; dataF = Single_mu_2017F; 
 
-
    
     #Temporal data 
     samples_data = [
         SampleCfg(name='data_2017B', dir_name=dataB.name, ana_dir=data_dir, tree_prod_name=tree_prod_name, is_data=True, norm_cut=add_data_cut),                                         #nevents =  5265969 
-        # SampleCfg(name='data_2017C', dir_name=dataC.name, ana_dir=data_dir, tree_prod_name=tree_prod_name, is_data=True, norm_cut=add_data_cut),                                         #nevents = 10522062 
-        # SampleCfg(name='data_2017D', dir_name=dataD.name, ana_dir=data_dir, tree_prod_name=tree_prod_name, is_data=True, norm_cut=add_data_cut),                                           #nevents =  3829353
-        # SampleCfg(name='data_2017E', dir_name=dataE.name, ana_dir=data_dir, tree_prod_name=tree_prod_name, is_data=True, norm_cut=add_data_cut),                                         #nevents = 10926946 
-        # SampleCfg(name='data_2017F', dir_name=dataF.name, ana_dir=data_dir, tree_prod_name=tree_prod_name, is_data=True, norm_cut=add_data_cut),                                         #nevents = 19122658 ; SUM of BCDEF = 49'666'988
+        SampleCfg(name='data_2017C', dir_name=dataC.name, ana_dir=data_dir, tree_prod_name=tree_prod_name, is_data=True, norm_cut=add_data_cut),                                         #nevents = 10522062 
+        SampleCfg(name='data_2017D', dir_name=dataD.name, ana_dir=data_dir, tree_prod_name=tree_prod_name, is_data=True, norm_cut=add_data_cut),                                           #nevents =  3829353
+        SampleCfg(name='data_2017E', dir_name=dataE.name, ana_dir=data_dir, tree_prod_name=tree_prod_name, is_data=True, norm_cut=add_data_cut),                                         #nevents = 10926946 
+        SampleCfg(name='data_2017F', dir_name=dataF.name, ana_dir=data_dir, tree_prod_name=tree_prod_name, is_data=True, norm_cut=add_data_cut),                                         #nevents = 19122658 ; SUM of BCDEF = 49'666'988
     ]
 
     samples_TTJets = [
@@ -298,9 +298,9 @@ def createSampleLists(analysis_dir='',
 
     # samples_mc = samples_TTJets + samples_WJets + samples_DY + samples_conversion  
     # samples_mc = samples_TTJets + samples_WJets + samples_DY 
-    # samples_mc = samples_DY 
+    samples_mc = samples_DY 
     # samples_mc = samples_DY +samples_WJets + samples_TTJets + samples_Diboson + samples_SingleTop 
-    samples_mc = samples_DY +samples_WJets + samples_TTJets + samples_conversion 
+    # samples_mc = samples_DY +samples_WJets + samples_TTJets + samples_conversion 
     samples_bkg = samples_mc 
     # samples_bkg = samples_dde
     samples_all = samples_bkg + samples_data

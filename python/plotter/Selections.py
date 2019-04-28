@@ -157,71 +157,72 @@ def getSelection(channel, selection_name):
         # self.SF                         = self.SF_TL + ' + ' + self.SF_LT + ' + ' + self.SF_LL_uncorrelated
         # self.DF                         = self.N_LL_correlated + ' * (weight_fr/(1-weight_fr))'
 
-# #DY_prompt
-# class Region(object):
-    # def __init__(self,name,channel,CR):
-        # self.name                       = name
-        # self.channel                    = channel
-        # self.CR                         = CR
-        # self.baseline = ('l0_pt>25 & abs(l0_eta)<2.4 & (l0_q != l1_q) '
-                     # '& l1_pt > 15 & abs(l1_eta) < 2.4 '
-                     # '& abs(l0_dxy) < 0.05 & abs(l0_dz) < 0.2 '
-                     # '& abs(l1_dxy) < 0.05 & abs(l1_dz) < 0.2 '
-                     # '& nbj == 0 '
-                     # '& l0_id_t '
-                     # '& l1_id_t '
-                     # '& l2_id_m '
-                     # '& l0_reliso_rho_03 < 0.20 '
-                     # '& l1_reliso_rho_03 < 0.20 '
-                     # '& l2_reliso_rho_03 < 0.20 '
-                     # # '& abs(hnl_m_01 - 91.2) < 15 '
-                     # # '& abs(hnl_dphi_hnvis0) > 2.0 '
-                     # # '& abs(hnl_dphi_hnvis0) < 3.0 '
-                     # )
-        # # self.data                       = 'l0_pt > 25 & l1_pt > 15 & l2_pt > 15 & abs(l0_eta) < 2.4 & abs(l2_eta) < 2.4 & '
-        # # self.data                       = 'l1_pt > 4  &  l2_pt > 4  &  l0_pt > 35  &  l1_q != l2_q  &  l0_reliso_rho_03 < 0.15  &  abs(l0_dz) < 0.2  &  hnl_dr_01 > 0.05  &  hnl_dr_02 > 0.05  &&  l0_id_l  &  l1_reliso_rho_03 < 0.15  &  l2_reliso_rho_03 < 0.15  &  l1_id_m  &  l2_id_m  &  abs(hnl_m_12 - 91.18) < 15  &  abs(hnl_w_vis_m - 91.18) > 15  &  nbj == 0  &  pfmet_pt < 30  &  hnl_mt_0 < 30'
-        # # self.MC                         = self.data + '& abs(l2_gen_match_pdgid) != 22 & l2_gen_match_isPromptFinalState == 0 '
-        # # self.MC_Conversions             = self.data + '& abs(l2_gen_match_pdgid) == 22 & l2_gen_match_isPromptFinalState == 1 '
-        # self.data                       = self.baseline
-        # self.MC                         = self.baseline 
-        # self.SF                         = self.baseline 
-        # # self.MC                         = self.data + '& abs(l2_gen_match_pdgid) != 22 '
-        # # self.MC_Conversions             = self.data + '& abs(l2_gen_match_pdgid) == 22 '
-#------------------------------------
-#TTbar_prompt
+#DY_prompt
 class Region(object):
     def __init__(self,name,channel,CR):
         self.name                       = name
         self.channel                    = channel
         self.CR                         = CR
-        self.data = (
-                     'l0_pt > 35 & abs(l0_eta) < 2.4'
-                     '& l1_pt > 10 & abs(l1_eta) < 2.5'
-                     '& l2_pt > 10 & abs(l2_eta) < 2.4'
-                     '& nbj > 0 '
-                     '& hnl_m_01 > 15'
-                     '& hnl_m_02 > 15'
-                     '& hnl_m_12 > 15'
-                     # '& abs(hnl_w_vis_m - 91.2) > 15'
+        self.baseline = ('l0_pt>25 & abs(l0_eta)<2.4 & (l0_q != l1_q) '
+                     '& l1_pt > 15 & abs(l1_eta) < 2.4 '
                      '& abs(l0_dxy) < 0.05 & abs(l0_dz) < 0.2 '
                      '& abs(l1_dxy) < 0.05 & abs(l1_dz) < 0.2 '
-                     # '& l0_reliso_rho_03 < 0.12 '
-                     # '& l1_reliso_rho_03 < 0.12 '
-                     # '& l2_reliso_rho_03 < 0.12 '
-                     # '& ((l0_q != l1_q & hnl_m_01 > 12) | (l0_q == l1_q))'
-                     # '& ((l0_q != l2_q & hnl_m_02 > 12) | (l0_q == l1_q))'
-                     # '& ((l1_q != l2_q & hnl_m_12 > 12) | (l1_q == l2_q))'
+                     '& nbj == 0 '
+                     '& l0_id_t '
+                     '& l1_id_t '
+                     '& l2_id_m '
+                     '& l0_reliso_rho_03 < 0.20 '
+                     '& l1_reliso_rho_03 < 0.20 '
+                     '& l2_reliso_rho_03 < 0.20 '
+                     # '& abs(hnl_m_01 - 91.2) < 15 '
+                     # '& abs(hnl_dphi_hnvis0) > 2.0 '
+                     # '& abs(hnl_dphi_hnvis0) < 3.0 '
                      )
-        # self.data = self.data + Z_veto()
         # self.data                       = 'l0_pt > 25 & l1_pt > 15 & l2_pt > 15 & abs(l0_eta) < 2.4 & abs(l2_eta) < 2.4 & '
-        # self.data                       = 'l1_pt > 4  &  l2_pt > 4  &  l0_pt > 35  &  l1_q != l2_q  &  l0_reliso05 < 0.15  &  abs(l0_dz) < 0.2  &  hnl_dr_01 > 0.05  &  hnl_dr_02 > 0.05  &&  l0_id_l  &  l1_reliso05 < 0.15  &  l2_reliso05 < 0.15  &  l1_id_m  &  l2_id_m  &  abs(hnl_m_12 - 91.18) < 15  &  abs(hnl_w_vis_m - 91.18) > 15  &  nbj == 0  &  pfmet_pt < 30  &  hnl_mt_0 < 30'
+        # self.data                       = 'l1_pt > 4  &  l2_pt > 4  &  l0_pt > 35  &  l1_q != l2_q  &  l0_reliso_rho_03 < 0.15  &  abs(l0_dz) < 0.2  &  hnl_dr_01 > 0.05  &  hnl_dr_02 > 0.05  &&  l0_id_l  &  l1_reliso_rho_03 < 0.15  &  l2_reliso_rho_03 < 0.15  &  l1_id_m  &  l2_id_m  &  abs(hnl_m_12 - 91.18) < 15  &  abs(hnl_w_vis_m - 91.18) > 15  &  nbj == 0  &  pfmet_pt < 30  &  hnl_mt_0 < 30'
         # self.MC                         = self.data + '& abs(l2_gen_match_pdgid) != 22 & l2_gen_match_isPromptFinalState == 0 '
         # self.MC_Conversions             = self.data + '& abs(l2_gen_match_pdgid) == 22 & l2_gen_match_isPromptFinalState == 1 '
-        self.MC                         = self.data 
-        self.MC_DY                      = self.data + '& abs(l2_gen_match_pdgid) != 22 '
-        self.MC_Conversions             = self.data + '& abs(l2_gen_match_pdgid) == 22 '
+        self.data                       = self.baseline
+        self.MC                         = self.baseline 
+        self.SF                         = self.baseline 
         # self.MC                         = self.data + '& abs(l2_gen_match_pdgid) != 22 '
         # self.MC_Conversions             = self.data + '& abs(l2_gen_match_pdgid) == 22 '
+
+# #------------------------------------
+# #TTbar_prompt
+# class Region(object):
+    # def __init__(self,name,channel,CR):
+        # self.name                       = name
+        # self.channel                    = channel
+        # self.CR                         = CR
+        # self.data = (
+                     # 'l0_pt > 35 & abs(l0_eta) < 2.4'
+                     # '& l1_pt > 10 & abs(l1_eta) < 2.5'
+                     # '& l2_pt > 10 & abs(l2_eta) < 2.4'
+                     # '& nbj > 0 '
+                     # '& hnl_m_01 > 15'
+                     # '& hnl_m_02 > 15'
+                     # '& hnl_m_12 > 15'
+                     # # '& abs(hnl_w_vis_m - 91.2) > 15'
+                     # '& abs(l0_dxy) < 0.05 & abs(l0_dz) < 0.2 '
+                     # '& abs(l1_dxy) < 0.05 & abs(l1_dz) < 0.2 '
+                     # # '& l0_reliso_rho_03 < 0.12 '
+                     # # '& l1_reliso_rho_03 < 0.12 '
+                     # # '& l2_reliso_rho_03 < 0.12 '
+                     # # '& ((l0_q != l1_q & hnl_m_01 > 12) | (l0_q == l1_q))'
+                     # # '& ((l0_q != l2_q & hnl_m_02 > 12) | (l0_q == l1_q))'
+                     # # '& ((l1_q != l2_q & hnl_m_12 > 12) | (l1_q == l2_q))'
+                     # )
+        # # self.data = self.data + Z_veto()
+        # # self.data                       = 'l0_pt > 25 & l1_pt > 15 & l2_pt > 15 & abs(l0_eta) < 2.4 & abs(l2_eta) < 2.4 & '
+        # # self.data                       = 'l1_pt > 4  &  l2_pt > 4  &  l0_pt > 35  &  l1_q != l2_q  &  l0_reliso05 < 0.15  &  abs(l0_dz) < 0.2  &  hnl_dr_01 > 0.05  &  hnl_dr_02 > 0.05  &&  l0_id_l  &  l1_reliso05 < 0.15  &  l2_reliso05 < 0.15  &  l1_id_m  &  l2_id_m  &  abs(hnl_m_12 - 91.18) < 15  &  abs(hnl_w_vis_m - 91.18) > 15  &  nbj == 0  &  pfmet_pt < 30  &  hnl_mt_0 < 30'
+        # # self.MC                         = self.data + '& abs(l2_gen_match_pdgid) != 22 & l2_gen_match_isPromptFinalState == 0 '
+        # # self.MC_Conversions             = self.data + '& abs(l2_gen_match_pdgid) == 22 & l2_gen_match_isPromptFinalState == 1 '
+        # self.MC                         = self.data 
+        # self.MC_DY                      = self.data + '& abs(l2_gen_match_pdgid) != 22 '
+        # self.MC_Conversions             = self.data + '& abs(l2_gen_match_pdgid) == 22 '
+        # # self.MC                         = self.data + '& abs(l2_gen_match_pdgid) != 22 '
+        # # self.MC_Conversions             = self.data + '& abs(l2_gen_match_pdgid) == 22 '
 
 
 

@@ -6,9 +6,9 @@ from CMGTools.HNL.samples.samples_mc_2018   import TTJets, TTJets_ext, WJetsToLN
 
 samples = [TTJets, WJetsToLNu, TTJets_ext, DYBB, DYJetsToLL_M5to50, DYJetsToLL_M50, DYJetsToLL_M50_ext, WW, WZ, ZZ]
 samples = [Single_mu_2018A, Single_mu_2018B, Single_mu_2018C, Single_mu_2018D]
-samples = [Single_mu_2018C]
 samples = [TTJets_ext, DYJetsToLL_M50, DYJetsToLL_M50_ext, DYJetsToLL_M5to50,]
 samples = [DYBB]
+samples = [Single_mu_2018C]
 
 
 # edit the lines here to specify your ntuple production mode production         = False # state whether you're running production mode or not

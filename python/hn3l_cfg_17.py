@@ -41,10 +41,6 @@ def generateKeyConfigs(samples,production, promptLeptonType, L1L2LeptonType, isD
     promptLeptonType = promptLeptonType # choose from 'ele' or 'mu'
     L1L2LeptonType = L1L2LeptonType  #choose from 'ee', 'mm', 'em'
 
-    os.environ['IS_DATA'  ] = 'True' if isData   else 'False'
-    os.environ['IS_SIGNAL'] = 'True' if isSignal else 'False' 
-
-
     ###################################################
     ###               HANDLE SAMPLES                ###
     ###################################################
@@ -57,15 +53,13 @@ def generateKeyConfigs(samples,production, promptLeptonType, L1L2LeptonType, isD
             sample.triggers += ['HLT_Ele35_WPTight_Gsf_v%d'          %i for i in range(1, 15)] #electron trigger
             sample.triggers += ['HLT_Ele115_CaloIdVT_GsfTrkIdT_v%d'  %i for i in range(1, 15)] #electron trigger
             sample.triggers += ['HLT_Ele135_CaloIdVT_GsfTrkIdT_v%d'  %i for i in range(1, 15)] #electron trigger
-            sample.splitFactor = splitFactor(sample, 2e5)
-    # triggers same for 2018: https://tomc.web.cern.ch/tomc/triggerPrescales/2018//?match=Ele
+            sample.splitFactor = splitFactor(sample, 1e5)
     if promptLeptonType == 'mu':
         for sample in samples:
             sample.triggers  = ['HLT_IsoMu24_v%d' %i for i in range(1, 15)] #muon trigger
             sample.triggers += ['HLT_IsoMu27_v%d' %i for i in range(1, 15)] #muon trigger
             sample.triggers += ['HLT_Mu50_v%d'    %i for i in range(1, 15)] #muon trigger
-            sample.splitFactor = splitFactor(sample, 2e5)
-    # triggers same for 2018: https://tomc.web.cern.ch/tomc/triggerPrescales/2018//?match=Ele
+            sample.splitFactor = splitFactor(sample, 1e5)
 
     selectedComponents = samples
 
@@ -394,7 +388,7 @@ def generateKeyConfigs(samples,production, promptLeptonType, L1L2LeptonType, isD
     ###################################################
     preprocessor = None
 
-    # temporary copy remote files using xrd
+    #temporary copy remote files using xrd
     from PhysicsTools.HeppyCore.framework.eventsfwlite import Events
     from CMGTools.HNL.utils.EOSEventsWithDownload import EOSEventsWithDownload
     event_class = EOSEventsWithDownload if not preprocessor else Events
@@ -415,15 +409,12 @@ def generateKeyConfigs(samples,production, promptLeptonType, L1L2LeptonType, isD
         # preprocessor = CmsswPreprocessor(fname, addOrigAsSecondary=False)
 
     # the following is declared in case this cfg is used in input to the heppy.py script
-    # from PhysicsTools.HeppyCore.framework.eventsfwlite import Events
     config = cfg.Config(
         components   = selectedComponents,
         sequence     = sequence,
         services     = [],
-        # preprocessor = None,
         preprocessor = preprocessor,
         events_class = event_class
-        # events_class = Events
     )
 
     printComps(config.components, True)

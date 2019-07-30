@@ -393,6 +393,7 @@ def generateKeyConfigs(samples,production, promptLeptonType, L1L2LeptonType, isD
     from CMGTools.HNL.utils.EOSEventsWithDownload import EOSEventsWithDownload
     event_class = EOSEventsWithDownload if not preprocessor else Events
     EOSEventsWithDownload.aggressive = 2 # always fetch if running on Wigner
+    EOSEventsWithDownload.aggressive = 0 
     EOSEventsWithDownload.long_cache = getHeppyOption('long_cache', False)
 
     if preprocessor: preprocessor.prefetch = prefetch

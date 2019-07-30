@@ -5,7 +5,6 @@ This is the base analyzer going through data and trying to identify HNL->3L even
 import ROOT
 from itertools import product, combinations
 from math import sqrt, pow
-from os import environ
 import PhysicsTools.HeppyCore.framework.config as cfg
 from PhysicsTools.Heppy.analyzers.core.Analyzer import Analyzer
 from PhysicsTools.Heppy.analyzers.core.AutoHandle import AutoHandle
@@ -36,27 +35,17 @@ class HNLAnalyzer(Analyzer):
     def declareHandles(self): 
         super(HNLAnalyzer, self).declareHandles() 
 
-        '''
-        # watch out for MC and data differences; not just muons, also electrons, photons & taus
-        # MC:   vector<pat::Muon>                     "slimmedMuons"              ""                "PAT"
-        # data: vector<pat::Muon>                     "slimmedMuons"              ""                "RECO"
-        '''
-        # if self.cfg_ana.isData == True:  prcs = 'RECO'
-        # if self.cfg_ana.isData == False: prcs = 'PAT'
-        if environ['IS_DATA'] == 'True':  prcs = 'RECO'
-        if environ['IS_DATA'] == 'False': prcs = 'PAT'
-    
-        self.handles['electrons'] = AutoHandle(('slimmedElectrons'             ,'', prcs ), 'std::vector<pat::Electron>'                    )
-        self.handles['muons'    ] = AutoHandle(('slimmedMuons'                 ,'', prcs ), 'std::vector<pat::Muon>'                        )
+        self.handles['electrons'] = AutoHandle(('slimmedElectrons'             ,'','PAT' ), 'std::vector<pat::Electron>'                    )
+        self.handles['muons'    ] = AutoHandle(('slimmedMuons'                 ,'','PAT' ), 'std::vector<pat::Muon>'                        )
         self.handles['dsamuons' ] = AutoHandle(('displacedStandAloneMuons'     ,'','RECO'), 'std::vector<reco::Track>', mayFail=True        )
         self.handles['dgmuons'  ] = AutoHandle(('displacedGlobalMuons'         ,'','RECO'), 'std::vector<reco::Track>', mayFail=True        )
-        self.handles['photons'  ] = AutoHandle(('slimmedPhotons'               ,'', prcs ), 'std::vector<pat::Photon>'                      )
-        self.handles['taus'     ] = AutoHandle(('slimmedTaus'                  ,'', prcs ), 'std::vector<pat::Tau>'                         )
+        self.handles['photons'  ] = AutoHandle(('slimmedPhotons'               ,'','PAT' ), 'std::vector<pat::Photon>'                      )
+        self.handles['taus'     ] = AutoHandle(('slimmedTaus'                  ,'','PAT' ), 'std::vector<pat::Tau>'                         )
         self.handles['jets'     ] = AutoHandle( 'slimmedJets'                             , 'std::vector<pat::Jet>'                         )
-        self.handles['pvs'      ] = AutoHandle(('offlineSlimmedPrimaryVertices','', prcs ), 'std::vector<reco::Vertex>'                     )
-        self.handles['svs'      ] = AutoHandle(('slimmedSecondaryVertices'     ,'', prcs ), 'std::vector<reco::VertexCompositePtrCandidate>')
+        self.handles['pvs'      ] = AutoHandle(('offlineSlimmedPrimaryVertices','','PAT' ), 'std::vector<reco::Vertex>'                     )
+        self.handles['svs'      ] = AutoHandle(('slimmedSecondaryVertices'     ,'','PAT' ), 'std::vector<reco::VertexCompositePtrCandidate>')
         self.handles['beamspot' ] = AutoHandle(('offlineBeamSpot'              ,'','RECO'), 'reco::BeamSpot'                                )
-        self.handles['pfmet'    ] = AutoHandle(('slimmedMETs'                  ,'', prcs ), 'std::vector<pat::MET>'                         )
+        self.handles['pfmet'    ] = AutoHandle(('slimmedMETs'                  ,'','PAT' ), 'std::vector<pat::MET>'                         )
         self.handles['puppimet' ] = AutoHandle('slimmedMETsPuppi'                         , 'std::vector<pat::MET>'                         )
         self.handles['pfcand'   ] = AutoHandle('packedPFCandidates'                       , 'std::vector<pat::PackedCandidate> '            )
 
@@ -261,6 +250,7 @@ class HNLAnalyzer(Analyzer):
 
         # save a flag to know whether the muons is likely OOT
         # FIXME! for displaced too?
+        #TODO filter rather saving the flag
         for imu in event.muons:
             imu.isoot = self.isOotMuon(imu)
 
@@ -501,8 +491,8 @@ class HNLAnalyzer(Analyzer):
                                  event.the_3lep_cand.l2()]
 
         # plus any isolated electron or muon is also a good lepton rather than a jet
-        event.selMuons     = [mu  for mu  in event.muons     if self.preselectPromptMuons    (mu , pt=10) and mu .relIso(cone_size=0.3, iso_type='dbeta', dbeta_factor=0.5, all_charged=0)<0.15]
-        event.selElectrons = [ele for ele in event.electrons if self.preselectPromptElectrons(ele, pt=10) and ele.relIso(cone_size=0.3, iso_type='dbeta', dbeta_factor=0.5, all_charged=0)<0.15]
+        event.selMuons     = [mu  for mu  in event.muons     if self.preselectPromptMuons    (mu , pt=10) and mu .relIsoR(R=0.3, dBetaFactor=0.5, allCharged=0)<0.15]
+        event.selElectrons = [ele for ele in event.electrons if self.preselectPromptElectrons(ele, pt=10) and ele.relIsoR(R=0.3, dBetaFactor=0.5, allCharged=0)<0.15]
         # RM: what about taus?
 
         event.selectedLeptons += event.selMuons

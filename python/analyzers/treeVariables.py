@@ -403,8 +403,8 @@ vertex_vars = [
     Variable('yError'        , lambda vtx : vtx.yError()                                ),
     Variable('zError'        , lambda vtx : vtx.zError()                                ),
     Variable('prob'          , lambda vtx : ROOT.TMath.Prob(vtx.chi2(), int(vtx.ndof()))),
-    Variable('ls'                                                                       ),
-    Variable('cos'                                                                      ),
+    # Variable('ls'                                                                       ),
+    Variable('cos'           , lambda vtx : vtx.disp2DFromBS_cos)                       ),
 ]
 
 # muon

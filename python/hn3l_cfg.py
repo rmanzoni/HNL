@@ -41,8 +41,9 @@ def generateKeyConfigs(samples,production, promptLeptonType, L1L2LeptonType, isD
     promptLeptonType = promptLeptonType # choose from 'ele' or 'mu'
     L1L2LeptonType = L1L2LeptonType  #choose from 'ee', 'mm', 'em'
 
-    os.environ['IS_DATA'  ] = 'True' if isData   else 'False'
-    os.environ['IS_SIGNAL'] = 'True' if isSignal else 'False' 
+    os.environ['IS_DATA'  ]  = 'True' if isData     else 'False'
+    os.environ['IS_SIGNAL']  = 'True' if isSignal   else 'False' 
+    os.environ['PRODUCTION'] = 'True' if production else 'False' 
 
 
     ###################################################
@@ -399,7 +400,7 @@ def generateKeyConfigs(samples,production, promptLeptonType, L1L2LeptonType, isD
     from CMGTools.HNL.utils.EOSEventsWithDownload import EOSEventsWithDownload
     event_class = EOSEventsWithDownload if not preprocessor else Events
     EOSEventsWithDownload.aggressive = 2 # always fetch if running on Wigner
-    EOSEventsWithDownload.aggressive = 0 
+    # EOSEventsWithDownload.aggressive = 0 
     EOSEventsWithDownload.long_cache = getHeppyOption('long_cache', False)
 
     if preprocessor: preprocessor.prefetch = prefetch

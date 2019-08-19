@@ -404,7 +404,7 @@ vertex_vars = [
     Variable('zError'        , lambda vtx : vtx.zError()                                ),
     Variable('prob'          , lambda vtx : ROOT.TMath.Prob(vtx.chi2(), int(vtx.ndof()))),
     # Variable('ls'                                                                       ),
-    Variable('cos'           , lambda vtx : vtx.disp2DFromBS_cos)                       ),
+    Variable('cos'           , lambda vtx : vtx.disp2DFromBS_cos                        ),
 ]
 
 # muon

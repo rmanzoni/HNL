@@ -77,7 +77,7 @@ add needed packages:
 
 ### add HNL
 
-`git clone -o HNL https://github.com/HNLETHZ/HNL.git -b HNL_18 HNL`
+`git clone -o HNL https://github.com/vinzenzstampf/HNL.git -b HNL_18 HNL`
 
 `cd HNL`
 

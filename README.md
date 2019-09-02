@@ -43,11 +43,15 @@ here replace everything by
 
 `/RecoTauTag/RecoTau/`
 
-### add CMG 104X
+### add CMG CMSSW 104X
+
+`git remote add cmg-central https://github.com/CERN-PH-CMG/cmg-cmssw.git  -f  -t heppy_104X_dev`
 
 `git remote add vstampf https://github.com/vinzenzstampf/cmg-cmssw.git -f -t hnl_104X`
 
 `git checkout -b hnl_104X vstampf/hnl_104X`
+
+`git checkout -b heppy_104X_dev cmg-central/heppy_104X_dev`
 
 add needed packages:
 
@@ -77,7 +81,7 @@ add needed packages:
 
 `cd HNL`
 
-### adding some scale-factors
+### add scale-factors and custom code in Heppy
 
 `cp /afs/cern.ch/work/d/dwinterb/public/MSSM2016/tagging_efficiencies_Moriond2017.root data/.`
 
@@ -86,6 +90,18 @@ add needed packages:
 `wget https://github.com/jandrejk/ProductionFromNano/tree/SM2018/utils/CorrectionWorkspaces/htt_scalefactors_2018_v1.root`
 
 `wget https://github.com/CMS-HTT/CorrectionsWorkspace/raw/2017_17NovReRecoData_Fall17MC/htt_scalefactors_v17_1.root`
+
+`cd ../../../../` # should be at /src now 
+
+`git checkout hnl_104X PhysicsTools/Heppy/python/analyzers/core/PileUpAnalyzer.py`
+
+`git checkout hnl_104X PhysicsTools/Heppy/python/physicsobjects/Electron.py`
+
+`git checkout hnl_104X PhysicsTools/Heppy/python/physicsobjects/Muon.py`
+
+`git checkout hnl_104X PhysicsTools/Heppy/python/physicsobjects/Lepton.py`
+
+
 
 ### compile
 

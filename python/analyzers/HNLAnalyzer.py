@@ -340,9 +340,9 @@ class HNLAnalyzer(Analyzer):
 
         # NEW -- VS: 30.8.: add ID requirement, either loose or martina to shrink ntuple sizes
         event.muons = [imu for imu in event.muons if imu.pt() > 5.\
-                       and abs(imu.eta()) < 2.4\
-                       and imu.relIsoFromEA(0.3) < 10\
-                       and (imu.isSoftMuon(imu.associatedVertex) == 1 or imu.muonID('POG_ID_Loose') == 1 or imu.Medium == 1)]
+                       and abs(imu.eta()) < 2.4]#\
+                       # and imu.relIsoFromEA(0.3) < 10\
+                       # and (imu.isSoftMuon(imu.associatedVertex) == 1 or imu.muonID('POG_ID_Loose') == 1 or imu.Medium == 1)]
 
         #check there are enough leptons in the resp. flavor combination
         if not self.checkLeptonFlavors(event.electrons, event.muons):

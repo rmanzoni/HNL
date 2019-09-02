@@ -12,7 +12,7 @@ samples = [TTJets, WJetsToLNu, TTJets_ext, DYBB, DYJetsToLL_M5to50, DYJetsToLL_M
 
 
 # edit the lines here to specify your ntuple production mode production         = False # state whether you're running production mode or not
-production         = False  # state whether you're running production mode or not
+production         = True  # state whether you're running production mode or not
 isData             = False
 isSignal           = False
 promptLeptonType   = "mu" # choose from 'ele', 'mu'

@@ -11,7 +11,7 @@ samples = [Single_mu_2018A, Single_mu_2018B, Single_mu_2018C, Single_mu_2018D]
 samples = [TTJets, WJetsToLNu, TTJets_ext, DYBB, DYJetsToLL_M5to50, DYJetsToLL_M50, DYJetsToLL_M50_ext, WW, WZ, ZZ]
 
 # edit the lines here to specify your ntuple production mode 
-production         = True # state whether you're running production mode or not
+production         = False # state whether you're running production mode or not
 isData             = False
 isSignal           = False
 promptLeptonType   = "ele" # choose from 'ele', 'mu'

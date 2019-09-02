@@ -316,7 +316,13 @@ class HNLAnalyzer(Analyzer):
         # Preselect electrons
         #####################################################################################
         #FIXME: make min electron pt configurable and set the default at 5 GeV
-        event.electrons  = [iele for iele in event.electrons if iele.pt()>5. and abs(iele.eta())<2.5]
+        # event.electrons  = [iele for iele in event.electrons if iele.pt()>5. and abs(iele.eta())<2.5]
+
+        # NEW -- VS: 30.8.: add ID requirement, either loose or martina to shrink ntuple sizes
+        event.electrons  = [iele for iele in event.electrons if iele.pt() > 5.\
+                            and abs(iele.eta()) < 2.5]#\
+                            # and iele.relIsoFromEA(0.3) < 10\
+                            # and iele.LooseNoIsoID() == 1]
 
         #check there are enough leptons in the resp. flavor combination
         if not self.checkLeptonFlavors(event.electrons, event.muons):
@@ -328,9 +334,15 @@ class HNLAnalyzer(Analyzer):
         # Preselect muons
         #####################################################################################
         
-        event.muons      = [imu for imu in event.muons if imu.pt()>3. and abs(imu.eta())<2.4]
+        # event.muons      = [imu for imu in event.muons if imu.pt()>3. and abs(imu.eta())<2.4]
         # event.dsamuons   = [imu for imu in event.dsamuons       if imu.pt()>3. and abs(imu.eta())>2.4]
         # event.dgmuons    = [imu for imu in event.dgmuons        if imu.pt()>3. and abs(imu.eta())>2.4]
+
+        # NEW -- VS: 30.8.: add ID requirement, either loose or martina to shrink ntuple sizes
+        event.muons = [imu for imu in event.muons if imu.pt() > 5.\
+                       and abs(imu.eta()) < 2.4\
+                       and imu.relIsoFromEA(0.3) < 10\
+                       and (imu.isSoftMuon(imu.associatedVertex) == 1 or imu.muonID('POG_ID_Loose') == 1 or imu.Medium == 1)]
 
         #check there are enough leptons in the resp. flavor combination
         if not self.checkLeptonFlavors(event.electrons, event.muons):
@@ -407,13 +419,8 @@ class HNLAnalyzer(Analyzer):
         event.filtered_electrons = [ele for ele in event.electrons if ele.physObj != prompt_lep.physObj]
          
         ########################################################################################
-        # Preselection for the reco leptons and then create pairs
+        # Create pairs
         ########################################################################################
-        # some simple preselection
-        event.muons      = [imu for imu in event.filtered_muons if imu.pt()>3. and abs(imu.eta())<2.4]
-        # event.dsamuons   = [imu for imu in event.dsamuons       if imu.pt()>3. and abs(imu.eta())>2.4]
-        # event.dgmuons    = [imu for imu in event.dgmuons        if imu.pt()>3. and abs(imu.eta())>2.4]
-        event.electrons  = [iele for iele in event.filtered_electrons if iele.pt()>5. and abs(iele.eta())<2.5]
 
         # create all the possible di-lepton pairs out of the different collections
         dileptons = self.makeLeptonPairs(event,event.electrons,event.muons)

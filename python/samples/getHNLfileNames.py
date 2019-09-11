@@ -11,6 +11,7 @@ wget http://tomc.web.cern.ch/tomc/heavyNeutrino/availableHeavyNeutrinoSamples.tx
 wget http://tomc.web.cern.ch/tomc/heavyNeutrino/heavyNeutrinoFileList.txt
 '''
 
+import re
 from collections import OrderedDict, Counter
 
 class HNLSample():
@@ -45,8 +46,14 @@ class HNLSample():
         self.year              = int(year.replace('v3',''))
         self.files             = files
         self.name              = path.split('/')[-1]
-        self.title             = path.split('/')[-1].replace('.', 'p').replace('HeavyNeutrino_trilepton', 'HN3L').replace('HN3L_M-','HN3L_M_').replace('V-0p', 'V_0p')
+        self.title             = path.split('/')[-1].replace('.', 'p').replace('HeavyNeutrino_trilepton', 'HN3L').replace('HN3L_M-','HN3L_M_').replace('V-0p', 'V_0p')#.replace('e-', 'eminus')
     
+        if 'e-' in self.title:
+            coupling = re.search('V-\d.\d*e-\d*', self.title)
+            if len(coupling.group()):
+                new_coupling = float(coupling.group()[2:].replace('p', '.'))
+                self.title = self.title.replace(coupling.group(), 'V_%.14f' %new_coupling).replace('.', 'p')
+                    
     def __str__(self):
         blabla  = self.title
         blabla += '\n\tyear                 %d  ' %self.year
@@ -173,7 +180,7 @@ if __name__ == '__main__':
             for sample in toread[yy]:
                 print >> f, sample.title + '.files = ['
                 for ii in sample.files:
-                    print >> f, "    {0:200},".format("'"+ii+"'")
+                    print >> f, "    {0:200},".format("'"+ii.replace('/pnfs/iihe/cms', '')+"'")
                 print >> f, ']'
 
             print >> f, '\n\n'

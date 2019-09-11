@@ -180,7 +180,7 @@ if __name__ == '__main__':
             for sample in toread[yy]:
                 print >> f, sample.title + '.files = ['
                 for ii in sample.files:
-                    print >> f, "    {0:200},".format("'"+ii+"'")
+                    print >> f, "    {0:200},".format("'"+ii.replace('/pnfs/iihe/cms', '')+"'")
                 print >> f, ']'
 
             print >> f, '\n\n'

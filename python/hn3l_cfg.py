@@ -1,39 +1,39 @@
-import os
-from collections import OrderedDict
-import PhysicsTools.HeppyCore.framework.config as cfg
-from PhysicsTools.HeppyCore.framework.config import printComps
-from PhysicsTools.HeppyCore.framework.heppy_loop import getHeppyOption
-from PhysicsTools.Heppy.utils.cmsswPreprocessor import CmsswPreprocessor
-from PhysicsTools.HeppyCore.framework.eventsfwlite import Events
-
-from CMGTools.HNL.utils.EOSEventsWithDownload import EOSEventsWithDownload
-from CMGTools.RootTools.utils.splitFactor import splitFactor
-
-# import Heppy analyzers:
-from PhysicsTools.Heppy.analyzers.core.JSONAnalyzer      import JSONAnalyzer
-from PhysicsTools.Heppy.analyzers.core.SkimAnalyzerCount import SkimAnalyzerCount
-from PhysicsTools.Heppy.analyzers.core.EventSelector     import EventSelector
-from PhysicsTools.Heppy.analyzers.objects.VertexAnalyzer import VertexAnalyzer
-from PhysicsTools.Heppy.analyzers.core.PileUpAnalyzer    import PileUpAnalyzer
-from PhysicsTools.Heppy.analyzers.gen.GeneratorAnalyzer  import GeneratorAnalyzer
-from PhysicsTools.Heppy.analyzers.gen.LHEWeightAnalyzer  import LHEWeightAnalyzer
-
-from CMGTools.H2TauTau.proto.analyzers.TriggerAnalyzer   import TriggerAnalyzer
-
-# import HNL analyzers:
-from CMGTools.HNL.analyzers.HNLAnalyzer         import HNLAnalyzer
-from CMGTools.HNL.analyzers.HNLTreeProducer     import HNLTreeProducer
-from CMGTools.HNL.analyzers.HNLGenTreeAnalyzer  import HNLGenTreeAnalyzer
-from CMGTools.HNL.analyzers.HNLSignalReweighter import HNLSignalReweighter
-from CMGTools.HNL.analyzers.RecoGenAnalyzer     import RecoGenAnalyzer
-from CMGTools.HNL.analyzers.TriggerAnalyzer     import TriggerAnalyzer
-from CMGTools.HNL.analyzers.JetAnalyzer         import JetAnalyzer
-from CMGTools.HNL.analyzers.METFilter           import METFilter
-from CMGTools.HNL.analyzers.LeptonWeighter      import LeptonWeighter
-from pdb import set_trace
-
-
 def generateKeyConfigs(samples, promptLeptonType, L1L2LeptonType, isData, isSignal, prefetch=False, year=2018):
+    import os
+    from collections import OrderedDict
+    import PhysicsTools.HeppyCore.framework.config as cfg
+    from PhysicsTools.HeppyCore.framework.config import printComps
+    from PhysicsTools.HeppyCore.framework.heppy_loop import getHeppyOption
+    from PhysicsTools.Heppy.utils.cmsswPreprocessor import CmsswPreprocessor
+    from PhysicsTools.HeppyCore.framework.eventsfwlite import Events
+
+    from CMGTools.HNL.utils.EOSEventsWithDownload import EOSEventsWithDownload
+    from CMGTools.RootTools.utils.splitFactor import splitFactor
+
+    # import Heppy analyzers:
+    from PhysicsTools.Heppy.analyzers.core.JSONAnalyzer      import JSONAnalyzer
+    from PhysicsTools.Heppy.analyzers.core.SkimAnalyzerCount import SkimAnalyzerCount
+    from PhysicsTools.Heppy.analyzers.core.EventSelector     import EventSelector
+    from PhysicsTools.Heppy.analyzers.objects.VertexAnalyzer import VertexAnalyzer
+    from PhysicsTools.Heppy.analyzers.core.PileUpAnalyzer    import PileUpAnalyzer
+    from PhysicsTools.Heppy.analyzers.gen.GeneratorAnalyzer  import GeneratorAnalyzer
+    from PhysicsTools.Heppy.analyzers.gen.LHEWeightAnalyzer  import LHEWeightAnalyzer
+
+    from CMGTools.H2TauTau.proto.analyzers.TriggerAnalyzer   import TriggerAnalyzer
+
+    # import HNL analyzers:
+    from CMGTools.HNL.analyzers.HNLAnalyzer         import HNLAnalyzer
+    from CMGTools.HNL.analyzers.HNLTreeProducer     import HNLTreeProducer
+    from CMGTools.HNL.analyzers.HNLGenTreeAnalyzer  import HNLGenTreeAnalyzer
+    from CMGTools.HNL.analyzers.HNLSignalReweighter import HNLSignalReweighter
+    from CMGTools.HNL.analyzers.RecoGenAnalyzer     import RecoGenAnalyzer
+    from CMGTools.HNL.analyzers.TriggerAnalyzer     import TriggerAnalyzer
+    from CMGTools.HNL.analyzers.JetAnalyzer         import JetAnalyzer
+    from CMGTools.HNL.analyzers.METFilter           import METFilter
+    from CMGTools.HNL.analyzers.LeptonWeighter      import LeptonWeighter
+    from pdb import set_trace
+
+
     ###################################################
     ###                   OPTIONS                   ###
     ###################################################

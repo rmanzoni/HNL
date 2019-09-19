@@ -30,4 +30,3 @@ config = generateKeyConfigs(
     isSignal=isSignal,
     prefetch=False
 )
-

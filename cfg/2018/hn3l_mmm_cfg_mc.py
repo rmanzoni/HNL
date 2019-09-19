@@ -1,10 +1,6 @@
 from CMGTools.HNL.hn3l_cfg import generateKeyConfigs
 
 # specify the samples considered
-from CMGTools.HNL.samples.samples_mc_2018   import TTJets, TTJets_ext, WJetsToLNu, DYBB, DYJetsToLL_M5to50, DYJetsToLL_M50, DYJetsToLL_M50_ext, WW, WZ, ZZ 
-
-samples = [TTJets_ext, DYJetsToLL_M50, DYJetsToLL_M50_ext, DYJetsToLL_M5to50,]
-samples = [DYBB]
 samples = [TTJets, WJetsToLNu, TTJets_ext, DYBB, DYJetsToLL_M5to50, DYJetsToLL_M50, DYJetsToLL_M50_ext, WW, WZ, ZZ]
 
 ###################################################
@@ -32,4 +28,3 @@ config = generateKeyConfigs(
     isSignal=isSignal,
     prefetch=False
 )
-

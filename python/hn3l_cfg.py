@@ -1,38 +1,39 @@
-def generateKeyConfigs(samples, promptLeptonType, L1L2LeptonType, isData, isSignal, prefetch=False):
-    import os
-    from collections import OrderedDict
-    import PhysicsTools.HeppyCore.framework.config as cfg
-    from PhysicsTools.HeppyCore.framework.config     import printComps
-    from PhysicsTools.HeppyCore.framework.heppy_loop import getHeppyOption
-    from PhysicsTools.Heppy.utils.cmsswPreprocessor import CmsswPreprocessor
-    from PhysicsTools.HeppyCore.framework.eventsfwlite import Events
+import os
+from collections import OrderedDict
+import PhysicsTools.HeppyCore.framework.config as cfg
+from PhysicsTools.HeppyCore.framework.config import printComps
+from PhysicsTools.HeppyCore.framework.heppy_loop import getHeppyOption
+from PhysicsTools.Heppy.utils.cmsswPreprocessor import CmsswPreprocessor
+from PhysicsTools.HeppyCore.framework.eventsfwlite import Events
 
-    from CMGTools.HNL.utils.EOSEventsWithDownload import EOSEventsWithDownload
-    from CMGTools.RootTools.utils.splitFactor import splitFactor
+from CMGTools.HNL.utils.EOSEventsWithDownload import EOSEventsWithDownload
+from CMGTools.RootTools.utils.splitFactor import splitFactor
 
-    # import Heppy analyzers:
-    from PhysicsTools.Heppy.analyzers.core.JSONAnalyzer      import JSONAnalyzer
-    from PhysicsTools.Heppy.analyzers.core.SkimAnalyzerCount import SkimAnalyzerCount
-    from PhysicsTools.Heppy.analyzers.core.EventSelector     import EventSelector
-    from PhysicsTools.Heppy.analyzers.objects.VertexAnalyzer import VertexAnalyzer
-    from PhysicsTools.Heppy.analyzers.core.PileUpAnalyzer    import PileUpAnalyzer
-    from PhysicsTools.Heppy.analyzers.gen.GeneratorAnalyzer  import GeneratorAnalyzer
-    from PhysicsTools.Heppy.analyzers.gen.LHEWeightAnalyzer  import LHEWeightAnalyzer
+# import Heppy analyzers:
+from PhysicsTools.Heppy.analyzers.core.JSONAnalyzer      import JSONAnalyzer
+from PhysicsTools.Heppy.analyzers.core.SkimAnalyzerCount import SkimAnalyzerCount
+from PhysicsTools.Heppy.analyzers.core.EventSelector     import EventSelector
+from PhysicsTools.Heppy.analyzers.objects.VertexAnalyzer import VertexAnalyzer
+from PhysicsTools.Heppy.analyzers.core.PileUpAnalyzer    import PileUpAnalyzer
+from PhysicsTools.Heppy.analyzers.gen.GeneratorAnalyzer  import GeneratorAnalyzer
+from PhysicsTools.Heppy.analyzers.gen.LHEWeightAnalyzer  import LHEWeightAnalyzer
 
-    from CMGTools.H2TauTau.proto.analyzers.TriggerAnalyzer   import TriggerAnalyzer
+from CMGTools.H2TauTau.proto.analyzers.TriggerAnalyzer   import TriggerAnalyzer
 
-    # import HNL analyzers:
-    from CMGTools.HNL.analyzers.HNLAnalyzer         import HNLAnalyzer
-    from CMGTools.HNL.analyzers.HNLTreeProducer     import HNLTreeProducer
-    from CMGTools.HNL.analyzers.HNLGenTreeAnalyzer  import HNLGenTreeAnalyzer
-    from CMGTools.HNL.analyzers.HNLSignalReweighter import HNLSignalReweighter
-    from CMGTools.HNL.analyzers.RecoGenAnalyzer     import RecoGenAnalyzer
-    from CMGTools.HNL.analyzers.TriggerAnalyzer     import TriggerAnalyzer
-    from CMGTools.HNL.analyzers.JetAnalyzer         import JetAnalyzer
-    from CMGTools.HNL.analyzers.METFilter           import METFilter
-    from CMGTools.HNL.analyzers.LeptonWeighter      import LeptonWeighter
-    from pdb import set_trace
+# import HNL analyzers:
+from CMGTools.HNL.analyzers.HNLAnalyzer         import HNLAnalyzer
+from CMGTools.HNL.analyzers.HNLTreeProducer     import HNLTreeProducer
+from CMGTools.HNL.analyzers.HNLGenTreeAnalyzer  import HNLGenTreeAnalyzer
+from CMGTools.HNL.analyzers.HNLSignalReweighter import HNLSignalReweighter
+from CMGTools.HNL.analyzers.RecoGenAnalyzer     import RecoGenAnalyzer
+from CMGTools.HNL.analyzers.TriggerAnalyzer     import TriggerAnalyzer
+from CMGTools.HNL.analyzers.JetAnalyzer         import JetAnalyzer
+from CMGTools.HNL.analyzers.METFilter           import METFilter
+from CMGTools.HNL.analyzers.LeptonWeighter      import LeptonWeighter
+from pdb import set_trace
 
+
+def generateKeyConfigs(samples, promptLeptonType, L1L2LeptonType, isData, isSignal, prefetch=False, year=2018):
     ###################################################
     ###                   OPTIONS                   ###
     ###################################################
@@ -46,8 +47,45 @@ def generateKeyConfigs(samples, promptLeptonType, L1L2LeptonType, isData, isSign
 
     os.environ['IS_DATA'  ]  = 'True' if isData     else 'False'
     os.environ['IS_SIGNAL']  = 'True' if isSignal   else 'False' 
+
     # what is this?
-#     os.environ['PRODUCTION'] = 'True' if production else 'False' 
+    # os.environ['PRODUCTION'] = 'True' if production else 'False' 
+
+    if year == 2017: 
+        SF_FILE = 'htt_scalefactors_v17_1.root'
+
+        # Electron corrections, valid for l1 and l2
+        ELE_SFS = OrderedDict()
+        ELE_SFS['idiso'   ] = ('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/'+SF_FILE, 'e_id')
+        ELE_SFS['tracking'] = ('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/'+SF_FILE, 'e_iso')
+        # Add trigger corrections for the prompt lepton l0
+        ELE_PROMPT_SFS = ELE_SFS
+        ELE_PROMPT_SFS['trigger' ] = ('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/'+SF_FILE, 'e_trg_SingleEle_Ele32OREle35_desy')
+
+        # Muon corrections, valid for l1 and l2
+        MU_SFS = OrderedDict()
+        MU_SFS['idiso'   ] = ('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/'+SF_FILE, 'm_id')
+        MU_SFS['tracking'] = ('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/'+SF_FILE, 'm_iso')
+        # Add trigger corrections for the prompt lepton l0
+        MU_PROMPT_SFS = MU_SFS
+        MU_PROMPT_SFS['trigger' ] = ('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/'+SF_FILE, 'm_trg_SingleMu_Mu24ORMu27_desy')
+
+    if year == 2018: 
+        SF_FILE = 'htt_scalefactors_2018_v1.root'
+
+        # Electron corrections, valid for l1 and l2
+        ELE_SFS = OrderedDict()
+        ELE_SFS['idiso'] = ('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/'+SF_FILE, 'e_idiso_desy')
+        # Add trigger corrections for the prompt lepton l0
+        ELE_PROMPT_SFS = ELE_SFS
+        ELE_PROMPT_SFS['trigger'] = ('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/'+SF_FILE, 'e_trgEle32orEle35_desy')
+
+        # Muon corrections, valid for l1 and l2
+        MU_SFS = OrderedDict()
+        MU_SFS['idiso'] = ('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_2018_v1.root', 'm_idiso_desy')
+        # Add trigger corrections for the prompt lepton l0
+        MU_PROMPT_SFS = MU_SFS
+        MU_PROMPT_SFS['trigger'] = ('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_2018_v1.root', 'm_trgIsoMu24orIsoMu27_desy')
 
     ###################################################
     ###               HANDLE SAMPLES                ###
@@ -192,15 +230,9 @@ def generateKeyConfigs(samples, promptLeptonType, L1L2LeptonType, isData, isSign
         Weighter_l0 = cfg.Analyzer(
             LeptonWeighter,
             name='LeptonWeighter_l0',
-            scaleFactorFiles={
-                'trigger' :('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_2018_v1.root', 'e_trgEle32orEle35_desy'),
-                'idiso'   :('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_2018_v1.root', 'e_idiso_desy'),
-#                 'tracking':('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_2018_v1.root', 'e_iso'),
-            },
-            dataEffFiles={
-                # 'trigger':('$CMSSW_BASE/src/CMGTools/H2TauTau/data/htt_scalefactors_v16_2.root', 'm_trgIsoMu22orTkIsoMu22_desy'),
-            },
-            getter = lambda event : event.the_3lep_cand.l0(),
+            scaleFactorFiles=ELE_PROMPT_SFS,
+            dataEffFiles={},
+            getter=lambda event : event.the_3lep_cand.l0(),
             disable=False
         )
 
@@ -208,15 +240,9 @@ def generateKeyConfigs(samples, promptLeptonType, L1L2LeptonType, isData, isSign
         Weighter_l0 = cfg.Analyzer(
             LeptonWeighter,
             name='LeptonWeighter_l0',
-            scaleFactorFiles={
-                'trigger' :('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_2018_v1.root', 'm_trgIsoMu24orIsoMu27_desy'),
-                'idiso'   :('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_2018_v1.root', 'm_idiso_desy'),
-#                 'tracking':('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_2018_v1.root', 'm_iso'),
-            },
-            dataEffFiles={
-                # 'trigger':('$CMSSW_BASE/src/CMGTools/H2TauTau/data/htt_scalefactors_v16_2.root', 'm_trgIsoMu22orTkIsoMu22_desy'),
-            },
-            getter = lambda event : event.the_3lep_cand.l0(),
+            scaleFactorFiles=MU_PROMPT_SFS,
+            dataEffFiles={},
+            getter=lambda event : event.the_3lep_cand.l0(),
             disable=False
         )
 
@@ -224,55 +250,35 @@ def generateKeyConfigs(samples, promptLeptonType, L1L2LeptonType, isData, isSign
         Weighter_l1 = cfg.Analyzer(
             LeptonWeighter,
             name='LeptonWeighter_l1',
-            scaleFactorFiles={
-                'idiso'   :('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_2018_v1.root', 'm_idiso_desy'),
-#                 'tracking':('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_2018_v1.root', 'm_iso'),
-            },
-            dataEffFiles={
-                # 'trigger':('$CMSSW_BASE/src/CMGTools/H2TauTau/data/htt_scalefactors_v16_2.root', 'm_trgIsoMu22orTkIsoMu22_desy'),
-            },
-            getter = lambda event : event.the_3lep_cand.l1(),
-            disable=True
+            scaleFactorFiles=MU_SFS,
+            dataEffFiles={},
+            getter=lambda event : event.the_3lep_cand.l1(),
+            disable=True,
         )
         Weighter_l2 = cfg.Analyzer(
             LeptonWeighter,
             name='LeptonWeighter_l2',
-            scaleFactorFiles={
-                'idiso'   :('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_2018_v1.root', 'm_idiso_desy'),
-                'tracking':('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_2018_v1.root', 'm_iso'),
-            },
-            dataEffFiles={
-                # 'trigger':('$CMSSW_BASE/src/CMGTools/H2TauTau/data/htt_scalefactors_v16_2.root', 'm_trgIsoMu22orTkIsoMu22_desy'),
-            },
-            getter = lambda event : event.the_3lep_cand.l2(),
-            disable=True
+            scaleFactorFiles=MU_SFS,
+            dataEffFiles={},
+            getter=lambda event : event.the_3lep_cand.l2(),
+            disable=True,
         )
 
     if L1L2LeptonType == 'em':
         Weighter_l1 = cfg.Analyzer(
             LeptonWeighter,
             name='LeptonWeighter_l1',
-            scaleFactorFiles={
-                'idiso'   :('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_2018_v1.root', 'e_idiso_desy'),
-#                 'tracking':('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_2018_v1.root', 'e_iso'),
-            },
-            dataEffFiles={
-                # 'trigger':('$CMSSW_BASE/src/CMGTools/H2TauTau/data/htt_scalefactors_v16_2.root', 'm_trgIsoMu22orTkIsoMu22_desy'),
-            },
-            getter = lambda event : event.the_3lep_cand.l1(),
-            disable=True
+            scaleFactorFiles=ELE_SFS,
+            dataEffFiles={},
+            getter=lambda event : event.the_3lep_cand.l1(),
+            disable=True,
         )
         Weighter_l2 = cfg.Analyzer(
             LeptonWeighter,
             name='LeptonWeighter_l2',
-            scaleFactorFiles={
-                'idiso'   :('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_2018_v1.root', 'm_idiso_desy'),
-#                 'tracking':('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_2018_v1.root', 'm_iso'),
-            },
-            dataEffFiles={
-                # 'trigger':('$CMSSW_BASE/src/CMGTools/H2TauTau/data/htt_scalefactors_v16_2.root', 'm_trgIsoMu22orTkIsoMu22_desy'),
-            },
-            getter = lambda event : event.the_3lep_cand.l2(),
+            scaleFactorFiles=MU_SFS,
+            dataEffFiles={},
+            getter=lambda event : event.the_3lep_cand.l2(),
             disable=True
         )
 
@@ -280,27 +286,17 @@ def generateKeyConfigs(samples, promptLeptonType, L1L2LeptonType, isData, isSign
         Weighter_l1 = cfg.Analyzer(
             LeptonWeighter,
             name='LeptonWeighter_l1',
-            scaleFactorFiles={
-                'idiso'   :('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_2018_v1.root', 'e_idiso_desy'),
-#                 'tracking':('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_2018_v1.root', 'e_iso'),
-            },
-            dataEffFiles={
-                # 'trigger':('$CMSSW_BASE/src/CMGTools/H2TauTau/data/htt_scalefactors_v16_2.root', 'm_trgIsoMu22orTkIsoMu22_desy'),
-            },
-            getter = lambda event : event.the_3lep_cand.l1(),
+            scaleFactorFiles=ELE_SFS,
+            dataEffFiles={},
+            getter=lambda event : event.the_3lep_cand.l1(),
             disable=True
         )
         Weighter_l2 = cfg.Analyzer(
             LeptonWeighter,
             name='LeptonWeighter_l2',
-            scaleFactorFiles={
-                'idiso'   :('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_2018_v1.root', 'e_idiso_desy'),
-#                 'tracking':('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_2018_v1.root', 'e_iso'),
-            },
-            dataEffFiles={
-                # 'trigger':('$CMSSW_BASE/src/CMGTools/H2TauTau/data/htt_scalefactors_v16_2.root', 'm_trgIsoMu22orTkIsoMu22_desy'),
-            },
-            getter = lambda event : event.the_3lep_cand.l2(),
+            scaleFactorFiles=ELE_SFS,
+            dataEffFiles={},
+            getter=lambda event : event.the_3lep_cand.l2(),
             disable=True
         )
 

@@ -1,10 +1,13 @@
-def generateKeyConfigs(samples,production, promptLeptonType, L1L2LeptonType, isData, isSignal):
+def generateKeyConfigs(samples, promptLeptonType, L1L2LeptonType, isData, isSignal, prefetch=False):
     import os
     from collections import OrderedDict
     import PhysicsTools.HeppyCore.framework.config as cfg
     from PhysicsTools.HeppyCore.framework.config     import printComps
     from PhysicsTools.HeppyCore.framework.heppy_loop import getHeppyOption
     from PhysicsTools.Heppy.utils.cmsswPreprocessor import CmsswPreprocessor
+    from PhysicsTools.HeppyCore.framework.eventsfwlite import Events
+
+    from CMGTools.HNL.utils.EOSEventsWithDownload import EOSEventsWithDownload
     from CMGTools.RootTools.utils.splitFactor import splitFactor
 
     # import Heppy analyzers:
@@ -19,14 +22,15 @@ def generateKeyConfigs(samples,production, promptLeptonType, L1L2LeptonType, isD
     from CMGTools.H2TauTau.proto.analyzers.TriggerAnalyzer   import TriggerAnalyzer
 
     # import HNL analyzers:
-    from CMGTools.HNL.analyzers.HNLAnalyzer        import HNLAnalyzer
-    from CMGTools.HNL.analyzers.HNLTreeProducer    import HNLTreeProducer
-    from CMGTools.HNL.analyzers.HNLGenTreeAnalyzer import HNLGenTreeAnalyzer
-    from CMGTools.HNL.analyzers.RecoGenAnalyzer    import RecoGenAnalyzer
-    from CMGTools.HNL.analyzers.TriggerAnalyzer    import TriggerAnalyzer
-    from CMGTools.HNL.analyzers.JetAnalyzer        import JetAnalyzer
-    from CMGTools.HNL.analyzers.METFilter          import METFilter
-    from CMGTools.HNL.analyzers.LeptonWeighter     import LeptonWeighter
+    from CMGTools.HNL.analyzers.HNLAnalyzer         import HNLAnalyzer
+    from CMGTools.HNL.analyzers.HNLTreeProducer     import HNLTreeProducer
+    from CMGTools.HNL.analyzers.HNLGenTreeAnalyzer  import HNLGenTreeAnalyzer
+    from CMGTools.HNL.analyzers.HNLSignalReweighter import HNLSignalReweighter
+    from CMGTools.HNL.analyzers.RecoGenAnalyzer     import RecoGenAnalyzer
+    from CMGTools.HNL.analyzers.TriggerAnalyzer     import TriggerAnalyzer
+    from CMGTools.HNL.analyzers.JetAnalyzer         import JetAnalyzer
+    from CMGTools.HNL.analyzers.METFilter           import METFilter
+    from CMGTools.HNL.analyzers.LeptonWeighter      import LeptonWeighter
     from pdb import set_trace
 
     ###################################################
@@ -35,16 +39,15 @@ def generateKeyConfigs(samples,production, promptLeptonType, L1L2LeptonType, isD
     # Get all heppy options; set via "-o production" or "-o production=True"
     # production = True run on batch, production = False (or unset) run locally
 
-    production         = getHeppyOption('production' , production)
-    pick_events        = getHeppyOption('pick_events', False)
+    pick_events = getHeppyOption('pick_events', False)
 
     promptLeptonType = promptLeptonType # choose from 'ele' or 'mu'
-    L1L2LeptonType = L1L2LeptonType  #choose from 'ee', 'mm', 'em'
+    L1L2LeptonType = L1L2LeptonType  # choose from 'ee', 'mm', 'em'
 
     os.environ['IS_DATA'  ]  = 'True' if isData     else 'False'
     os.environ['IS_SIGNAL']  = 'True' if isSignal   else 'False' 
-    os.environ['PRODUCTION'] = 'True' if production else 'False' 
-
+    # what is this?
+#     os.environ['PRODUCTION'] = 'True' if production else 'False' 
 
     ###################################################
     ###               HANDLE SAMPLES                ###
@@ -92,6 +95,11 @@ def generateKeyConfigs(samples,production, promptLeptonType, L1L2LeptonType, isD
     skimAna = cfg.Analyzer(
         SkimAnalyzerCount,
         name='SkimAnalyzerCount'
+    )
+
+    signalReweighAna = cfg.Analyzer(
+        HNLSignalReweighter,
+        name='HNLSignalReweighter'
     )
 
     triggerAna = cfg.Analyzer(
@@ -185,9 +193,9 @@ def generateKeyConfigs(samples,production, promptLeptonType, L1L2LeptonType, isD
             LeptonWeighter,
             name='LeptonWeighter_l0',
             scaleFactorFiles={
-                'trigger' :('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_2018_v1.root', 'e_trg_SingleEle_Ele32OREle35_desy'),
-                'idiso'   :('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_2018_v1.root', 'e_id'),
-                'tracking':('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_2018_v1.root', 'e_iso'),
+                'trigger' :('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_2018_v1.root', 'e_trgEle32orEle35_desy'),
+                'idiso'   :('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_2018_v1.root', 'e_idiso_desy'),
+#                 'tracking':('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_2018_v1.root', 'e_iso'),
             },
             dataEffFiles={
                 # 'trigger':('$CMSSW_BASE/src/CMGTools/H2TauTau/data/htt_scalefactors_v16_2.root', 'm_trgIsoMu22orTkIsoMu22_desy'),
@@ -201,9 +209,9 @@ def generateKeyConfigs(samples,production, promptLeptonType, L1L2LeptonType, isD
             LeptonWeighter,
             name='LeptonWeighter_l0',
             scaleFactorFiles={
-                'trigger' :('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_2018_v1.root', 'm_trg_SingleMu_Mu24ORMu27_desy'),
-                'idiso'   :('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_2018_v1.root', 'm_id'),
-                'tracking':('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_2018_v1.root', 'm_iso'),
+                'trigger' :('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_2018_v1.root', 'm_trgIsoMu24orIsoMu27_desy'),
+                'idiso'   :('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_2018_v1.root', 'm_idiso_desy'),
+#                 'tracking':('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_2018_v1.root', 'm_iso'),
             },
             dataEffFiles={
                 # 'trigger':('$CMSSW_BASE/src/CMGTools/H2TauTau/data/htt_scalefactors_v16_2.root', 'm_trgIsoMu22orTkIsoMu22_desy'),
@@ -217,8 +225,8 @@ def generateKeyConfigs(samples,production, promptLeptonType, L1L2LeptonType, isD
             LeptonWeighter,
             name='LeptonWeighter_l1',
             scaleFactorFiles={
-                'idiso'   :('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_2018_v1.root', 'm_id'),
-                'tracking':('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_2018_v1.root', 'm_iso'),
+                'idiso'   :('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_2018_v1.root', 'm_idiso_desy'),
+#                 'tracking':('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_2018_v1.root', 'm_iso'),
             },
             dataEffFiles={
                 # 'trigger':('$CMSSW_BASE/src/CMGTools/H2TauTau/data/htt_scalefactors_v16_2.root', 'm_trgIsoMu22orTkIsoMu22_desy'),
@@ -230,7 +238,7 @@ def generateKeyConfigs(samples,production, promptLeptonType, L1L2LeptonType, isD
             LeptonWeighter,
             name='LeptonWeighter_l2',
             scaleFactorFiles={
-                'idiso'   :('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_2018_v1.root', 'm_id'),
+                'idiso'   :('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_2018_v1.root', 'm_idiso_desy'),
                 'tracking':('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_2018_v1.root', 'm_iso'),
             },
             dataEffFiles={
@@ -245,8 +253,8 @@ def generateKeyConfigs(samples,production, promptLeptonType, L1L2LeptonType, isD
             LeptonWeighter,
             name='LeptonWeighter_l1',
             scaleFactorFiles={
-                'idiso'   :('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_2018_v1.root', 'e_id'),
-                'tracking':('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_2018_v1.root', 'e_iso'),
+                'idiso'   :('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_2018_v1.root', 'e_idiso_desy'),
+#                 'tracking':('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_2018_v1.root', 'e_iso'),
             },
             dataEffFiles={
                 # 'trigger':('$CMSSW_BASE/src/CMGTools/H2TauTau/data/htt_scalefactors_v16_2.root', 'm_trgIsoMu22orTkIsoMu22_desy'),
@@ -258,8 +266,8 @@ def generateKeyConfigs(samples,production, promptLeptonType, L1L2LeptonType, isD
             LeptonWeighter,
             name='LeptonWeighter_l2',
             scaleFactorFiles={
-                'idiso'   :('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_2018_v1.root', 'm_id'),
-                'tracking':('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_2018_v1.root', 'm_iso'),
+                'idiso'   :('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_2018_v1.root', 'm_idiso_desy'),
+#                 'tracking':('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_2018_v1.root', 'm_iso'),
             },
             dataEffFiles={
                 # 'trigger':('$CMSSW_BASE/src/CMGTools/H2TauTau/data/htt_scalefactors_v16_2.root', 'm_trgIsoMu22orTkIsoMu22_desy'),
@@ -273,8 +281,8 @@ def generateKeyConfigs(samples,production, promptLeptonType, L1L2LeptonType, isD
             LeptonWeighter,
             name='LeptonWeighter_l1',
             scaleFactorFiles={
-                'idiso'   :('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_2018_v1.root', 'e_id'),
-                'tracking':('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_2018_v1.root', 'e_iso'),
+                'idiso'   :('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_2018_v1.root', 'e_idiso_desy'),
+#                 'tracking':('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_2018_v1.root', 'e_iso'),
             },
             dataEffFiles={
                 # 'trigger':('$CMSSW_BASE/src/CMGTools/H2TauTau/data/htt_scalefactors_v16_2.root', 'm_trgIsoMu22orTkIsoMu22_desy'),
@@ -286,8 +294,8 @@ def generateKeyConfigs(samples,production, promptLeptonType, L1L2LeptonType, isD
             LeptonWeighter,
             name='LeptonWeighter_l2',
             scaleFactorFiles={
-                'idiso'   :('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_2018_v1.root', 'e_id'),
-                'tracking':('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_2018_v1.root', 'e_iso'),
+                'idiso'   :('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_2018_v1.root', 'e_idiso_desy'),
+#                 'tracking':('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_2018_v1.root', 'e_iso'),
             },
             dataEffFiles={
                 # 'trigger':('$CMSSW_BASE/src/CMGTools/H2TauTau/data/htt_scalefactors_v16_2.root', 'm_trgIsoMu22orTkIsoMu22_desy'),
@@ -339,6 +347,7 @@ def generateKeyConfigs(samples,production, promptLeptonType, L1L2LeptonType, isD
                 lheWeightAna, # les houches
                 jsonAna,
                 skimAna,
+                signalReweighAna,
                 triggerAna,
                 vertexAna,
                 pileUpAna,
@@ -374,46 +383,14 @@ def generateKeyConfigs(samples,production, promptLeptonType, L1L2LeptonType, isD
             ])
 
     ###################################################
-    ###            SET BATCH OR LOCAL               ###
-    ###################################################
-    if not production:
-    #     comp                 = HN3L_M_2p5_V_0p0173205080757_e_onshell
-    #     comp                 = HN3L_M_2p5_V_0p00707106781187_e_onshell
-        # comp                 = all_signals_e[0]
-        # comp                 = DYJetsToLL_M50
-        comp                 = samples[0]
-        # comp                 = samples
-    #     comp                 = ttbar
-        # comp                 = bkg
-        selectedComponents   = [comp]
-        comp.splitFactor     = 1
-        comp.fineSplitFactor = 1
-        comp.files           = comp.files[:1]
-
-    ###################################################
     ###            PREPROCESSOR                     ###
     ###################################################
-    preprocessor = None
 
     # temporary copy remote files using xrd
-    from PhysicsTools.HeppyCore.framework.eventsfwlite import Events
-    from CMGTools.HNL.utils.EOSEventsWithDownload import EOSEventsWithDownload
-    event_class = EOSEventsWithDownload if not preprocessor else Events
-    EOSEventsWithDownload.aggressive = 2 # always fetch if running on Wigner
-    # EOSEventsWithDownload.aggressive = 0 
-    EOSEventsWithDownload.long_cache = getHeppyOption('long_cache', False)
-
-    if preprocessor: preprocessor.prefetch = prefetch
-
-    # if extrap_muons_to_L1:
-        # fname = '$CMSSW_BASE/src/CMGTools/WTau3Mu/prod/muon_extrapolator_cfg.py'
-        # sequence.append(fileCleaner)
-        # preprocessor = CmsswPreprocessor(fname, addOrigAsSecondary=False)
-
-    # if compute_mvamet:
-        # fname = '$CMSSW_BASE/src/CMGTools/WTau3Mu/prod/compute_mva_met_data_cfg.py'
-        # sequence.append(fileCleaner)
-        # preprocessor = CmsswPreprocessor(fname, addOrigAsSecondary=False)
+    event_class = EOSEventsWithDownload if not prefetch else Events
+    if prefetch:
+        EOSEventsWithDownload.aggressive = 2 # always fetch if running on Wigner
+        EOSEventsWithDownload.long_cache = getHeppyOption('long_cache', False)
 
     # the following is declared in case this cfg is used in input to the heppy.py script
     # from PhysicsTools.HeppyCore.framework.eventsfwlite import Events
@@ -421,12 +398,10 @@ def generateKeyConfigs(samples,production, promptLeptonType, L1L2LeptonType, isD
         components   = selectedComponents,
         sequence     = sequence,
         services     = [],
-        # preprocessor = None,
-        preprocessor = preprocessor,
+        preprocessor = None,
         events_class = event_class
-        # events_class = Events
     )
-
+    
     printComps(config.components, True)
 
     return config

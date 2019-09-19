@@ -42,15 +42,6 @@ def generateKeyConfigs(samples, promptLeptonType, L1L2LeptonType, isData, isSign
 
     pick_events = getHeppyOption('pick_events', False)
 
-    promptLeptonType = promptLeptonType # choose from 'ele' or 'mu'
-    L1L2LeptonType = L1L2LeptonType  # choose from 'ee', 'mm', 'em'
-
-    os.environ['IS_DATA'  ]  = 'True' if isData     else 'False'
-    os.environ['IS_SIGNAL']  = 'True' if isSignal   else 'False' 
-
-    # what is this?
-    # os.environ['PRODUCTION'] = 'True' if production else 'False' 
-
     if year == 2017: 
         SF_FILE = 'htt_scalefactors_v17_1.root'
 

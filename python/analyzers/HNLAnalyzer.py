@@ -5,7 +5,6 @@ This is the base analyzer going through data and trying to identify HNL->3L even
 import ROOT
 from itertools import product, combinations
 from math import sqrt, pow
-from os import environ
 import PhysicsTools.HeppyCore.framework.config as cfg
 from PhysicsTools.Heppy.analyzers.core.Analyzer import Analyzer
 from PhysicsTools.Heppy.analyzers.core.AutoHandle import AutoHandle
@@ -35,30 +34,20 @@ class HNLAnalyzer(Analyzer):
 
     def declareHandles(self): 
         super(HNLAnalyzer, self).declareHandles() 
-
-        '''
-        # watch out for MC and data differences; not just muons, also electrons, photons & taus
-        # MC:   vector<pat::Muon>                     "slimmedMuons"              ""                "PAT"
-        # data: vector<pat::Muon>                     "slimmedMuons"              ""                "RECO"
-        '''
-        # if self.cfg_ana.isData == True:  prcs = 'RECO'
-        # if self.cfg_ana.isData == False: prcs = 'PAT'
-        if environ['IS_DATA'] == 'True':  prcs = 'RECO'
-        if environ['IS_DATA'] == 'False': prcs = 'PAT'
     
-        self.handles['electrons'] = AutoHandle(('slimmedElectrons'             ,'', prcs ), 'std::vector<pat::Electron>'                    )
-        self.handles['muons'    ] = AutoHandle(('slimmedMuons'                 ,'', prcs ), 'std::vector<pat::Muon>'                        )
-        self.handles['dsamuons' ] = AutoHandle(('displacedStandAloneMuons'     ,'','RECO'), 'std::vector<reco::Track>', mayFail=True        )
-        self.handles['dgmuons'  ] = AutoHandle(('displacedGlobalMuons'         ,'','RECO'), 'std::vector<reco::Track>', mayFail=True        )
-        self.handles['photons'  ] = AutoHandle(('slimmedPhotons'               ,'', prcs ), 'std::vector<pat::Photon>'                      )
-        self.handles['taus'     ] = AutoHandle(('slimmedTaus'                  ,'', prcs ), 'std::vector<pat::Tau>'                         )
-        self.handles['jets'     ] = AutoHandle( 'slimmedJets'                             , 'std::vector<pat::Jet>'                         )
-        self.handles['pvs'      ] = AutoHandle(('offlineSlimmedPrimaryVertices','', prcs ), 'std::vector<reco::Vertex>'                     )
-        self.handles['svs'      ] = AutoHandle(('slimmedSecondaryVertices'     ,'', prcs ), 'std::vector<reco::VertexCompositePtrCandidate>')
-        self.handles['beamspot' ] = AutoHandle(('offlineBeamSpot'              ,'','RECO'), 'reco::BeamSpot'                                )
-        self.handles['pfmet'    ] = AutoHandle(('slimmedMETs'                  ,'', prcs ), 'std::vector<pat::MET>'                         )
-        self.handles['puppimet' ] = AutoHandle('slimmedMETsPuppi'                         , 'std::vector<pat::MET>'                         )
-        self.handles['pfcand'   ] = AutoHandle('packedPFCandidates'                       , 'std::vector<pat::PackedCandidate> '            )
+        self.handles['electrons'] = AutoHandle('slimmedElectrons'             , 'std::vector<pat::Electron>'                    )
+        self.handles['muons'    ] = AutoHandle('slimmedMuons'                 , 'std::vector<pat::Muon>'                        )
+        self.handles['dsamuons' ] = AutoHandle('displacedStandAloneMuons'     , 'std::vector<reco::Track>', mayFail=True        )
+        self.handles['dgmuons'  ] = AutoHandle('displacedGlobalMuons'         , 'std::vector<reco::Track>', mayFail=True        )
+        self.handles['photons'  ] = AutoHandle('slimmedPhotons'               , 'std::vector<pat::Photon>'                      )
+        self.handles['taus'     ] = AutoHandle('slimmedTaus'                  , 'std::vector<pat::Tau>'                         )
+        self.handles['jets'     ] = AutoHandle('slimmedJets'                  , 'std::vector<pat::Jet>'                         )
+        self.handles['pvs'      ] = AutoHandle('offlineSlimmedPrimaryVertices', 'std::vector<reco::Vertex>'                     )
+        self.handles['svs'      ] = AutoHandle('slimmedSecondaryVertices'     , 'std::vector<reco::VertexCompositePtrCandidate>')
+        self.handles['beamspot' ] = AutoHandle('offlineBeamSpot'              , 'reco::BeamSpot'                                )
+        self.handles['pfmet'    ] = AutoHandle('slimmedMETs'                  , 'std::vector<pat::MET>'                         )
+        self.handles['puppimet' ] = AutoHandle('slimmedMETsPuppi'             , 'std::vector<pat::MET>'                         )
+        self.handles['pfcand'   ] = AutoHandle('packedPFCandidates'           , 'std::vector<pat::PackedCandidate> '            )
 
     def assignVtx(self, particles, vtx):
         for ip in particles:
@@ -320,9 +309,9 @@ class HNLAnalyzer(Analyzer):
 
         # NEW -- VS: 30.8.: add ID requirement, either loose or martina to shrink ntuple sizes
         event.electrons  = [iele for iele in event.electrons if iele.pt() > 5.\
-                            and abs(iele.eta()) < 2.5]#\
-                            # and iele.relIsoFromEA(0.3) < 10\
-                            # and iele.LooseNoIsoID() == 1]
+                            and abs(iele.eta()) < 2.5\
+                            and iele.relIsoFromEA(0.3) < 10\
+                            and iele.LooseNoIsoID() == 1]
 
         #check there are enough leptons in the resp. flavor combination
         if not self.checkLeptonFlavors(event.electrons, event.muons):
@@ -340,9 +329,9 @@ class HNLAnalyzer(Analyzer):
 
         # NEW -- VS: 30.8.: add ID requirement, either loose or martina to shrink ntuple sizes
         event.muons = [imu for imu in event.muons if imu.pt() > 5.\
-                       and abs(imu.eta()) < 2.4]#\
-                       # and imu.relIsoFromEA(0.3) < 10\
-                       # and (imu.isSoftMuon(imu.associatedVertex) == 1 or imu.muonID('POG_ID_Loose') == 1 or imu.Medium == 1)]
+                       and abs(imu.eta()) < 2.4\
+                       and imu.relIsoFromEA(0.3) < 10\
+                       and (imu.isSoftMuon(imu.associatedVertex) == 1 or imu.muonID('POG_ID_Loose') == 1 or imu.Medium == 1)]
 
         #check there are enough leptons in the resp. flavor combination
         if not self.checkLeptonFlavors(event.electrons, event.muons):

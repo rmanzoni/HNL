@@ -1,6 +1,7 @@
 import ROOT
 import numpy as np
 from CMGTools.HNL.analyzers.TreeProducerBase import TreeProducerBase
+from CMGTools.HNL.analyzers.HNLSignalReweighter import new_v2s
 from PhysicsTools.HeppyCore.utils.deltar import deltaR, bestMatch
 from CMGTools.HNL.utils.utils import isAncestor, displacement2D, displacement3D, makeRecoVertex # utility functions
 from pdb import set_trace
@@ -182,6 +183,15 @@ class HNLTreeProducer(TreeProducerBase):
         
         # LHE weight
         self.var(self.tree, 'lhe_weight')
+        
+        # weights for ctau reweighing (only for signal!)
+        if 'HN3L' in self.cfg_comp.name:
+            for iv2 in new_v2s:
+                # 'stringify' the coupling
+                iv2_name = str(iv2).replace('-', 'm')
+                self.var(self.tree, 'ctau_w_v2_%s' %iv2_name)
+                self.var(self.tree, 'xs_w_v2_%s' %iv2_name  )
+        
 
     def process(self, event):
         '''
@@ -396,6 +406,14 @@ class HNLTreeProducer(TreeProducerBase):
                 self.fill(self.tree, 'hnl_m_2Vmu', (event.veto_save_mu.p4() + event.the_3lep_cand.l2().p4()).mass())
         # LHE weight
         self.fill(self.tree, 'lhe_weight', np.sign(getattr(event, 'LHE_originalWeight', 1.)))
+
+        # weights for ctau reweighing (only for signal!)
+        if 'HN3L' in self.cfg_comp.name:
+            for iv2 in new_v2s:
+                # 'stringify' the coupling
+                iv2_name = str(iv2).replace('-', 'm')
+                self.fill(self.tree, 'ctau_w_v2_%s' %iv2_name, event.ctau_weights[iv2]['ctau_weight'])
+                self.fill(self.tree, 'xs_w_v2_%s' %iv2_name  , event.ctau_weights[iv2]['xs_weight'  ])
                 
         self.fillTree(event)
 

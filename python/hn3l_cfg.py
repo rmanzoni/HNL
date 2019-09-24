@@ -244,7 +244,7 @@ def generateKeyConfigs(samples, promptLeptonType, L1L2LeptonType, isData, isSign
             scaleFactorFiles=MU_SFS,
             dataEffFiles={},
             getter=lambda event : event.the_3lep_cand.l1(),
-            disable=True,
+            disable=False,
         )
         Weighter_l2 = cfg.Analyzer(
             LeptonWeighter,
@@ -252,7 +252,7 @@ def generateKeyConfigs(samples, promptLeptonType, L1L2LeptonType, isData, isSign
             scaleFactorFiles=MU_SFS,
             dataEffFiles={},
             getter=lambda event : event.the_3lep_cand.l2(),
-            disable=True,
+            disable=False,
         )
 
     if L1L2LeptonType == 'em':
@@ -262,7 +262,7 @@ def generateKeyConfigs(samples, promptLeptonType, L1L2LeptonType, isData, isSign
             scaleFactorFiles=ELE_SFS,
             dataEffFiles={},
             getter=lambda event : event.the_3lep_cand.l1(),
-            disable=True,
+            disable=False,
         )
         Weighter_l2 = cfg.Analyzer(
             LeptonWeighter,
@@ -270,7 +270,7 @@ def generateKeyConfigs(samples, promptLeptonType, L1L2LeptonType, isData, isSign
             scaleFactorFiles=MU_SFS,
             dataEffFiles={},
             getter=lambda event : event.the_3lep_cand.l2(),
-            disable=True
+            disable=False
         )
 
     if L1L2LeptonType == 'ee':
@@ -280,7 +280,7 @@ def generateKeyConfigs(samples, promptLeptonType, L1L2LeptonType, isData, isSign
             scaleFactorFiles=ELE_SFS,
             dataEffFiles={},
             getter=lambda event : event.the_3lep_cand.l1(),
-            disable=True
+            disable=False
         )
         Weighter_l2 = cfg.Analyzer(
             LeptonWeighter,
@@ -288,7 +288,7 @@ def generateKeyConfigs(samples, promptLeptonType, L1L2LeptonType, isData, isSign
             scaleFactorFiles=ELE_SFS,
             dataEffFiles={},
             getter=lambda event : event.the_3lep_cand.l2(),
-            disable=True
+            disable=False
         )
 
     # see SM HTT TWiki

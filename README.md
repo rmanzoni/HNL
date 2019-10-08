@@ -91,7 +91,7 @@ add needed packages:
 
 `wget https://github.com/CMS-HTT/CorrectionsWorkspace/raw/2017_17NovReRecoData_Fall17MC/htt_scalefactors_v17_1.root`
 
-`cd ../../../../` # should be at /src now 
+`cd $CMSSW_BASE/src` 
 
 `git checkout hnl_104X PhysicsTools/Heppy/python/analyzers/core/PileUpAnalyzer.py`
 

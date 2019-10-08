@@ -3,8 +3,8 @@ from CMGTools.HNL.samples.samples_mc_2017 import TTJets, WJetsToLNu, DYBB, DYJet
 
 # specify the samples considered
 samples = [TTJets, DYJetsToLL_M50_ext]#, WJetsToLNu, TTJets_ext, DYBB, DYJetsToLL_M5to50, DYJetsToLL_M50, WW, WZ, ZZ]
-samples = [TTJets, DYJetsToLL_M50_ext, WJetsToLNu, DYBB, DYJetsToLL_M10to50, DYJetsToLL_M50, WW, WZ, ZZ]
 samples = [DYBB]
+samples = [TTJets, DYJetsToLL_M50_ext, WJetsToLNu, DYBB, DYJetsToLL_M10to50, DYJetsToLL_M50, WW, WZ, ZZ]
 
 ###################################################
 # set to True if you want to run interactively on a selected portion of samples/files/whatnot
@@ -29,5 +29,6 @@ config = generateKeyConfigs(
     L1L2LeptonType, 
     isData=isData, 
     isSignal=isSignal,
-    prefetch=False
+    prefetch=False,
+    year = 2017
 )

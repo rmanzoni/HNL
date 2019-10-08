@@ -8,12 +8,12 @@ samples = [TTJets, WJetsToLNu, TTJets_ext, DYBB, DYJetsToLL_M5to50, DYJetsToLL_M
 
 ###################################################
 # set to True if you want to run interactively on a selected portion of samples/files/whatnot
-testing = True 
+testing = False 
 if testing:
     # run on a single component
     comp = samples[0]
-    # comp.files = comp.files[:1]
-    comp.fineSplitFactor = 10 # fine splitting, multicore
+    compfiles = comp.files[:1]
+    # comp.fineSplitFactor = 10 # fine splitting, multicore
     samples = [comp]
 ###################################################
 

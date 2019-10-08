@@ -54,7 +54,7 @@ DYBB .nGenEvents = DYBB.dataset_entries
 
 
 DYJetsToLL_M5to50 = creator.makeMCComponent(
-    name    = 'DYJetsToLL_M50to50',
+    name    = 'DYJetsToLL_M5to50',
     dataset = '/DYJetsToLL_M-5to50_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v2/MINIAODSIM',
     user    = 'CMS', 
     pattern = '.*root',

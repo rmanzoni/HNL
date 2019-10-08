@@ -12,7 +12,8 @@ creator = ComponentCreator()
 ''' makeMyPrivateDataComponent is a copy of MakeMyPrivateMCComponent in ComponentCreator.py
     this should be adjusted (i guess) to include some data only attributes, like lumi, etc.
 '''
-json = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/Final/Cert_294927-306462_13TeV_PromptReco_Collisions17_JSON.txt'
+# json = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/Final/Cert_294927-306462_13TeV_PromptReco_Collisions17_JSON.txt'
+json = '$CMSSW_BASE/src/CMGTools/HNL/data/Cert_294927-306462_13TeV_PromptReco_Collisions17_JSON.txt'
 
 Single_ele_2017B  = creator.makeDataComponent('Single_ele_2017B', '/SingleElectron/Run2017B-31Mar2018-v1/MINIAOD', 'CMS', '.*root', json, useAAA=True)
 Single_ele_2017C  = creator.makeDataComponent('Single_ele_2017C', '/SingleElectron/Run2017C-31Mar2018-v1/MINIAOD', 'CMS', '.*root', json, useAAA=True)

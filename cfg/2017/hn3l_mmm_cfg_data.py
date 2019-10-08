@@ -3,12 +3,12 @@ from CMGTools.HNL.hn3l_cfg import generateKeyConfigs
 # specify the samples considered
 from CMGTools.HNL.samples.samples_data_2017 import Single_mu_2017, Single_mu_2017E, Single_mu_2017B, Single_mu_2017C, Single_mu_2017D, Single_mu_2017F
 
-samples = [Single_mu_2017E, Single_mu_2017B, Single_mu_2017C, Single_mu_2017D, Single_mu_2017F]
 samples = [Single_mu_2017B]#, Single_mu_2017B, Single_mu_2017C, Single_mu_2017D]
+samples = [Single_mu_2017E, Single_mu_2017C, Single_mu_2017D, Single_mu_2017F]
 
 ###################################################
 # set to True if you want to run interactively on a selected portion of samples/files/whatnot
-testing = True 
+testing = False 
 if testing:
     # run on a single component
     comp = samples[0]

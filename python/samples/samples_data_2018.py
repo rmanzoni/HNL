@@ -31,7 +31,8 @@ Single_ele_2018D  = creator.makeDataComponent('Single_ele_2018D', '/EGamma/Run20
 Single_mu_2018A   = creator.makeDataComponent('Single_mu_2018A' , '/SingleMuon/Run2018A-17Sep2018-v2/MINIAOD'    , 'CMS', '.*root', json, useAAA=True)
 Single_mu_2018B   = creator.makeDataComponent('Single_mu_2018B' , '/SingleMuon/Run2018B-17Sep2018-v1/MINIAOD'    , 'CMS', '.*root', json, useAAA=True)
 Single_mu_2018C   = creator.makeDataComponent('Single_mu_2018C' , '/SingleMuon/Run2018C-17Sep2018-v1/MINIAOD'    , 'CMS', '.*root', json, useAAA=True)
-Single_mu_2018D   = creator.makeDataComponent('Single_mu_2018D' , '/SingleMuon/Run2018D-30Apr2019-v1/MINIAOD'    , 'CMS', '.*root', json, useAAA=True)
+Single_mu_2018D   = creator.makeDataComponent('Single_mu_2018D' , '/SingleMuon/Run2018D-22Jan2019-v2/MINIAOD'    , 'CMS', '.*root', json, useAAA=True)
+# Single_mu_2018D   = creator.makeDataComponent('Single_mu_2018D' , '/SingleMuon/Run2018D-30Apr2019-v1/MINIAOD'    , 'CMS', '.*root', json, useAAA=True) #VS 10/14/19: This DS only makes 5 chunks
 
 Single_ele_2018 = [
     Single_ele_2018A,

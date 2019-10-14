@@ -4,7 +4,8 @@ from CMGTools.HNL.hn3l_cfg import generateKeyConfigs
 from CMGTools.HNL.samples.samples_data_2018 import Single_mu_2018, Single_mu_2018A, Single_mu_2018B, Single_mu_2018C, Single_mu_2018D
 
 samples = [Single_mu_2018A, Single_mu_2018B, Single_mu_2018C, Single_mu_2018D]
-samples = [Single_mu_2018B, Single_mu_2018C, Single_mu_2018D]
+samples = [Single_mu_2018A, Single_mu_2018B, Single_mu_2018C, Single_mu_2018D]
+samples = [Single_mu_2018D]
 
 ###################################################
 # set to True if you want to run interactively on a selected portion of samples/files/whatnot

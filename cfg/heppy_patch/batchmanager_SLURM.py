@@ -282,6 +282,7 @@ class BatchManager:
         "LXPLUS-LSF" : batch command is bsub, and logged on lxplus
         "LXPLUS"     : batch command is condor, and logged on lxplus
         "PSI"        : batch command is qsub, and logged to t3uiXX
+        "PSI_SLURM   : batch command is sbatch, and logged to t3ui07
         "NAF"        : batch command is qsub, and logged on naf
         "IC"         : batch command is qsub, and logged on hep.ph.ic.ac.uk
         "LOCAL"      : batch command is nohup.
@@ -335,7 +336,7 @@ class BatchManager:
         elif batchCmd == "sbatch":
             if onPSI:
                 print('running on SLURM : %s from %s' % (batchCmd, hostName))
-                return 'PSI'
+                return 'PSI_SLURM'
             else:
                 err = 'Cannot run %s on %s' % (batchCmd, hostName)
                 raise ValueError( err )

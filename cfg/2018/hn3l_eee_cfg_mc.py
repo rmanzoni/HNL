@@ -3,16 +3,16 @@ from CMGTools.HNL.samples.samples_mc_2018 import TTJets, TTJets_ext, WJetsToLNu,
 
 # specify the samples considered
 samples = [TTJets_ext, DYJetsToLL_M50, DYJetsToLL_M50_ext, DYJetsToLL_M5to50,]
-samples = [DYBB]
 samples = [TTJets, WJetsToLNu, TTJets_ext, DYBB, DYJetsToLL_M5to50, DYJetsToLL_M50, DYJetsToLL_M50_ext, WW, WZ, ZZ]
+samples = [DYBB]
 
 ###################################################
 # set to True if you want to run interactively on a selected portion of samples/files/whatnot
-testing = False 
+testing = True 
 if testing:
     # run on a single component
     comp = samples[0]
-    compfiles = comp.files[:1]
+    comp.files = comp.files[:1]
     # comp.fineSplitFactor = 10 # fine splitting, multicore
     samples = [comp]
 ###################################################
@@ -30,5 +30,6 @@ config = generateKeyConfigs(
     L1L2LeptonType, 
     isData=isData, 
     isSignal=isSignal,
-    prefetch=False
+    prefetch=False,
+    year=2018
 )

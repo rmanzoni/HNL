@@ -7,12 +7,12 @@ samples = [Single_mu_2018A, Single_mu_2018B, Single_mu_2018C, Single_mu_2018D]
 
 ###################################################
 # set to True if you want to run interactively on a selected portion of samples/files/whatnot
-testing = True 
+testing = False 
 if testing:
     # run on a single component
     comp = samples[0]
-    # comp.files = comp.files[:1]
-    comp.fineSplitFactor = 10 # fine splitting, multicore
+    comp.files = comp.files[:1]
+    # comp.fineSplitFactor = 10 # fine splitting, multicore
     samples = [comp]
 ###################################################
 

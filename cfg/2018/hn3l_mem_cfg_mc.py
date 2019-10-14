@@ -13,8 +13,8 @@ testing = False
 if testing:
     # run on a single component
     comp = samples[0]
-    # comp.files = comp.files[:1]
-    comp.fineSplitFactor = 10 # fine splitting, multicore
+    comp.files = comp.files[:1]
+    # comp.fineSplitFactor = 10 # fine splitting, multicore
     samples = [comp]
 ###################################################
 

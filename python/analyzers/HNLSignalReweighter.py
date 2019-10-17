@@ -96,6 +96,10 @@ class HNLSignalReweighter(Analyzer):
         event.genp_pruned = self.mchandles['genp_pruned'].product()
         event.lhe         = self.mchandles['lhe'].product()
 
+        # save the gen W
+        the_ws = sorted([ip for ip in event.genp_pruned if ip.isLastCopy() and ip.statusFlags().isPrompt() and abs(ip.pdgId())==24], key = lambda x : x.pt(), reverse=True)
+        event.the_gen_w = the_ws[0] if len(the_ws) else None
+
         hepup = event.lhe.hepeup()
     
         # for each particle at LHE level, its lifetime is saved. If the particle decays immediately, it is set to 0.

@@ -191,6 +191,7 @@ class HNLTreeProducer(TreeProducerBase):
                 iv2_name = str(iv2).replace('-', 'm')
                 self.var(self.tree, 'ctau_w_v2_%s' %iv2_name)
                 self.var(self.tree, 'xs_w_v2_%s' %iv2_name  )
+            self.bookParticle(self.tree, 'w_gen')
         
 
     def process(self, event):
@@ -414,7 +415,10 @@ class HNLTreeProducer(TreeProducerBase):
                 iv2_name = str(iv2).replace('-', 'm')
                 self.fill(self.tree, 'ctau_w_v2_%s' %iv2_name, event.ctau_weights[iv2]['ctau_weight'])
                 self.fill(self.tree, 'xs_w_v2_%s' %iv2_name  , event.ctau_weights[iv2]['xs_weight'  ])
-                
+            if event.the_gen_w is not None:
+                self.fillParticle(self.tree, 'w_gen', event.the_gen_w)
+            
+                            
         self.fillTree(event)
 
 

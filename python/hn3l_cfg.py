@@ -89,8 +89,8 @@ def generateKeyConfigs(samples,
     ###               HANDLE SAMPLES                ###
     ###################################################
 
-    #samples = [comp for comp in samples if comp.name=='TTJets_amcat']
-    if promptLeptonType == 'ele':
+    # FIXME! are trigger names and filters correct regardless of the year?
+    if promptLeptonType == 'e':
         for sample in samples:
             sample.triggers  = ['HLT_Ele27_WPTight_Gsf_v%d'          %i for i in range(1, 15)] #electron trigger
             sample.triggers += ['HLT_Ele32_WPTight_Gsf_v%d'          %i for i in range(1, 15)] #electron trigger
@@ -99,7 +99,7 @@ def generateKeyConfigs(samples,
             sample.triggers += ['HLT_Ele135_CaloIdVT_GsfTrkIdT_v%d'  %i for i in range(1, 15)] #electron trigger
             sample.splitFactor = splitFactor(sample, 2e5)
     # triggers same for 2018: https://tomc.web.cern.ch/tomc/triggerPrescales/2018//?match=Ele
-    if promptLeptonType == 'mu':
+    if promptLeptonType == 'm':
         for sample in samples:
             sample.triggers  = ['HLT_IsoMu24_v%d' %i for i in range(1, 15)] #muon trigger
             sample.triggers += ['HLT_IsoMu27_v%d' %i for i in range(1, 15)] #muon trigger
@@ -202,19 +202,39 @@ def generateKeyConfigs(samples,
     # for each path specify which filters you want the electrons/muons to match to
     triggers_and_filters = OrderedDict()
 
-    if promptLeptonType == 'ele':
+    if promptLeptonType == 'e':
         triggers_and_filters['HLT_Ele27_WPTight_Gsf']         = 'hltEle27WPTightGsfTrackIsoFilter'
         triggers_and_filters['HLT_Ele32_WPTight_Gsf']         = 'hltEle32WPTightGsfTrackIsoFilter'
         triggers_and_filters['HLT_Ele35_WPTight_Gsf']         = 'hltEle35noerWPTightGsfTrackIsoFilter'
         triggers_and_filters['HLT_Ele115_CaloIdVT_GsfTrkIdT'] = 'hltEle115CaloIdVTGsfTrkIdTGsfDphiFilter'
         triggers_and_filters['HLT_Ele135_CaloIdVT_GsfTrkIdT'] = 'hltEle135CaloIdVTGsfTrkIdTGsfDphiFilter'
 
-    if promptLeptonType == 'mu':
+    if promptLeptonType == 'm':
         triggers_and_filters['HLT_IsoMu24'] = 'hltL3crIsoL1sSingleMu22L1f0L2f10QL3f24QL3trkIsoFiltered0p07'
         triggers_and_filters['HLT_IsoMu27'] = 'hltL3crIsoL1sMu22Or25L1f0L2f10QL3f27QL3trkIsoFiltered0p07'
         triggers_and_filters['HLT_Mu50']    = 'hltL3fL1sMu22Or25L1f0L2f10QL3Filtered50Q'
     # TODO: add (HLT_IsoTkMu24_v*) and (HLT_TkMu50_v*); but only later for 2016 dataset
 
+    # Here we define the baseline selection for muons and electrons.
+    # These are the minimal requirements that leptons need to satisfy to be considered
+    # in building HNL candidates and be saved in the ntuples 
+    def preselect_mu(imu):
+        if imu.pt() < 5.             : return False 
+        if abs(imu.eta()) > 2.4      : return False
+        if imu.relIsoFromEA(0.3) > 10: return False
+        if not (imu.isSoftMuon(imu.associatedVertex) or \
+                imu.muonID('POG_ID_Loose')           or \
+                imu.Medium == 1): return False
+        return True
+
+    def preselect_ele(iele):
+        if iele.pt() < 5.             : return False 
+        if abs(iele.eta()) > 2.5      : return False
+        if iele.relIsoFromEA(0.3) > 10: return False
+        if not (iele.LooseNoIsoID or \
+                iele.electronID("MVA_ID_nonIso_Fall17_Loose")): return False
+        return True
+        
     HNLAnalyzer = cfg.Analyzer(
         HNLAnalyzer,
         name='HNLAnalyzer',
@@ -222,9 +242,11 @@ def generateKeyConfigs(samples,
         L1L2LeptonType=L1L2LeptonType,
         triggersAndFilters=triggers_and_filters,
         candidate_selection='maxpt',
+        muon_preselection=preselect_mu,
+        ele_preselection=preselect_ele,
     )
 
-    if promptLeptonType == 'ele':
+    if promptLeptonType == 'e':
         Weighter_l0 = cfg.Analyzer(
             LeptonWeighter,
             name='LeptonWeighter_l0',
@@ -234,7 +256,7 @@ def generateKeyConfigs(samples,
             disable=False
         )
 
-    if promptLeptonType == 'mu':
+    if promptLeptonType == 'm':
         Weighter_l0 = cfg.Analyzer(
             LeptonWeighter,
             name='LeptonWeighter_l0',

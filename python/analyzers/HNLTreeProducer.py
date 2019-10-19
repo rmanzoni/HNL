@@ -203,9 +203,10 @@ class HNLTreeProducer(TreeProducerBase):
         self.fillEvent(self.tree, event)
         self.fill     (self.tree, 'n_cands', len(event.dileptonsvtx))
         self.fill     (self.tree, 'rho'    , event.rho)
-        self.fill     (self.tree, 'nLeptons'    , event.nLeptons)
-        self.fill     (self.tree, 'nElectrons'  , event.nElectrons)
-        self.fill     (self.tree, 'nMuons'    , event.nMuons)
+        # these are PRESELECTED leptons according to the preselection given via cfg
+        self.fill     (self.tree, 'nLeptons'  , len(event.electrons) + len(event.muons))
+        self.fill     (self.tree, 'nElectrons', len(event.electrons))
+        self.fill     (self.tree, 'nMuons'    , len(event.muons))
 
         # reco HNL
         self.fillHNL (self.tree, 'hnl'                  , event.the_3lep_cand                 )

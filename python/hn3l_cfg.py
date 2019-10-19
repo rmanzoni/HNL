@@ -1,4 +1,11 @@
-def generateKeyConfigs(samples, promptLeptonType, L1L2LeptonType, isData, isSignal, prefetch=False, year=2018):
+def generateKeyConfigs(samples, 
+                       promptLeptonType, 
+                       L1L2LeptonType, 
+                       isData, 
+                       isSignal, 
+                       prefetch=False, 
+                       year=2018,
+                       toSelect=[]):
     import os
     from collections import OrderedDict
     import PhysicsTools.HeppyCore.framework.config as cfg
@@ -108,7 +115,7 @@ def generateKeyConfigs(samples, promptLeptonType, L1L2LeptonType, isData, isSign
     eventSelector = cfg.Analyzer(
         EventSelector,
         name='EventSelector',
-        toSelect=[326]
+        toSelect=toSelect,
     )
 
     lheWeightAna = cfg.Analyzer(
@@ -315,7 +322,6 @@ def generateKeyConfigs(samples, promptLeptonType, L1L2LeptonType, isData, isSign
     ###################################################
     if isData == True:
         sequence = cfg.Sequence([
-        #     eventSelector,
             jsonAna,
             skimAna,
             triggerAna,
@@ -330,7 +336,6 @@ def generateKeyConfigs(samples, promptLeptonType, L1L2LeptonType, isData, isSign
     if isData == False:
         if isSignal == True:
             sequence = cfg.Sequence([
-            #     eventSelector,
                 lheWeightAna, # les houches
                 jsonAna,
                 skimAna,
@@ -351,7 +356,6 @@ def generateKeyConfigs(samples, promptLeptonType, L1L2LeptonType, isData, isSign
             ])
         if isSignal == False:
             sequence = cfg.Sequence([
-            #     eventSelector,
                 lheWeightAna, # les houches
                 jsonAna,
                 skimAna,
@@ -368,7 +372,13 @@ def generateKeyConfigs(samples, promptLeptonType, L1L2LeptonType, isData, isSign
                 metFilter,
                 HNLTreeProducer,
             ])
-
+    
+    if len(toSelect):
+        print 'Cherry picking the following events to process:'
+        for iev in toSelect:
+            print '\t', iev
+        sequence.insert(0, eventSelector)
+    
     ###################################################
     ###            PREPROCESSOR                     ###
     ###################################################

@@ -42,7 +42,7 @@ class HNLTreeProducer(TreeProducerBase):
         self.var     (self.tree, 'hnl_iso05_rel_deltaBeta')
 #        self.var     (self.tree, 'hnl_iso_rel_met')
         
-        if   self.cfg_ana.promptLepType == 'ele':
+        if   self.cfg_ana.promptLepType == 'e':
             self.bookEle (self.tree, 'l0')
             self.var(self.tree, 'hlt_Ele27_WPTight_Gsf'        )
             self.var(self.tree, 'hlt_Ele32_WPTight_Gsf'        )
@@ -50,7 +50,7 @@ class HNLTreeProducer(TreeProducerBase):
             self.var(self.tree, 'hlt_Ele115_CaloIdVT_GsfTrkIdT')
             self.var(self.tree, 'hlt_Ele135_CaloIdVT_GsfTrkIdT')
 
-        elif self.cfg_ana.promptLepType == 'mu':
+        elif self.cfg_ana.promptLepType == 'm':
             self.bookMuon(self.tree, 'l0')
             self.var(self.tree, 'hlt_IsoMu24'                   )
             self.var(self.tree, 'hlt_IsoMu27'                   )
@@ -236,8 +236,8 @@ class HNLTreeProducer(TreeProducerBase):
             self.fillMuon(self.tree, 'l2'                   , event.the_3lep_cand.l2()            )
 
 
-        if self.cfg_ana.promptLepType == 'ele' :       self.fillEle (self.tree, 'l0', event.the_3lep_cand.l0())
-        if self.cfg_ana.promptLepType == 'mu'  :       self.fillMuon(self.tree, 'l0', event.the_3lep_cand.l0())
+        if self.cfg_ana.promptLepType == 'e' :       self.fillEle (self.tree, 'l0', event.the_3lep_cand.l0())
+        if self.cfg_ana.promptLepType == 'm'  :       self.fillMuon(self.tree, 'l0', event.the_3lep_cand.l0())
 
         # output of MC analysis ONLY FOR SIGNAL
         if hasattr(event, 'the_hnl'):
@@ -284,13 +284,13 @@ class HNLTreeProducer(TreeProducerBase):
 
         # HLT bits & matches
         trig_list = [trig.name for trig in event.trigger_infos if trig.fired]
-        if self.cfg_ana.promptLepType == 'ele':
+        if self.cfg_ana.promptLepType == 'e':
             self.fill(self.tree, 'hlt_Ele27_WPTight_Gsf'               , any('HLT_Ele27_WPTight_Gsf'                 in name for name in trig_list))
             self.fill(self.tree, 'hlt_Ele32_WPTight_Gsf'               , any('HLT_Ele32_WPTight_Gsf'                 in name for name in trig_list))
             self.fill(self.tree, 'hlt_Ele35_WPTight_Gsf'               , any('HLT_Ele35_WPTight_Gsf'                 in name for name in trig_list))
             self.fill(self.tree, 'hlt_Ele115_CaloIdVT_GsfTrkIdT'       , any('HLT_Ele115_CaloIdVT_GsfTrkIdT'         in name for name in trig_list))
             self.fill(self.tree, 'hlt_Ele135_CaloIdVT_GsfTrkIdT'       , any('HLT_Ele135_CaloIdVT_GsfTrkIdT'         in name for name in trig_list))
-        if self.cfg_ana.promptLepType == 'mu':
+        if self.cfg_ana.promptLepType == 'm':
             self.fill(self.tree, 'hlt_IsoMu24'                          , any('HLT_IsoMu24'                           in name for name in trig_list))
             self.fill(self.tree, 'hlt_IsoMu27'                          , any('HLT_IsoMu27'                           in name for name in trig_list))
             self.fill(self.tree, 'hlt_Mu50'                             , any('HLT_Mu50'                              in name for name in trig_list))

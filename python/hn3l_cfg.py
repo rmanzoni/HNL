@@ -406,11 +406,14 @@ def generateKeyConfigs(samples,
     ###################################################
 
     # temporary copy remote files using xrd
-    event_class = EOSEventsWithDownload if not prefetch else Events
+#     event_class = EOSEventsWithDownload if prefetch else Events
+    
+    # FIXME! for some reason, Events doesn't work anymore in 10_4
+    event_class = EOSEventsWithDownload  
     if prefetch:
         EOSEventsWithDownload.aggressive = 2 # always fetch if running on Wigner
         EOSEventsWithDownload.long_cache = getHeppyOption('long_cache', False)
-
+    
     # the following is declared in case this cfg is used in input to the heppy.py script
     # from PhysicsTools.HeppyCore.framework.eventsfwlite import Events
     config = cfg.Config(

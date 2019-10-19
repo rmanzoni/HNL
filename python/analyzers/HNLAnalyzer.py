@@ -274,9 +274,9 @@ class HNLAnalyzer(Analyzer):
         prompt_mu_cands  = sorted([mu  for mu  in event.muons     if self.preselectPromptMuons    (mu) ], key = lambda x : x.pt(), reverse = True)
         prompt_ele_cands = sorted([ele for ele in event.electrons if self.preselectPromptElectrons(ele)], key = lambda x : x.pt(), reverse = True)
 
-        if   self.cfg_ana.promptLepton=='mu':
+        if   self.cfg_ana.promptLepton=='m':
             prompt_leps = prompt_mu_cands       
-        elif self.cfg_ana.promptLepton=='ele':
+        elif self.cfg_ana.promptLepton=='e':
             prompt_leps = prompt_ele_cands
         else:
             print 'ERROR: HNLAnalyzer not supported lepton flavour', self.cfg_ana.promptLepton

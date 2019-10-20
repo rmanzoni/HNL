@@ -31,6 +31,7 @@ def generateKeyConfigs(samples,
     # import HNL analyzers:
     from CMGTools.HNL.analyzers.HNLAnalyzer         import HNLAnalyzer
     from CMGTools.HNL.analyzers.HNLTreeProducer     import HNLTreeProducer
+    from CMGTools.HNL.analyzers.HNLTreeProducerBase import HNLTreeProducerBase
     from CMGTools.HNL.analyzers.HNLGenTreeAnalyzer  import HNLGenTreeAnalyzer
     from CMGTools.HNL.analyzers.HNLSignalReweighter import HNLSignalReweighter
     from CMGTools.HNL.analyzers.RecoGenAnalyzer     import RecoGenAnalyzer
@@ -181,9 +182,17 @@ def generateKeyConfigs(samples,
 
     HNLTreeProducer = cfg.Analyzer(
         HNLTreeProducer,
+        name='HNLExtendedTreeProducer',
+        L1L2LeptonType=L1L2LeptonType,
+        promptLepType=promptLeptonType,
+    )
+
+    HNLTreeProducerBase = cfg.Analyzer(
+        HNLTreeProducerBase,
         name='HNLTreeProducer',
         L1L2LeptonType=L1L2LeptonType,
         promptLepType=promptLeptonType,
+        skimFunction='event.the_3lep_cand.charge12()==0 and event.the_3lep_cand.mass12()<12 and event.recoSv.disp2DFromBS_cos>0.'
     )
 
     HNLGenTreeAnalyzer = cfg.Analyzer(
@@ -345,13 +354,14 @@ def generateKeyConfigs(samples,
     if isData == True:
         sequence = cfg.Sequence([
             jsonAna,
-            skimAna,
+            # skimAna,
             triggerAna,
             vertexAna,
-            pileUpAna,
+            # pileUpAna,
             HNLAnalyzer,
             jetAna,
             metFilter,
+            HNLTreeProducerBase,
             HNLTreeProducer,
         ])
 
@@ -359,7 +369,7 @@ def generateKeyConfigs(samples,
         if isSignal == True:
             sequence = cfg.Sequence([
                 lheWeightAna, # les houches
-                jsonAna,
+                #jsonAna,
                 skimAna,
                 signalReweighAna,
                 triggerAna,
@@ -374,12 +384,13 @@ def generateKeyConfigs(samples,
                 Weighter_l2, 
                 jetAna,
                 metFilter,
+                HNLTreeProducerBase,
                 HNLTreeProducer,
             ])
         if isSignal == False:
             sequence = cfg.Sequence([
                 lheWeightAna, # les houches
-                jsonAna,
+                #jsonAna,
                 skimAna,
                 triggerAna,
                 vertexAna,
@@ -392,6 +403,7 @@ def generateKeyConfigs(samples,
                 Weighter_l2, 
                 jetAna,
                 metFilter,
+                HNLTreeProducerBase,
                 HNLTreeProducer,
             ])
     

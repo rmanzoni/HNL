@@ -21,36 +21,16 @@ def default():
 # event variables
 event_vars = [
     Variable('run', type=int),
-    Variable('lumi', lambda ev : ev.lumi, type=int),
-    Variable('event', lambda ev : ev.eventId, type=int, storageType='l'), 
-    Variable('bx', lambda ev : (ev.input.eventAuxiliary().bunchCrossing() * ev.input.eventAuxiliary().isRealData()), type=int),
+    Variable('lumi'        , lambda ev : ev.lumi, type=int),
+    Variable('event'       , lambda ev : ev.eventId, type=int, storageType='l'), 
+    Variable('bx'          , lambda ev : (ev.input.eventAuxiliary().bunchCrossing() * ev.input.eventAuxiliary().isRealData()), type=int),
     Variable('orbit_number', lambda ev : (ev.input.eventAuxiliary().orbitNumber() * ev.input.eventAuxiliary().isRealData()), type=int),
-    Variable('is_data', lambda ev: ev.input.eventAuxiliary().isRealData(), type=int),
-#     Variable('nPU', lambda ev : -99 if getattr(ev, 'nPU', -1) is None else getattr(ev, 'nPU', -1)),
-    Variable('nPU', lambda ev : np.nan if getattr(ev, 'nPU', -1) is None else getattr(ev, 'nPU', -1)),
-    Variable('rho', lambda ev : ev.rho),
-#     Variable('Flag_HBHENoiseFilter', type=int),
-#     Variable('Flag_HBHENoiseIsoFilter', type=int),
-#     Variable('Flag_EcalDeadCellTriggerPrimitiveFilter', type=int),
-#     Variable('Flag_goodVertices', type=int),
-#     Variable('Flag_eeBadScFilter', type=int),
-#     Variable('Flag_globalTightHalo2016Filter', type=int),
-#     Variable('passBadMuonFilter', type=int),
-#     Variable('passBadChargedHadronFilter', type=int),
-#     Variable('n_muons'    , lambda ev : len(ev.muons), type=int),
-#     Variable('n_electrons', lambda ev : len(ev.electrons), type=int),
-#     Variable('n_taus'     , lambda ev : len(ev.taus), type=int),
-#     Variable('n_candidates', lambda ev : ev.ncands, type=int),
-    Variable('n_vtx', lambda ev : len(ev.goodVertices), type=int),
-    Variable('weight', lambda ev : ev.eventWeight, type=float),
-    Variable('puweight', lambda ev : ev.puWeight, type=float),
-
-
-#   FIXME! needed for per-sample PU reweight
-#     outputTree->Branch("_n_Interactions", &_n_Interactions, "_n_Interactions/I");
-#     outputTree->Branch("_n_trueInteractions", &_n_trueInteractions, "_n_trueInteractions/D");
-
-
+    Variable('is_data'     , lambda ev : ev.input.eventAuxiliary().isRealData(), type=int),
+    Variable('n_pu'        , lambda ev : getattr(ev, 'nPU', default())),
+    Variable('rho'         , lambda ev : ev.rho),
+    Variable('n_vtx'       , lambda ev : len(ev.goodVertices), type=int),
+    Variable('weight'      , lambda ev : getattr(ev, 'eventWeight', 1.), type=float),
+    Variable('puweight'    , lambda ev : getattr(ev, 'puWeight', 1.), type=float),
 ]
 
 # RIC
@@ -77,12 +57,12 @@ reco_hn_vars = [
 
 # generic HNL reconstruction event variables
 hnlreco_vars = [
-    Variable('n_sMu', lambda ev : ev.n_sMu, type=int),
-    Variable('n_dSAMu', lambda ev : ev.n_dSAMu, type=int),
-    Variable('n_dGMu', lambda ev : ev.n_dGMu, type=int),
-    Variable('n_dMu', lambda ev : ev.n_dMu, type=int),
-    Variable('n_pairs', lambda ev : ev.n_pairs, type=int),
-    Variable('n_dimuon', lambda ev : ev.n_dimuon, type=int),
+    Variable('n_sMu'    , lambda ev : ev.n_sMu  , type=int),
+    Variable('n_dSAMu'  , lambda ev : ev.n_dSAMu, type=int),
+    Variable('n_dGMu'   , lambda ev : ev.n_dGMu , type=int),
+    Variable('n_dMu'    , lambda ev : ev.n_dMu  , type=int),
+    Variable('n_pairs'  , lambda ev : ev.n_pairs, type=int),
+    Variable('n_dimuon' , lambda ev : ev.n_dimuon, type=int),
     Variable('dphi_met0', lambda ev : deltaPhi(ev.the_prompt_cand.phi(),ev.puppimet.phi()), type=float),   #FIXME does it work?
     Variable('dphi_met1', lambda ev : deltaPhi(ev.dMu1MaxCosBPA.phi(),ev.puppimet.phi()) if hasattr(ev,'dMu1MaxCosBPA') else -99, type=float),     #FIXME does it work?
     Variable('dphi_met2', lambda ev : deltaPhi(ev.dMu2MaxCosBPA.phi(),ev.puppimet.phi()) if hasattr(ev,'dMu2MaxCosBPA') else -99, type=float),     #FIXME does it work?

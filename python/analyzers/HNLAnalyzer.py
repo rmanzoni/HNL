@@ -6,21 +6,21 @@ import ROOT
 from itertools import product, combinations
 from math import sqrt, pow
 import PhysicsTools.HeppyCore.framework.config as cfg
-from PhysicsTools.Heppy.analyzers.core.Analyzer import Analyzer
-from PhysicsTools.Heppy.analyzers.core.AutoHandle import AutoHandle
+from PhysicsTools.Heppy.analyzers.core.Analyzer       import Analyzer
+from PhysicsTools.Heppy.analyzers.core.AutoHandle     import AutoHandle
 from PhysicsTools.Heppy.physicsobjects.PhysicsObjects import Lepton
-from PhysicsTools.HeppyCore.utils.deltar import deltaR, deltaR2
-from PhysicsTools.Heppy.physicsobjects.GenParticle   import GenParticle
-from PhysicsTools.Heppy.physicsobjects.Photon        import Photon
-from PhysicsTools.Heppy.physicsobjects.Tau           import Tau
-from PhysicsTools.Heppy.physicsobjects.Muon          import Muon
-from PhysicsTools.Heppy.physicsobjects.Electron      import Electron
-from PhysicsTools.Heppy.physicsobjects.Jet           import Jet
-from PhysicsTools.Heppy.physicsobjects.PhysicsObject import PhysicsObject
-from CMGTools.HNL.utils.utils                        import isAncestor, displacement2D, displacement3D, makeRecoVertex, fitVertex
-from CMGTools.HNL.physicsobjects.HN3L                import HN3L
-from CMGTools.HNL.physicsobjects.DiLepton            import DiLepton
-from CMGTools.HNL.physicsobjects.DisplacedMuon       import DisplacedMuon
+from PhysicsTools.HeppyCore.utils.deltar              import deltaR, deltaR2
+from PhysicsTools.Heppy.physicsobjects.GenParticle    import GenParticle
+from PhysicsTools.Heppy.physicsobjects.Photon         import Photon
+from PhysicsTools.Heppy.physicsobjects.Tau            import Tau
+from PhysicsTools.Heppy.physicsobjects.Muon           import Muon
+from PhysicsTools.Heppy.physicsobjects.Electron       import Electron
+from PhysicsTools.Heppy.physicsobjects.Jet            import Jet
+from PhysicsTools.Heppy.physicsobjects.PhysicsObject  import PhysicsObject
+from CMGTools.HNL.utils.utils                         import isAncestor, displacement2D, displacement3D, makeRecoVertex, fitVertex
+from CMGTools.HNL.physicsobjects.HN3L                 import HN3L
+from CMGTools.HNL.physicsobjects.DiLepton             import DiLepton
+from CMGTools.HNL.physicsobjects.DisplacedMuon        import DisplacedMuon
 from pdb import set_trace
 
 # load custom library to ROOT. This contains the kinematic vertex fitter class
@@ -35,19 +35,18 @@ class HNLAnalyzer(Analyzer):
     def declareHandles(self): 
         super(HNLAnalyzer, self).declareHandles() 
     
-        self.handles['electrons'] = AutoHandle('slimmedElectrons'             , 'std::vector<pat::Electron>'                    )
-        self.handles['muons'    ] = AutoHandle('slimmedMuons'                 , 'std::vector<pat::Muon>'                        )
-        self.handles['dsamuons' ] = AutoHandle('displacedStandAloneMuons'     , 'std::vector<reco::Track>', mayFail=True        )
-        self.handles['dgmuons'  ] = AutoHandle('displacedGlobalMuons'         , 'std::vector<reco::Track>', mayFail=True        )
-        self.handles['photons'  ] = AutoHandle('slimmedPhotons'               , 'std::vector<pat::Photon>'                      )
-        self.handles['taus'     ] = AutoHandle('slimmedTaus'                  , 'std::vector<pat::Tau>'                         )
-        self.handles['jets'     ] = AutoHandle('slimmedJets'                  , 'std::vector<pat::Jet>'                         )
-        self.handles['pvs'      ] = AutoHandle('offlineSlimmedPrimaryVertices', 'std::vector<reco::Vertex>'                     )
-        self.handles['svs'      ] = AutoHandle('slimmedSecondaryVertices'     , 'std::vector<reco::VertexCompositePtrCandidate>')
-        self.handles['beamspot' ] = AutoHandle('offlineBeamSpot'              , 'reco::BeamSpot'                                )
-        self.handles['pfmet'    ] = AutoHandle('slimmedMETs'                  , 'std::vector<pat::MET>'                         )
-        self.handles['puppimet' ] = AutoHandle('slimmedMETsPuppi'             , 'std::vector<pat::MET>'                         )
-        self.handles['pfcand'   ] = AutoHandle('packedPFCandidates'           , 'std::vector<pat::PackedCandidate> '            )
+        self.handles['electrons'] = AutoHandle('slimmedElectrons'  , 'std::vector<pat::Electron>'       )
+        self.handles['muons'    ] = AutoHandle('slimmedMuons'      , 'std::vector<pat::Muon>'           )
+        self.handles['photons'  ] = AutoHandle('slimmedPhotons'    , 'std::vector<pat::Photon>'         )
+        self.handles['jets'     ] = AutoHandle('slimmedJets'       , 'std::vector<pat::Jet>'            )
+        self.handles['beamspot' ] = AutoHandle('offlineBeamSpot'   , 'reco::BeamSpot'                   )
+        self.handles['pfmet'    ] = AutoHandle('slimmedMETs'       , 'std::vector<pat::MET>'            )
+        self.handles['puppimet' ] = AutoHandle('slimmedMETsPuppi'  , 'std::vector<pat::MET>'            )
+        self.handles['pfcand'   ] = AutoHandle('packedPFCandidates', 'std::vector<pat::PackedCandidate>')
+        
+        # commented out for the time being...
+#         self.handles['dsamuons' ] = AutoHandle('displacedStandAloneMuons'     , 'std::vector<reco::Track>', mayFail=True        )
+#         self.handles['dgmuons'  ] = AutoHandle('displacedGlobalMuons'         , 'std::vector<reco::Track>', mayFail=True        )
 
     def assignVtx(self, particles, vtx):
         for ip in particles:
@@ -60,16 +59,11 @@ class HNLAnalyzer(Analyzer):
         count.register('all events')
         count.register('good pf collections')
         count.register('>0 good vtx')
-        count.register('>= 3 leptons')
-        count.register('>= 3 leptons with correct flavor combo')
-        count.register('enough electrons passing preselection')
-        count.register('enough muons passing preselection')
+        count.register('>= 3L w/ correct flavours')
         count.register('>0 prompt lep')
         count.register('>0 trig match prompt lep')
         count.register('> 0 di-lepton')
         count.register('> 0 di-lepton + vtx')
-        # count.register('> 0 di-leptons with good vertices')
-        # count.register('exactly 1 dilepton with good vertex')
     
     def buildDiLeptons(self, cmgDiLeptons, event):
         return map(self.__class_.DiLeptonClass, cmgDiLeptons) 
@@ -87,7 +81,7 @@ class HNLAnalyzer(Analyzer):
         # passed
         return True
     
-    def preselectPromptElectrons(self, ele, pt=30, eta=2.5, dxy=0.045, dz=0.2):
+    def preselectPromptElectrons(self, ele, pt=30, eta=2.5, dxy=0.05, dz=0.2):
         # kinematics
         if not self.testLepKin(ele, pt, eta): return False
         # id
@@ -97,7 +91,7 @@ class HNLAnalyzer(Analyzer):
         # passed
         return True
 
-    def preselectPromptMuons(self, mu, pt=25, eta=2.4, dxy=0.045, dz=0.2):
+    def preselectPromptMuons(self, mu, pt=25, eta=2.4, dxy=0.05, dz=0.2):
         # kinematics
         if not self.testLepKin(mu, pt, eta): return False
         # id
@@ -156,23 +150,9 @@ class HNLAnalyzer(Analyzer):
     def checkLeptonFlavors(self, electrons, muons):
         ''' Checks whether the existing leptons are 
         in the correct flavor combination'''
-        minNumMu  = 0
-        minNumEle = 0
-
-        if self.cfg_ana.promptLepton=='mu':
-            minNumMu  += 1
-        if self.cfg_ana.promptLepton=='ele':
-            minNumEle += 1
-        if self.cfg_ana.L1L2LeptonType == 'ee':
-            minNumEle += 2
-        if self.cfg_ana.L1L2LeptonType == 'mm':
-            minNumMu  += 2
-        if self.cfg_ana.L1L2LeptonType == 'em':
-            minNumMu  += 1
-            minNumEle += 1
-
-        if len(electrons) < minNumEle: return False
-        if len(muons)     < minNumMu: return False
+        final_state = self.cfg_ana.promptLepton + self.cfg_ana.L1L2LeptonType
+        if len(electrons) < final_state.count('e'): return False
+        if len(muons)     < final_state.count('m'): return False
         return True
 
     def makeLeptonPairs(self, event, electrons, muons):
@@ -198,25 +178,25 @@ class HNLAnalyzer(Analyzer):
     def selectDiLepton(self, event, dileptonsvtx):
         which_candidate = getattr(self.cfg_ana, 'candidate_selection', 'maxpt')
         
-        if which_candidate == 'minmass'    : event.displaced_dilepton_reco_cand = None if not len(dileptonsvtx) else sorted(dileptonsvtx, key = lambda x : (x.isSS(),  x.mass()                        ), reverse=False)[0]
-        if which_candidate == 'minchi2'    : event.displaced_dilepton_reco_cand = None if not len(dileptonsvtx) else sorted(dileptonsvtx, key = lambda x : (x.isSS(),  x.chi2()                        ), reverse=False)[0]
-        if which_candidate == 'mindr'      : event.displaced_dilepton_reco_cand = None if not len(dileptonsvtx) else sorted(dileptonsvtx, key = lambda x : (x.isSS(),  x.dr()                          ), reverse=False)[0]
-        if which_candidate == 'maxdphi'    : event.displaced_dilepton_reco_cand = None if not len(dileptonsvtx) else sorted(dileptonsvtx, key = lambda x : (x.isSS(), -x.dphi()                        ), reverse=False)[0]
-        if which_candidate == 'mindeta'    : event.displaced_dilepton_reco_cand = None if not len(dileptonsvtx) else sorted(dileptonsvtx, key = lambda x : (x.isSS(),  x.deta()                        ), reverse=False)[0]
-        if which_candidate == 'maxdisp2dbs': event.displaced_dilepton_reco_cand = None if not len(dileptonsvtx) else sorted(dileptonsvtx, key = lambda x : (x.isSS(), -x.disp2DFromBS()                ), reverse=False)[0]
-        if which_candidate == 'maxdisp2dpv': event.displaced_dilepton_reco_cand = None if not len(dileptonsvtx) else sorted(dileptonsvtx, key = lambda x : (x.isSS(), -x.disp2DFromPV()                ), reverse=False)[0]
-        if which_candidate == 'maxdisp3dpv': event.displaced_dilepton_reco_cand = None if not len(dileptonsvtx) else sorted(dileptonsvtx, key = lambda x : (x.isSS(), -x.disp3DFromPV()                ), reverse=False)[0]
-        if which_candidate == 'maxdls2dbs' : event.displaced_dilepton_reco_cand = None if not len(dileptonsvtx) else sorted(dileptonsvtx, key = lambda x : (x.isSS(), -x.disp2DFromBSSignificance()    ), reverse=False)[0]
-        if which_candidate == 'maxdls2dpv' : event.displaced_dilepton_reco_cand = None if not len(dileptonsvtx) else sorted(dileptonsvtx, key = lambda x : (x.isSS(), -x.disp2DFromPVSignificance()    ), reverse=False)[0]
-        if which_candidate == 'maxdls3dpv' : event.displaced_dilepton_reco_cand = None if not len(dileptonsvtx) else sorted(dileptonsvtx, key = lambda x : (x.isSS(), -x.disp3DFromPVSignificance()    ), reverse=False)[0]
-        if which_candidate == 'maxcos'     : event.displaced_dilepton_reco_cand = None if not len(dileptonsvtx) else sorted(dileptonsvtx, key = lambda x : (x.isSS(), -x.cosTransversePointingAngleBS()), reverse=False)[0]
-        if which_candidate == 'maxpt'      : event.displaced_dilepton_reco_cand = None if not len(dileptonsvtx) else sorted(dileptonsvtx, key = lambda x : (x.isSS(), -x.pt()                          ), reverse=False)[0]
-
-
-    def process(self, event):
-        return self.searchHNL(event)
+        #  just a safety check, shouldn't be needed
+        if not len(dileptonsvtx): return False
         
-    def searchHNL(self, event):
+        if which_candidate == 'minmass'    : return sorted(dileptonsvtx, key = lambda x : (x.isSS(),  x.mass()                        ), reverse=False)[0]
+        if which_candidate == 'minchi2'    : return sorted(dileptonsvtx, key = lambda x : (x.isSS(),  x.chi2()                        ), reverse=False)[0]
+        if which_candidate == 'mindr'      : return sorted(dileptonsvtx, key = lambda x : (x.isSS(),  x.dr()                          ), reverse=False)[0]
+        if which_candidate == 'maxdphi'    : return sorted(dileptonsvtx, key = lambda x : (x.isSS(), -x.dphi()                        ), reverse=False)[0]
+        if which_candidate == 'mindeta'    : return sorted(dileptonsvtx, key = lambda x : (x.isSS(),  x.deta()                        ), reverse=False)[0]
+        if which_candidate == 'maxdisp2dbs': return sorted(dileptonsvtx, key = lambda x : (x.isSS(), -x.disp2DFromBS()                ), reverse=False)[0]
+        if which_candidate == 'maxdisp2dpv': return sorted(dileptonsvtx, key = lambda x : (x.isSS(), -x.disp2DFromPV()                ), reverse=False)[0]
+        if which_candidate == 'maxdisp3dpv': return sorted(dileptonsvtx, key = lambda x : (x.isSS(), -x.disp3DFromPV()                ), reverse=False)[0]
+        if which_candidate == 'maxdls2dbs' : return sorted(dileptonsvtx, key = lambda x : (x.isSS(), -x.disp2DFromBSSignificance()    ), reverse=False)[0]
+        if which_candidate == 'maxdls2dpv' : return sorted(dileptonsvtx, key = lambda x : (x.isSS(), -x.disp2DFromPVSignificance()    ), reverse=False)[0]
+        if which_candidate == 'maxdls3dpv' : return sorted(dileptonsvtx, key = lambda x : (x.isSS(), -x.disp3DFromPVSignificance()    ), reverse=False)[0]
+        if which_candidate == 'maxcos'     : return sorted(dileptonsvtx, key = lambda x : (x.isSS(), -x.cosTransversePointingAngleBS()), reverse=False)[0]
+        if which_candidate == 'maxpt'      : return sorted(dileptonsvtx, key = lambda x : (x.isSS(), -x.pt()                          ), reverse=False)[0]
+
+        
+    def process(self, event):
         self.readCollections(event.input)
         self.counters.counter('HNL').inc('all events')
         # make PF candidates
@@ -226,8 +206,6 @@ class HNLAnalyzer(Analyzer):
         except: print(event.eventId, event.run, event.lumi); return False#; set_trace()
         self.counters.counter('HNL').inc('good pf collections')
       
-#        event.rho = self.handles['rho'].product()[0]
-
         #####################################################################################
         # primary vertex
         #####################################################################################
@@ -240,9 +218,9 @@ class HNLAnalyzer(Analyzer):
         # produce collections and map our objects to convenient Heppy objects
         #####################################################################################
         # make muon collections
-        event.muons       = map(Muon, self.handles['muons'].product())
-       # event.dsamuons    = self.buildDisplacedMuons(self.handles['dsamuons'].product())
-       # event.dgmuons     = self.buildDisplacedMuons(self.handles['dgmuons' ].product())
+        event.muons    = map(Muon, self.handles['muons'].product())
+#         event.dsamuons = self.buildDisplacedMuons(self.handles['dsamuons'].product())
+#         event.dgmuons  = self.buildDisplacedMuons(self.handles['dgmuons' ].product())
 
         for imu in event.muons   : imu.type = 13; imu.rho = event.rho
 #        for imu in event.dsamuons: imu.type = 26
@@ -253,19 +231,34 @@ class HNLAnalyzer(Analyzer):
         for imu in event.muons:
             imu.isoot = self.isOotMuon(imu)
 
-        event.electrons   = map(Electron, self.handles['electrons'].product())
-        
+        event.electrons = map(Electron, self.handles['electrons'].product())
         # prepare the electrons for ID mangling
         for ele in event.electrons:
             ele.event = event.input.object() # RM: this is needed god knows why to get the eleID
             ele.rho = event.rho
 
-        event.photons     = map(Photon  , self.handles['photons'  ].product())
-        event.taus        = map(Tau     , self.handles['taus'     ].product())
+        # assign to the leptons the primary vertex, will be needed to compute a few quantities
+        pv = event.goodVertices[0]
+        
+        self.assignVtx(event.muons    , pv)
+        self.assignVtx(event.electrons, pv)
+        
+        #####################################################################################
+        # filter for events with at least 3 leptons in proper flavor combination
+        #####################################################################################
+        event.muons     = [imu  for imu  in event.muons     if self.cfg_ana.muon_preselection(imu)]
+        event.electrons = [iele for iele in event.electrons if self.cfg_ana.ele_preselection(iele)]
+
+        if not self.checkLeptonFlavors(event.electrons, event.muons):
+            return False
+        self.counters.counter('HNL').inc('>= 3L w/ correct flavours')
+        
+        #####################################################################################
+        # finish reading collections
+        #####################################################################################
+        event.photons     = map(Photon  , self.handles['photons'].product())
 
         # make vertex objects 
-        event.pvs         = self.handles['pvs'     ].product()
-        event.svs         = self.handles['svs'     ].product()
         event.beamspot    = self.handles['beamspot'].product()
 
         # make met object
@@ -274,79 +267,16 @@ class HNLAnalyzer(Analyzer):
 
         # make jet object
         jets = map(Jet, self.handles['jets'].product())        
-
-        # assign to the leptons the primary vertex, will be needed to compute a few quantities
-        pv = event.goodVertices[0]
-        
-        self.assignVtx(event.muons    , pv)
-        self.assignVtx(event.electrons, pv)
-
-        #####################################################################################
-        # filter for events with at least 3 leptons in proper flavor combination
-        #####################################################################################
-        
-        #check there are enough leptons
-        if len(event.muons + event.electrons) < 3: 
-            return False
-        self.counters.counter('HNL').inc('>= 3 leptons')
-        
-        #check there are enough leptons in the resp. flavor combination
-        if not self.checkLeptonFlavors(event.electrons, event.muons):
-            return False 
-
-        #save the key numbers
-        event.nElectrons = len(event.electrons)
-        event.nMuons     = len(event.muons)
-        event.nLeptons   = len(event.electrons) + len(event.muons) 
-        
-        self.counters.counter('HNL').inc('>= 3 leptons with correct flavor combo')
-
-        #####################################################################################
-        # Preselect electrons
-        #####################################################################################
-        #FIXME: make min electron pt configurable and set the default at 5 GeV
-        # event.electrons  = [iele for iele in event.electrons if iele.pt()>5. and abs(iele.eta())<2.5]
-
-        # NEW -- VS: 30.8.: add ID requirement, either loose or martina to shrink ntuple sizes
-        event.electrons  = [iele for iele in event.electrons if iele.pt() > 5.\
-                            and abs(iele.eta()) < 2.5\
-                            and iele.relIsoFromEA(0.3) < 10\
-                            and iele.LooseNoIsoID() == 1]
-
-        #check there are enough leptons in the resp. flavor combination
-        if not self.checkLeptonFlavors(event.electrons, event.muons):
-            return False 
-
-        self.counters.counter('HNL').inc('enough electrons passing preselection')
-
-        #####################################################################################
-        # Preselect muons
-        #####################################################################################
-        
-        # event.muons      = [imu for imu in event.muons if imu.pt()>3. and abs(imu.eta())<2.4]
-        # event.dsamuons   = [imu for imu in event.dsamuons       if imu.pt()>3. and abs(imu.eta())>2.4]
-        # event.dgmuons    = [imu for imu in event.dgmuons        if imu.pt()>3. and abs(imu.eta())>2.4]
-
-        # NEW -- VS: 30.8.: add ID requirement, either loose or martina to shrink ntuple sizes
-        event.muons = [imu for imu in event.muons if imu.pt() > 5.\
-                       and abs(imu.eta()) < 2.4\
-                       and imu.relIsoFromEA(0.3) < 10\
-                       and (imu.isSoftMuon(imu.associatedVertex) == 1 or imu.muonID('POG_ID_Loose') == 1 or imu.Medium == 1)]
-
-        #check there are enough leptons in the resp. flavor combination
-        if not self.checkLeptonFlavors(event.electrons, event.muons):
-            return False 
-        self.counters.counter('HNL').inc('enough muons passing preselection')
-
+                
         #####################################################################################
         # Preselect the prompt leptons
         #####################################################################################
         prompt_mu_cands  = sorted([mu  for mu  in event.muons     if self.preselectPromptMuons    (mu) ], key = lambda x : x.pt(), reverse = True)
         prompt_ele_cands = sorted([ele for ele in event.electrons if self.preselectPromptElectrons(ele)], key = lambda x : x.pt(), reverse = True)
 
-        if   self.cfg_ana.promptLepton=='mu':
+        if   self.cfg_ana.promptLepton=='m':
             prompt_leps = prompt_mu_cands       
-        elif self.cfg_ana.promptLepton=='ele':
+        elif self.cfg_ana.promptLepton=='e':
             prompt_leps = prompt_ele_cands
         else:
             print 'ERROR: HNLAnalyzer not supported lepton flavour', self.cfg_ana.promptLepton
@@ -373,7 +303,7 @@ class HNLAnalyzer(Analyzer):
             
             # loop over the final HLT objects of each path
             for info in fired_triggers:
-            
+
                 # get the HLT name w/o version
                 hltname     = '_'.join(info.name.split('_')[:-1])          
                 # get the filter name you want to match the offline lepton to
@@ -412,7 +342,11 @@ class HNLAnalyzer(Analyzer):
         ########################################################################################
 
         # create all the possible di-lepton pairs out of the different collections
-        dileptons = self.makeLeptonPairs(event,event.electrons,event.muons)
+        # AFTER having removed the prompt lepton
+#         dileptons = self.makeLeptonPairs(event,event.electrons,event.muons) # double counts the prompt lepton!
+        dileptons = self.makeLeptonPairs(event, event.filtered_electrons, event.filtered_muons)
+
+#         import pdb ; pdb.set_trace()
 
         if not len(dileptons):
             return False
@@ -439,7 +373,7 @@ class HNLAnalyzer(Analyzer):
         ########################################################################################
         # Select the most promising dilepton candidate
         ########################################################################################
-        self.selectDiLepton(event, dileptonsvtx)
+        event.displaced_dilepton_reco_cand = self.selectDiLepton(event, dileptonsvtx)
 
         ########################################################################################
         # Create a reco HNL3L object and "harvest" all the relevant eventinfos
@@ -453,8 +387,8 @@ class HNLAnalyzer(Analyzer):
         # save reco secondary vertex
         event.recoSv = event.displaced_dilepton_reco_cand.vtx()
 
-        event.recoSv.disp3DFromBS      = ROOT.VertexDistance3D().distance(event.recoSv, pv)
-        event.recoSv.disp3DFromBS_sig  = event.recoSv.disp3DFromBS.significance()
+        event.recoSv.disp3DFromBS     = ROOT.VertexDistance3D().distance(event.recoSv, pv)
+        event.recoSv.disp3DFromBS_sig = event.recoSv.disp3DFromBS.significance()
         
         # create an 'ideal' vertex out of the BS
         point = ROOT.reco.Vertex.Point(
@@ -467,9 +401,9 @@ class HNLAnalyzer(Analyzer):
         ndof = 0.
         bsvtx = ROOT.reco.Vertex(point, error, chi2, ndof, 2) # size? say 3? does it matter?
                                         
-        event.recoSv.disp2DFromBS      = ROOT.VertexDistanceXY().distance(event.recoSv, bsvtx)
-        event.recoSv.disp2DFromBS_sig  = event.recoSv.disp2DFromBS.significance()
-        event.recoSv.prob              = ROOT.TMath.Prob(event.recoSv.chi2(), int(event.recoSv.ndof()))
+        event.recoSv.disp2DFromBS     = ROOT.VertexDistanceXY().distance(event.recoSv, bsvtx)
+        event.recoSv.disp2DFromBS_sig = event.recoSv.disp2DFromBS.significance()
+        event.recoSv.prob             = ROOT.TMath.Prob(event.recoSv.chi2(), int(event.recoSv.ndof()))
         
         dilep_p4 = event.displaced_dilepton_reco_cand.lep1().p4() + event.displaced_dilepton_reco_cand.lep2().p4()
 
@@ -507,8 +441,8 @@ class HNLAnalyzer(Analyzer):
         ########################################################################################
         # Extra prompt and isolated lepton veto
         ########################################################################################        
-        event.veto_mus   = [mu for mu in event.selMuons     if mu.physObj not in [event.the_3lep_cand.l0().physObj, event.the_3lep_cand.l1().physObj, event.the_3lep_cand.l2().physObj] ]
-        event.veto_eles  = [ele  for ele  in event.selElectrons if ele .physObj not in [event.the_3lep_cand.l0().physObj, event.the_3lep_cand.l1().physObj, event.the_3lep_cand.l2().physObj] ]
+        event.veto_mus   = [mu  for mu  in event.selMuons     if mu .physObj not in [event.the_3lep_cand.l0().physObj, event.the_3lep_cand.l1().physObj, event.the_3lep_cand.l2().physObj] ]
+        event.veto_eles  = [ele for ele in event.selElectrons if ele.physObj not in [event.the_3lep_cand.l0().physObj, event.the_3lep_cand.l1().physObj, event.the_3lep_cand.l2().physObj] ]
 
         #FIXME: Is this step really needed?
         if len(event.veto_eles): event.veto_save_ele = sorted([ele for ele in event.veto_eles], key = lambda x : x.pt, reverse = True)[0] 
@@ -518,26 +452,26 @@ class HNLAnalyzer(Analyzer):
         # charged PF isolation
         ########################################################################################        
 
-        event.the_3lep_cand.abs_tot_iso03_rhoArea    = totIso(event, 'rhoArea', 0.3) 
-        event.the_3lep_cand.abs_tot_iso04_rhoArea    = totIso(event, 'rhoArea', 0.4) 
-        event.the_3lep_cand.abs_tot_iso05_rhoArea    = totIso(event, 'rhoArea', 0.5) 
+        event.the_3lep_cand.abs_tot_iso03_rhoArea   = totIso(event, 'rhoArea', 0.3) 
+        event.the_3lep_cand.abs_tot_iso04_rhoArea   = totIso(event, 'rhoArea', 0.4) 
+        event.the_3lep_cand.abs_tot_iso05_rhoArea   = totIso(event, 'rhoArea', 0.5) 
 
-        event.the_3lep_cand.rel_tot_iso03_rhoArea    = event.the_3lep_cand.abs_tot_iso03_rhoArea / event.the_3lep_cand.hnVisP4().pt()
-        event.the_3lep_cand.rel_tot_iso04_rhoArea    = event.the_3lep_cand.abs_tot_iso04_rhoArea / event.the_3lep_cand.hnVisP4().pt()
-        event.the_3lep_cand.rel_tot_iso05_rhoArea    = event.the_3lep_cand.abs_tot_iso05_rhoArea / event.the_3lep_cand.hnVisP4().pt()
+        event.the_3lep_cand.rel_tot_iso03_rhoArea   = event.the_3lep_cand.abs_tot_iso03_rhoArea / event.the_3lep_cand.hnVisP4().pt()
+        event.the_3lep_cand.rel_tot_iso04_rhoArea   = event.the_3lep_cand.abs_tot_iso04_rhoArea / event.the_3lep_cand.hnVisP4().pt()
+        event.the_3lep_cand.rel_tot_iso05_rhoArea   = event.the_3lep_cand.abs_tot_iso05_rhoArea / event.the_3lep_cand.hnVisP4().pt()
 
-        event.the_3lep_cand.abs_tot_iso03_deltaBeta  = totIso(event, 'dBeta', 0.3) 
-        event.the_3lep_cand.abs_tot_iso04_deltaBeta  = totIso(event, 'dBeta', 0.4) 
-        event.the_3lep_cand.abs_tot_iso05_deltaBeta  = totIso(event, 'dBeta', 0.5) 
+        event.the_3lep_cand.abs_tot_iso03_deltaBeta = totIso(event, 'dBeta', 0.3) 
+        event.the_3lep_cand.abs_tot_iso04_deltaBeta = totIso(event, 'dBeta', 0.4) 
+        event.the_3lep_cand.abs_tot_iso05_deltaBeta = totIso(event, 'dBeta', 0.5) 
 
-        event.the_3lep_cand.rel_tot_iso03_deltaBeta  =  event.the_3lep_cand.abs_tot_iso03_deltaBeta /  event.the_3lep_cand.hnVisP4().pt()
-        event.the_3lep_cand.rel_tot_iso04_deltaBeta  =  event.the_3lep_cand.abs_tot_iso04_deltaBeta /  event.the_3lep_cand.hnVisP4().pt()
-        event.the_3lep_cand.rel_tot_iso05_deltaBeta  =  event.the_3lep_cand.abs_tot_iso05_deltaBeta /  event.the_3lep_cand.hnVisP4().pt()
-
+        event.the_3lep_cand.rel_tot_iso03_deltaBeta =  event.the_3lep_cand.abs_tot_iso03_deltaBeta /  event.the_3lep_cand.hnVisP4().pt()
+        event.the_3lep_cand.rel_tot_iso04_deltaBeta =  event.the_3lep_cand.abs_tot_iso04_deltaBeta /  event.the_3lep_cand.hnVisP4().pt()
+        event.the_3lep_cand.rel_tot_iso05_deltaBeta =  event.the_3lep_cand.abs_tot_iso05_deltaBeta /  event.the_3lep_cand.hnVisP4().pt()
 
         #####################################################################################
         # After passing all selections and we have an HNL candidate, pass a "true" boolean!
         #####################################################################################
+
         return True
 
 

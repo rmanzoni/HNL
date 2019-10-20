@@ -9,18 +9,28 @@ samples = [Single_mu_2018D]
 
 ###################################################
 # set to True if you want to run interactively on a selected portion of samples/files/whatnot
-testing = False 
+testing = True 
 if testing:
     # run on a single component
     comp = samples[0]
     comp.files = comp.files[:1]
+    comp.files = ['/tmp/manzoni/DD93A253-6D38-C145-A54B-EBDA1D9941C9.root']
     # comp.fineSplitFactor = 10 # fine splitting, multicore
     samples = [comp]
 ###################################################
 
+toSelect = [
+    1907001815,
+    1906900170,
+    1907804418,
+    1907294530,
+    1906669138,
+    1907945433,
+]
+
 isData             = True
 isSignal           = False
-promptLeptonType   = "mu" # choose from 'ele', 'mu'
+promptLeptonType   = "m" # choose from 'e', 'm'
 L1L2LeptonType     = "mm"  # choose from 'ee', 'mm', 'em'
 
 # this calls the master cfg file with the proper settings
@@ -30,5 +40,7 @@ config = generateKeyConfigs(
     L1L2LeptonType, 
     isData=isData, 
     isSignal=isSignal,
-    prefetch=False
+    prefetch=True,
+    year=2018,
+#     toSelect=toSelect,
 )

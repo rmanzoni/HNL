@@ -1,4 +1,11 @@
-def generateKeyConfigs(samples, promptLeptonType, L1L2LeptonType, isData, isSignal, prefetch=False, year=2018):
+def generateKeyConfigs(samples, 
+                       promptLeptonType, 
+                       L1L2LeptonType, 
+                       isData, 
+                       isSignal, 
+                       prefetch=False, 
+                       year=2018,
+                       toSelect=[]):
     import os
     from collections import OrderedDict
     import PhysicsTools.HeppyCore.framework.config as cfg
@@ -24,6 +31,7 @@ def generateKeyConfigs(samples, promptLeptonType, L1L2LeptonType, isData, isSign
     # import HNL analyzers:
     from CMGTools.HNL.analyzers.HNLAnalyzer         import HNLAnalyzer
     from CMGTools.HNL.analyzers.HNLTreeProducer     import HNLTreeProducer
+    from CMGTools.HNL.analyzers.HNLTreeProducerBase import HNLTreeProducerBase
     from CMGTools.HNL.analyzers.HNLGenTreeAnalyzer  import HNLGenTreeAnalyzer
     from CMGTools.HNL.analyzers.HNLSignalReweighter import HNLSignalReweighter
     from CMGTools.HNL.analyzers.RecoGenAnalyzer     import RecoGenAnalyzer
@@ -82,8 +90,8 @@ def generateKeyConfigs(samples, promptLeptonType, L1L2LeptonType, isData, isSign
     ###               HANDLE SAMPLES                ###
     ###################################################
 
-    #samples = [comp for comp in samples if comp.name=='TTJets_amcat']
-    if promptLeptonType == 'ele':
+    # FIXME! are trigger names and filters correct regardless of the year?
+    if promptLeptonType == 'e':
         for sample in samples:
             sample.triggers  = ['HLT_Ele27_WPTight_Gsf_v%d'          %i for i in range(1, 15)] #electron trigger
             sample.triggers += ['HLT_Ele32_WPTight_Gsf_v%d'          %i for i in range(1, 15)] #electron trigger
@@ -92,7 +100,7 @@ def generateKeyConfigs(samples, promptLeptonType, L1L2LeptonType, isData, isSign
             sample.triggers += ['HLT_Ele135_CaloIdVT_GsfTrkIdT_v%d'  %i for i in range(1, 15)] #electron trigger
             sample.splitFactor = splitFactor(sample, 2e5)
     # triggers same for 2018: https://tomc.web.cern.ch/tomc/triggerPrescales/2018//?match=Ele
-    if promptLeptonType == 'mu':
+    if promptLeptonType == 'm':
         for sample in samples:
             sample.triggers  = ['HLT_IsoMu24_v%d' %i for i in range(1, 15)] #muon trigger
             sample.triggers += ['HLT_IsoMu27_v%d' %i for i in range(1, 15)] #muon trigger
@@ -108,7 +116,7 @@ def generateKeyConfigs(samples, promptLeptonType, L1L2LeptonType, isData, isSign
     eventSelector = cfg.Analyzer(
         EventSelector,
         name='EventSelector',
-        toSelect=[326]
+        toSelect=toSelect,
     )
 
     lheWeightAna = cfg.Analyzer(
@@ -174,9 +182,17 @@ def generateKeyConfigs(samples, promptLeptonType, L1L2LeptonType, isData, isSign
 
     HNLTreeProducer = cfg.Analyzer(
         HNLTreeProducer,
+        name='HNLExtendedTreeProducer',
+        L1L2LeptonType=L1L2LeptonType,
+        promptLepType=promptLeptonType,
+    )
+
+    HNLTreeProducerBase = cfg.Analyzer(
+        HNLTreeProducerBase,
         name='HNLTreeProducer',
         L1L2LeptonType=L1L2LeptonType,
         promptLepType=promptLeptonType,
+        skimFunction='event.the_3lep_cand.charge12()==0 and event.the_3lep_cand.mass12()<12 and event.recoSv.disp2DFromBS_cos>0.'
     )
 
     HNLGenTreeAnalyzer = cfg.Analyzer(
@@ -195,19 +211,39 @@ def generateKeyConfigs(samples, promptLeptonType, L1L2LeptonType, isData, isSign
     # for each path specify which filters you want the electrons/muons to match to
     triggers_and_filters = OrderedDict()
 
-    if promptLeptonType == 'ele':
+    if promptLeptonType == 'e':
         triggers_and_filters['HLT_Ele27_WPTight_Gsf']         = 'hltEle27WPTightGsfTrackIsoFilter'
         triggers_and_filters['HLT_Ele32_WPTight_Gsf']         = 'hltEle32WPTightGsfTrackIsoFilter'
         triggers_and_filters['HLT_Ele35_WPTight_Gsf']         = 'hltEle35noerWPTightGsfTrackIsoFilter'
         triggers_and_filters['HLT_Ele115_CaloIdVT_GsfTrkIdT'] = 'hltEle115CaloIdVTGsfTrkIdTGsfDphiFilter'
         triggers_and_filters['HLT_Ele135_CaloIdVT_GsfTrkIdT'] = 'hltEle135CaloIdVTGsfTrkIdTGsfDphiFilter'
 
-    if promptLeptonType == 'mu':
+    if promptLeptonType == 'm':
         triggers_and_filters['HLT_IsoMu24'] = 'hltL3crIsoL1sSingleMu22L1f0L2f10QL3f24QL3trkIsoFiltered0p07'
         triggers_and_filters['HLT_IsoMu27'] = 'hltL3crIsoL1sMu22Or25L1f0L2f10QL3f27QL3trkIsoFiltered0p07'
         triggers_and_filters['HLT_Mu50']    = 'hltL3fL1sMu22Or25L1f0L2f10QL3Filtered50Q'
     # TODO: add (HLT_IsoTkMu24_v*) and (HLT_TkMu50_v*); but only later for 2016 dataset
 
+    # Here we define the baseline selection for muons and electrons.
+    # These are the minimal requirements that leptons need to satisfy to be considered
+    # in building HNL candidates and be saved in the ntuples 
+    def preselect_mu(imu):
+        if imu.pt() < 5.             : return False 
+        if abs(imu.eta()) > 2.4      : return False
+        if imu.relIsoFromEA(0.3) > 10: return False
+        if not (imu.isSoftMuon(imu.associatedVertex) or \
+                imu.muonID('POG_ID_Loose')           or \
+                imu.Medium == 1): return False
+        return True
+
+    def preselect_ele(iele):
+        if iele.pt() < 5.             : return False 
+        if abs(iele.eta()) > 2.5      : return False
+        if iele.relIsoFromEA(0.3) > 10: return False
+        if not (iele.LooseNoIsoID or \
+                iele.electronID("MVA_ID_nonIso_Fall17_Loose")): return False
+        return True
+        
     HNLAnalyzer = cfg.Analyzer(
         HNLAnalyzer,
         name='HNLAnalyzer',
@@ -215,9 +251,11 @@ def generateKeyConfigs(samples, promptLeptonType, L1L2LeptonType, isData, isSign
         L1L2LeptonType=L1L2LeptonType,
         triggersAndFilters=triggers_and_filters,
         candidate_selection='maxpt',
+        muon_preselection=preselect_mu,
+        ele_preselection=preselect_ele,
     )
 
-    if promptLeptonType == 'ele':
+    if promptLeptonType == 'e':
         Weighter_l0 = cfg.Analyzer(
             LeptonWeighter,
             name='LeptonWeighter_l0',
@@ -227,7 +265,7 @@ def generateKeyConfigs(samples, promptLeptonType, L1L2LeptonType, isData, isSign
             disable=False
         )
 
-    if promptLeptonType == 'mu':
+    if promptLeptonType == 'm':
         Weighter_l0 = cfg.Analyzer(
             LeptonWeighter,
             name='LeptonWeighter_l0',
@@ -315,24 +353,23 @@ def generateKeyConfigs(samples, promptLeptonType, L1L2LeptonType, isData, isSign
     ###################################################
     if isData == True:
         sequence = cfg.Sequence([
-        #     eventSelector,
             jsonAna,
-            skimAna,
+            # skimAna,
             triggerAna,
             vertexAna,
-            pileUpAna,
+            # pileUpAna,
             HNLAnalyzer,
             jetAna,
             metFilter,
+            HNLTreeProducerBase,
             HNLTreeProducer,
         ])
 
     if isData == False:
         if isSignal == True:
             sequence = cfg.Sequence([
-            #     eventSelector,
                 lheWeightAna, # les houches
-                jsonAna,
+                #jsonAna,
                 skimAna,
                 signalReweighAna,
                 triggerAna,
@@ -347,13 +384,13 @@ def generateKeyConfigs(samples, promptLeptonType, L1L2LeptonType, isData, isSign
                 Weighter_l2, 
                 jetAna,
                 metFilter,
+                HNLTreeProducerBase,
                 HNLTreeProducer,
             ])
         if isSignal == False:
             sequence = cfg.Sequence([
-            #     eventSelector,
                 lheWeightAna, # les houches
-                jsonAna,
+                #jsonAna,
                 skimAna,
                 triggerAna,
                 vertexAna,
@@ -366,19 +403,29 @@ def generateKeyConfigs(samples, promptLeptonType, L1L2LeptonType, isData, isSign
                 Weighter_l2, 
                 jetAna,
                 metFilter,
+                HNLTreeProducerBase,
                 HNLTreeProducer,
             ])
-
+    
+    if len(toSelect):
+        print 'Cherry picking the following events to process:'
+        for iev in toSelect:
+            print '\t', iev
+        sequence.insert(0, eventSelector)
+    
     ###################################################
     ###            PREPROCESSOR                     ###
     ###################################################
 
     # temporary copy remote files using xrd
-    event_class = EOSEventsWithDownload if not prefetch else Events
+#     event_class = EOSEventsWithDownload if prefetch else Events
+    
+    # FIXME! for some reason, Events doesn't work anymore in 10_4
+    event_class = EOSEventsWithDownload  
     if prefetch:
         EOSEventsWithDownload.aggressive = 2 # always fetch if running on Wigner
         EOSEventsWithDownload.long_cache = getHeppyOption('long_cache', False)
-
+    
     # the following is declared in case this cfg is used in input to the heppy.py script
     # from PhysicsTools.HeppyCore.framework.eventsfwlite import Events
     config = cfg.Config(

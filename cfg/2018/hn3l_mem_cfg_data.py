@@ -28,5 +28,6 @@ config = generateKeyConfigs(
     L1L2LeptonType, 
     isData=isData, 
     isSignal=isSignal,
-    prefetch=False
+    prefetch=False,
+    year=2018,
 )

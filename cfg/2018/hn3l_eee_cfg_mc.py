@@ -19,7 +19,7 @@ if testing:
 
 isData             = False
 isSignal           = False
-promptLeptonType   = "ele" # choose from 'ele', 'ele'
+promptLeptonType   = "e" # choose from 'ele', 'ele'
 L1L2LeptonType     = "ee"  # choose from 'ee', 'mm', 'em'
 
 

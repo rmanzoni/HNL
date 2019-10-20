@@ -1,3 +1,4 @@
+import numpy as np
 from PhysicsTools.Heppy.analyzers.core.Analyzer import Analyzer
 from PhysicsTools.Heppy.analyzers.core.AutoHandle import AutoHandle
 from pdb import set_trace
@@ -42,6 +43,9 @@ class METFilter(Analyzer):
         triggerBits = self.handles['TriggerResults'].product()
         names = event.input.object().triggerNames(triggerBits)
 
+        # assume the events pass all filters
+        event.pass_met_filters = 1
+        
         for trigger_name in self.triggers:
             index = names.triggerIndex(trigger_name)
 
@@ -57,6 +61,9 @@ class METFilter(Analyzer):
 #                print(trigger_name)
             else:
                 setattr(event, trigger_name, False)
+
+            # update at each filter
+            event.pass_met_filters *= fired
 
    
 #        self.handles['badPFMuonFilter'].ReallyLoad(self.handles['badPFMuonFilter'].event)

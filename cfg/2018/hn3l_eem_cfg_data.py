@@ -18,7 +18,7 @@ if testing:
 
 isData             = True
 isSignal           = False
-promptLeptonType   = "ele" # choose from 'ele', 'mu'
+promptLeptonType   = "e" # choose from 'ele', 'mu'
 L1L2LeptonType     = "em"  # choose from 'ee', 'mm', 'em'
 
 # this calls the master cfg file with the proper settings

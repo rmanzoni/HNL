@@ -122,6 +122,96 @@ ZZ = creator.makeMCComponent(
 )
 ZZ.nGenEvents = ZZ.dataset_entries
 
+# VS :: 10/21/19: adding single top & Z/WGamma / are x-sec ok?
+ST_sch_lep = creator.makeMCComponent(
+    name    = 'ST_sch_lep', 
+    # dataset = '/ST_s-channel_4f_leptonDecays_TuneCP5_13TeV-amcatnlo-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM', # MC_2017
+    dataset = '/ST_s-channel_4f_leptonDecays_TuneCP5_13TeV-madgraph-pythia8/RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15_ext1-v4/MINIAODSIM', 
+    user    = 'CMS', 
+    pattern = '.*root', 
+    xSec    = 3.68, 
+    useAAA  = True
+)
+
+ST_sch_lep .nGenEvents = ST_sch_lep.dataset_entries 
+
+
+STbar_tch_inc = creator.makeMCComponent(
+    name    = 'STbar_tch_inc', 
+    # dataset = '/ST_t-channel_antitop_4f_inclusiveDecays_TuneCP5_13TeV-powhegV2-madspin-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM', # MC_2017
+    dataset = '/ST_t-channel_antitop_4f_InclusiveDecays_TuneCP5_13TeV-powheg-madspin-pythia8/RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v1/MINIAODSIM', 
+    user    = 'CMS', 
+    pattern = '.*root', 
+    xSec    = 26.23, 
+    useAAA  = True
+)
+
+STbar_tch_inc .nGenEvents = STbar_tch_inc .dataset_entries 
+
+
+ST_tch_inc = creator.makeMCComponent(
+    name    = 'ST_tch_inc', 
+    # dataset = '/ST_t-channel_top_4f_inclusiveDecays_TuneCP5_13TeV-powhegV2-madspin-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_new_pmx_94X_mc2017_realistic_v14-v1/MINIAODSIM', # MC_2017
+    dataset = '/ST_t-channel_top_4f_InclusiveDecays_TuneCP5_13TeV-powheg-madspin-pythia8/RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v1/MINIAODSIM', 
+    user    = 'CMS', 
+    pattern = '.*root', 
+    xSec    = 44.07, 
+    useAAA  = True
+)
+
+ST_tch_inc .nGenEvents = ST_tch_inc.dataset_entries 
+
+
+STbar_tW_inc = creator.makeMCComponent(
+    name    = 'STbar_tW_inc', 
+    # dataset = '/ST_tW_antitop_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM', # MC_2017
+    dataset = '/ST_tW_antitop_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8/RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15_ext1-v1/MINIAODSIM', 
+    user    = 'CMS', 
+    pattern = '.*root', 
+    xSec    = 35.6, 
+    useAAA  = True
+)
+
+STbar_tW_inc .nGenEvents = STbar_tW_inc.dataset_entries 
+
+
+ST_tW_inc = creator.makeMCComponent(
+    name    = 'ST_tW_inc', 
+    # dataset = '/ST_tW_top_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM', # MC_2017
+    dataset = '/ST_tW_top_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8/RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15_ext1-v1/MINIAODSIM',
+    user    = 'CMS', 
+    pattern = '.*root', 
+    xSec    = 35.6, 
+    useAAA  = True
+)
+
+ST_tW_inc .nGenEvents = ST_tW_inc.dataset_entries 
+
+WGToLNuG = creator.makeMCComponent(
+    name    = 'WGamma', 
+    # /WGToLNuG TuneCUETP8M1 13TeV-amcatnloFXFX-pythia8 # MC_2017
+    dataset = '/WGToLNuG_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v1/MINIAODSIM',
+    user    = 'CMS', 
+    pattern = '.*root', 
+    xSec    = 405.271,
+    useAAA  = True
+)
+
+WGToLNuG .nGenEvents = WGToLNuG.dataset_entries 
+
+ZGTo2LG = creator.makeMCComponent(
+    name    = 'ZGamma', 
+    # /ZGTo2LG_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8 # MC_2017
+    dataset = '/ZGToLLG_01J_5f_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15_ext1-v2/MINIAODSIM', 
+    dataset = '',
+    user    = 'CMS', 
+    pattern = '.*root', 
+    xSec    = 123.9,
+    useAAA  = True
+)
+
+WGToLNuG .nGenEvents = WGToLNuG.dataset_entries 
+ 
 
 # LINK for crosssections: 
 #https://twiki.cern.ch/twiki/bin/viewauth/CMS/SummaryTable1G25ns

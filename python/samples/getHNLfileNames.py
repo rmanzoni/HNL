@@ -9,6 +9,10 @@ wget http://tomc.web.cern.ch/tomc/heavyNeutrinoFileList.txt
 29/8/2019
 wget http://tomc.web.cern.ch/tomc/heavyNeutrino/availableHeavyNeutrinoSamples.txt
 wget http://tomc.web.cern.ch/tomc/heavyNeutrino/heavyNeutrinoFileList.txt
+
+21/10/2019
+wget http://tomc.web.cern.ch/tomc/heavyNeutrino/availableHeavyNeutrinoSamples.txt
+wget http://tomc.web.cern.ch/tomc/heavyNeutrino/heavyNeutrinoFileList.txt
 '''
 
 import re
@@ -194,6 +198,11 @@ if __name__ == '__main__':
             for sample in toread[yy]:
                 print >> f, '    %s,' %sample.title
             print >> f, ']'            
+
+            print >> f, '\n\n' 
+
+            print >> f, 'for isample in all_signals:' 
+            print >> f, '    isample.isSignal = True' 
 
             print >> f, '\n\n' 
 

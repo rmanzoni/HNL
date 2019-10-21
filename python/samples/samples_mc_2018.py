@@ -209,8 +209,27 @@ ZGTo2LG = creator.makeMCComponent(
     useAAA  = True
 )
 
-WGToLNuG .nGenEvents = WGToLNuG.dataset_entries 
+ZGTo2LG .nGenEvents = ZGTo2LG.dataset_entries 
  
+all_samples = [
+    TTJets            ,
+    TTJets_ext        ,
+    WJetsToLNu        ,
+    DYBB              ,
+    DYJetsToLL_M5to50 ,
+    DYJetsToLL_M50    ,
+    DYJetsToLL_M50_ext,
+    WW                ,
+    WZ                ,
+    ZZ                ,
+    ST_sch_lep        ,
+    STbar_tch_inc     ,
+    ST_tch_inc        ,
+    STbar_tW_inc      ,
+    ST_tW_inc         ,
+    WGToLNuG          ,
+    ZGTo2LG           ,
+]
 
 # LINK for crosssections: 
 #https://twiki.cern.ch/twiki/bin/viewauth/CMS/SummaryTable1G25ns

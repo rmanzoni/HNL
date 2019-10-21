@@ -60,7 +60,7 @@ class HNLGenTreeAnalyzer(Analyzer):
         event.genp = [ip for ip in event.genp_pruned] + [ip for ip in event.genp_packed]
 
         # get the heavy neutrino
-        the_hns = [ip for ip in event.genp_pruned if abs(ip.pdgId())==9900012 and ip.isLastCopy()]
+        the_hns = [ip for ip in event.genp_pruned if abs(ip.pdgId()) in [9900012, 9990012] and ip.isLastCopy()] # 9900012 is Majorana, 9990012 is Dirac. Dirac comes in two species, particle and anti-particle!
         event.the_hn = the_hns[0] # one per event
 
         # prompt lepton

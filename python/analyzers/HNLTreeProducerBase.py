@@ -324,7 +324,7 @@ class HNLTreeProducerBase(TreeProducerBase):
                 if hasattr(event.the_3lep_cand.l1(), 'bestmatch'): self.fill(self.tree, 'l1_is_real', deltaR(event.the_3lep_cand.l1().bestmatch,event.the_hnl.l1()) < 0.05)
                 if hasattr(event.the_3lep_cand.l2(), 'bestmatch'): self.fill(self.tree, 'l2_is_real', deltaR(event.the_3lep_cand.l2().bestmatch,event.the_hnl.l2()) < 0.05)
 
-            print('event:', event.eventId, 'lumi:', event.lumi)
+            # print('event:', event.eventId, 'lumi:', event.lumi)
 
         # extra lepton veto
         self.fill(self.tree, 'pass_e_veto', len(event.veto_eles)==0)

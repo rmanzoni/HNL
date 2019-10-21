@@ -5,7 +5,8 @@ def generateKeyConfigs(samples,
                        isSignal, 
                        prefetch=False, 
                        year=2018,
-                       toSelect=[]):
+                       toSelect=[],
+                       saveBigTree=True,):
     import os
     from collections import OrderedDict
     import PhysicsTools.HeppyCore.framework.config as cfg
@@ -362,7 +363,6 @@ def generateKeyConfigs(samples,
             jetAna,
             metFilter,
             HNLTreeProducerBase,
-            HNLTreeProducer,
         ])
 
     if isData == False:
@@ -385,7 +385,6 @@ def generateKeyConfigs(samples,
                 jetAna,
                 metFilter,
                 HNLTreeProducerBase,
-                HNLTreeProducer,
             ])
         if isSignal == False:
             sequence = cfg.Sequence([
@@ -404,8 +403,10 @@ def generateKeyConfigs(samples,
                 jetAna,
                 metFilter,
                 HNLTreeProducerBase,
-                HNLTreeProducer,
             ])
+    
+    if saveBigTree:
+        sequence.insert(-1, HNLTreeProducer)
     
     if len(toSelect):
         print 'Cherry picking the following events to process:'

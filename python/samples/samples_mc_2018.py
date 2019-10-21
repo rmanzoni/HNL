@@ -203,7 +203,6 @@ ZGTo2LG = creator.makeMCComponent(
     name    = 'ZGamma', 
     # /ZGTo2LG_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8 # MC_2017
     dataset = '/ZGToLLG_01J_5f_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15_ext1-v2/MINIAODSIM', 
-    dataset = '',
     user    = 'CMS', 
     pattern = '.*root', 
     xSec    = 123.9,

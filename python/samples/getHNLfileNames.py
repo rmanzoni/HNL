@@ -201,6 +201,11 @@ if __name__ == '__main__':
 
             print >> f, '\n\n' 
 
+            print >> f, 'for isample in all_signals:' 
+            print >> f, '    isample.isSignal = True' 
+
+            print >> f, '\n\n' 
+
             print >> f, "all_signals_e  = [isample for isample in all_signals if '_e_'   in isample.name]"
             print >> f, "all_signals_m  = [isample for isample in all_signals if '_mu_'  in isample.name]"
             print >> f, "all_signals_t  = [isample for isample in all_signals if '_tau_' in isample.name]"

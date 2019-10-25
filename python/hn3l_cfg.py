@@ -8,6 +8,7 @@ def generateKeyConfigs(samples,
                        toSelect=[],
                        saveBigTree=True,):
     import os
+    from copy import deepcopy as dc
     from collections import OrderedDict
     import PhysicsTools.HeppyCore.framework.config as cfg
     from PhysicsTools.HeppyCore.framework.config import printComps
@@ -19,17 +20,15 @@ def generateKeyConfigs(samples,
     from CMGTools.RootTools.utils.splitFactor import splitFactor
 
     # import Heppy analyzers:
-    from PhysicsTools.Heppy.analyzers.core.JSONAnalyzer      import JSONAnalyzer
-    from PhysicsTools.Heppy.analyzers.core.SkimAnalyzerCount import SkimAnalyzerCount
     from PhysicsTools.Heppy.analyzers.core.EventSelector     import EventSelector
     from PhysicsTools.Heppy.analyzers.objects.VertexAnalyzer import VertexAnalyzer
-    from PhysicsTools.Heppy.analyzers.core.PileUpAnalyzer    import PileUpAnalyzer
     from PhysicsTools.Heppy.analyzers.gen.GeneratorAnalyzer  import GeneratorAnalyzer
-    from PhysicsTools.Heppy.analyzers.gen.LHEWeightAnalyzer  import LHEWeightAnalyzer
-
-    from CMGTools.H2TauTau.proto.analyzers.TriggerAnalyzer   import TriggerAnalyzer
+#     from PhysicsTools.Heppy.analyzers.gen.LHEWeightAnalyzer  import LHEWeightAnalyzer
 
     # import HNL analyzers:
+    from CMGTools.HNL.analyzers.PileUpAnalyzer      import PileUpAnalyzer
+    from CMGTools.HNL.analyzers.JSONAnalyzer        import JSONAnalyzer
+    from CMGTools.HNL.analyzers.SkimAnalyzerCount   import SkimAnalyzerCount
     from CMGTools.HNL.analyzers.HNLAnalyzer         import HNLAnalyzer
     from CMGTools.HNL.analyzers.HNLTreeProducer     import HNLTreeProducer
     from CMGTools.HNL.analyzers.HNLTreeProducerBase import HNLTreeProducerBase
@@ -77,14 +76,14 @@ def generateKeyConfigs(samples,
         ELE_SFS = OrderedDict()
         ELE_SFS['idiso'] = ('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/'+SF_FILE, 'e_idiso_desy')
         # Add trigger corrections for the prompt lepton l0
-        ELE_PROMPT_SFS = ELE_SFS
+        ELE_PROMPT_SFS = dc(ELE_SFS)
         ELE_PROMPT_SFS['trigger'] = ('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/'+SF_FILE, 'e_trgEle32orEle35_desy')
 
         # Muon corrections, valid for l1 and l2
         MU_SFS = OrderedDict()
         MU_SFS['idiso'] = ('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_2018_v1.root', 'm_idiso_desy')
         # Add trigger corrections for the prompt lepton l0
-        MU_PROMPT_SFS = MU_SFS
+        MU_PROMPT_SFS = dc(MU_SFS)
         MU_PROMPT_SFS['trigger'] = ('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_2018_v1.root', 'm_trgIsoMu24orIsoMu27_desy')
 
     ###################################################
@@ -120,10 +119,10 @@ def generateKeyConfigs(samples,
         toSelect=toSelect,
     )
 
-    lheWeightAna = cfg.Analyzer(
-        LHEWeightAnalyzer, name="LHEWeightAnalyzer",
-        useLumiInfo=False
-    )
+#     lheWeightAna = cfg.Analyzer(
+#         LHEWeightAnalyzer, name="LHEWeightAnalyzer",
+#         useLumiInfo=False
+#     )
 
     jsonAna = cfg.Analyzer(
         JSONAnalyzer,
@@ -368,7 +367,7 @@ def generateKeyConfigs(samples,
     if isData == False:
         if isSignal == True:
             sequence = cfg.Sequence([
-                lheWeightAna, # les houches
+                #lheWeightAna, # les houches
                 #jsonAna,
                 skimAna,
                 signalReweighAna,
@@ -388,7 +387,7 @@ def generateKeyConfigs(samples,
             ])
         if isSignal == False:
             sequence = cfg.Sequence([
-                lheWeightAna, # les houches
+                #lheWeightAna, # les houches
                 #jsonAna,
                 skimAna,
                 triggerAna,

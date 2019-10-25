@@ -367,7 +367,7 @@ def generateKeyConfigs(samples,
     if isData == False:
         if isSignal == True:
             sequence = cfg.Sequence([
-                #lheWeightAna, # les houches
+#                 lheWeightAna, # les houches
                 #jsonAna,
                 skimAna,
                 signalReweighAna,
@@ -387,7 +387,7 @@ def generateKeyConfigs(samples,
             ])
         if isSignal == False:
             sequence = cfg.Sequence([
-                #lheWeightAna, # les houches
+#                 lheWeightAna, # les houches
                 #jsonAna,
                 skimAna,
                 triggerAna,

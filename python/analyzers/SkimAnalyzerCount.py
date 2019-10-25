@@ -23,6 +23,7 @@ class SkimAnalyzerCount( Analyzer ):
         super(SkimAnalyzerCount, self).declareHandles()
         self.counterHandle = Handle("edm::MergeableCounter")
         self.mchandles['GenInfo'] = AutoHandle( ('generator','',''), 'GenEventInfoProduct' )
+#         self.mchandles['LHEweights'] = AutoHandle('externalLHEProducer', 'LHEEventProduct', mayFail=True, fallbackLabel='source', lazy=False)
         
     def beginLoop(self, setup):
         super(SkimAnalyzerCount,self).beginLoop(setup)
@@ -69,7 +70,21 @@ class SkimAnalyzerCount( Analyzer ):
             if self.cfg_comp.isMC: 
                 self.count.inc('Sum Norm Weights', np.sign(self.mchandles['GenInfo'].product().weight()))
                 self.count.inc('Sum Weights'     , self.mchandles['GenInfo'].product().weight())
+                
+                # the two following lines return the same result
+                event.LHE_originalWeight = np.sign(self.mchandles['GenInfo'].product().weight())
+#                 event.LHE_originalWeight = np.sign(self.mchandles['LHEweights'].product().originalXWGTUP())
 
+#                 genweight = self.mchandles['GenInfo'].product().weight()
+#                 lheweight = self.mchandles['LHEweights'].product().originalXWGTUP()
+# 
+#                 if genweight!=lheweight:                
+#                     print('lhe', lheweight)
+#                     print('gen', genweight)
+#                     print('same sign?', np.sign(lheweight) == np.sign(genweight))
+#                     if np.sign(lheweight) != np.sign(genweight):
+#                         import pdb ; pdb.set_trace()
+                
 #                 print 'weight = ', self.mchandles['GenInfo'].product().weight()
 
         return True

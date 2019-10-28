@@ -58,7 +58,7 @@ DYJetsToLL_M5to50 = creator.makeMCComponent(
     dataset = '/DYJetsToLL_M-5to50_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v2/MINIAODSIM',
     user    = 'CMS', 
     pattern = '.*root',
-    xSec    = -99,
+    xSec    = 81880.0,
     useAAA  = True
 )
 DYJetsToLL_M5to50.nGenEvents = DYJetsToLL_M5to50.dataset_entries 
@@ -69,7 +69,7 @@ DYJetsToLL_M50 = creator.makeMCComponent(
     dataset = '/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v1/MINIAODSIM', 
     user    = 'CMS', 
     pattern = '.*root', 
-    xSec    = 2075.14*3, 
+    xSec    = 6077.22, # 2075.14*3, # https://hypernews.cern.ch/HyperNews/CMS/get/tauid/966.html
     useAAA  = True
 )
 DYJetsToLL_M50.nGenEvents = DYJetsToLL_M50.dataset_entries
@@ -81,7 +81,7 @@ DYJetsToLL_M50_ext = creator.makeMCComponent(
     user    = 'CMS', 
     pattern = '.*root', 
     # xSec    = 1921.8*3, #oldValue 
-    xSec    = 2075.14*3, 
+    xSec    = 6077.22, # 2075.14*3, # https://hypernews.cern.ch/HyperNews/CMS/get/tauid/966.html
     useAAA  = True
 )
 DYJetsToLL_M50_ext.nGenEvents = DYJetsToLL_M50_ext.dataset_entries

@@ -23,11 +23,11 @@
 
 `git remote add cmg-central https://github.com/CERN-PH-CMG/cmg-cmssw.git  -f  -t heppy_104X_dev`
 
-`git remote add vstampf https://github.com/vinzenzstampf/cmg-cmssw.git -f -t hnl_104X`
+`git remote add vstampf https://github.com/vinzenzstampf/cmg-cmssw.git -f -t heppy_104X_hnl`
 
 `git checkout -b heppy_104X_dev cmg-central/heppy_104X_dev`
 
-`git checkout -b heppy_104X_hnl vstampf/heppy_104X_dev`
+`git checkout -b heppy_104X_hnl vstampf/heppy_104X_hnl`
 
 add needed packages:
 

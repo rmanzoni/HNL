@@ -1,6 +1,7 @@
 from DataFormats.FWLite import Events as FWLiteEvents
 from CMGTools.Production.changeComponentAccessMode import convertFile as convertFileAccess 
 import os, subprocess, json, timeit, hashlib
+from re import sub
 
 class EOSEventsWithDownload(object):
     def __init__(self, files, tree_name):
@@ -14,8 +15,10 @@ class EOSEventsWithDownload(object):
             retjson = subprocess.check_output(query)
             retobj = json.loads(retjson)
             for entry in retobj:
-                self._files.append( (str(entry['file']), self._nevents, self._nevents+entry['events'] ) ) # str() is needed since the output is a unicode string
+                # self._files.append( (str(entry['file']), self._nevents, self._nevents+entry['events'] ) ) # str() is needed since the output is a unicode string
+                self._files.append( (sub('root://cms-xrd-global.cern.ch/', 'root://xrootd-cms.infn.it/', str(entry['file'])), self._nevents, self._nevents+entry['events'] ) )
                 self._nevents += entry['events']
+            # from pdb import set_trace; print self._files; set_trace()
         except subprocess.CalledProcessError:
             print "[FileFetcher]: Failed the big query: ",query
             ## OK, now we go for something more fancy
@@ -129,6 +132,11 @@ class EOSEventsWithDownload(object):
                     if fname.startswith("root://eoscms") or (self.aggressive >= 2 and fname.startswith("root://")):
                         if not self.isLocal(fname):
                             tmpdir = os.environ['TMPDIR'] if 'TMPDIR' in os.environ else "/tmp"
+                            # VS 29/10/19, /scratch is larger than /tmp for T3 WN:
+                            print tmpdir
+                            from socket import gethostname; from pdb import set_trace
+                            if 't3' in gethostname(): tmpdir = "/scratch" 
+                            print tmpdir#; set_trace()
                             rndchars  = "".join([hex(ord(i))[2:] for i in os.urandom(8)]) if not self.long_cache else "long_cache-id%d-%s" % (os.getuid(), hashlib.sha1(fname).hexdigest());
                             localfile = "%s/%s-%s.root" % (tmpdir, os.path.basename(fname).replace(".root",""), rndchars)
                             if self.long_cache and os.path.exists(localfile):

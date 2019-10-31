@@ -9,12 +9,12 @@ samples = [DYBB]
 
 ###################################################
 # set to True if you want to run interactively on a selected portion of samples/files/whatnot
-testing = False 
+testing = True 
 if testing:
     # run on a single component
     comp = samples[0]
-    # comp.files = comp.files[:1]
-    comp.fineSplitFactor = 10 # fine splitting, multicore
+    comp.files = comp.files[:1]
+    # comp.fineSplitFactor = 4 # fine splitting, multicore
     samples = [comp]
 ###################################################
 
@@ -30,5 +30,6 @@ config = generateKeyConfigs(
     L1L2LeptonType, 
     isData=isData, 
     isSignal=isSignal,
-    prefetch=False
+    prefetch=True,
+    year=2018
 )

@@ -170,29 +170,68 @@ class HNLTreeProducerBase(TreeProducerBase):
         self.counters.counter('HNLTreeProducer').inc('all events')        
         # save the event only if it passes the skim selection (if it exists)
         # import pdb ; pdb.set_trace()
-        if not eval(self.skimFunction):
+        # try except needed if running multiple channels
+        try:
+            if not eval(self.skimFunction):
+                return True
+        except:
             return True
+        
+        # get ahold of the objects to save
+        final_state = self.cfg_ana.promptLepType + self.cfg_ana.L1L2LeptonType
+        dileptonsvtx  = event.dileptonsvtx_dict [final_state]
+        the_3lep_cand = event.the_3lep_cand_dict[final_state]
+        recoSv        = event.recoSv_dict       [final_state]
+        
+        # also cleaned jet collections depend on the final state
+        cleanJets   = event.cleanJets  [final_state]
+        cleanBJets  = event.cleanBJets [final_state]
+        cleanJets30 = event.cleanJets30[final_state]
+
+        # adjust the weights, according to the final state
+        event.eventWeight = event.puWeight           * \
+                            event.LHE_originalWeight * \
+                            getattr(event, 'weight_%s' %final_state)
+        
+        the_3lep_cand.l0().weight          = getattr(the_3lep_cand.l0(), 'weight_%s'          %final_state, 1.)
+        the_3lep_cand.l0().weight_id       = getattr(the_3lep_cand.l0(), 'weight_%s_id'       %final_state, 1.)
+        the_3lep_cand.l0().weight_idiso    = getattr(the_3lep_cand.l0(), 'weight_%s_idiso'    %final_state, 1.)
+        the_3lep_cand.l0().weight_trigger  = getattr(the_3lep_cand.l0(), 'weight_%s_trigger'  %final_state, 1.)
+        the_3lep_cand.l0().weight_tracking = getattr(the_3lep_cand.l0(), 'weight_%s_tracking' %final_state, 1.)
+
+        the_3lep_cand.l1().weight          = getattr(the_3lep_cand.l1(), 'weight_%s'          %final_state, 1.)
+        the_3lep_cand.l1().weight_id       = getattr(the_3lep_cand.l1(), 'weight_%s_id'       %final_state, 1.)
+        the_3lep_cand.l1().weight_idiso    = getattr(the_3lep_cand.l1(), 'weight_%s_idiso'    %final_state, 1.)
+        the_3lep_cand.l1().weight_trigger  = getattr(the_3lep_cand.l1(), 'weight_%s_trigger'  %final_state, 1.)
+        the_3lep_cand.l1().weight_tracking = getattr(the_3lep_cand.l1(), 'weight_%s_tracking' %final_state, 1.)
+
+        the_3lep_cand.l2().weight          = getattr(the_3lep_cand.l2(), 'weight_%s'          %final_state, 1.)
+        the_3lep_cand.l2().weight_id       = getattr(the_3lep_cand.l2(), 'weight_%s_id'       %final_state, 1.)
+        the_3lep_cand.l2().weight_idiso    = getattr(the_3lep_cand.l2(), 'weight_%s_idiso'    %final_state, 1.)
+        the_3lep_cand.l2().weight_trigger  = getattr(the_3lep_cand.l2(), 'weight_%s_trigger'  %final_state, 1.)
+        the_3lep_cand.l2().weight_tracking = getattr(the_3lep_cand.l2(), 'weight_%s_tracking' %final_state, 1.)
+
         self.counters.counter('HNLTreeProducer').inc('pass skim')
         
         # event variables 
         self.fillEvent(self.tree, event)
-        self.fill     (self.tree, 'n_cands', len(event.dileptonsvtx))
+        self.fill     (self.tree, 'n_cands', len(dileptonsvtx))
         # these are PRESELECTED leptons according to the preselection given via cfg
 
         # reco HNL
-        self.fillHNL (self.tree, 'hnl', event.the_3lep_cand)
+        self.fillHNL (self.tree, 'hnl', the_3lep_cand)
         if self.cfg_ana.L1L2LeptonType == 'mm':
-            self.fillMuon(self.tree, 'l1', event.the_3lep_cand.l1())
-            self.fillMuon(self.tree, 'l2', event.the_3lep_cand.l2())
+            self.fillMuon(self.tree, 'l1', the_3lep_cand.l1())
+            self.fillMuon(self.tree, 'l2', the_3lep_cand.l2())
         if self.cfg_ana.L1L2LeptonType == 'ee':
-            self.fillEle(self.tree, 'l1', event.the_3lep_cand.l1())
-            self.fillEle(self.tree, 'l2', event.the_3lep_cand.l2())
+            self.fillEle(self.tree, 'l1', the_3lep_cand.l1())
+            self.fillEle(self.tree, 'l2', the_3lep_cand.l2())
         if self.cfg_ana.L1L2LeptonType == 'em':
-            self.fillEle (self.tree, 'l1', event.the_3lep_cand.l1())
-            self.fillMuon(self.tree, 'l2', event.the_3lep_cand.l2())
+            self.fillEle (self.tree, 'l1', the_3lep_cand.l1())
+            self.fillMuon(self.tree, 'l2', the_3lep_cand.l2())
 
-        if self.cfg_ana.promptLepType == 'e': self.fillEle (self.tree, 'l0', event.the_3lep_cand.l0())
-        if self.cfg_ana.promptLepType == 'm': self.fillMuon(self.tree, 'l0', event.the_3lep_cand.l0())
+        if self.cfg_ana.promptLepType == 'e': self.fillEle (self.tree, 'l0', the_3lep_cand.l0())
+        if self.cfg_ana.promptLepType == 'm': self.fillMuon(self.tree, 'l0', the_3lep_cand.l0())
 
         # output of MC analysis ONLY FOR SIGNAL
         if hasattr(event, 'the_hnl'):
@@ -251,13 +290,13 @@ class HNLTreeProducerBase(TreeProducerBase):
             self.fill(self.tree, 'hlt_Mu50'   , any('HLT_Mu50'    in name for name in trig_list))
     
         # reco secondary vertex and displacement
-        self.fillVertex(self.tree, 'sv' , event.recoSv)
+        self.fillVertex(self.tree, 'sv' , recoSv)
     
-        self.fill(self.tree, 'hnl_2d_disp', event.recoSv.disp2DFromBS.value()) # from beamspot
-        self.fill(self.tree, 'hnl_3d_disp', event.recoSv.disp3DFromBS.value()) # from PV
+        self.fill(self.tree, 'hnl_2d_disp', recoSv.disp2DFromBS.value()) # from beamspot
+        self.fill(self.tree, 'hnl_3d_disp', recoSv.disp3DFromBS.value()) # from PV
     
-        self.fill(self.tree, 'hnl_2d_disp_sig', event.recoSv.disp2DFromBS_sig) # from beamspot
-        self.fill(self.tree, 'hnl_3d_disp_sig', event.recoSv.disp3DFromBS_sig) # from PV
+        self.fill(self.tree, 'hnl_2d_disp_sig', recoSv.disp2DFromBS_sig) # from beamspot
+        self.fill(self.tree, 'hnl_3d_disp_sig', recoSv.disp3DFromBS_sig) # from PV
 
         # jet/met variables
         self.fillExtraMetInfo(self.tree, event)
@@ -265,15 +304,13 @@ class HNLTreeProducerBase(TreeProducerBase):
         # met filter flags
         self.fill(self.tree, 'pass_met_filters', event.pass_met_filters)
 
-        if len(event.cleanJets )>0: self.fillJet(self.tree, 'j1' , event.cleanJets [0], fill_extra=False)
-        if len(event.cleanJets )>1: self.fillJet(self.tree, 'j2' , event.cleanJets [1], fill_extra=False)
-        if len(event.cleanBJets)>0: self.fillJet(self.tree, 'bj1', event.cleanBJets[0], fill_extra=False)
-        if len(event.cleanBJets)>1: self.fillJet(self.tree, 'bj2', event.cleanBJets[1], fill_extra=False)
+        if len(cleanJets )>0: self.fillJet(self.tree, 'j1' , cleanJets [0], fill_extra=False)
+        if len(cleanJets )>1: self.fillJet(self.tree, 'j2' , cleanJets [1], fill_extra=False)
+        if len(cleanBJets)>0: self.fillJet(self.tree, 'bj1', cleanBJets[0], fill_extra=False)
+        if len(cleanBJets)>1: self.fillJet(self.tree, 'bj2', cleanBJets[1], fill_extra=False)
 
-#         self.fill(self.tree, 'htj' , event.HT_cleanJets   )
-#         self.fill(self.tree, 'htbj', event.HT_bJets       )
-        self.fill(self.tree, 'nj'  , len(event.cleanJets) )
-        self.fill(self.tree, 'nbj' , len(event.cleanBJets))
+        self.fill(self.tree, 'nj'  , len(cleanJets) )
+        self.fill(self.tree, 'nbj' , len(cleanBJets))
 
         # FIXME! RM what is this?
         # gen match
@@ -285,9 +322,9 @@ class HNLTreeProducerBase(TreeProducerBase):
 #            stable_genp += [pp for pp in event.genParticles if (pp.status()==23  and pp.vertex().z()!=0)]
 #            stable_genp += [pp for pp in event.genp_packed  if (pp.status()==23  and pp.vertex().z()!=0)] 
         
-            tomatch = [(event.the_3lep_cand.l0(), 0.05*0.05),
-                       (event.the_3lep_cand.l1(), 0.2 *0.2 ),
-                       (event.the_3lep_cand.l2(), 0.2 *0.2 )]
+            tomatch = [(the_3lep_cand.l0(), 0.05*0.05),
+                       (the_3lep_cand.l1(), 0.2 *0.2 ),
+                       (the_3lep_cand.l2(), 0.2 *0.2 )]
         
             for ilep, idr2 in tomatch:
                 bestmatch, dr2 = bestMatch(ilep, stable_genp)
@@ -295,24 +332,24 @@ class HNLTreeProducerBase(TreeProducerBase):
                     ilep.bestmatch = bestmatch
 
             # relevant for mc: check if reco matched with gen, save a float
-            if hasattr(event.the_3lep_cand.l0(), 'bestmatch'):
-                LEP0 = event.the_3lep_cand.l0()
+            if hasattr(the_3lep_cand.l0(), 'bestmatch'):
+                LEP0 = the_3lep_cand.l0()
                 self.fillSimpleGenParticle(self.tree, 'l0_gen_match', LEP0.bestmatch)
                 self.fill(self.tree, 'l0_good_match', deltaR(LEP0.bestmatch, LEP0))
 #                if deltaR(LEP0.bestmatch, LEP0) < 0.04 and LEP0.pdgId() == LEP0.bestmatch.pdgId():
 #                    self.fill(self.tree, 'l0_good_match', 1)
 
 
-            if hasattr(event.the_3lep_cand.l1(), 'bestmatch'):
-                LEP1 = event.the_3lep_cand.l1()
+            if hasattr(the_3lep_cand.l1(), 'bestmatch'):
+                LEP1 = the_3lep_cand.l1()
                 self.fillSimpleGenParticle(self.tree, 'l1_gen_match', LEP1.bestmatch)
                 self.fill(self.tree, 'l1_good_match', deltaR(LEP1.bestmatch, LEP1))
 #                if deltaR(LEP1.bestmatch, LEP1) < 0.04 and LEP1.pdgId() == LEP1.bestmatch.pdgId():
 #                    self.fill(self.tree, 'l1_good_match', 1)
 
 
-            if hasattr(event.the_3lep_cand.l2(), 'bestmatch'):
-                LEP2 = event.the_3lep_cand.l2()
+            if hasattr(the_3lep_cand.l2(), 'bestmatch'):
+                LEP2 = the_3lep_cand.l2()
                 self.fillSimpleGenParticle(self.tree, 'l2_gen_match', LEP2.bestmatch)
                 self.fill(self.tree, 'l2_good_match', deltaR(LEP2.bestmatch, LEP2))
 #                if deltaR(LEP2.bestmatch, LEP2) < 0.04 and LEP2.pdgId() == LEP2.bestmatch.pdgId():
@@ -320,9 +357,9 @@ class HNLTreeProducerBase(TreeProducerBase):
 
             # matching by pointer does not work, so let's trick it with deltaR
             if hasattr(event, 'the_hnl'):
-                if hasattr(event.the_3lep_cand.l0(), 'bestmatch'): self.fill(self.tree, 'l0_is_real', deltaR(event.the_3lep_cand.l0().bestmatch,event.the_hnl.l0()) < 0.01)
-                if hasattr(event.the_3lep_cand.l1(), 'bestmatch'): self.fill(self.tree, 'l1_is_real', deltaR(event.the_3lep_cand.l1().bestmatch,event.the_hnl.l1()) < 0.05)
-                if hasattr(event.the_3lep_cand.l2(), 'bestmatch'): self.fill(self.tree, 'l2_is_real', deltaR(event.the_3lep_cand.l2().bestmatch,event.the_hnl.l2()) < 0.05)
+                if hasattr(the_3lep_cand.l0(), 'bestmatch'): self.fill(self.tree, 'l0_is_real', deltaR(the_3lep_cand.l0().bestmatch,event.the_hnl.l0()) < 0.01)
+                if hasattr(the_3lep_cand.l1(), 'bestmatch'): self.fill(self.tree, 'l1_is_real', deltaR(the_3lep_cand.l1().bestmatch,event.the_hnl.l1()) < 0.05)
+                if hasattr(the_3lep_cand.l2(), 'bestmatch'): self.fill(self.tree, 'l2_is_real', deltaR(the_3lep_cand.l2().bestmatch,event.the_hnl.l2()) < 0.05)
 
             # print('event:', event.eventId, 'lumi:', event.lumi)
 

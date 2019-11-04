@@ -34,7 +34,7 @@ for sample in [TTJets_18]:
     totevents = 0
     nfiles = len(sample.files)
     # nfiles = 1
-    batch = 5
+    batch = 10
     maxend = (nfiles - nfiles%batch) / batch + 1
 
     for i in range(maxend):

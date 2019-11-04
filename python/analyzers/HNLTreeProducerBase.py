@@ -18,15 +18,21 @@ class HNLTreeProducerBase(TreeProducerBase):
     
     def __init__(self, *args):
         super(HNLTreeProducerBase, self).__init__(*args)
-        self.skimFunction = 'True'
-        if hasattr(self.cfg_ana, 'skimFunction'):
-            self.skimFunction = self.cfg_ana.skimFunction
+        
+        self.skimFilter = 'True'
+        if hasattr(self.cfg_ana, 'skimFilter'):
+            self.skimFilter = self.cfg_ana.skimFilter
+
+        self.finalStateFilter = 'True'
+        if hasattr(self.cfg_ana, 'finalStateFilter'):
+            self.finalStateFilter = self.cfg_ana.finalStateFilter
 
     def beginLoop(self, setup):
         super(HNLTreeProducerBase, self).beginLoop(setup)
         self.counters.addCounter('HNLTreeProducer')
         count = self.counters.counter('HNLTreeProducer')
         count.register('all events')
+        count.register('pass final state')
         count.register('pass skim')
     
     def declareVariables(self, setup):
@@ -159,6 +165,12 @@ class HNLTreeProducerBase(TreeProducerBase):
                 self.var(self.tree, 'ctau_w_v2_%s' %iv2_name)
                 self.var(self.tree, 'xs_w_v2_%s' %iv2_name  )
             self.bookParticle(self.tree, 'w_gen')
+
+        # easy handles to address overlap removal
+        self.var(self.tree, 'pass_mmm' )
+        self.var(self.tree, 'pass_mem' )
+        self.var(self.tree, 'pass_eee' )
+        self.var(self.tree, 'pass_eem' )
         
 
     def process(self, event, fill=True):
@@ -168,20 +180,24 @@ class HNLTreeProducerBase(TreeProducerBase):
         self.tree.reset()
 
         self.counters.counter('HNLTreeProducer').inc('all events')        
-        # save the event only if it passes the skim selection (if it exists)
-        # import pdb ; pdb.set_trace()
-        # try except needed if running multiple channels
-        try:
-            if not eval(self.skimFunction):
-                return True
-        except:
+
+        # save the event only if it is in the correct final state
+        if not eval(self.finalStateFilter):
             return True
+        self.counters.counter('HNLTreeProducer').inc('pass final state')
         
         # get ahold of the objects to save
         final_state = self.cfg_ana.promptLepType + self.cfg_ana.L1L2LeptonType
         dileptonsvtx  = event.dileptonsvtx_dict [final_state]
         the_3lep_cand = event.the_3lep_cand_dict[final_state]
         recoSv        = event.recoSv_dict       [final_state]
+
+        # save the event only if it passes the skim selection (if it exists)
+        # import pdb ; pdb.set_trace()
+        if not eval(self.skimFilter):
+            return True
+
+        self.counters.counter('HNLTreeProducer').inc('pass skim')
         
         # also cleaned jet collections depend on the final state
         cleanJets   = event.cleanJets  [final_state]
@@ -210,8 +226,6 @@ class HNLTreeProducerBase(TreeProducerBase):
         the_3lep_cand.l2().weight_idiso    = getattr(the_3lep_cand.l2(), 'weight_%s_idiso'    %final_state, 1.)
         the_3lep_cand.l2().weight_trigger  = getattr(the_3lep_cand.l2(), 'weight_%s_trigger'  %final_state, 1.)
         the_3lep_cand.l2().weight_tracking = getattr(the_3lep_cand.l2(), 'weight_%s_tracking' %final_state, 1.)
-
-        self.counters.counter('HNLTreeProducer').inc('pass skim')
         
         # event variables 
         self.fillEvent(self.tree, event)
@@ -379,6 +393,11 @@ class HNLTreeProducerBase(TreeProducerBase):
                 self.fill(self.tree, 'xs_w_v2_%s' %iv2_name  , event.ctau_weights[iv2]['xs_weight'  ])
             if event.the_gen_w is not None:
                 self.fillParticle(self.tree, 'w_gen', event.the_gen_w)
+
+        self.fill(self.tree, 'pass_mmm', getattr(event, 'pass_mmm', -1.))
+        self.fill(self.tree, 'pass_mem', getattr(event, 'pass_mem', -1.))
+        self.fill(self.tree, 'pass_eee', getattr(event, 'pass_eee', -1.))
+        self.fill(self.tree, 'pass_eem', getattr(event, 'pass_eem', -1.))
                                         
         if fill:                   
             self.fillTree(event)

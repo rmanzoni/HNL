@@ -256,38 +256,42 @@ HNLEventFilter = cfg.Analyzer(
 ##########################################################################################
 # ONE TREE PRODUCER PER FINAL STATE FIXME! ADD THE EXTENDED PRODUCER
 ##########################################################################################
-skimFunction   = 'event.the_3lep_cand.charge12()==0 and event.the_3lep_cand.mass12()<12 and event.recoSv.disp2DFromBS_cos>0.'
+skimFilter = 'the_3lep_cand.charge12()==0 and the_3lep_cand.mass12()<12 and recoSv.disp2DFromBS_cos>0.'
 
 HNLTreeProducerBase_mmm = cfg.Analyzer(
     HNLTreeProducerBase,
-    name           = 'HNLTreeProducer_mmm',
-    L1L2LeptonType = 'mm',
-    promptLepType  = 'm',
-    skimFunction   = '(%s)*(%s)' %('event.pass_mmm', skimFunction)
+    name             = 'HNLTreeProducer_mmm',
+    promptLepType    = 'm',
+    L1L2LeptonType   = 'mm',
+    finalStateFilter = 'event.pass_mmm',
+    skimFilter       = skimFilter,
 )
 
 HNLTreeProducerBase_mem = cfg.Analyzer(
     HNLTreeProducerBase,
-    name           = 'HNLTreeProducer_mem',
-    L1L2LeptonType = 'em',
-    promptLepType  = 'm',
-    skimFunction   = '(%s)*(%s)' %('event.pass_mem', skimFunction)
+    name             = 'HNLTreeProducer_mem',
+    promptLepType    = 'm',
+    L1L2LeptonType   = 'em',
+    finalStateFilter = 'event.pass_mem',
+    skimFilter       = skimFilter,
 )
 
 HNLTreeProducerBase_eee = cfg.Analyzer(
     HNLTreeProducerBase,
-    name           = 'HNLTreeProducer_eee',
-    L1L2LeptonType = 'ee',
-    promptLepType  = 'e',
-    skimFunction   = '(%s)*(%s)' %('event.pass_eee', skimFunction)
+    name             = 'HNLTreeProducer_eee',
+    promptLepType    = 'e',
+    L1L2LeptonType   = 'ee',
+    finalStateFilter = 'event.pass_eee',
+    skimFilter       = skimFilter,
 )
 
 HNLTreeProducerBase_eem = cfg.Analyzer(
     HNLTreeProducerBase,
-    name           = 'HNLTreeProducer_eem',
-    L1L2LeptonType = 'em',
-    promptLepType  = 'e',
-    skimFunction   = '(%s)*(%s)' %('event.pass_eem', skimFunction)
+    name             = 'HNLTreeProducer_eem',
+    promptLepType    = 'e',
+    L1L2LeptonType   = 'em',
+    finalStateFilter = 'event.pass_eem',
+    skimFilter       = skimFilter,
 )
 
 # HNLTreeProducer = cfg.Analyzer(

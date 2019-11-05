@@ -18,24 +18,23 @@ TTJets_18 = creator.makeMCComponent(
     useAAA  = True
 )
 
+handle = Handle('std::vector<PileupSummaryInfo>')
+label  = ("slimmedAddPileupInfo")
+
 for sample in [TTJets_18]:
     print '#######################################'
     print '#### computing pileup for %s'%(sample.name)
     print '#######################################'
     # outfile = ROOT.TFile.Open('pileup_TEST.root', 'recreate')
     outfile = ROOT.TFile.Open('pileup_%s.root'%(sample.name), 'recreate')
-    set_trace()
 
     # fill with true interactions
     h_ti = ROOT.TH1F('pileup', 'pileup', 200, 0, 200)
 
-    handle  = Handle ('std::vector<PileupSummaryInfo>')
-    label = ("slimmedAddPileupInfo")
-
     totevents = 0
     nfiles = len(sample.files)
     # nfiles = 1
-    batch = 20
+    batch = 10
     maxend = (nfiles - nfiles%batch) / batch + 1
 
     for i in range(maxend):
@@ -45,16 +44,17 @@ for sample in [TTJets_18]:
         end    = batch * (i+1)
         
         print 'running of %d-th batch of %d files out of %d total batches' %(i+1, batch, maxend)
+        
+        # need to cast to strings, otherwise file names are returned as unicode objects
+        # and ROOT doesn't like them 
+        files_in_batch = map(str, sample.files[begin:end])
 
-        events = Events(sample.files[begin:end])
-        set_trace()
-        events.getByLabel(label, handle)
-        # events = Events(samples.files[:10])
+        events = Events(files_in_batch)
+
         for j, event in enumerate(events):
-            set_trace()
-            # if j%100000==0:
-                # print '\t\tprocessing the %d-th event of the %d-th batch' %(j, i+1)
-            # event.getByLabel(label, handle)
+            if j%100000==0:
+                print '\t\tprocessing the %d-th event of the %d-th batch' %(j, i+1)
+            event.getByLabel(label, handle)
             puinfos = map(PileUpSummaryInfo, handle.product())
             for pu in puinfos:
                 if pu.getBunchCrossing()==0:

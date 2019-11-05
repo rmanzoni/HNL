@@ -10,12 +10,14 @@ samples = all_samples
 
 ###################################################
 # set to True if you want to run interactively on a selected portion of samples/files/whatnot
-testing = False 
+testing = True 
 if testing:
     # run on a single component
+    comp = samples[0]
     comp = TTJets_ext
-    comp.files = comp.files[:1]
-    comp.files = ['/tmp/manzoni/001784E5-D649-734B-A5FF-E151DA54CC02.root'] # one file from TTJets_ext on lxplus700
+    # comp.files = comp.files[:1]
+    comp.files = ['/work/vstampf/check_4ch_ntuplizer.input.root']
+    comp.files = ['/afs/cern.ch/work/m/manzoni/public/001784E5-D649-734B-A5FF-E151DA54CC02.root']
     # comp.fineSplitFactor = 10 # fine splitting, multicore
     samples = [comp]
 ###################################################

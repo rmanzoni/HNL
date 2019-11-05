@@ -3,6 +3,8 @@ This is the base analyzer going through data and trying to identify HNL->3L even
 '''
 
 import ROOT
+import sys
+from collections import OrderedDict
 from itertools import product, combinations
 from math import sqrt, pow
 import PhysicsTools.HeppyCore.framework.config as cfg
@@ -197,6 +199,14 @@ class HNLAnalyzer(Analyzer):
 
         
     def process(self, event):
+        
+        # decide whether filter the event or pass through
+        # useful to run multiple final states at the same time
+        return_statement = getattr(self.cfg_ana, 'pass_through', False)
+
+        # initiate a flag
+        setattr(event, 'pass_%s' %(self.cfg_ana.promptLepton + self.cfg_ana.L1L2LeptonType), False)
+
         self.readCollections(event.input)
         self.counters.counter('HNL').inc('all events')
         # make PF candidates
@@ -210,7 +220,7 @@ class HNLAnalyzer(Analyzer):
         # primary vertex
         #####################################################################################
         if not len(event.goodVertices):
-            return False
+            return return_statement
 
         self.counters.counter('HNL').inc('>0 good vtx')
 
@@ -250,20 +260,20 @@ class HNLAnalyzer(Analyzer):
         event.electrons = [iele for iele in event.electrons if self.cfg_ana.ele_preselection(iele)]
 
         if not self.checkLeptonFlavors(event.electrons, event.muons):
-            return False
+            return return_statement
         self.counters.counter('HNL').inc('>= 3L w/ correct flavours')
         
         #####################################################################################
         # finish reading collections
         #####################################################################################
-        event.photons     = map(Photon  , self.handles['photons'].product())
+        event.photons = map(Photon  , self.handles['photons'].product())
 
         # make vertex objects 
-        event.beamspot    = self.handles['beamspot'].product()
+        event.beamspot = self.handles['beamspot'].product()
 
         # make met object
-        event.pfmet       = self.handles['pfmet'   ].product().at(0)
-        event.puppimet    = self.handles['puppimet'].product().at(0)
+        event.pfmet    = self.handles['pfmet'   ].product().at(0)
+        event.puppimet = self.handles['puppimet'].product().at(0)
 
         # make jet object
         jets = map(Jet, self.handles['jets'].product())        
@@ -280,9 +290,9 @@ class HNLAnalyzer(Analyzer):
             prompt_leps = prompt_ele_cands
         else:
             print 'ERROR: HNLAnalyzer not supported lepton flavour', self.cfg_ana.promptLepton
-            exit(0) 
+            sys.exit(0) 
         if not len(prompt_leps):
-            return False
+            return return_statement
         
         self.counters.counter('HNL').inc('>0 prompt lep')
 
@@ -293,7 +303,7 @@ class HNLAnalyzer(Analyzer):
         # match only if the trigger fired and if it is among those we care about
         fired_triggers = [info for info in getattr(event, 'trigger_infos', []) if info.fired and '_'.join(info.name.split('_')[:-1]) in self.cfg_ana.triggersAndFilters.keys()]
     
-        drmax=0.15
+        drmax = getattr(self.cfg_ana, 'dr_max', 0.15)
         
         # loop over the selected prompt leptons
         for ilep in prompt_leps:
@@ -322,7 +332,7 @@ class HNLAnalyzer(Analyzer):
         prompt_leps = [ilep for ilep in prompt_leps if len(ilep.matched_hlt_obj)>0]
         
         if len(prompt_leps)==0:
-            return False
+            return return_statement
         
         self.counters.counter('HNL').inc('>0 trig match prompt lep')
         
@@ -349,7 +359,7 @@ class HNLAnalyzer(Analyzer):
 #         import pdb ; pdb.set_trace()
 
         if not len(dileptons):
-            return False
+            return return_statement
 
         self.counters.counter('HNL').inc('> 0 di-lepton')
 
@@ -365,8 +375,14 @@ class HNLAnalyzer(Analyzer):
 
         event.dileptonsvtx = dileptonsvtx
         
+        final_state = self.cfg_ana.promptLepton + self.cfg_ana.L1L2LeptonType
+
+        if not getattr(event, 'dileptonsvtx_dict', False):
+            event.dileptonsvtx_dict = OrderedDict()
+        event.dileptonsvtx_dict[final_state] = event.dileptonsvtx
+                
         if not len(event.dileptonsvtx):
-            return False 
+            return return_statement 
         
         self.counters.counter('HNL').inc('> 0 di-lepton + vtx')
 
@@ -383,6 +399,9 @@ class HNLAnalyzer(Analyzer):
                                    event.displaced_dilepton_reco_cand.lep2(), 
                                    event.pfmet)
 
+        if not getattr(event, 'the_3lep_cand_dict', False):
+            event.the_3lep_cand_dict = OrderedDict()
+        event.the_3lep_cand_dict[final_state] = event.the_3lep_cand
 
         # save reco secondary vertex
         event.recoSv = event.displaced_dilepton_reco_cand.vtx()
@@ -421,22 +440,33 @@ class HNLAnalyzer(Analyzer):
         
         event.recoSv.disp2DFromBS_cos = cos
 
+        if not getattr(event, 'recoSv_dict', False):
+            event.recoSv_dict = OrderedDict()
+        event.recoSv_dict[final_state] = event.recoSv
+
         ########################################################################################
         # Define event.selectedLeptons, will be used by JetAnalyzer.py
         ########################################################################################
 
+        # different selected leptons for different final states
+        if not hasattr(event, 'selectedLeptons'):
+            event.selectedLeptons = OrderedDict()
+
+        # final state, as configured
+        final_state = self.cfg_ana.promptLepton + self.cfg_ana.L1L2LeptonType
+
         # the selected 3 leptons must be leptons and not jets
-        event.selectedLeptons = [event.the_3lep_cand.l0(),
-                                 event.the_3lep_cand.l1(),
-                                 event.the_3lep_cand.l2()]
+        event.selectedLeptons[final_state] = [event.the_3lep_cand.l0(),
+                                              event.the_3lep_cand.l1(),
+                                              event.the_3lep_cand.l2()]
 
         # plus any isolated electron or muon is also a good lepton rather than a jet
-        event.selMuons     = [mu  for mu  in event.muons     if self.preselectPromptMuons    (mu , pt=10) and mu .relIso(cone_size=0.3, iso_type='dbeta', dbeta_factor=0.5, all_charged=0)<0.15]
-        event.selElectrons = [ele for ele in event.electrons if self.preselectPromptElectrons(ele, pt=10) and ele.relIso(cone_size=0.3, iso_type='dbeta', dbeta_factor=0.5, all_charged=0)<0.15]
+        event.selMuons     = [mu  for mu  in event.muons     if self.preselectPromptMuons    (mu , pt=10) and mu .relIso(cone_size=0.3, iso_type='dbeta', dbeta_factor=0.5, all_charged=0)<0.15 and mu  not in event.selectedLeptons[final_state]]
+        event.selElectrons = [ele for ele in event.electrons if self.preselectPromptElectrons(ele, pt=10) and ele.relIso(cone_size=0.3, iso_type='dbeta', dbeta_factor=0.5, all_charged=0)<0.15 and ele not in event.selectedLeptons[final_state]]
         # RM: what about taus?
 
-        event.selectedLeptons += event.selMuons
-        event.selectedLeptons += event.selElectrons
+        event.selectedLeptons[final_state] += event.selMuons
+        event.selectedLeptons[final_state] += event.selElectrons
 
         ########################################################################################
         # Extra prompt and isolated lepton veto
@@ -444,7 +474,7 @@ class HNLAnalyzer(Analyzer):
         event.veto_mus   = [mu  for mu  in event.selMuons     if mu .physObj not in [event.the_3lep_cand.l0().physObj, event.the_3lep_cand.l1().physObj, event.the_3lep_cand.l2().physObj] ]
         event.veto_eles  = [ele for ele in event.selElectrons if ele.physObj not in [event.the_3lep_cand.l0().physObj, event.the_3lep_cand.l1().physObj, event.the_3lep_cand.l2().physObj] ]
 
-        #FIXME: Is this step really needed?
+        # FIXME!: Is this step really needed?
         if len(event.veto_eles): event.veto_save_ele = sorted([ele for ele in event.veto_eles], key = lambda x : x.pt, reverse = True)[0] 
         if len(event.veto_mus ): event.veto_save_mu  = sorted([mu  for mu  in event.veto_mus ], key = lambda x : x.pt, reverse = True)[0] 
 
@@ -471,6 +501,9 @@ class HNLAnalyzer(Analyzer):
         #####################################################################################
         # After passing all selections and we have an HNL candidate, pass a "true" boolean!
         #####################################################################################
+        
+        # save a flag
+        setattr(event, 'pass_%s' %(self.cfg_ana.promptLepton + self.cfg_ana.L1L2LeptonType), True)
 
         return True
 

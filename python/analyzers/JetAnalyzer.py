@@ -1,4 +1,5 @@
 import os
+from collections import OrderedDict
 
 from PhysicsTools.Heppy.analyzers.core.Analyzer import Analyzer
 from PhysicsTools.Heppy.analyzers.core.AutoHandle import AutoHandle
@@ -73,62 +74,45 @@ class JetAnalyzer(Analyzer):
     def declareHandles(self):
         super(JetAnalyzer, self).declareHandles()
 
-        self.handles['jets'] = AutoHandle(self.cfg_ana.jetCol,
-                                          'std::vector<pat::Jet>')
-
-        if hasattr(self.cfg_ana, 'leptonCollections'):
-            for coll, cms_type in self.cfg_ana.leptonCollections.items():
-                self.handles[coll] = AutoHandle(coll, cms_type)
-
+        self.handles['jets'] = AutoHandle(self.cfg_ana.jetCol, 'std::vector<pat::Jet>')
 
         if self.cfg_comp.isMC:
-            self.mchandles['genParticles'] = AutoHandle('packedGenParticles',
-                                                        'std::vector<pat::PackedGenParticle>')
-            self.mchandles['genJets'] = AutoHandle('slimmedGenJets',
-                                                   'std::vector<reco::GenJet>')
+            self.mchandles['genParticles'] = AutoHandle('packedGenParticles', 'std::vector<pat::PackedGenParticle>')
+            self.mchandles['genJets'     ] = AutoHandle('slimmedGenJets'    , 'std::vector<reco::GenJet>'          )
 
     def beginLoop(self, setup):
         super(JetAnalyzer, self).beginLoop(setup)
         self.counters.addCounter('jets')
         count = self.counters.counter('jets')
         count.register('all events')
-        count.register('at least 2 good jets')
-        count.register('at least 2 clean jets')
-        count.register('at least 1 b jet')
-        count.register('at least 2 b jets')
 
     def process(self, event):
 
         self.readCollections(event.input)
-        miniaodjets = self.handles['jets'].product()
+        
+        # create Heppy Jet objects
+        allJets = map(Jet, self.handles['jets'].product())
 
-        allJets = []
-        event.jets = []
+        # create intially empty jet collections
+        event.jets  = []
         event.bJets = []
-        event.cleanJets = []
-        event.cleanBJets = []
-
-        leptons = []
-        if hasattr(event, 'selectedLeptons'):
-            leptons = event.selectedLeptons
-        if hasattr(self.cfg_ana, 'toClean'):
-            leptons = getattr(event, self.cfg_ana.toClean)
-            
-
-        if hasattr(self.cfg_ana, 'leptonCollections'):
-            for coll in self.cfg_ana.leptonCollections:
-                leptons += self.handles[coll].product()
+        event.cleanJets   = OrderedDict()
+        event.cleanJets30 = OrderedDict()
+        event.cleanBJets  = OrderedDict()
+        
+        # selected leptons as defined in the analyzer prior to this
+        leptons = getattr(event, 'selectedLeptons', [])
 
         genJets = None
         if self.cfg_comp.isMC:
             genJets = map(GenJet, self.mchandles['genJets'].product())
 
-        allJets = [Jet(jet) for jet in miniaodjets]
-
+        # recalibrate jets
         if self.recalibrateJets:
-            self.jetReCalibrator.correctAll(allJets, event.rho, delta=0., metShift=[0.,0.],
-                                                addCorr=True, addShifts=True)
+            self.jetReCalibrator.correctAll(allJets, event.rho, delta=0., metShift=[0.,0.], addCorr=True, addShifts=True)
 
+        # fill the various jet collections and
+        # possibly correct jets (if configured to do so)
         for jet in allJets:
             if genJets:
                 # Use DeltaR = 0.25 matching like JetMET
@@ -137,67 +121,56 @@ class JetAnalyzer(Analyzer):
                     pass
                 else:
                     jet.matchedGenJet = pairs[jet]
-            # Add JER correction for MC jets. Requires gen-jet matching.
-            if self.cfg_comp.isMC and hasattr(self.cfg_ana, 'jerCorr') and self.cfg_ana.jerCorr:
-                self.jerCorrection(jet)
+                    
+            # Add JER/JES correction for MC jets. Requires gen-jet matching.
             # Add JES correction for MC jets.
-            if self.cfg_comp.isMC and hasattr(self.cfg_ana, 'jesCorr'):
-                self.jesCorrection(jet, self.cfg_ana.jesCorr)
-            if self.testJet(jet):
-                event.jets.append(jet)
-            if self.testBJet(jet):
-                event.bJets.append(jet)
+            if self.cfg_comp.isMC and hasattr(self.cfg_ana, 'jerCorr') and self.cfg_ana.jerCorr: self.jerCorrection(jet)
+            if self.cfg_comp.isMC and hasattr(self.cfg_ana, 'jesCorr')                         : self.jesCorrection(jet, self.cfg_ana.jesCorr)
+            
+            # preselect jets
+            if self.testJet(jet) : event.jets .append(jet)
+            if self.testBJet(jet): event.bJets.append(jet)
 
         self.counters.counter('jets').inc('all events')
 
-        event.cleanJets, dummy = cleanObjectCollection(event.jets,
-                                                       masks=leptons,
-                                                       deltaRMin=0.5)
-        event.cleanBJets, dummy = cleanObjectCollection(event.bJets,
-                                                        masks=leptons,
-                                                        deltaRMin=0.5)
-
-        # Attach matched jets to selected + other leptons
-        if hasattr(event, 'otherLeptons'):
-            leptons += event.otherLeptons
+        for final_state in ['mmm', 'mem', 'eee', 'eem']:
             
-        pairs = matchObjectCollection(leptons, allJets, 0.5 * 0.5)
-        # associating a jet to each lepton
-        for lepton in leptons:
-            jet = pairs[lepton]
-            if jet is None:
-                lepton.jet = lepton
-            else:
-                lepton.jet = jet
+            if final_state not in leptons.keys():
+                continue
+            
+            # clean jets from selected leptons (per final state!)
+            event.cleanJets [final_state], dummy = cleanObjectCollection(event.jets , masks=leptons[final_state], deltaRMin=0.5)
+            event.cleanBJets[final_state], dummy = cleanObjectCollection(event.bJets, masks=leptons[final_state], deltaRMin=0.5)
 
-        # associating a leg to each clean jet
-        invpairs = matchObjectCollection(event.cleanJets, leptons, 99999.)
-        for jet in event.cleanJets:
-            leg = invpairs[jet]
-            jet.leg = leg
+            pairs = matchObjectCollection(leptons[final_state], allJets, 0.5 * 0.5)
+            # associating a jet to each lepton
+            for lepton in leptons[final_state]:
+                jet = pairs[lepton]
+                if jet is None:
+                    lepton.jet = lepton
+                else:
+                    lepton.jet = jet
 
-        for jet in event.cleanJets:
-            jet.matchGenParton = 999.0
+            # associating to each (clean) jet the lepton that's closest to it
+            invpairs = matchObjectCollection(event.cleanJets[final_state], leptons[final_state], 99999.)
+            for jet in event.cleanJets[final_state]:
+                leg = invpairs[jet]
+                jet.leg = leg
 
-        event.jets30 = [jet for jet in event.jets if jet.pt() > 30]
-        event.cleanJets30 = [jet for jet in event.cleanJets if jet.pt() > 30]
-        if len(event.jets30) >= 2:
-            self.counters.counter('jets').inc('at least 2 good jets')
-        if len(event.cleanJets30) >= 2:
-            self.counters.counter('jets').inc('at least 2 clean jets')
-        if len(event.cleanBJets) > 0:
-            self.counters.counter('jets').inc('at least 1 b jet')
-            if len(event.cleanBJets) > 1:
-                self.counters.counter('jets').inc('at least 2 b jets')
-                
-        # save HTs
-        event.HT_allJets     = sum([jet.pt() for jet in allJets          ])
-        event.HT_jets        = sum([jet.pt() for jet in event.jets       ])
-        event.HT_bJets       = sum([jet.pt() for jet in event.bJets      ])
-        event.HT_cleanJets   = sum([jet.pt() for jet in event.cleanJets  ])
-        event.HT_jets30      = sum([jet.pt() for jet in event.jets30     ])
-        event.HT_cleanJets30 = sum([jet.pt() for jet in event.cleanJets30])
-        
+            for jet in event.cleanJets[final_state]:
+                jet.matchGenParton = 999.0
+
+            event.jets30                   = [jet for jet in event.jets                   if jet.pt() > 30]
+            event.cleanJets30[final_state] = [jet for jet in event.cleanJets[final_state] if jet.pt() > 30]
+
+            # save HTs
+#             event.HT_allJets     = sum([jet.pt() for jet in allJets          ])
+#             event.HT_jets        = sum([jet.pt() for jet in event.jets       ])
+#             event.HT_jets30      = sum([jet.pt() for jet in event.jets30     ])
+#             event.HT_bJets       = sum([jet.pt() for jet in event.bJets      ])
+#             event.HT_cleanJets[final_state]   = sum([jet.pt() for jet in event.cleanJets  ])
+#             event.HT_cleanJets30 [final_state]= sum([jet.pt() for jet in event.cleanJets30])
+                                    
         return True
 
     def jerCorrection(self, jet):

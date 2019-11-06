@@ -1,3 +1,11 @@
+# heppy_batch.py -r /store/group/phys_tau/WTau3Mu/DoubleMuLowMass23Feb2019 -o DoubleMuLowMass23Feb2019 wtau3mu_2016_data_doublemu_lowmass_cfg.py -B -b 'run_condor_simple.sh -t 1200 ./batchScript.sh'
+# heppy_batch.py -o mmm_2018 hn3l_mmm_cfg_data.py -B -b 'run_condor_simple.sh -t 1800 ./batchScript.sh'
+
+# import pickle
+# with open('config.pck') as ff:
+#     aa = pickle.load(ff)
+# for ifile in aa.files: print "\t'"+ifile+"',"
+
 from CMGTools.HNL.hn3l_cfg import generateKeyConfigs
 
 # specify the samples considered
@@ -9,13 +17,15 @@ samples = [Single_mu_2018A, Single_mu_2018B, Single_mu_2018C, Single_mu_2018D]
 
 ###################################################
 # set to True if you want to run interactively on a selected portion of samples/files/whatnot
-testing = True 
+testing = False 
 if testing:
     # run on a single component
     comp = samples[0]
     comp.files = comp.files[:1]
     # comp.files = ['/tmp/manzoni/DD93A253-6D38-C145-A54B-EBDA1D9941C9.root']
     # comp.fineSplitFactor = 10 # fine splitting, multicore
+    comp.files = ['/tmp/manzoni/DD93A253-6D38-C145-A54B-EBDA1D9941C9.root'] # one file from SingleMu 2018D on lxplus741
+#     comp.fineSplitFactor = 10 # fine splitting, multicore
     samples = [comp]
 ###################################################
 
@@ -30,8 +40,8 @@ toSelect = [
 
 isData             = True
 isSignal           = False
-promptLeptonType   = "m" # choose from 'e', 'm'
-L1L2LeptonType     = "mm"  # choose from 'ee', 'mm', 'em'
+promptLeptonType   = "m"  # choose from 'e', 'm'
+L1L2LeptonType     = "mm" # choose from 'ee', 'mm', 'em'
 
 # this calls the master cfg file with the proper settings
 config = generateKeyConfigs(
@@ -43,4 +53,5 @@ config = generateKeyConfigs(
     prefetch=True,
     year=2018,
 #     toSelect=toSelect,
+    saveBigTree=False,
 )

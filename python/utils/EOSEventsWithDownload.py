@@ -133,10 +133,8 @@ class EOSEventsWithDownload(object):
                         if not self.isLocal(fname):
                             tmpdir = os.environ['TMPDIR'] if 'TMPDIR' in os.environ else "/tmp"
                             # VS 29/10/19, /scratch is larger than /tmp for T3 WN:
-                            # print tmpdir
                             from socket import gethostname#; from pdb import set_trace
                             if 't3' in gethostname(): tmpdir = "/scratch" 
-                            # print tmpdir#; set_trace()
                             rndchars  = "".join([hex(ord(i))[2:] for i in os.urandom(8)]) if not self.long_cache else "long_cache-id%d-%s" % (os.getuid(), hashlib.sha1(fname).hexdigest());
                             localfile = "%s/%s-%s.root" % (tmpdir, os.path.basename(fname).replace(".root",""), rndchars)
                             if self.long_cache and os.path.exists(localfile):

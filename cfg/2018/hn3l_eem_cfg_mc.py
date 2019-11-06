@@ -9,7 +9,7 @@ samples = [TTJets, WJetsToLNu, TTJets_ext, DYBB, DYJetsToLL_M5to50, DYJetsToLL_M
 
 ###################################################
 # set to True if you want to run interactively on a selected portion of samples/files/whatnot
-testing = False 
+testing = True 
 if testing:
     # run on a single component
     comp = samples[0]

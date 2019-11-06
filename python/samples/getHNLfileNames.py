@@ -73,7 +73,10 @@ class HNLSample():
         return blabla
     
     def _prependPath(self):
-        self.files = ['/'.join(['root://cms-xrd-global.cern.ch/', self.path, ifile]) for ifile in self.files]
+        # Tom suggests to change redirector, something fishy in Ghent
+        # self.files = ['/'.join(['root://cms-xrd-global.cern.ch/', self.path, ifile]) for ifile in self.files]
+        self.files = ['/'.join(['root://maite.iihe.ac.be:1094/../', self.path, ifile]) for ifile in self.files]
+#         self.files = ['/'.join(['root://maite.iihe.ac.be:1094/../pnfs/iihe/cms/', self.path, ifile]) for ifile in self.files]
 
 if __name__ == '__main__':
 
@@ -184,7 +187,8 @@ if __name__ == '__main__':
             for sample in toread[yy]:
                 print >> f, sample.title + '.files = ['
                 for ii in sample.files:
-                    print >> f, "    {0:200},".format("'"+ii.replace('/pnfs/iihe/cms', '')+"'")
+                    print >> f, "    {0:200},".format("'"+ii+"'")
+#                     print >> f, "    {0:200},".format("'"+ii.replace('/pnfs/iihe/cms', '')+"'")
                 print >> f, ']'
 
             print >> f, '\n\n'
@@ -202,6 +206,7 @@ if __name__ == '__main__':
             print >> f, '\n\n' 
 
             print >> f, 'for isample in all_signals:' 
+            print >> f, '    isample.isMC = True' 
             print >> f, '    isample.isSignal = True' 
 
             print >> f, '\n\n' 

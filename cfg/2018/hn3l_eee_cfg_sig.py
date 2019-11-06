@@ -1,10 +1,9 @@
 from CMGTools.HNL.hn3l_cfg import generateKeyConfigs
 
 # specify the samples considered
-from CMGTools.HNL.samples.samples_data_2018 import Single_ele_2018, Single_ele_2018A, Single_ele_2018B, Single_ele_2018C, Single_ele_2018D
+from CMGTools.HNL.samples.signals_2018 import all_signals_e
 
-samples = Single_ele_2018
-samples = [Single_ele_2018A, Single_ele_2018B, Single_ele_2018C, Single_ele_2018D]
+samples = all_signals_e
 
 ###################################################
 # set to True if you want to run interactively on a selected portion of samples/files/whatnot
@@ -17,11 +16,10 @@ if testing:
     samples = [comp]
 ###################################################
 
-isData             = True
-isSignal           = False
+isData             = False
+isSignal           = True
 promptLeptonType   = "e" # choose from 'ele', 'mu'
-L1L2LeptonType     = "em"  # choose from 'ee', 'mm', 'em'
-
+L1L2LeptonType     = "ee"  # choose from 'ee', 'mm', 'em'
 
 # this calls the master cfg file with the proper settings
 config = generateKeyConfigs(
@@ -30,6 +28,6 @@ config = generateKeyConfigs(
     L1L2LeptonType, 
     isData=isData, 
     isSignal=isSignal,
-    prefetch=False,
-    year=2018
+    prefetch=True,
+    year=2017
 )

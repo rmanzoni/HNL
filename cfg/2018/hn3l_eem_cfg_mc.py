@@ -1,9 +1,8 @@
 from CMGTools.HNL.hn3l_cfg import generateKeyConfigs
+from CMGTools.HNL.samples.samples_mc_2018 import TTJets, TTJets_ext, WJetsToLNu, DYBB, DYJetsToLL_M5to50, DYJetsToLL_M50, DYJetsToLL_M50_ext, WW, WZ, ZZ 
+from CMGTools.HNL.samples.samples_mc_2018 import ZGTo2LG, WGToLNuG, STbar_tch_inc, ST_tW_inc, ST_tch_inc, ST_sch_lep, STbar_tW_inc 
 
 # specify the samples considered
-from CMGTools.HNL.samples.samples_mc_2018   import TTJets, TTJets_ext, WJetsToLNu, DYBB, DYJetsToLL_M5to50, DYJetsToLL_M50, DYJetsToLL_M50_ext, WW, WZ, ZZ 
-from CMGTools.HNL.samples.samples_mc_2018 import ZGTo2LG, WGToLNuG, STbar_tch_inc, ST_tW_inc, ST_tch_inc, ST_sch_lep, STbar_tW_inc
-
 samples = [TTJets, WJetsToLNu, TTJets_ext, DYBB, DYJetsToLL_M5to50, DYJetsToLL_M50, DYJetsToLL_M50_ext, WW, WZ, ZZ]
 samples = [DYBB]
 samples = [TTJets, WJetsToLNu, TTJets_ext, DYBB, DYJetsToLL_M5to50, DYJetsToLL_M50, DYJetsToLL_M50_ext, WW, WZ, ZZ, ZGTo2LG, WGToLNuG, STbar_tch_inc, ST_tW_inc, ST_tch_inc, ST_sch_lep, STbar_tW_inc]

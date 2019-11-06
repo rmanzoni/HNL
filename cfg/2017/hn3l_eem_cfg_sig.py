@@ -1,12 +1,14 @@
 from CMGTools.HNL.hn3l_cfg import generateKeyConfigs
 
 # specify the samples considered
-from CMGTools.HNL.samples.samples_data_2018 import Single_ele_2018, Single_ele_2018A, Single_ele_2018B, Single_ele_2018C, Single_ele_2018D
+from CMGTools.HNL.samples.signals_2017 import HN3L_M_4_V_0p00290516780927_e_massiveAndCKM_LO
 
-samples = Single_ele_2018
-samples = [Single_ele_2018A, Single_ele_2018B, Single_ele_2018C, Single_ele_2018D]
+samples = [HN3L_M_4_V_0p00290516780927_e_massiveAndCKM_LO]
 
 ###################################################
+comp = samples[0]
+comp.fineSplitFactor = 10 # fine splitting, multicore
+
 # set to True if you want to run interactively on a selected portion of samples/files/whatnot
 testing = False 
 if testing:
@@ -17,11 +19,10 @@ if testing:
     samples = [comp]
 ###################################################
 
-isData             = True
-isSignal           = False
+isData             = False
+isSignal           = True
 promptLeptonType   = "e" # choose from 'ele', 'mu'
 L1L2LeptonType     = "em"  # choose from 'ee', 'mm', 'em'
-
 
 # this calls the master cfg file with the proper settings
 config = generateKeyConfigs(
@@ -31,5 +32,5 @@ config = generateKeyConfigs(
     isData=isData, 
     isSignal=isSignal,
     prefetch=False,
-    year=2018
+    year=2017
 )

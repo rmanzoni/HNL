@@ -162,6 +162,7 @@ class TriggerAnalyzer(Analyzer):
                         info.objects.append(to)
                         info.objIds.add(abs(to.pdgId()))
                          
+        set_trace()
         event.trigger_infos = trigger_infos
         
         for itrig, iveto in product(event.trigger_infos, self.vetoTriggerList):

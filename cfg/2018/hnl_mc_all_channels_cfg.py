@@ -33,6 +33,7 @@ from CMGTools.HNL.analyzers.EventFilter         import EventFilter
 from pdb import set_trace
 
 from CMGTools.HNL.samples.samples_mc_2018 import all_samples, TTJets, TTJets_ext, WJetsToLNu, DYBB, DYJetsToLL_M5to50, DYJetsToLL_M50, DYJetsToLL_M50_ext, WW, WZ, ZZ 
+# from CMGTools.HNL.samples.signals_2018 import all_samples, TTJets, TTJets_ext, WJetsToLNu, DYBB, DYJetsToLL_M5to50, DYJetsToLL_M50, DYJetsToLL_M50_ext, WW, WZ, ZZ 
 
 ###################################################
 ###                   OPTIONS                   ###
@@ -407,7 +408,7 @@ saveBigTree = False
 if saveBigTree:
     sequence.insert(-1, HNLTreeProducer)
 
-isSignal = False
+isSignal = True
 
 if isSignal:
     sequence.insert(1, signalReweighAna)
@@ -436,7 +437,7 @@ for ii in range(len(sequence)):
 
 ###################################################
 # set to True if you want to run interactively on a selected portion of samples/files/whatnot
-testing = True 
+testing = False 
 if testing:
     # run on a single component
     comp = TTJets_ext
@@ -452,7 +453,6 @@ if testing:
 # temporary copy remote files using xrd
 # event_class = EOSEventsWithDownload if prefetch else Events
 
-# FIXME! for some reason, Events doesn't work anymore in 10_4
 prefetch = False
 event_class = EOSEventsWithDownload  
 if prefetch:

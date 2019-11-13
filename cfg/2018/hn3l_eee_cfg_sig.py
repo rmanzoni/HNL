@@ -7,7 +7,7 @@ samples = all_signals_e
 
 ###################################################
 # set to True if you want to run interactively on a selected portion of samples/files/whatnot
-testing = False 
+testing = True 
 if testing:
     # run on a single component
     comp = samples[0]
@@ -29,5 +29,5 @@ config = generateKeyConfigs(
     isData=isData, 
     isSignal=isSignal,
     prefetch=True,
-    year=2017
+    year=2018
 )

@@ -301,7 +301,7 @@ class HNLAnalyzer(Analyzer):
         #####################################################################################
         
         # match only if the trigger fired and if it is among those we care about
-        set_trace()
+        # set_trace()
         fired_triggers = [info for info in getattr(event, 'trigger_infos', []) if info.fired and '_'.join(info.name.split('_')[:-1]) in self.cfg_ana.triggersAndFilters.keys()]
     
         drmax = getattr(self.cfg_ana, 'dr_max', 0.15)
@@ -325,7 +325,7 @@ class HNLAnalyzer(Analyzer):
                 matchedobjs = [iobj for iobj in lastobjects if deltaR(iobj, ilep)<drmax]
                 # extend the list of matched objects
                 ilep.matched_hlt_obj.extend(matchedobjs)
-                set_trace()
+                # set_trace()
             # remove duplicates through 'set'
             ilep.matched_hlt_obj = [iobj for iobj in set(ilep.matched_hlt_obj)]
         

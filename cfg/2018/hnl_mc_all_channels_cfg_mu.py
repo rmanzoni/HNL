@@ -33,7 +33,7 @@ from CMGTools.HNL.analyzers.EventFilter         import EventFilter
 from pdb import set_trace
 
 from CMGTools.HNL.samples.samples_mc_2018 import all_samples, TTJets, TTJets_ext, WJetsToLNu, DYBB, DYJetsToLL_M5to50, DYJetsToLL_M50, DYJetsToLL_M50_ext, WW, WZ, ZZ 
-from CMGTools.HNL.samples.signals_2018 import all_signals_e
+from CMGTools.HNL.samples.signals_2018 import all_signals_m
 
 ###################################################
 ###                   OPTIONS                   ###
@@ -63,7 +63,7 @@ MU_PROMPT_SFS['trigger'] = (SF_FILE, 'm_trgIsoMu24orIsoMu27_desy')
 ###               HANDLE SAMPLES                ###
 ###################################################
 # samples = all_samples
-samples = all_signals_e
+samples = all_signals_m
 ###################################################
 # set to True if you want to run interactively on a selected portion of samples/files/whatnot
 testing = False 

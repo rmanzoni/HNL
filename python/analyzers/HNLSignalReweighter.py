@@ -26,10 +26,10 @@ order_of_magnitudes = np.linspace(-10,-1,10)
 
 new_v2s = []
 for iv2, ioom in product(v2s, order_of_magnitudes):
-    print 'value', iv2,'\texpo', ioom, '\t\t\t\t',
+    # print 'value', iv2,'\texpo', ioom, '\t\t\t\t',
     new_v2 = iv2 * np.power(10., ioom)
     new_v2s.append(new_v2)
-    print new_v2
+    # print new_v2
 
 class HNLSignalReweighter(Analyzer):
     '''

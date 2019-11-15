@@ -21,41 +21,19 @@ from pdb import set_trace
 global new_v2s
 
 # couplings to compute weights for
-new_v2s = [
-    1e-10, 
-    5e-10, 
-    1e-9, 
-    5e-9, 
-    1e-8, 
-    5e-8, 
-    1e-7, 
-    5e-7, 
-    1e-6, 
-    5e-6, 
-    6e-06, 
-    8e-06, 
-    1e-5, 
-    2e-5, 
-    3e-5, 
-    4e-5, 
-    5e-5, 
-    7e-05, 
-    0.0001, 
-    0.0002, 
-    0.00025, 
-    0.0003, 
-    0.0005, 
-    0.0012,
-]
+v2s = np.linspace(1,9,9)
+order_of_magnitudes = np.linspace(-10,-1,10)
 
-
+new_v2s = []
+for iv2, ioom in product(v2s, order_of_magnitudes):
+    print 'value', iv2,'\texpo', ioom, '\t\t\t\t',
+    new_v2 = iv2 * np.power(10., ioom)
+    new_v2s.append(new_v2)
+    print new_v2
 
 class HNLSignalReweighter(Analyzer):
     '''
     '''
-
-
-
 
     def declareHandles(self):
         super(HNLSignalReweighter, self).declareHandles()

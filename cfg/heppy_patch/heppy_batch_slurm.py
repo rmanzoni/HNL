@@ -233,8 +233,8 @@ cp -r Loop/* $SUBMISSIONDIR""".format(idx=index, srm='srm://t3se01.psi.ch'+remot
     script = """#!/bin/bash
 #SBATCH -p wn
 #SBATCH --time 01:00:00
-#SBATCH -e $SLURM_JOB_ID.err 
-#SBATCH -o $SLURM_JOB_ID.out  
+#SBATCH -e log.err 
+#SBATCH -o log.out  
 
 echo HOME: $HOME 
 echo USER: $USER 
@@ -256,6 +256,7 @@ TOPWORKDIR=/scratch/`whoami`
 JOBDIR=slurm-job-$SLURM_JOB_ID
 WORKDIR=$TOPWORKDIR/$JOBDIR
 SUBMISSIONDIR={jdir}
+echo "$TOPWORKDIR, $JOBDIR, $WORKDIR, $SUBMISSIONDIR"
 if test -e "$WORKDIR"; then
    echo "ERROR: WORKDIR ($WORKDIR) already exists! Aborting..." >&2
    exit 1
@@ -291,7 +292,7 @@ RUNTIME=$((DATE_END-DATE_START))
 echo "################################################################"
 echo "Job finished at " `date`
 echo "Wallclock running time: $RUNTIME s"
-rmdir  $WORKDIR
+rm -r  $WORKDIR
 exit 0
 """.format(jdir=jobDir, vo=VO_CMS_SW_DIR,cmssw=cmssw_release, copy=cpCmd)
 

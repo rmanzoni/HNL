@@ -205,9 +205,9 @@ class HNLTreeProducerBase(TreeProducerBase):
         cleanJets30 = event.cleanJets30[final_state]
 
         # adjust the weights, according to the final state
-        event.eventWeight = getattr(event, 'puWeight', 1.)  * \
-                            getattr(event, 'LHE_originalWeight', 1.)  * \
-                            getattr(event, 'weight_%s' %final_state, 1.)
+        event.eventWeight = event.puWeight           * \
+                            event.LHE_originalWeight * \
+                            getattr(event, 'weight_%s' %final_state)
         
         the_3lep_cand.l0().weight          = getattr(the_3lep_cand.l0(), 'weight_%s'          %final_state, 1.)
         the_3lep_cand.l0().weight_id       = getattr(the_3lep_cand.l0(), 'weight_%s_id'       %final_state, 1.)

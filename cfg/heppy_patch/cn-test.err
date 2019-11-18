@@ -1,9 +1,0 @@
-/var/spool/slurmd/job100115/slurm_script: line 16: =============: command not found
-perl: warning: Setting locale failed.
-perl: warning: Please check that your locale settings:
-	LANGUAGE = (unset),
-	LC_ALL = (unset),
-	LC_CTYPE = "UTF-8",
-	LANG = "C"
-    are supported and installed on your system.
-perl: warning: Falling back to the standard locale ("C").

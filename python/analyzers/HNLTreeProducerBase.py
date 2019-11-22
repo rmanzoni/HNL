@@ -160,8 +160,10 @@ class HNLTreeProducerBase(TreeProducerBase):
         # weights for ctau reweighing (only for signal!)
         if 'HN3L' in self.cfg_comp.name:
             for iv2 in new_v2s:
+                # reduce precision to avoid nasty numbers e.g. 6.000000000000001e-05
+                iv2_name = np.format_float_scientific(iv2, unique=False, precision=1, exp_digits=2)
                 # 'stringify' the coupling
-                iv2_name = str(iv2).replace('-', 'm')
+                iv2_name = iv2_name.replace('-', 'm')
                 self.var(self.tree, 'ctau_w_v2_%s' %iv2_name)
                 self.var(self.tree, 'xs_w_v2_%s' %iv2_name  )
             self.bookParticle(self.tree, 'w_gen')
@@ -388,7 +390,9 @@ class HNLTreeProducerBase(TreeProducerBase):
         if 'HN3L' in self.cfg_comp.name:
             for iv2 in new_v2s:
                 # 'stringify' the coupling
-                iv2_name = str(iv2).replace('-', 'm')
+                # reduce precision to avoid nasty numbers e.g. 6.000000000000001e-05
+                iv2_name = np.format_float_scientific(iv2, unique=False, precision=1, exp_digits=2)
+                iv2_name = iv2_name.replace('-', 'm')
                 self.fill(self.tree, 'ctau_w_v2_%s' %iv2_name, event.ctau_weights[iv2]['ctau_weight'])
                 self.fill(self.tree, 'xs_w_v2_%s' %iv2_name  , event.ctau_weights[iv2]['xs_weight'  ])
             if event.the_gen_w is not None:

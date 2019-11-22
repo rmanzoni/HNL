@@ -25,7 +25,7 @@ v2s = np.linspace(1,9,9)
 order_of_magnitudes = np.linspace(-10,-1,10)
 
 new_v2s = []
-for iv2, ioom in product(v2s, order_of_magnitudes):
+for ioom, iv2 in product(order_of_magnitudes, v2s):
     # print 'value', iv2,'\texpo', ioom, '\t\t\t\t',
     new_v2 = iv2 * np.power(10., ioom)
     new_v2s.append(new_v2)

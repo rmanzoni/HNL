@@ -15,8 +15,8 @@ class EOSEventsWithDownload(object):
             retjson = subprocess.check_output(query)
             retobj = json.loads(retjson)
             for entry in retobj:
-                # self._files.append( (str(entry['file']), self._nevents, self._nevents+entry['events'] ) ) # str() is needed since the output is a unicode string
-                self._files.append( (sub('root://cms-xrd-global.cern.ch/', 'root://xrootd-cms.infn.it/', str(entry['file'])), self._nevents, self._nevents+entry['events'] ) )
+                self._files.append( (str(entry['file']), self._nevents, self._nevents+entry['events'] ) ) # str() is needed since the output is a unicode string
+                # self._files.append( (sub('root://cms-xrd-global.cern.ch/', 'root://xrootd-cms.infn.it/', str(entry['file'])), self._nevents, self._nevents+entry['events'] ) )
                 self._nevents += entry['events']
             # from pdb import set_trace; print self._files; set_trace()
         except subprocess.CalledProcessError:

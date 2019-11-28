@@ -32,8 +32,8 @@ from CMGTools.HNL.analyzers.MultiLeptonWeighter import MultiLeptonWeighter
 from CMGTools.HNL.analyzers.EventFilter         import EventFilter
 from pdb import set_trace
 
-from CMGTools.HNL.samples.samples_mc_2018 import all_samples, TTJets, TTJets_ext, WJetsToLNu, DYBB, DYJetsToLL_M5to50, DYJetsToLL_M50, DYJetsToLL_M50_ext, WW, WZ, ZZ 
-from CMGTools.HNL.samples.signals_2018 import all_signals_e
+from CMGTools.HNL.samples.samples_data_2017 import Single_ele_2017, Single_ele_2017F, Single_ele_2017E, Single_ele_2017B, Single_ele_2017C, Single_ele_2017D
+from CMGTools.HNL.samples.samples_data_2017 import Single_mu_2017,  Single_mu_2017F, Single_mu_2017E, Single_mu_2017B, Single_mu_2017C, Single_mu_2017D
 
 ###################################################
 ###                   OPTIONS                   ###
@@ -43,7 +43,7 @@ from CMGTools.HNL.samples.signals_2018 import all_signals_e
 
 pick_events = getHeppyOption('pick_events', False)
 
-SF_FILE = '$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_2018_v1.root'
+SF_FILE = '$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_v17_1.root'
 
 # Electron corrections, valid for l1 and l2
 ELE_SFS = OrderedDict()
@@ -62,8 +62,8 @@ MU_PROMPT_SFS['trigger'] = (SF_FILE, 'm_trgIsoMu24orIsoMu27_desy')
 ###################################################
 ###               HANDLE SAMPLES                ###
 ###################################################
-# samples = all_samples
-samples = all_signals_e
+samples = Single_ele_2017 + Single_mu_2017
+isData = True
 ###################################################
 # set to True if you want to run interactively on a selected portion of samples/files/whatnot
 testing = True 
@@ -80,7 +80,7 @@ if testing:
 ###################################################
 
 # FIXME! are trigger names and filters correct regardless of the year?
-# triggers same for 2018: https://tomc.web.cern.ch/tomc/triggerPrescales/2018//?match=Ele
+# triggers same for 2017: https://tomc.web.cern.ch/tomc/triggerPrescales/2017//?match=Ele
 for sample in samples:
 
     sample.triggers  = ['HLT_Ele27_WPTight_Gsf_v%d'         %i for i in range(1, 15)] #electron trigger
@@ -94,8 +94,8 @@ for sample in samples:
 
     sample.splitFactor = splitFactor(sample, 1e6)
 
-    sample.puFileMC   = '$CMSSW_BASE/src/CMGTools/HNL/data/pileup/MC_PileUp_2018_Autumn18.root'
-    sample.puFileData = '$CMSSW_BASE/src/CMGTools/HNL/data/pileup/Data_PileUp_2018_69p2.root'
+    # sample.puFileMC   = '$CMSSW_BASE/src/CMGTools/HNL/data/pileup/<TBD>' #FIXME
+    sample.puFileData = '$CMSSW_BASE/src/CMGTools/HNL/data/pileup/pileup_data_golden_json_2017.root'
 
 selectedComponents = samples
 
@@ -393,37 +393,58 @@ jetAna = cfg.Analyzer(
 ###################################################
 ###                  SEQUENCE                   ###
 ###################################################
-sequence = cfg.Sequence([
-    skimAna,
-    triggerAna,
-    vertexAna,
-    pileUpAna,
-    genAna,
-    HNLGenTreeAnalyzer,
-    # RecoGenAnalyzer,
-    HNLAnalyzer_mmm,
-    HNLAnalyzer_mem,
-    HNLAnalyzer_eee,
-    HNLAnalyzer_eem,
-    HNLEventFilter,
-    Weighter_mmm, 
-    Weighter_mem, 
-    Weighter_eee, 
-    Weighter_eem, 
-    jetAna,
-    metFilter,
-    HNLTreeProducerBase_mmm,
-    HNLTreeProducerBase_mem,
-    HNLTreeProducerBase_eee,
-    HNLTreeProducerBase_eem,
-])
+if isData == True:
+    sequence = cfg.Sequence([
+        jsonAna,
+        # skimAna,
+        triggerAna,
+        vertexAna,
+        # pileUpAna,
+        HNLAnalyzer_mmm,
+        HNLAnalyzer_mem,
+        HNLAnalyzer_eee,
+        HNLAnalyzer_eem,
+        HNLEventFilter,
+        jetAna,
+        metFilter,
+        HNLTreeProducerBase_mmm,
+        HNLTreeProducerBase_mem,
+        HNLTreeProducerBase_eee,
+        HNLTreeProducerBase_eem,
+        ])
+
+if isData == False:
+    sequence = cfg.Sequence([
+        skimAna,
+        triggerAna,
+        vertexAna,
+        pileUpAna,
+        genAna,
+        HNLGenTreeAnalyzer,
+        # RecoGenAnalyzer,
+        HNLAnalyzer_mmm,
+        HNLAnalyzer_mem,
+        HNLAnalyzer_eee,
+        HNLAnalyzer_eem,
+        HNLEventFilter,
+        Weighter_mmm, 
+        Weighter_mem, 
+        Weighter_eee, 
+        Weighter_eem, 
+        jetAna,
+        metFilter,
+        HNLTreeProducerBase_mmm,
+        HNLTreeProducerBase_mem,
+        HNLTreeProducerBase_eee,
+        HNLTreeProducerBase_eem,
+    ])
 
 saveBigTree = False
 
 if saveBigTree:
     sequence.insert(-1, HNLTreeProducer)
 
-isSignal = True
+isSignal = False
 
 if isSignal:
     sequence.insert(1, signalReweighAna)

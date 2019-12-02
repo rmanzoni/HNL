@@ -30,7 +30,6 @@ class JSONAnalyzer( Analyzer ):
 
     def __init__(self, cfg_ana, cfg_comp, looperName):
         super(JSONAnalyzer, self).__init__(cfg_ana, cfg_comp, looperName)
-        self.cfg_comp.json = '$CMSSW_BASE/src/CMGTools/HNL/data/golden_but_json.txt'
         if not cfg_comp.isMC:
             if self.cfg_comp.json is None:
                 raise ValueError('component {cname} is not MC, and contains no JSON file. Either remove the JSONAnalyzer for your path or set the "json" attribute of this component'.format(cname=cfg_comp.name))

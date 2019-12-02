@@ -66,7 +66,7 @@ samples = Single_ele_2017 + Single_mu_2017
 isData = True
 ###################################################
 # set to True if you want to run interactively on a selected portion of samples/files/whatnot
-testing = True 
+testing = False 
 if testing:
     # run on a single component
     comp = samples[0]

@@ -137,6 +137,7 @@ class ScaleFactor(object):
 
         sf_name = self.sf_name.replace('genuine', 'fake') if isFake else self.sf_name
 
+        from pdb import set_trace; set_trace()
         return self.ws.function('_'.join([sf_name, tag])).getVal()
 
     def findEtaLabel(self, eta, eff_dict):

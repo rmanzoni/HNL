@@ -62,8 +62,8 @@ MU_PROMPT_SFS['trigger'] = (SF_FILE, 'm_trgIsoMu24orIsoMu27_desy')
 ###################################################
 ###               HANDLE SAMPLES                ###
 ###################################################
-# samples = all_samples
-samples = all_signals_e
+samples = all_samples
+# samples = all_signals_e
 ###################################################
 # set to True if you want to run interactively on a selected portion of samples/files/whatnot
 testing = True 

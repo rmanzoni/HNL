@@ -32,8 +32,8 @@ from CMGTools.HNL.analyzers.MultiLeptonWeighter import MultiLeptonWeighter
 from CMGTools.HNL.analyzers.EventFilter         import EventFilter
 from pdb import set_trace
 
-from CMGTools.HNL.samples.samples_data_2016 import Single_ele_2016, Single_ele_2016F, Single_ele_2016E, Single_ele_2016B, Single_ele_2016C, Single_ele_2016D
-from CMGTools.HNL.samples.samples_data_2016 import Single_mu_2016,  Single_mu_2016F, Single_mu_2016E, Single_mu_2016B, Single_mu_2016C, Single_mu_2016D
+from CMGTools.HNL.samples.samples_data_2016 import Single_ele_2016,  Single_ele_2016H, Single_ele_2016G, Single_ele_2016F, Single_ele_2016E, Single_ele_2016B, Single_ele_2016C, Single_ele_2016D
+from CMGTools.HNL.samples.samples_data_2016 import Single_mu_2016,   Single_mu_2016H, Single_mu_2016G, Single_mu_2016F, Single_mu_2016E, Single_mu_2016B, Single_mu_2016C, Single_mu_2016D
 
 ###################################################
 ###                   OPTIONS                   ###
@@ -43,7 +43,7 @@ from CMGTools.HNL.samples.samples_data_2016 import Single_mu_2016,  Single_mu_20
 
 pick_events = getHeppyOption('pick_events', False)
 
-SF_FILE = '$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_v17_1.root'
+SF_FILE = '$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_v17_1.root' #FIXME 
 
 # Electron corrections, valid for l1 and l2
 ELE_SFS = OrderedDict()
@@ -62,16 +62,16 @@ MU_PROMPT_SFS['trigger'] = (SF_FILE, 'm_trgIsoMu24orIsoMu27_desy')
 ###################################################
 ###               HANDLE SAMPLES                ###
 ###################################################
-samples = Single_ele_2017 + Single_mu_2017
+samples = Single_ele_2016 + Single_mu_2016
 isData = True
 ###################################################
 # set to True if you want to run interactively on a selected portion of samples/files/whatnot
-testing = False 
+testing = True 
 if testing:
     # run on a single component
-    comp = samples[0]
+    comp = Single_mu_2016F
        
-    comp.files = comp.files[:1]
+    comp.files = comp.files[0:1]
     # comp.files = ['/tmp/manzoni/001784E5-D649-734B-A5FF-E151DA54CC02.root'] # one file from TTJets_ext on lxplus700
     # comp.fineSplitFactor = 10 # fine splitting, multicore
     samples = [comp]
@@ -94,7 +94,7 @@ for sample in samples:
 
     sample.splitFactor = splitFactor(sample, 1e6)
 
-    sample.puFileData = '$CMSSW_BASE/src/CMGTools/HNL/data/pileup/pileup_data_golden_json_2017.root'
+    # sample.puFileData = '$CMSSW_BASE/src/CMGTools/HNL/data/pileup/pileup_data_golden_json_2017.root' #FIXME
 
 selectedComponents = samples
 
@@ -159,9 +159,9 @@ metFilter = cfg.Analyzer(
         'Flag_HBHENoiseIsoFilter',
         'Flag_EcalDeadCellTriggerPrimitiveFilter',
         'Flag_BadPFMuonFilter',
-        'Flag_BadChargedCandidateFilter',
+        # 'Flag_BadChargedCandidateFilter', # NOT RECOMMENDED https://twiki.cern.ch/twiki/bin/viewauth/CMS/MissingETOptionalFiltersRun2#2016_data
         'Flag_eeBadScFilter',
-        'Flag_ecalBadCalibFilter',
+        # 'Flag_ecalBadCalibFilter',        # DEPRECATED      https://twiki.cern.ch/twiki/bin/viewauth/CMS/MissingETOptionalFiltersRun2#2016_data
     ]
 )
 

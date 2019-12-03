@@ -14,7 +14,7 @@ creator = ComponentCreator()
 '''
 json = '$CMSSW_BASE/src/CMGTools/HNL/data/Cert_271036-284044_13TeV_PromptReco_Collisions16_JSON.txt'
 
-Single_ele_2016B  = creator.makeDataComponent('Single_ele_2016B', '/SingleElectron/Run2016B-17Jul2018-ver1-v1/MINIAOD', 'CMS', '.*root', json, useAAA=True)
+Single_ele_2016B  = creator.makeDataComponent('Single_ele_2016B', '/SingleElectron/Run2016B-17Jul2018_ver1-v1/MINIAOD', 'CMS', '.*root', json, useAAA=True)
 Single_ele_2016C  = creator.makeDataComponent('Single_ele_2016C', '/SingleElectron/Run2016C-17Jul2018-v1/MINIAOD', 'CMS', '.*root', json, useAAA=True)
 Single_ele_2016D  = creator.makeDataComponent('Single_ele_2016D', '/SingleElectron/Run2016D-17Jul2018-v1/MINIAOD', 'CMS', '.*root', json, useAAA=True)
 Single_ele_2016E  = creator.makeDataComponent('Single_ele_2016E', '/SingleElectron/Run2016E-17Jul2018-v1/MINIAOD', 'CMS', '.*root', json, useAAA=True)
@@ -22,7 +22,7 @@ Single_ele_2016F  = creator.makeDataComponent('Single_ele_2016F', '/SingleElectr
 Single_ele_2016G  = creator.makeDataComponent('Single_ele_2016G', '/SingleElectron/Run2016G-17Jul2018-v1/MINIAOD', 'CMS', '.*root', json, useAAA=True)
 Single_ele_2016H  = creator.makeDataComponent('Single_ele_2016H', '/SingleElectron/Run2016H-17Jul2018-v1/MINIAOD', 'CMS', '.*root', json, useAAA=True)
                                                                                                                             
-Single_mu_2016B  = creator.makeDataComponent('Single_mu_2016B', '/SingleMuon/Run2016B-17Jul2018-ver1-v1/MINIAOD', 'CMS', '.*root', json, useAAA=True)
+Single_mu_2016B  = creator.makeDataComponent('Single_mu_2016B', '/SingleMuon/Run2016B-17Jul2018_ver1-v1/MINIAOD', 'CMS', '.*root', json, useAAA=True)
 Single_mu_2016C  = creator.makeDataComponent('Single_mu_2016C', '/SingleMuon/Run2016C-17Jul2018-v1/MINIAOD', 'CMS', '.*root', json, useAAA=True)
 Single_mu_2016D  = creator.makeDataComponent('Single_mu_2016D', '/SingleMuon/Run2016D-17Jul2018-v1/MINIAOD', 'CMS', '.*root', json, useAAA=True)
 Single_mu_2016E  = creator.makeDataComponent('Single_mu_2016E', '/SingleMuon/Run2016E-17Jul2018-v1/MINIAOD', 'CMS', '.*root', json, useAAA=True)

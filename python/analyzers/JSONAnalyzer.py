@@ -83,6 +83,7 @@ class JSONAnalyzer( Analyzer ):
             return True
 
         self.count.inc('All Events')
+        # from pdb import set_trace; set_trace()
         if self.lumiList.contains(run,lumi):
             self.count.inc('Passed Events')
             if not self.useLumiBlocks:

@@ -1,3 +1,6 @@
+# heppy_batch.py -o bkg_mc_2018_v1 hnl_mc_all_channels_cfg.py -B -b 'run_condor_simple.sh -t 2880 ./batchScript.sh'
+# heppy_batch.py -o signals_2018 hnl_mc_all_channels_cfg.py -B -b 'run_condor_simple.sh -t 2880 ./batchScript.sh'
+
 import os
 from copy import deepcopy as dc
 from collections import OrderedDict
@@ -33,6 +36,7 @@ from CMGTools.HNL.analyzers.EventFilter         import EventFilter
 from pdb import set_trace
 
 from CMGTools.HNL.samples.samples_mc_2018 import all_samples, TTJets, TTJets_ext, WJetsToLNu, DYBB, DYJetsToLL_M5to50, DYJetsToLL_M50, DYJetsToLL_M50_ext, WW, WZ, ZZ 
+from CMGTools.HNL.samples.signals_2018 import all_signals_m, all_signals_e, all_signals 
 
 ###################################################
 ###                   OPTIONS                   ###
@@ -61,7 +65,8 @@ MU_PROMPT_SFS['trigger'] = (SF_FILE, 'm_trgIsoMu24orIsoMu27_desy')
 ###################################################
 ###               HANDLE SAMPLES                ###
 ###################################################
-samples = all_samples
+# samples = all_samples + all_signals
+samples = all_signals
 
 # FIXME! are trigger names and filters correct regardless of the year?
 # triggers same for 2018: https://tomc.web.cern.ch/tomc/triggerPrescales/2018//?match=Ele
@@ -76,8 +81,10 @@ for sample in samples:
     sample.triggers += ['HLT_IsoMu27_v%d' %i for i in range(1, 15)] #muon trigger
     sample.triggers += ['HLT_Mu50_v%d'    %i for i in range(1, 15)] #muon trigger
 
-    sample.splitFactor = splitFactor(sample, 1e6)
-
+    sample.splitFactor = splitFactor(sample, 7e5)
+    if sample in all_signals:
+        sample.splitFactor = splitFactor(sample, 5e5)
+        
     sample.puFileMC   = '$CMSSW_BASE/src/CMGTools/HNL/data/pileup/MC_PileUp_2018_Autumn18.root'
     sample.puFileData = '$CMSSW_BASE/src/CMGTools/HNL/data/pileup/Data_PileUp_2018_69p2.root'
 
@@ -407,7 +414,7 @@ saveBigTree = False
 if saveBigTree:
     sequence.insert(-1, HNLTreeProducer)
 
-isSignal = False
+isSignal = True
 
 if isSignal:
     sequence.insert(1, signalReweighAna)
@@ -436,13 +443,14 @@ for ii in range(len(sequence)):
 
 ###################################################
 # set to True if you want to run interactively on a selected portion of samples/files/whatnot
-testing = True 
+testing = False 
 if testing:
     # run on a single component
-    comp = TTJets_ext
-        
+    #comp = TTJets_ext
+    comp = all_signals_m[0]
     # comp.files = comp.files[:1]
-    comp.files = ['/tmp/manzoni/001784E5-D649-734B-A5FF-E151DA54CC02.root'] # one file from TTJets_ext on lxplus700
+#     comp.files = ['/tmp/manzoni/001784E5-D649-734B-A5FF-E151DA54CC02.root'] # one file from TTJets_ext on lxplus700
+    comp.files = ['heavyNeutrino_1.root']
     # comp.fineSplitFactor = 10 # fine splitting, multicore
     samples = [comp]
 
@@ -453,7 +461,7 @@ if testing:
 # event_class = EOSEventsWithDownload if prefetch else Events
 
 # FIXME! for some reason, Events doesn't work anymore in 10_4
-prefetch = False
+prefetch = True
 event_class = EOSEventsWithDownload  
 if prefetch:
     EOSEventsWithDownload.aggressive = 2 # always fetch if running on Wigner

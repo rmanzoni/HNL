@@ -1,6 +1,7 @@
 from DataFormats.FWLite import Events as FWLiteEvents
 from CMGTools.Production.changeComponentAccessMode import convertFile as convertFileAccess 
 import os, subprocess, json, timeit, hashlib
+from socket import gethostname
 from re import sub
 
 class EOSEventsWithDownload(object):
@@ -133,12 +134,15 @@ class EOSEventsWithDownload(object):
                         if not self.isLocal(fname):
                             tmpdir = os.environ['TMPDIR'] if 'TMPDIR' in os.environ else "/tmp"
                             # VS 29/10/19, /scratch is larger than /tmp for T3 WN:
-                            from socket import gethostname#; from pdb import set_trace
-                            from getpass import getuser; USER = getuser()
+                            from pdb import set_trace
+                            # from getpass import getuser; USER = getuser()
                             # if 't3' in gethostname(): tmpdir = "/scratch" 
-                            if 't3' in gethostname(): tmpdir = "/work/%s/tmp" %USER
+                            # if 't3' in gethostname(): tmpdir = "/work/%s/tmp" %USER
+                            # if 't3' in gethostname(): tmpdir = 'root://t3dcachedb03.psi.ch/pnfs/psi.ch/cms/trivcat/store/user/vstampf/hnl_tmp/'
+                            if 't3' in gethostname(): tmpdir = 'root://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/user/vstampf/hnl_tmp/'
                             rndchars  = "".join([hex(ord(i))[2:] for i in os.urandom(8)]) if not self.long_cache else "long_cache-id%d-%s" % (os.getuid(), hashlib.sha1(fname).hexdigest());
                             localfile = "%s/%s-%s.root" % (tmpdir, os.path.basename(fname).replace(".root",""), rndchars)
+                            file_name_simple = os.path.basename(fname)
                             if self.long_cache and os.path.exists(localfile):
                                 print "[FileFetcher]: Filename %s is already available in local path %s " % (fname,localfile)
                                 fname = localfile
@@ -146,13 +150,17 @@ class EOSEventsWithDownload(object):
                                 try:
                                     print "[FileFetcher]: Filename %s is remote (geotag >= 9000), will do a copy to local path %s " % (fname,localfile)
                                     start = timeit.default_timer()
-                                    subprocess.check_output(["xrdcp","-f","-N",fname,localfile])
+                                    # set_trace()
+                                    print subprocess.check_output(["xrdcp","-f","-N",fname,localfile])
                                     print "[FileFetcher]: Time used for transferring the file locally: %s s" % (timeit.default_timer() - start)
                                     if not self.long_cache: self._localCopy = localfile 
                                     fname = localfile
                                 except:
                                     print "[FileFetcher]: Could not save file locally, will run from remote"
-                                    if os.path.exists(localfile): os.remove(localfile) # delete in case of incomplete transfer
+                                    if 't3' in gethostname(): 
+                                        os.system("uberftp t3se01.psi.ch 'rm /pnfs/psi.ch/cms/trivcat/store/user/vstampf/hnl_tmp/%s'" %file_name_simple)
+                                    else:
+                                        if os.path.exists(localfile): os.remove(localfile) # delete in case of incomplete transfer
                     print "[FileFetcher]: Will run from "+fname
                     self.events = FWLiteEvents([fname])
                     break
@@ -164,7 +172,8 @@ class EOSEventsWithDownload(object):
         todelete = self.__dict__['_localCopy']
         if todelete:
             print "[FileFetcher]: Removing local cache file ",todelete
-            os.remove(todelete)
+            if 't3' in gethostname(): os.system("uberftp t3se01.psi.ch 'rm /pnfs/psi.ch/cms/trivcat/store/user/vstampf/hnl_tmp/%s'" % os.path.basename(todelete))
+            else: os.remove(todelete)
     def __del__(self):
         self.endLoop()
 

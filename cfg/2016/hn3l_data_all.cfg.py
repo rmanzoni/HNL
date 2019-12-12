@@ -380,7 +380,7 @@ for ii in range(len(sequence)):
 # temporary copy remote files using xrd
 # event_class = EOSEventsWithDownload if prefetch else Events
 
-prefetch = False
+prefetch = True
 event_class = EOSEventsWithDownload  
 if prefetch:
     EOSEventsWithDownload.aggressive = 2 # always fetch if running on Wigner

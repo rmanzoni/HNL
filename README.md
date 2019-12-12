@@ -74,8 +74,11 @@ add needed packages:
 ### fix & add heppy scripts
 
 `cp heppyMvBadChunks.py      $CMSSW_BASE/bin/slc7_amd64_gcc700/.`
+
 `cp heppyMvGoodChunks.py     $CMSSW_BASE/bin/slc7_amd64_gcc700/.`
+
 `cp heppyMvGoodNoChunks.py   $CMSSW_BASE/bin/slc7_amd64_gcc700/.`
+
 `cp heppy_batch_slurm.py     $CMSSW_BASE/bin/slc7_amd64_gcc700/heppy_batch.py`
 
 `chmod 777 $CMSSW_BASE/bin/slc7_amd64_gcc700/heppy*`

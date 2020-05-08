@@ -64,20 +64,22 @@ if testing:
 # FIXME! are trigger names and filters correct regardless of the year?
 # triggers same for 2017: https://tomc.web.cern.ch/tomc/triggerPrescales/2017//?match=Ele
 for sample in samples:
-    sample.triggers  = ['HLT_Ele25_eta2p1_WPTight_Gsf_v%d'  %i for i in range(1, 15)] #electron trigger
+    sample.triggers = []
+#     sample.triggers += ['HLT_Ele25_eta2p1_WPTight_Gsf_v%d'  %i for i in range(1, 15)] #electron trigger
     sample.triggers += ['HLT_Ele27_WPTight_Gsf_v%d'         %i for i in range(1, 15)] #electron trigger
-    sample.triggers += ['HLT_Ele32_WPTight_Gsf_v%d'         %i for i in range(1, 15)] #electron trigger
-    sample.triggers += ['HLT_Ele35_WPTight_Gsf_v%d'         %i for i in range(1, 15)] #electron trigger
-    sample.triggers += ['HLT_Ele115_CaloIdVT_GsfTrkIdT_v%d' %i for i in range(1, 15)] #electron trigger
-    sample.triggers += ['HLT_Ele135_CaloIdVT_GsfTrkIdT_v%d' %i for i in range(1, 15)] #electron trigger
+#     sample.triggers += ['HLT_Ele32_WPTight_Gsf_v%d'         %i for i in range(1, 15)] #electron trigger
+#     sample.triggers += ['HLT_Ele35_WPTight_Gsf_v%d'         %i for i in range(1, 15)] #electron trigger
+#     sample.triggers += ['HLT_Ele115_CaloIdVT_GsfTrkIdT_v%d' %i for i in range(1, 15)] #electron trigger
+#     sample.triggers += ['HLT_Ele135_CaloIdVT_GsfTrkIdT_v%d' %i for i in range(1, 15)] #electron trigger
 
-    sample.triggers += ['HLT_IsoMu22_v%d'                   %i for i in range(1, 15)] #muon trigger
-    sample.triggers += ['HLT_IsoTkMu22_v%d'                 %i for i in range(1, 15)] #muon trigger
-    sample.triggers += ['HLT_IsoMu22_eta2p1_v%d'            %i for i in range(1, 15)] #muon trigger
-    sample.triggers += ['HLT_IsoTkMu22_eta2p1_v%d'          %i for i in range(1, 15)] #muon trigger
+#     sample.triggers += ['HLT_IsoMu22_v%d'                   %i for i in range(1, 15)] #muon trigger
+#     sample.triggers += ['HLT_IsoTkMu22_v%d'                 %i for i in range(1, 15)] #muon trigger
+#     sample.triggers += ['HLT_IsoMu22_eta2p1_v%d'            %i for i in range(1, 15)] #muon trigger
+#     sample.triggers += ['HLT_IsoTkMu22_eta2p1_v%d'          %i for i in range(1, 15)] #muon trigger
     sample.triggers += ['HLT_IsoMu24_v%d'                   %i for i in range(1, 15)] #muon trigger
-    sample.triggers += ['HLT_IsoMu27_v%d'                   %i for i in range(1, 15)] #muon trigger
-    sample.triggers += ['HLT_Mu50_v%d'                      %i for i in range(1, 15)] #muon trigger
+    sample.triggers += ['HLT_IsoTkMu24_v%d'                 %i for i in range(1, 15)] #muon trigger
+#     sample.triggers += ['HLT_IsoMu27_v%d'                   %i for i in range(1, 15)] #muon trigger
+#     sample.triggers += ['HLT_Mu50_v%d'                      %i for i in range(1, 15)] #muon trigger
 
     sample.splitFactor = splitFactor(sample, 1e6)
 

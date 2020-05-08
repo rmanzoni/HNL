@@ -78,21 +78,22 @@ samples = all_samples + all_signals
 # FIXME! are trigger names and filters correct regardless of the year?
 # triggers same for 2018: https://tomc.web.cern.ch/tomc/triggerPrescales/2018//?match=Ele
 for sample in samples:
-
-    sample.triggers  = ['HLT_Ele25_eta2p1_WPTight_Gsf_v%d'  %i for i in range(1, 15)] #electron trigger
+    sample.triggers = []
+#     sample.triggers += ['HLT_Ele25_eta2p1_WPTight_Gsf_v%d'  %i for i in range(1, 15)] #electron trigger
     sample.triggers += ['HLT_Ele27_WPTight_Gsf_v%d'         %i for i in range(1, 15)] #electron trigger
-    sample.triggers += ['HLT_Ele32_WPTight_Gsf_v%d'         %i for i in range(1, 15)] #electron trigger
-    sample.triggers += ['HLT_Ele35_WPTight_Gsf_v%d'         %i for i in range(1, 15)] #electron trigger
-    sample.triggers += ['HLT_Ele115_CaloIdVT_GsfTrkIdT_v%d' %i for i in range(1, 15)] #electron trigger
-    sample.triggers += ['HLT_Ele135_CaloIdVT_GsfTrkIdT_v%d' %i for i in range(1, 15)] #electron trigger
+#     sample.triggers += ['HLT_Ele32_WPTight_Gsf_v%d'         %i for i in range(1, 15)] #electron trigger
+#     sample.triggers += ['HLT_Ele35_WPTight_Gsf_v%d'         %i for i in range(1, 15)] #electron trigger
+#     sample.triggers += ['HLT_Ele115_CaloIdVT_GsfTrkIdT_v%d' %i for i in range(1, 15)] #electron trigger
+#     sample.triggers += ['HLT_Ele135_CaloIdVT_GsfTrkIdT_v%d' %i for i in range(1, 15)] #electron trigger
 
-    sample.triggers += ['HLT_IsoMu22_v%d'                   %i for i in range(1, 15)] #muon trigger
-    sample.triggers += ['HLT_IsoTkMu22_v%d'                 %i for i in range(1, 15)] #muon trigger
-    sample.triggers += ['HLT_IsoMu22_eta2p1_v%d'            %i for i in range(1, 15)] #muon trigger
-    sample.triggers += ['HLT_IsoTkMu22_eta2p1_v%d'          %i for i in range(1, 15)] #muon trigger
+#     sample.triggers += ['HLT_IsoMu22_v%d'                   %i for i in range(1, 15)] #muon trigger
+#     sample.triggers += ['HLT_IsoTkMu22_v%d'                 %i for i in range(1, 15)] #muon trigger
+#     sample.triggers += ['HLT_IsoMu22_eta2p1_v%d'            %i for i in range(1, 15)] #muon trigger
+#     sample.triggers += ['HLT_IsoTkMu22_eta2p1_v%d'          %i for i in range(1, 15)] #muon trigger
     sample.triggers += ['HLT_IsoMu24_v%d'                   %i for i in range(1, 15)] #muon trigger
-    sample.triggers += ['HLT_IsoMu27_v%d'                   %i for i in range(1, 15)] #muon trigger
-    sample.triggers += ['HLT_Mu50_v%d'                      %i for i in range(1, 15)] #muon trigger
+    sample.triggers += ['HLT_IsoTkMu24_v%d'                 %i for i in range(1, 15)] #muon trigger
+#     sample.triggers += ['HLT_IsoMu27_v%d'                   %i for i in range(1, 15)] #muon trigger
+#     sample.triggers += ['HLT_Mu50_v%d'                      %i for i in range(1, 15)] #muon trigger
 
     sample.splitFactor = splitFactor(sample, 7e5)
     if sample in all_signals:
@@ -208,20 +209,21 @@ genAna.allGenTaus = True # save in event.gentaus *ALL* taus, regardless whether 
 triggers_and_filters_ele = OrderedDict()
 triggers_and_filters_mu  = OrderedDict()
 
-triggers_and_filters_ele['HLT_Ele25_eta2p1_WPTight_Gsf']  = 'hltEle25erWPTightGsfTrackIsoFilter'
+# triggers_and_filters_ele['HLT_Ele25_eta2p1_WPTight_Gsf']  = 'hltEle25erWPTightGsfTrackIsoFilter'
 triggers_and_filters_ele['HLT_Ele27_WPTight_Gsf']         = 'hltEle27WPTightGsfTrackIsoFilter'
-triggers_and_filters_ele['HLT_Ele32_WPTight_Gsf']         = 'hltEle32WPTightGsfTrackIsoFilter'
-triggers_and_filters_ele['HLT_Ele35_WPTight_Gsf']         = 'hltEle35noerWPTightGsfTrackIsoFilter'
-triggers_and_filters_ele['HLT_Ele115_CaloIdVT_GsfTrkIdT'] = 'hltEle115CaloIdVTGsfTrkIdTGsfDphiFilter'
-triggers_and_filters_ele['HLT_Ele135_CaloIdVT_GsfTrkIdT'] = 'hltEle135CaloIdVTGsfTrkIdTGsfDphiFilter'
+# triggers_and_filters_ele['HLT_Ele32_WPTight_Gsf']         = 'hltEle32WPTightGsfTrackIsoFilter'
+# triggers_and_filters_ele['HLT_Ele35_WPTight_Gsf']         = 'hltEle35noerWPTightGsfTrackIsoFilter'
+# triggers_and_filters_ele['HLT_Ele115_CaloIdVT_GsfTrkIdT'] = 'hltEle115CaloIdVTGsfTrkIdTGsfDphiFilter'
+# triggers_and_filters_ele['HLT_Ele135_CaloIdVT_GsfTrkIdT'] = 'hltEle135CaloIdVTGsfTrkIdTGsfDphiFilter'
 
-triggers_and_filters_mu['HLT_IsoMu22']          = 'hltL3crIsoL1sMu20L1f0L2f10QL3f22QL3trkIsoFiltered0p09'     
-triggers_and_filters_mu['HLT_IsoTkMu22']        = 'hltL3fL1sMu20L1f0Tkf22QL3trkIsoFiltered0p09'     
-triggers_and_filters_mu['HLT_IsoMu22_eta2p1']   = 'hltL3crIsoL1sSingleMu20erL1f0L2f10QL3f22QL3trkIsoFiltered0p09'     
-triggers_and_filters_mu['HLT_IsoTkMu22_eta2p1'] = 'hltL3fL1sMu20erL1f0Tkf22QL3trkIsoFiltered0p09'     
-triggers_and_filters_mu['HLT_IsoMu24']          = 'hltL3crIsoL1sMu22L1f0L2f10QL3f24QL3trkIsoFiltered0p09'     
-triggers_and_filters_mu['HLT_IsoMu27']          = 'hltL3crIsoL1sMu22Or25L1f0L2f10QL3f27QL3trkIsoFiltered0p09' 
-triggers_and_filters_mu['HLT_Mu50']             = 'hltL3fL1sMu22Or25L1f0L2f10QL3Filtered50Q'
+# triggers_and_filters_mu['HLT_IsoMu22']          = 'hltL3crIsoL1sMu20L1f0L2f10QL3f22QL3trkIsoFiltered0p09'     
+# triggers_and_filters_mu['HLT_IsoTkMu22']        = 'hltL3fL1sMu20L1f0Tkf22QL3trkIsoFiltered0p09'     
+# triggers_and_filters_mu['HLT_IsoMu22_eta2p1']   = 'hltL3crIsoL1sSingleMu20erL1f0L2f10QL3f22QL3trkIsoFiltered0p09'     
+# triggers_and_filters_mu['HLT_IsoTkMu22_eta2p1'] = 'hltL3fL1sMu20erL1f0Tkf22QL3trkIsoFiltered0p09'     
+triggers_and_filters_mu['HLT_IsoMu24']          = 'hltL3crIsoL1sMu22L1f0L2f10QL3f24QL3trkIsoFiltered0p09' 
+triggers_and_filters_mu['HLT_IsoTkMu24']        = 'hltL3fL1sMu22L1f0Tkf24QL3trkIsoFiltered0p09'     
+# triggers_and_filters_mu['HLT_IsoMu27']          = 'hltL3crIsoL1sMu22Or25L1f0L2f10QL3f27QL3trkIsoFiltered0p09' 
+# triggers_and_filters_mu['HLT_Mu50']             = 'hltL3fL1sMu22Or25L1f0L2f10QL3Filtered50Q'
 # TODO: add (HLT_IsoTkMu24_v*) and (HLT_TkMu50_v*); but only later for 2016 dataset
 
 # Here we define the baseline selection for muons and electrons.

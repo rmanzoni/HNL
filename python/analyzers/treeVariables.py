@@ -16,7 +16,12 @@ class Variable():
         self.storageType = storageType
 
 def default():
-    return np.nan
+    # https://root-forum.cern.ch/t/how-can-i-assign-nan/8624/2
+    # better this than a numpy.nan, as numpy.nan is forcefully a float
+    # and if a branch is instantiated as int, it does not accept a float when the tree is
+    # filled or reset
+#     return ROOT.std.numeric_limits('int').quiet_NaN()
+    return numpy.nan
 
 # event variables
 event_vars = [
@@ -26,7 +31,7 @@ event_vars = [
     Variable('bx'          , lambda ev : (ev.input.eventAuxiliary().bunchCrossing() * ev.input.eventAuxiliary().isRealData()), type=int),
     Variable('orbit_number', lambda ev : (ev.input.eventAuxiliary().orbitNumber() * ev.input.eventAuxiliary().isRealData()), type=int),
     Variable('is_data'     , lambda ev : ev.input.eventAuxiliary().isRealData(), type=int),
-    Variable('n_pu'        , lambda ev : getattr(ev, 'nPU', default())),
+    Variable('n_pu'        , lambda ev : getattr(ev, 'nPU', np.nan)),
     Variable('rho'         , lambda ev : ev.rho),
     Variable('n_vtx'       , lambda ev : len(ev.goodVertices), type=int),
     Variable('weight'      , lambda ev : getattr(ev, 'eventWeight', 1.), type=float),
@@ -64,8 +69,8 @@ hnlreco_vars = [
     Variable('n_pairs'  , lambda ev : ev.n_pairs, type=int),
     Variable('n_dimuon' , lambda ev : ev.n_dimuon, type=int),
     Variable('dphi_met0', lambda ev : deltaPhi(ev.the_prompt_cand.phi(),ev.puppimet.phi()), type=float),   #FIXME does it work?
-    Variable('dphi_met1', lambda ev : deltaPhi(ev.dMu1MaxCosBPA.phi(),ev.puppimet.phi()) if hasattr(ev,'dMu1MaxCosBPA') else -99, type=float),     #FIXME does it work?
-    Variable('dphi_met2', lambda ev : deltaPhi(ev.dMu2MaxCosBPA.phi(),ev.puppimet.phi()) if hasattr(ev,'dMu2MaxCosBPA') else -99, type=float),     #FIXME does it work?
+    Variable('dphi_met1', lambda ev : deltaPhi(ev.dMu1MaxCosBPA.phi(),ev.puppimet.phi()) if hasattr(ev,'dMu1MaxCosBPA') else np.nan, type=float),     #FIXME does it work?
+    Variable('dphi_met2', lambda ev : deltaPhi(ev.dMu2MaxCosBPA.phi(),ev.puppimet.phi()) if hasattr(ev,'dMu2MaxCosBPA') else np.nan, type=float),     #FIXME does it work?
 ]
 
 # Variables indicating the quality of HNL reconstruction
@@ -176,7 +181,7 @@ hnl_vars = [
     Variable('hn_q'           , lambda hn : getattr(hn, 'hnCharge'    , default)()),
     Variable('hn_m'           , lambda hn : getattr(hn, 'hnMass'      , default)()),
     Variable('hn_sum_pt'      , lambda hn : getattr(hn, 'hnSumPt'     , default)()),
-  
+
     Variable('hn_vis_pt'      , lambda hn : getattr(hn, 'hnVisPt'     , default)()),
     Variable('hn_vis_eta'     , lambda hn : getattr(hn, 'hnVisEta'    , default)()),
     Variable('hn_vis_phi'     , lambda hn : getattr(hn, 'hnVisPhi'    , default)()),
@@ -247,28 +252,28 @@ particleJet_vars = [
     Variable('q'                         , lambda p: p.charge() if hasattr(p, 'charge') else 0), # charge may be non-integer for gen particles
     Variable('mass'                      , lambda p: p.mass()                                 ),
     Variable('pdgid'                     , lambda p: p.pdgId()                                ),
-    Variable('flavour_parton'            , lambda jet : jet.partonFlavour() if hasattr(jet, 'partonFlavour') else -99),
+    Variable('flavour_parton'            , lambda jet : jet.partonFlavour() if hasattr(jet, 'partonFlavour') else np.nan),
 ]
 
 # gen particle
 gen_particle_vars = [
-    Variable('pt'                                            , lambda p: p.pt()                                                   ),
-    Variable('eta'                                           , lambda p: p.eta()                                                  ),
-    Variable('phi'                                           , lambda p: p.phi()                                                  ),
-    Variable('q'                                             , lambda p: p.charge() if hasattr(p, 'charge') else 0                ), # charge may be non-integer for gen particles
-    Variable('mass'                                          , lambda p: p.mass()                                                 ),
-    Variable('pdgid'                                         , lambda p: p.pdgId()                                                ),
-    Variable('fromHardProcessFinalState'                     , lambda p: p.fromHardProcessFinalState()                            ),
-    Variable('isPromptFinalState'                            , lambda p: p.isPromptFinalState()                                   ),
-    Variable('isDirectPromptTauDecayProductFinalState'       , lambda p: p.isDirectPromptTauDecayProductFinalState()              ),      
-    Variable('isDirectHardProcessTauDecayProductFinalState'  , lambda p: p.isDirectHardProcessTauDecayProductFinalState()         ),
-    Variable('vtx_x'                                         , lambda p: p.vertex().x()                                           ),
-    Variable('vtx_y'                                         , lambda p: p.vertex().y()                                           ),
-    Variable('vtx_z'                                         , lambda p: p.vertex().z()                                           ),
-    Variable('status'                                        , lambda p: p.status()                                               ),
-    Variable('isPrompt'                                      , lambda p: p.statusFlags().isPrompt()                               ),
-    Variable('isDecayedLeptonHadron'                         , lambda p: p.statusFlags().isDecayedLeptonHadron()                  ),
-    Variable('isPromptDecayed'                               , lambda p: 1 if (p.statusFlags().isPrompt() == 1 and p.statusFlags().isDecayedLeptonHadron() == 1) else 0   ),
+    Variable('pt'                                          , lambda p: p.pt()                                                   ),
+    Variable('eta'                                         , lambda p: p.eta()                                                  ),
+    Variable('phi'                                         , lambda p: p.phi()                                                  ),
+    Variable('q'                                           , lambda p: p.charge() if hasattr(p, 'charge') else 0                ), # charge may be non-integer for gen particles
+    Variable('mass'                                        , lambda p: p.mass()                                                 ),
+    Variable('pdgid'                                       , lambda p: p.pdgId()                                                ),
+    Variable('fromHardProcessFinalState'                   , lambda p: p.fromHardProcessFinalState()                            ),
+    Variable('isPromptFinalState'                          , lambda p: p.isPromptFinalState()                                   ),
+    Variable('isDirectPromptTauDecayProductFinalState'     , lambda p: p.isDirectPromptTauDecayProductFinalState()              ),      
+    Variable('isDirectHardProcessTauDecayProductFinalState', lambda p: p.isDirectHardProcessTauDecayProductFinalState()         ),
+    Variable('vtx_x'                                       , lambda p: p.vertex().x()                                           ),
+    Variable('vtx_y'                                       , lambda p: p.vertex().y()                                           ),
+    Variable('vtx_z'                                       , lambda p: p.vertex().z()                                           ),
+    Variable('status'                                      , lambda p: p.status()                                               ),
+    Variable('isPrompt'                                    , lambda p: p.statusFlags().isPrompt()                               ),
+    Variable('isDecayedLeptonHadron'                       , lambda p: p.statusFlags().isDecayedLeptonHadron()                  ),
+    Variable('isPromptDecayed'                             , lambda p: 1 if (p.statusFlags().isPrompt() == 1 and p.statusFlags().isDecayedLeptonHadron() == 1) else 0   ),
 ]
 
 # stage-2 L1 object
@@ -300,7 +305,9 @@ lepton_vars = [
     Variable('dz'             , lambda lep : lep.leadChargedHadrCand().dz() if hasattr(lep, 'leadChargedHadrCand') else lep.dz()),
     Variable('dz_error'       , lambda lep : lep.edz() if hasattr(lep, 'edz') else -1.),
     Variable('weight'),
-    Variable('weight_id'      , lambda lep : getattr(lep, 'idweight'       , 1.)),
+    Variable('weight_id'      , lambda lep : getattr(lep, 'weight_id'      , 1.)),
+    Variable('weight_iso'     , lambda lep : getattr(lep, 'weight_iso'     , 1.)),
+    Variable('weight_reco'    , lambda lep : getattr(lep, 'weight_reco'    , 1.)),
     Variable('weight_trigger' , lambda lep : getattr(lep, 'weight_trigger' , 1.)),
     Variable('weight_idiso'   , lambda lep : getattr(lep, 'weight_idiso'   , 1.)),
     Variable('weight_tracking', lambda lep : getattr(lep, 'weight_tracking', 1.)),
@@ -407,7 +414,7 @@ muon_vars = [
     Variable('is_gl'                      , lambda muon : muon.isGlobalMuon()                                 ),
     Variable('is_tk'                      , lambda muon : muon.isTrackerMuon()                                ),
     Variable('is_pf'                      , lambda muon : muon.isPFMuon()                                     ),
-    Variable('is_oot'                     , lambda muon : muon.isoot if hasattr(muon, 'isoot') else default() ),
+    Variable('is_oot'                     , lambda muon : muon.isoot if hasattr(muon, 'isoot') else np.nan ),
 ## sim type for DD
     Variable('simType'                    , lambda muon : muon.simType() if abs(muon.simType()) < 1001 else muon.simType() - 2**32),
     Variable('simFlavour'                 , lambda muon : muon.simFlavour()                                   ),
@@ -462,24 +469,24 @@ muon_extra_vars = [
     Variable('dxy_innertrack'   , lambda muon : muon.innerTrack().dxy(muon.associatedVertex.position())              ),
     Variable('dz_innertrack'    , lambda muon : muon.innerTrack().dz(muon.associatedVertex.position())               ),
     Variable('weight_tracking'  , lambda muon : getattr(muon, 'weight_tracking', 1.)                                 ),
-    Variable('pdgIDoverweight'  , lambda muon : muon.pdgIDoverweight    if hasattr(muon, "pdgIDoverweight")  else default()),
+    Variable('pdgIDoverweight'  , lambda muon : muon.pdgIDoverweight    if hasattr(muon, "pdgIDoverweight")  else np.nan),
     #BDT VARS 
-    Variable('segComp'          , lambda muon : muon.segComp            if hasattr(muon, 'segComp')          else default()),
-    Variable('chi2LocMom'       , lambda muon : muon.chi2LocMom         if hasattr(muon, 'chi2LocMom')       else default()),
-    Variable('chi2LocPos'       , lambda muon : muon.chi2LocPos         if hasattr(muon, 'chi2LocPos')       else default()),
-    Variable('glbTrackTailProb' , lambda muon : muon.glbTrackTailProb   if hasattr(muon, 'glbTrackTailProb') else default()),
-    Variable('iValFrac'         , lambda muon : muon.iValFrac           if hasattr(muon, 'iValFrac')         else default()),
-    Variable('LHW'              , lambda muon : muon.LHW                if hasattr(muon, 'LHW')              else default()),
-    Variable('kinkFinder'       , lambda muon : muon.kinkFinder         if hasattr(muon, 'kinkFinder')       else default()),
-    Variable('timeAtIpInOutErr' , lambda muon : muon.timeAtIpInOutErr   if hasattr(muon, 'timeAtIpInOutErr') else default()),
-    Variable('outerChi2'        , lambda muon : muon.outerChi2          if hasattr(muon, 'outerChi2')        else default()),
-    Variable('innerChi2'        , lambda muon : muon.innerChi2          if hasattr(muon, 'innerChi2')        else default()),
-    Variable('trkRelChi2'       , lambda muon : muon.trkRelChi2         if hasattr(muon, 'trkRelChi2')       else default()),
-    Variable('vMuonHitComb'     , lambda muon : muon.vMuonHitComb       if hasattr(muon, 'vMuonHitComb')     else default()),
-    Variable('Qprod'            , lambda muon : muon.Qprod              if hasattr(muon, 'Qprod')            else default()),
-    Variable('LogGlbKinkFinder' , lambda muon : muon.LogGlbKinkFinder   if hasattr(muon, 'LogGlbKinkFinder') else default()),
+    Variable('segComp'          , lambda muon : muon.segComp            if hasattr(muon, 'segComp')          else np.nan),
+    Variable('chi2LocMom'       , lambda muon : muon.chi2LocMom         if hasattr(muon, 'chi2LocMom')       else np.nan),
+    Variable('chi2LocPos'       , lambda muon : muon.chi2LocPos         if hasattr(muon, 'chi2LocPos')       else np.nan),
+    Variable('glbTrackTailProb' , lambda muon : muon.glbTrackTailProb   if hasattr(muon, 'glbTrackTailProb') else np.nan),
+    Variable('iValFrac'         , lambda muon : muon.iValFrac           if hasattr(muon, 'iValFrac')         else np.nan),
+    Variable('LHW'              , lambda muon : muon.LHW                if hasattr(muon, 'LHW')              else np.nan),
+    Variable('kinkFinder'       , lambda muon : muon.kinkFinder         if hasattr(muon, 'kinkFinder')       else np.nan),
+    Variable('timeAtIpInOutErr' , lambda muon : muon.timeAtIpInOutErr   if hasattr(muon, 'timeAtIpInOutErr') else np.nan),
+    Variable('outerChi2'        , lambda muon : muon.outerChi2          if hasattr(muon, 'outerChi2')        else np.nan),
+    Variable('innerChi2'        , lambda muon : muon.innerChi2          if hasattr(muon, 'innerChi2')        else np.nan),
+    Variable('trkRelChi2'       , lambda muon : muon.trkRelChi2         if hasattr(muon, 'trkRelChi2')       else np.nan),
+    Variable('vMuonHitComb'     , lambda muon : muon.vMuonHitComb       if hasattr(muon, 'vMuonHitComb')     else np.nan),
+    Variable('Qprod'            , lambda muon : muon.Qprod              if hasattr(muon, 'Qprod')            else np.nan),
+    Variable('LogGlbKinkFinder' , lambda muon : muon.LogGlbKinkFinder   if hasattr(muon, 'LogGlbKinkFinder') else np.nan),
     #fake muons variables
-    Variable('isFake'           , lambda muon : muon.isFake             if hasattr(muon, 'isFake')           else default()),
+    Variable('isFake'           , lambda muon : muon.isFake             if hasattr(muon, 'isFake')           else np.nan),
 ]
 
 # tau
@@ -487,7 +494,7 @@ tau_vars = [
     Variable('decayMode', lambda tau : tau.decayMode()),
     Variable('zImpact', lambda tau : tau.zImpact()),
     Variable('dz_selfvertex', lambda tau : tau.vertex().z() - tau.associatedVertex.position().z()),
-    Variable('ptScale', lambda tau : getattr(tau, 'ptScale', -999.)),
+    Variable('ptScale', lambda tau : getattr(tau, 'ptScale', np.nan)),
     Variable('NewMVAID'),
     Variable('NewMVAraw'),
 ]
@@ -521,21 +528,25 @@ jet_vars = [
     # Variable('area', lambda jet : jet.jetArea()),
     Variable('flavour_parton', lambda jet : jet.partonFlavour()),
     Variable('csv', lambda jet : jet.btagMVA),
-    Variable('genjet_pt', lambda jet : jet.matchedGenJet.pt() if hasattr(jet, 'matchedGenJet') and jet.matchedGenJet else default()),
+    Variable('df', lambda jet : jet.deepflavour_score),
+    Variable('df_b', lambda jet : jet.deepflavour_prob_b),
+    Variable('df_bb', lambda jet : jet.deepflavour_prob_bb),
+    Variable('df_lepb', lambda jet : jet.deepflavour_prob_lepb),
+    Variable('genjet_pt', lambda jet : jet.matchedGenJet.pt() if hasattr(jet, 'matchedGenJet') and jet.matchedGenJet else np.nan),
 ]
 
 # extended jet vars
 jet_vars_extra = [
-    Variable('nConstituents', lambda jet : getattr(jet, 'nConstituents', default)()),
-    Variable('rawFactor', lambda jet : getattr(jet, 'rawFactor', default)()),
-    Variable('chargedHadronEnergy', lambda jet : getattr(jet, 'chargedHadronEnergy', default)()),
-    Variable('neutralHadronEnergy', lambda jet : getattr(jet, 'neutralHadronEnergy', default)()),
-    Variable('neutralEmEnergy', lambda jet : getattr(jet, 'neutralEmEnergy', default)()),
-    Variable('muonEnergy', lambda jet : getattr(jet, 'muonEnergy', default)()),
-    Variable('chargedEmEnergy', lambda jet : getattr(jet, 'chargedEmEnergy', default)()),
-    Variable('chargedHadronMultiplicity', lambda jet : getattr(jet, 'chargedHadronMultiplicity', default)()),
-    Variable('chargedMultiplicity', lambda jet : getattr(jet, 'chargedMultiplicity', default)()),
-    Variable('neutralMultiplicity', lambda jet : getattr(jet, 'neutralMultiplicity', default)()),
+    Variable('nConstituents', lambda jet : getattr(jet, 'nConstituents', np.nan)),
+    Variable('rawFactor', lambda jet : getattr(jet, 'rawFactor', np.nan)),
+    Variable('chargedHadronEnergy', lambda jet : getattr(jet, 'chargedHadronEnergy', np.nan)),
+    Variable('neutralHadronEnergy', lambda jet : getattr(jet, 'neutralHadronEnergy', np.nan)),
+    Variable('neutralEmEnergy', lambda jet : getattr(jet, 'neutralEmEnergy', np.nan)),
+    Variable('muonEnergy', lambda jet : getattr(jet, 'muonEnergy', np.nan)),
+    Variable('chargedEmEnergy', lambda jet : getattr(jet, 'chargedEmEnergy', np.nan)),
+    Variable('chargedHadronMultiplicity', lambda jet : getattr(jet, 'chargedHadronMultiplicity', np.nan)),
+    Variable('chargedMultiplicity', lambda jet : getattr(jet, 'chargedMultiplicity', np.nan)),
+    Variable('neutralMultiplicity', lambda jet : getattr(jet, 'neutralMultiplicity', np.nan)),
 ]
 
 # gen info

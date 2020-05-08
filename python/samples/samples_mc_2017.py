@@ -225,12 +225,12 @@ DYJetsToLL_M10to50 = creator.makeMCComponent(
 DYJetsToLL_M10to50.nGenEvents = DYJetsToLL_M10to50.dataset_entries 
 
 # DYJetsToLL_M10to50_ext = creator.makeMCComponent(
-    # name    = 'DYJetsToLL_M10to50_ext',
-    # dataset = '/DYJetsToLL_M-10to50_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14_ext1-v1/MINIAODSIM',
-    # user    = 'CMS', 
-    # pattern = '.*root',
-    # xSec    = (1.581e+04)*1.23,# +- 2.890e+01 pb
-    # useAAA  = True
+#     name    = 'DYJetsToLL_M10to50_ext',
+#     dataset = '/DYJetsToLL_M-10to50_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14_ext1-v1/MINIAODSIM',
+#     user    = 'CMS', 
+#     pattern = '.*root',
+#     xSec    = (1.581e+04)*1.23,# +- 2.890e+01 pb
+#     useAAA  = True
 # )
 
 DYJetsToLL_M50 = creator.makeMCComponent(
@@ -599,36 +599,37 @@ ZZTo4L.nGenEvents = ZZTo4L.dataset_entries
 # assign to each sample its own PU profile file. For 2017 it is important to do it per-sample
 ##########################################################################################
 # TODO temporary workaround for pu of new samples
-DYBB                                      .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_DYBB.root' 
-DYJetsToLL_M10to50                        .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_DYJets_M10to50.root' 
-DYJetsToLL_M50                            .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_DYJetsToLL_M50.root' 
-DYJetsToLL_M50_ext                        .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_DYJetsToLL_M50_ext.root' 
-WJetsToLNu                                .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_WJetsToLNu.root'   # in Albert W3JetsToLNu-LO  /W3JetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM
-WJetsToLNu_ext                            .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_WJetsToLNu.root'
-for i in qcd+wjets:                      i.puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_TTJets_amcat.root' # derived manually 
+# these two are missing and make jobs fail!
+# DYBB                                      .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/mc/2017/pileup_DYBB.root' 
+# DYJetsToLL_M10to50                        .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/mc/2017/pileup_DYJets_M10to50.root' 
+DYJetsToLL_M50                            .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/mc/2017/pileup_DYJetsToLL_M50.root' 
+DYJetsToLL_M50_ext                        .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/mc/2017/pileup_DYJetsToLL_M50_ext.root' 
+WJetsToLNu                                .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/mc/2017/pileup_WJetsToLNu.root'   # in Albert W3JetsToLNu-LO  /W3JetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM
+WJetsToLNu_ext                            .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/mc/2017/pileup_WJetsToLNu.root'
+for i in qcd+wjets:                      i.puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/mc/2017/pileup_TTJets_amcat.root' # derived manually 
 ### the ones below are fine
-TTJets                                    .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_TTJets_amcat.root' # derived manually 
-ZZZ                                       .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_ZZZ.root' # derived manually 
-WZZ                                       .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_WZZ.root' # derived manually 
-WWZ                                       .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_WWZ.root' # derived manually 
-WWW                                       .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_WWW.root' # derived manually 
-WWTo2L2Nu                                 .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_WWTo2L2Nu.root' # derived manually 
-WGGJets                                   .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_WGGJets.root' # derived manually 
-TTWJetsToLNu                              .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_TTWJetsToLNu.root' # derived manually 
-TTZToLL_M10                               .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_TTZToLL_M10.root' # derived manually 
-TTZToLL_M1to10                            .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_TTZToLL_M1to10.root' # derived manually 
-ST_sch_lep                                .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_ST_s-channel_4f_leptonDecays.root' # derived manually 
-STbar_tch_inc                             .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_ST_t-channel_antitop_4f_inclusiveDecays.root' # derived manually 
-ST_tch_inc                                .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_ST_t-channel_top_4f_inclusiveDecays.root' # derived manually 
-STbar_tW_inc                              .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_STbar_tW_inc.root' # derived manually 
-ST_tW_inc                                 .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_ST_tW_inc.root' # derived manually 
-W3JetsToLNu                               .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_W3JetsToLNu.root'  # in Albert W3JetsToLNu-LO  /W3JetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM
-W4JetsToLNu                               .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_W4JetsToLNu.root'  # in Albert W4JetsToLNu-LO  /W4JetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM
-DY1JetsToLL_M50                           .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_DY1JetsToLL_M50.root' # derived manually   
-DY2JetsToLL_M50                           .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_DY2JetsToLL_M50.root' # derived manually     
-DY2JetsToLL_M50_ext                       .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_DY2JetsToLL_M50_ext.root' # derived manually 
-DY3JetsToLL_M50                           .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_DY3JetsToLL_M50.root' # derived manually     
-DY3JetsToLL_M50_ext                       .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_DY3JetsToLL_M50_ext.root' # derived manually 
+TTJets                                    .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/mc/2017/pileup_TTJets_amcat.root' # derived manually 
+ZZZ                                       .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/mc/2017/pileup_ZZZ.root' # derived manually 
+WZZ                                       .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/mc/2017/pileup_WZZ.root' # derived manually 
+WWZ                                       .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/mc/2017/pileup_WWZ.root' # derived manually 
+WWW                                       .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/mc/2017/pileup_WWW.root' # derived manually 
+WWTo2L2Nu                                 .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/mc/2017/pileup_WWTo2L2Nu.root' # derived manually 
+WGGJets                                   .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/mc/2017/pileup_WGGJets.root' # derived manually 
+TTWJetsToLNu                              .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/mc/2017/pileup_TTWJetsToLNu.root' # derived manually 
+TTZToLL_M10                               .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/mc/2017/pileup_TTZToLL_M10.root' # derived manually 
+TTZToLL_M1to10                            .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/mc/2017/pileup_TTZToLL_M1to10.root' # derived manually 
+ST_sch_lep                                .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/mc/2017/pileup_ST_s-channel_4f_leptonDecays.root' # derived manually 
+STbar_tch_inc                             .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/mc/2017/pileup_ST_t-channel_antitop_4f_inclusiveDecays.root' # derived manually 
+ST_tch_inc                                .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/mc/2017/pileup_ST_t-channel_top_4f_inclusiveDecays.root' # derived manually 
+STbar_tW_inc                              .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/mc/2017/pileup_STbar_tW_inc.root' # derived manually 
+ST_tW_inc                                 .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/mc/2017/pileup_ST_tW_inc.root' # derived manually 
+W3JetsToLNu                               .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/mc/2017/pileup_W3JetsToLNu.root'  # in Albert W3JetsToLNu-LO  /W3JetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM
+W4JetsToLNu                               .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/mc/2017/pileup_W4JetsToLNu.root'  # in Albert W4JetsToLNu-LO  /W4JetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM
+DY1JetsToLL_M50                           .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/mc/2017/pileup_DY1JetsToLL_M50.root' # derived manually   
+DY2JetsToLL_M50                           .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/mc/2017/pileup_DY2JetsToLL_M50.root' # derived manually     
+DY2JetsToLL_M50_ext                       .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/mc/2017/pileup_DY2JetsToLL_M50_ext.root' # derived manually 
+DY3JetsToLL_M50                           .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/mc/2017/pileup_DY3JetsToLL_M50.root' # derived manually     
+DY3JetsToLL_M50_ext                       .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/mc/2017/pileup_DY3JetsToLL_M50_ext.root' # derived manually 
 
 
 ##########################################################################################

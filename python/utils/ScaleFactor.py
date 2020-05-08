@@ -110,6 +110,7 @@ class ScaleFactor(object):
 
     def getScaleFactor(self, pt, eta, isFake=False, iso=None, dm=None):
         if hasattr(self, 'ws'):
+            # from pdb import set_trace; set_trace()
             return self.getFactorWS(pt, eta, 'ratio', isFake=isFake, iso=iso, dm=dm)
         return self.getEfficiencyData(pt, eta, isFake, iso, dm)/max(self.getEfficiencyMC(pt, eta, isFake, iso, dm), 1.e-6)
 
@@ -126,7 +127,7 @@ class ScaleFactor(object):
     def getFactorWS(self, pt, eta, tag, isFake=False, iso=None, dm=None):
         ''' See https://github.com/CMS-HTT/CorrectionsWorkspace
         '''
-#         import pdb ; pdb.set_trace()
+        # from pdb import set_trace; set_trace()
         self.ws.var('_'.join([self.obj_tag, 'pt'])).setVal(pt)
         self.ws.var('_'.join([self.obj_tag, 'eta'])).setVal(eta)
         if iso is not None:

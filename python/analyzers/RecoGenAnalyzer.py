@@ -68,6 +68,10 @@ class RecoGenAnalyzer(Analyzer):
         return muons
 
     def process(self, event):
+        # no point to run this if it's not a HNL signal
+        if 'HN3L' not in self.cfg_comp.name:
+            return True
+
         self.readCollections(event.input)
         self.counters.counter('RecoGenTreeAnalyzer').inc('all events')
 
@@ -192,6 +196,7 @@ class RecoGenAnalyzer(Analyzer):
            (pair[1] != None) and\
            (pair[0].physObj != pair[1].physObj):
 
+            import pdb ; pdb.set_trace()
             event.recoSv = fitVertex(pair)
 
             if event.recoSv:

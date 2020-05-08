@@ -8,7 +8,7 @@ from PhysicsTools.Heppy.physicsobjects.PhysicsObjects import Jet, GenJet
 from PhysicsTools.HeppyCore.utils.deltar import cleanObjectCollection, matchObjectCollection
 
 # from PhysicsTools.Heppy.physicsutils.BTagSF import BTagSF
-from CMGTools.H2TauTau.proto.physicsobjects.BTagSF import BTagSF
+from CMGTools.HNL.utils.BTagSF import BTagSF
 from PhysicsTools.Heppy.physicsutils.JetReCalibrator import JetReCalibrator
 
 # JAN: Kept this version of the jet analyzer in the tau-tau sequence
@@ -18,6 +18,29 @@ from PhysicsTools.Heppy.physicsutils.JetReCalibrator import JetReCalibrator
 # in heppy and possibly add b-tagging in another step or add it to the generic
 # jet analyzer
 
+
+# BTAG recommendations
+# general: https://twiki.cern.ch/twiki/bin/view/CMS/BtagRecommendation
+# 2016: https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation2016Legacy
+# 2017: https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation94X
+# 2018: https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation102X
+global deepflavour_wp
+deepflavour_wp = OrderedDict()
+
+deepflavour_wp[2018] = OrderedDict()
+deepflavour_wp[2018]['loose' ] = 0.0494
+deepflavour_wp[2018]['medium'] = 0.2770
+deepflavour_wp[2018]['tight' ] = 0.7264
+
+deepflavour_wp[2017] = OrderedDict()
+deepflavour_wp[2017]['loose' ] = 0.0521
+deepflavour_wp[2017]['medium'] = 0.3033
+deepflavour_wp[2017]['tight' ] = 0.7489
+
+deepflavour_wp[2016] = OrderedDict()
+deepflavour_wp[2016]['loose' ] = 0.0614
+deepflavour_wp[2016]['medium'] = 0.3093
+deepflavour_wp[2016]['tight' ] = 0.7221
 
 class JetAnalyzer(Analyzer):
 
@@ -51,7 +74,7 @@ class JetAnalyzer(Analyzer):
 
     def __init__(self, cfg_ana, cfg_comp, looperName):
         super(JetAnalyzer, self).__init__(cfg_ana, cfg_comp, looperName)
-        self.btagSF = BTagSF(0, wp='medium')
+        self.btagSF = BTagSF(0, wp=getattr(self.cfg_ana, 'btag_wp', 'medium'))
         self.recalibrateJets = getattr(cfg_ana, 'recalibrateJets', False)
 
         mcGT = getattr(cfg_ana, 'mcGT', 'Spring16_25nsV6_MC')
@@ -106,7 +129,7 @@ class JetAnalyzer(Analyzer):
         genJets = None
         if self.cfg_comp.isMC:
             genJets = map(GenJet, self.mchandles['genJets'].product())
-
+            
         # recalibrate jets
         if self.recalibrateJets:
             self.jetReCalibrator.correctAll(allJets, event.rho, delta=0., metShift=[0.,0.], addCorr=True, addShifts=True)
@@ -129,7 +152,7 @@ class JetAnalyzer(Analyzer):
             
             # preselect jets
             if self.testJet(jet) : event.jets .append(jet)
-            if self.testBJet(jet): event.bJets.append(jet)
+            if self.testBJet(jet, year=self.cfg_ana.year, wp=getattr(self.cfg_ana, 'btag_wp', 'medium')): event.bJets.append(jet)
 
         self.counters.counter('jets').inc('all events')
 
@@ -223,23 +246,43 @@ class JetAnalyzer(Analyzer):
             abs( jet.eta() ) < self.cfg_ana.jetEta and \
             self.testJetID(jet)
 
-    def testBJet(self, jet, csv_cut=0.8):
-        # medium csv working point
-        # https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation74X
+    def testBJet(self, jet, year, wp):    
+        '''
+        Test DeepFlavour
+        '''
+        
+        # RM remove me!
         jet.btagMVA = jet.btag('pfCombinedInclusiveSecondaryVertexV2BJetTags')
-        # jet.btagFlag = jet.btagMVA > csv_cut
 
+        # recommendations
+        # general: https://twiki.cern.ch/twiki/bin/view/CMS/BtagRecommendation
+        # 2016: https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation2016Legacy
+        # 2017: https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation94X
+        # 2018: https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation102X
+        jet.deepflavour_prob_b    = jet.btag('pfDeepFlavourJetTags:probb')
+        jet.deepflavour_prob_bb   = jet.btag('pfDeepFlavourJetTags:probbb')
+        jet.deepflavour_prob_lepb = jet.btag('pfDeepFlavourJetTags:problepb')
+        jet.deepflavour_score = jet.deepflavour_prob_b   + \
+                                jet.deepflavour_prob_bb  + \
+                                jet.deepflavour_prob_lepb
+
+        jet.pass_deepflavour = jet.deepflavour_score >= deepflavour_wp[year][wp]
+
+        # THIS PART NEEDS TO BE UPDATED TO DEEPFLAVOUR!
         # Use the following once we start applying data-MC scale factors:
-        jet.btagFlag = self.btagSF.isBTagged(
-            pt=jet.pt(),
-            eta=jet.eta(),
-            csv=jet.btag("pfCombinedInclusiveSecondaryVertexV2BJetTags"),
-            jetflavor=abs(jet.partonFlavour()),
-            is_data=not self.cfg_comp.isMC,
-            csv_cut=csv_cut
-        )
+#         jet.btagFlag = self.btagSF.isBTagged(
+#             pt=jet.pt(),
+#             eta=jet.eta(),
+#             csv=jet.btag("pfCombinedInclusiveSecondaryVertexV2BJetTags"),
+#             jetflavor=abs(jet.partonFlavour()),
+#             is_data=not self.cfg_comp.isMC,
+#             csv_cut=0.8
+#         )
+
+        # import pdb ; pdb.set_trace()
 
         return self.testJet(jet) and \
             abs(jet.eta()) < 2.4 and \
-            jet.btagFlag and \
+            jet.pass_deepflavour and \
             self.testJetID(jet)
+#             jet.btagFlag and \

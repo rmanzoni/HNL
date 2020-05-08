@@ -1,5 +1,6 @@
 '''
-wget http://tomc.web.cern.ch/tomc/availableDisplacedTrileptonSamples.txt
+wget https://tomc.web.cern.ch/tomc/heavyNeutrino/availableHeavyNeutrinoSamples.txt
+OLD wget http://tomc.web.cern.ch/tomc/availableDisplacedTrileptonSamples.txt
 wget http://tomc.web.cern.ch/tomc/privateHeavyNeutrinoSamples.txt
 '''
 

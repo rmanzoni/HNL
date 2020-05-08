@@ -122,6 +122,7 @@ def fitVertex(pair,L1L2LeptonType):
             vtx = makeRecoVertex(sv.currentDecayVertex().get(),kinVtxTrkSize=tofit.size())
         else:
             return False
+#     import pdb ; pdb.set_trace()
     return vtx
 
 

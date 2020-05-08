@@ -207,24 +207,30 @@ class HNLTreeProducerBase(TreeProducerBase):
         cleanJets30 = event.cleanJets30[final_state]
 
         # adjust the weights, according to the final state
-        event.eventWeight = event.puWeight           * \
-                            event.LHE_originalWeight * \
-                            getattr(event, 'weight_%s' %final_state)
+        event.eventWeight = getattr(event, 'puWeight', 1.)  * \
+                            getattr(event, 'LHE_originalWeight', 1.)  * \
+                            getattr(event, 'weight_%s' %final_state, 1.)
         
         the_3lep_cand.l0().weight          = getattr(the_3lep_cand.l0(), 'weight_%s'          %final_state, 1.)
         the_3lep_cand.l0().weight_id       = getattr(the_3lep_cand.l0(), 'weight_%s_id'       %final_state, 1.)
+        the_3lep_cand.l0().weight_iso      = getattr(the_3lep_cand.l0(), 'weight_%s_iso'      %final_state, 1.)
+        the_3lep_cand.l0().weight_reco     = getattr(the_3lep_cand.l0(), 'weight_%s_reco'     %final_state, 1.)
         the_3lep_cand.l0().weight_idiso    = getattr(the_3lep_cand.l0(), 'weight_%s_idiso'    %final_state, 1.)
         the_3lep_cand.l0().weight_trigger  = getattr(the_3lep_cand.l0(), 'weight_%s_trigger'  %final_state, 1.)
         the_3lep_cand.l0().weight_tracking = getattr(the_3lep_cand.l0(), 'weight_%s_tracking' %final_state, 1.)
 
         the_3lep_cand.l1().weight          = getattr(the_3lep_cand.l1(), 'weight_%s'          %final_state, 1.)
         the_3lep_cand.l1().weight_id       = getattr(the_3lep_cand.l1(), 'weight_%s_id'       %final_state, 1.)
+        the_3lep_cand.l1().weight_iso      = getattr(the_3lep_cand.l1(), 'weight_%s_iso'      %final_state, 1.)
+        the_3lep_cand.l1().weight_reco     = getattr(the_3lep_cand.l1(), 'weight_%s_reco'     %final_state, 1.)
         the_3lep_cand.l1().weight_idiso    = getattr(the_3lep_cand.l1(), 'weight_%s_idiso'    %final_state, 1.)
         the_3lep_cand.l1().weight_trigger  = getattr(the_3lep_cand.l1(), 'weight_%s_trigger'  %final_state, 1.)
         the_3lep_cand.l1().weight_tracking = getattr(the_3lep_cand.l1(), 'weight_%s_tracking' %final_state, 1.)
 
         the_3lep_cand.l2().weight          = getattr(the_3lep_cand.l2(), 'weight_%s'          %final_state, 1.)
         the_3lep_cand.l2().weight_id       = getattr(the_3lep_cand.l2(), 'weight_%s_id'       %final_state, 1.)
+        the_3lep_cand.l2().weight_iso      = getattr(the_3lep_cand.l2(), 'weight_%s_iso'      %final_state, 1.)
+        the_3lep_cand.l2().weight_reco     = getattr(the_3lep_cand.l2(), 'weight_%s_reco'     %final_state, 1.)
         the_3lep_cand.l2().weight_idiso    = getattr(the_3lep_cand.l2(), 'weight_%s_idiso'    %final_state, 1.)
         the_3lep_cand.l2().weight_trigger  = getattr(the_3lep_cand.l2(), 'weight_%s_trigger'  %final_state, 1.)
         the_3lep_cand.l2().weight_tracking = getattr(the_3lep_cand.l2(), 'weight_%s_tracking' %final_state, 1.)
@@ -325,8 +331,9 @@ class HNLTreeProducerBase(TreeProducerBase):
         if len(cleanBJets)>0: self.fillJet(self.tree, 'bj1', cleanBJets[0], fill_extra=False)
         if len(cleanBJets)>1: self.fillJet(self.tree, 'bj2', cleanBJets[1], fill_extra=False)
 
-        self.fill(self.tree, 'nj'  , len(cleanJets) )
-        self.fill(self.tree, 'nbj' , len(cleanBJets))
+        self.fill(self.tree, 'nj'  , len(cleanJets)  )
+        self.fill(self.tree, 'nj30', len(cleanJets30))
+        self.fill(self.tree, 'nbj' , len(cleanBJets) )
 
         # FIXME! RM what is this?
         # gen match
@@ -402,6 +409,8 @@ class HNLTreeProducerBase(TreeProducerBase):
         self.fill(self.tree, 'pass_mem', getattr(event, 'pass_mem', -1.))
         self.fill(self.tree, 'pass_eee', getattr(event, 'pass_eee', -1.))
         self.fill(self.tree, 'pass_eem', getattr(event, 'pass_eem', -1.))
+
+#         import pdb ; pdb.set_trace()
                                         
         if fill:                   
             self.fillTree(event)

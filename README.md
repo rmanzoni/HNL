@@ -19,39 +19,15 @@
 `git cms-init`
 
 
-### sparse-checkout
-
-edit the sparse-checkout: `vim .git/info/sparse-checkout`
-
-here replace everything by
-
-`/.clang-format`
-
-`/.clang-tidy`
-
-`/.gitignore`
-
-`/EgammaAnalysis/ElectronTools/`
-
-`/PhysicsTools/`
-
-`/RecoEgamma/EgammaTools/`
-
-`/RecoEgamma/ElectronIdentification/`
-
-`/RecoEgamma/PhotonIdentification/`
-
-`/RecoTauTag/RecoTau/`
-
 ### add CMG CMSSW 104X
 
 `git remote add cmg-central https://github.com/CERN-PH-CMG/cmg-cmssw.git  -f  -t heppy_104X_dev`
 
-`git remote add vstampf https://github.com/vinzenzstampf/cmg-cmssw.git -f -t hnl_104X`
-
-`git checkout -b hnl_104X vstampf/hnl_104X`
+`git remote add vstampf https://github.com/vinzenzstampf/cmg-cmssw.git -f -t heppy_104X_hnl`
 
 `git checkout -b heppy_104X_dev cmg-central/heppy_104X_dev`
+
+`git checkout -b heppy_104X_hnl vstampf/heppy_104X_hnl`
 
 add needed packages:
 
@@ -93,13 +69,13 @@ add needed packages:
 
 `cd $CMSSW_BASE/src` 
 
-`git checkout hnl_104X PhysicsTools/Heppy/python/analyzers/core/PileUpAnalyzer.py`
+`#git checkout hnl_104X PhysicsTools/Heppy/python/analyzers/core/PileUpAnalyzer.py`
 
-`git checkout hnl_104X PhysicsTools/Heppy/python/physicsobjects/Electron.py`
+`#git checkout hnl_104X PhysicsTools/Heppy/python/physicsobjects/Electron.py`
 
-`git checkout hnl_104X PhysicsTools/Heppy/python/physicsobjects/Muon.py`
+`#git checkout hnl_104X PhysicsTools/Heppy/python/physicsobjects/Muon.py`
 
-`git checkout hnl_104X PhysicsTools/Heppy/python/physicsobjects/Lepton.py`
+`#git checkout hnl_104X PhysicsTools/Heppy/python/physicsobjects/Lepton.py`
 
 
 

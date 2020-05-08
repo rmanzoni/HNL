@@ -323,7 +323,8 @@ lepton_vars = [
 # electron
 electron_vars = [
     Variable('eid_mva_noniso_loose', lambda ele : ele.electronID('MVA_ID_nonIso_Fall17_Loose')),
-    Variable('eid_mva_noniso_wp90' , lambda ele : ele.electronID('MVA_ID_nonIso_Fall17_wp90' )),
+   #Variable('eid_mva_noniso_wp90' , lambda ele : ele.electronID('MVA_ID_nonIso_Fall17_wp90' )), #this is V1, we need V2, see here https://github.com/vinzenzstampf/cmg-cmssw/blob/heppy_104X_hnl/PhysicsTools/Heppy/python/physicsobjects/Electron.py#L184
+    Variable('eid_mva_noniso_wp90' , lambda ele : ele.mvaRun2('Fall17V2noIso' )), # V2    
     Variable('eid_mva_noniso_wp80' , lambda ele : ele.electronID('MVA_ID_nonIso_Fall17_wp80' )),
     Variable('eid_mva_iso_loose'   , lambda ele : ele.electronID('MVA_ID_Iso_Fall17_Loose'   )),
     Variable('eid_mva_iso_wp90'    , lambda ele : ele.electronID('MVA_ID_Iso_Fall17_wp90'    )),

@@ -87,7 +87,8 @@ class HNLAnalyzer(Analyzer):
         # kinematics
         if not self.testLepKin(ele, pt, eta): return False
         # id
-        if not ele.electronID("MVA_ID_nonIso_Fall17_Loose"): return False
+        # if not ele.electronID("MVA_ID_nonIso_Fall17_Loose"): return False # ID V1... don't use https://github.com/vinzenzstampf/cmg-cmssw/blob/heppy_104X_hnl/PhysicsTools/Heppy/python/physicsobjects/Electron.py#L184
+        if not ele.mvaRun2('Fall17V2noIso' ): return False # ID V2
         # vertex
         if not self.testLepVtx(ele, dxy, dz): return False
         # passed
@@ -301,6 +302,7 @@ class HNLAnalyzer(Analyzer):
         #####################################################################################
         
         # match only if the trigger fired and if it is among those we care about
+        # set_trace()
         fired_triggers = [info for info in getattr(event, 'trigger_infos', []) if info.fired and '_'.join(info.name.split('_')[:-1]) in self.cfg_ana.triggersAndFilters.keys()]
     
         drmax = getattr(self.cfg_ana, 'dr_max', 0.15)
@@ -324,7 +326,7 @@ class HNLAnalyzer(Analyzer):
                 matchedobjs = [iobj for iobj in lastobjects if deltaR(iobj, ilep)<drmax]
                 # extend the list of matched objects
                 ilep.matched_hlt_obj.extend(matchedobjs)
-            
+                # set_trace()
             # remove duplicates through 'set'
             ilep.matched_hlt_obj = [iobj for iobj in set(ilep.matched_hlt_obj)]
         

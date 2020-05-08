@@ -1,8 +1,18 @@
 
-# HNL FW for 2018 (CMG 104X)
+# HNL FW for 2016, 2017 & 2018 (CMG 104X)
 
+## automatic
+
+`wget https://github.com/vinzenzstampf/HNL/setup.sh`
+
+`. setup.sh`
+
+
+## manually
 
 ### set up CMSSW 10.4
+
+`export SCRAM_ARCH=slc7_amd64_gcc700`
 
 `cmsrel CMSSW_10_4_0_patch1`
 
@@ -19,39 +29,15 @@
 `git cms-init`
 
 
-### sparse-checkout
-
-edit the sparse-checkout: `vim .git/info/sparse-checkout`
-
-here replace everything by
-
-`/.clang-format`
-
-`/.clang-tidy`
-
-`/.gitignore`
-
-`/EgammaAnalysis/ElectronTools/`
-
-`/PhysicsTools/`
-
-`/RecoEgamma/EgammaTools/`
-
-`/RecoEgamma/ElectronIdentification/`
-
-`/RecoEgamma/PhotonIdentification/`
-
-`/RecoTauTag/RecoTau/`
-
 ### add CMG CMSSW 104X
 
 `git remote add cmg-central https://github.com/CERN-PH-CMG/cmg-cmssw.git  -f  -t heppy_104X_dev`
 
-`git remote add vstampf https://github.com/vinzenzstampf/cmg-cmssw.git -f -t hnl_104X`
-
-`git checkout -b hnl_104X vstampf/hnl_104X`
+`git remote add vstampf https://github.com/vinzenzstampf/cmg-cmssw.git -f -t heppy_104X_hnl`
 
 `git checkout -b heppy_104X_dev cmg-central/heppy_104X_dev`
+
+`git checkout -b heppy_104X_hnl vstampf/heppy_104X_hnl`
 
 add needed packages:
 
@@ -81,34 +67,18 @@ add needed packages:
 
 `cd HNL`
 
-### add scale-factors and custom code in Heppy
-
-`cp /afs/cern.ch/work/d/dwinterb/public/MSSM2016/tagging_efficiencies_Moriond2017.root data/.`
-
-`cd data/leptonsf/`
-
-`wget https://github.com/jandrejk/ProductionFromNano/tree/SM2018/utils/CorrectionWorkspaces/htt_scalefactors_2018_v1.root`
-
-`wget https://github.com/CMS-HTT/CorrectionsWorkspace/raw/2017_17NovReRecoData_Fall17MC/htt_scalefactors_v17_1.root`
-
-`cd $CMSSW_BASE/src` 
-
-`git checkout hnl_104X PhysicsTools/Heppy/python/analyzers/core/PileUpAnalyzer.py`
-
-`git checkout hnl_104X PhysicsTools/Heppy/python/physicsobjects/Electron.py`
-
-`git checkout hnl_104X PhysicsTools/Heppy/python/physicsobjects/Muon.py`
-
-`git checkout hnl_104X PhysicsTools/Heppy/python/physicsobjects/Lepton.py`
-
-
-
 ### compile
 
-`cd $CMSSW_BASE; scram b -j 8`
+`cd $CMSSW_BASE; scram b -j 36`
 
-`cd src; scram b -j 8`
+### fix & add heppy scripts
 
-`cd CMGTools; scram b -j 8`
+`cp heppyMvBadChunks.py      $CMSSW_BASE/bin/slc7_amd64_gcc700/.`
 
-`cd HNL; scram b -j 8`
+`cp heppyMvGoodChunks.py     $CMSSW_BASE/bin/slc7_amd64_gcc700/.`
+
+`cp heppyMvGoodNoChunks.py   $CMSSW_BASE/bin/slc7_amd64_gcc700/.`
+
+`cp heppy_batch_slurm.py     $CMSSW_BASE/bin/slc7_amd64_gcc700/heppy_batch.py`
+
+`chmod 777 $CMSSW_BASE/bin/slc7_amd64_gcc700/heppy*`

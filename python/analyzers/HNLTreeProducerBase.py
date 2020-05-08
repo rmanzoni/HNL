@@ -152,6 +152,7 @@ class HNLTreeProducerBase(TreeProducerBase):
         self.bookJet(self.tree, 'bj1', fill_extra=False)
         self.bookJet(self.tree, 'bj2', fill_extra=False)
         self.var(self.tree, 'nj'  )
+        self.var(self.tree, 'nj30')
         self.var(self.tree, 'nbj' )
         
         # LHE weight

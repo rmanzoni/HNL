@@ -412,6 +412,8 @@ jetAna = cfg.Analyzer(
     puJetIDDisc       = 'pileupJetId:fullDiscriminant',
     recalibrateJets   = False,
     applyL2L3Residual = 'MC',
+    year              = 2017,
+    btag_wp           = 'medium' # DeepFlavour
     # RM: FIXME! check the GTs
 #    mcGT              = '94X_mc2017_realistic_v14',
 #    dataGT            = '94X_dataRun2_v6',

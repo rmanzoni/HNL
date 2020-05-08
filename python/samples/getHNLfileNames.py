@@ -13,6 +13,10 @@ wget http://tomc.web.cern.ch/tomc/heavyNeutrino/heavyNeutrinoFileList.txt
 21/10/2019
 wget http://tomc.web.cern.ch/tomc/heavyNeutrino/availableHeavyNeutrinoSamples.txt
 wget http://tomc.web.cern.ch/tomc/heavyNeutrino/heavyNeutrinoFileList.txt
+
+08/05/2020 RM: 'requested' column removed by Tom
+wget http://tomc.web.cern.ch/tomc/heavyNeutrino/availableHeavyNeutrinoSamples.txt
+wget http://tomc.web.cern.ch/tomc/heavyNeutrino/heavyNeutrinoFileList.txt
 '''
 
 import re
@@ -22,7 +26,7 @@ class HNLSample():
     def __init__(self, 
                  recommended, 
                  type,
-                 requested, 
+#                  requested, 
                  mass, 
                  v2, 
                  ctau, 
@@ -35,7 +39,7 @@ class HNLSample():
                  files=[]):
         self.recommended       = recommended      
         self.type              = type             
-        self.requested         = requested
+#         self.requested         = requested
         if ctau_ratio_to_theory=='-':    
             self.ctau_ratio = 1.
         else:
@@ -118,26 +122,58 @@ if __name__ == '__main__':
         if start_reading<=0:
             continue
         pieces = line.split()
-        if len(pieces)<14:
+        if len(pieces)<12:
             continue
         
         if pieces[0] != '*':
             continue 
 
+        # RM: 'requested' column removed by Tom
+#         my_hnl_sample = HNLSample(
+#             recommended          = int(pieces[0]!='*')  ,
+#             type                 = pieces[1]            ,
+#             requested            = pieces[2]            ,
+#             mass                 = float(pieces[3])     ,
+#             v2                   = float(pieces[4])     ,
+#             ctau                 = float(pieces[5])     ,
+#             ctau_ratio_to_theory = pieces[6]            ,
+#             nevents              = int(float(pieces[7])),
+#             xs                   = float(pieces[8])     ,
+#             xse                  = float(pieces[10])    ,
+#             year                 = pieces[12]           ,
+#             path                 = pieces[13]           ,
+#         )
+        
+        year = pieces[10]
+        if year=='2016v2':
+            continue
+        elif year=='2016v3':
+            year = '2016'
+        
+        if 'not yet available' in line:
+            continue
+        
         my_hnl_sample = HNLSample(
-            recommended          = int(pieces[0]!='*')  ,
-            type                 = pieces[1]            ,
-            requested            = pieces[2]            ,
-            mass                 = float(pieces[3])     ,
-            v2                   = float(pieces[4])     ,
-            ctau                 = float(pieces[5])     ,
-            ctau_ratio_to_theory = pieces[6]            ,
-            nevents              = int(float(pieces[7])),
-            xs                   = float(pieces[8])     ,
-            xse                  = float(pieces[10])    ,
-            year                 = pieces[12]           ,
-            path                 = pieces[13]           ,
+            recommended          = int(pieces[0]!='*')                       ,
+            type                 = pieces[1]                                 ,
+            mass                 = float(pieces[2])                          ,
+            v2                   = float(pieces[3])                          ,
+            ctau                 = float(pieces[4]) if pieces[5]!='-' else 0.,
+            ctau_ratio_to_theory = float(pieces[5]) if pieces[5]!='-' else 1.,
+            nevents              = int(float(pieces[6])) if pieces[6]!='?' else 1,
+            xs                   = float(pieces[7])                          ,
+            xse                  = float(pieces[9])                          ,
+            year                 = year                                      ,
+            path                 = pieces[11]                                ,
         )
+
+        # only lower masses
+        if my_hnl_sample.mass > 20.:
+            continue
+            
+        # no prompt samples
+        if 'prompt' in my_hnl_sample.path:
+            continue
 
         # don't consider hadronic samples
         if 'lljj' in my_hnl_sample.title: continue
@@ -145,7 +181,8 @@ if __name__ == '__main__':
         if my_hnl_sample.year==2016: toread[2016].append(my_hnl_sample)
         if my_hnl_sample.year==2017: toread[2017].append(my_hnl_sample)
         if my_hnl_sample.year==2018: toread[2018].append(my_hnl_sample)
-
+        
+        #import pdb ; pdb.set_trace()
 
     for yy in [2016, 2017, 2018]:
         

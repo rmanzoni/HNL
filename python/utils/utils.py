@@ -5,9 +5,11 @@ from pdb import set_trace
 # load custom library to ROOT. This contains the kinematic vertex fitter class
 ROOT.gSystem.Load('libCMGToolsHNL')
 from ROOT import HNLKinematicVertexFitter as VertexFitter
+from ROOT import HNLKalmanVertexFitter as KalmanVertexFitter
 
 # initiate the VertexFitter
 vtxfit = VertexFitter()
+kalman_vtxfit = KalmanVertexFitter()
 
 # create a std::vector<RecoChargedCandidate> to be passed to the fitter
 
@@ -80,7 +82,14 @@ def fitVertex_RecoChargedCandidates(pair):
     # set_trace()
     return vtx
 
-def fitVertex(pair,L1L2LeptonType):
+def fitVertex(pair, L1L2LeptonType, kinematic=False):
+    if kinematic:
+        return _kinematicFitVertex(pair,L1L2LeptonType)
+    else:
+        return _kalmanFitVertex(pair, L1L2LeptonType)
+
+
+def _kinematicFitVertex(pair, L1L2LeptonType):
     tofit = ROOT.std.vector('reco::Track')()
     vtx = None
     tofit.clear()
@@ -110,20 +119,51 @@ def fitVertex(pair,L1L2LeptonType):
                 if not ROOT.reco.Track(il.gsfTrack().get()).numberOfValidHits()>0:
                     print 'there are no valid tracker hits in this electron track'%(index)
             else: print 'could not load gsfTrack() from the electron'%(index)
+        
 
     if tofit.size() == 2 and tofit[0]!=tofit[1]:
         #call the vertix fit function from framework
         sv = vtxfit.Fit(tofit, L1L2LeptonType)
-            
         
-
         if not sv.get().isEmpty() and sv.get().isValid(): # check that the vertex is good
             sv.movePointerToTheTop()
             vtx = makeRecoVertex(sv.currentDecayVertex().get(),kinVtxTrkSize=tofit.size())
         else:
             return False
-#     import pdb ; pdb.set_trace()
+    
     return vtx
 
+def _kalmanFitVertex(pair, L1L2LeptonType):
+    tofit = ROOT.std.vector('reco::Track')()
+    vtx = None
+    tofit.clear()
 
-
+    if pair[0] == pair[1]:
+        print 'vtx fitter: both leps in the pair are the same!'
+        return False
+    
+    for il in pair:
+        if abs(il.pdgId())==13:
+            if il.muonBestTrack().get():
+                tofit.push_back(il.muonBestTrack().get())
+                if not il.muonBestTrack().get().numberOfValidHits()>0: 
+                    print 'there are no valid tracker hits in this muon track'
+            else: print 'could not load muonBestTrack() from the muon'
+        if abs(il.pdgId())==11:
+            if il.gsfTrack().get():
+                tofit.push_back(ROOT.reco.Track(il.gsfTrack().get()))
+                if not ROOT.reco.Track(il.gsfTrack().get()).numberOfValidHits()>0:
+                    print 'there are no valid tracker hits in this electron track'%(index)
+            else: print 'could not load gsfTrack() from the electron'%(index)
+        
+    if tofit.size() == 2 and tofit[0]!=tofit[1]:
+        #call the vertix fit function from framework
+        sv = kalman_vtxfit.Fit(tofit)
+        # create a reco::Vertex out of it
+        vtx = getattr(sv, 'operator Vertex')()
+    
+    if vtx.isValid():
+         return vtx
+    else: 
+        return False
+             

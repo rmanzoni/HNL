@@ -87,7 +87,8 @@ class HNLAnalyzer(Analyzer):
         # kinematics
         if not self.testLepKin(ele, pt, eta): return False
         # id
-        if not ele.electronID("MVA_ID_nonIso_Fall17_Loose"): return False
+        # if not ele.electronID("MVA_ID_nonIso_Fall17_Loose"): return False # ID V1... don't use https://github.com/vinzenzstampf/cmg-cmssw/blob/heppy_104X_hnl/PhysicsTools/Heppy/python/physicsobjects/Electron.py#L184
+        if not ele.mvaRun2('Fall17V2noIso' ): return False # ID V2
         # vertex
         if not self.testLepVtx(ele, dxy, dz): return False
         # passed

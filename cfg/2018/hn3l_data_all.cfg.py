@@ -272,7 +272,7 @@ HNLEventFilter = cfg.Analyzer(
 ##########################################################################################
 # ONE TREE PRODUCER PER FINAL STATE FIXME! ADD THE EXTENDED PRODUCER
 ##########################################################################################
-skimFilter = 'the_3lep_cand.charge12()==0 and the_3lep_cand.mass12()<12 and recoSv.disp2DFromBS_cos>0.'
+skimFilter = 'the_3lep_cand.charge12()==0 and the_3lep_cand.mass12()<20 and recoSv.disp2DFromBS_cos>0.'
 
 HNLTreeProducerBase_mmm = cfg.Analyzer(
     HNLTreeProducerBase,

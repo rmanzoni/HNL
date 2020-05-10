@@ -47,6 +47,7 @@ class HNLTreeProducerBase(TreeProducerBase):
         
         if self.cfg_ana.promptLepType == 'e':
             self.bookEle (self.tree, 'l0')
+            self.var(self.tree, 'hlt_Ele25_eta2p1_WPTight_Gsf' )
             self.var(self.tree, 'hlt_Ele27_WPTight_Gsf'        )
             self.var(self.tree, 'hlt_Ele32_WPTight_Gsf'        )
             self.var(self.tree, 'hlt_Ele35_WPTight_Gsf'        )
@@ -55,9 +56,14 @@ class HNLTreeProducerBase(TreeProducerBase):
 
         elif self.cfg_ana.promptLepType == 'm':
             self.bookMuon(self.tree, 'l0')
-            self.var(self.tree, 'hlt_IsoMu24')
-            self.var(self.tree, 'hlt_IsoMu27')
-            self.var(self.tree, 'hlt_Mu50'   )
+            self.var(self.tree, 'hlt_IsoMu22'         )
+            self.var(self.tree, 'hlt_IsoTkMu22'       )
+            self.var(self.tree, 'hlt_IsoMu22_eta2p1'  )
+            self.var(self.tree, 'hlt_IsoTkMu22_eta2p1')
+            self.var(self.tree, 'hlt_IsoMu24'         )
+            self.var(self.tree, 'hlt_IsoMu27'         )
+            self.var(self.tree, 'hlt_Mu50'            )
+            self.var(self.tree, 'hlt_TkMu50'          )
         else:
             print 'ERROR: prompt lepton type non specified or missing! Exit'
             sys.exit(0)

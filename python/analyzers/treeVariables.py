@@ -324,36 +324,35 @@ lepton_vars = [
 
 ]
 
-
-# FIXME! UPDATE TO 2017 MVA ISO AND MINI ISOLATION
-#        EFFECTIVE AREA CORRECTION
 # electron
 electron_vars = [
-    Variable('eid_mva_noniso_loose', lambda ele : ele.electronID('MVA_ID_nonIso_Fall17_Loose')),
-    Variable('eid_mva_noniso_wp90' , lambda ele : ele.electronID('MVA_ID_nonIso_Fall17_wp90' )),
-    Variable('eid_mva_noniso_wp80' , lambda ele : ele.electronID('MVA_ID_nonIso_Fall17_wp80' )),
-    Variable('eid_mva_iso_loose'   , lambda ele : ele.electronID('MVA_ID_Iso_Fall17_Loose'   )),
-    Variable('eid_mva_iso_wp90'    , lambda ele : ele.electronID('MVA_ID_Iso_Fall17_wp90'    )),
-    Variable('eid_mva_iso_wp80'    , lambda ele : ele.electronID('MVA_ID_Iso_Fall17_wp80'    )),
-    # Variable('eid_cut_tight'       , lambda ele : ele.cutBasedId('POG_FALL17_94X_v1_Tight'   )),
-    # Variable('eid_cut_medium'      , lambda ele : ele.cutBasedId('POG_FALL17_94X_v1_Medium'  )),
-    # Variable('eid_cut_loose'       , lambda ele : ele.cutBasedId('POG_FALL17_94X_v1_Loose'   )),
+    Variable('eid_cut_l'           , lambda ele : ele.electronID('cutBasedElectronID-Fall17-94X-V2-loose' )),
+    Variable('eid_cut_m'           , lambda ele : ele.electronID('cutBasedElectronID-Fall17-94X-V2-medium')),
+    Variable('eid_cut_t'           , lambda ele : ele.electronID('cutBasedElectronID-Fall17-94X-V2-tight' )),
+    Variable('eid_cut_v'           , lambda ele : ele.electronID('cutBasedElectronID-Fall17-94X-V2-veto'  )),
+    Variable('eid_mva_iso_80'      , lambda ele : ele.electronID('mvaEleID-Fall17-iso-V2-wp80'            )),
+    Variable('eid_mva_iso_90'      , lambda ele : ele.electronID('mvaEleID-Fall17-iso-V2-wp90'            )),
+    Variable('eid_mva_iso_hzz'     , lambda ele : ele.electronID('mvaEleID-Fall17-iso-V2-wpHZZ'           )),
+    Variable('eid_mva_iso_l'       , lambda ele : ele.electronID('mvaEleID-Fall17-iso-V2-wpLoose'         )),
+    Variable('eid_mva_niso_80'     , lambda ele : ele.electronID('mvaEleID-Fall17-noIso-V2-wp80'          )),
+    Variable('eid_mva_niso_90'     , lambda ele : ele.electronID('mvaEleID-Fall17-noIso-V2-wp90'          )),
+    Variable('eid_mva_niso_l'      , lambda ele : ele.electronID('mvaEleID-Fall17-noIso-V2-wpLoose'       )),
     Variable('n_hits_miss'         , lambda ele : ele.gsfTrack().hitPattern().numberOfLostHits(1), int),
     Variable('pass_conv_veto'      , lambda ele : ele.passConversionVeto()),
     Variable('reliso_dB_05_03'     , lambda ele : ele.relIso(cone_size=0.3, iso_type='dbeta', dbeta_factor=0.5, all_charged=0)),
     Variable('reliso_dB_05_04'     , lambda ele : ele.relIso(cone_size=0.4, iso_type='dbeta', dbeta_factor=0.5, all_charged=0)),
     Variable('reliso_dB_02_03'     , lambda ele : ele.relIso(cone_size=0.3, iso_type='dbeta', dbeta_factor=0.2, all_charged=0)),
     Variable('reliso_dB_02_04'     , lambda ele : ele.relIso(cone_size=0.4, iso_type='dbeta', dbeta_factor=0.2, all_charged=0)),
-    Variable('reliso_rho_04'       , lambda ele : ele.relIsoFromEA(0.4)                       ),
-    Variable('reliso_rho_03'       , lambda ele : ele.relIsoFromEA(0.3)                       ),
-    Variable('dEtaInSeed'          , lambda ele : ele.f_dEtaInSeed()                          ), 
-    Variable('dPhiSCTrackatVtx'    , lambda ele : ele.f_dPhiSCTrackatVtx()                    ), 
-    Variable('full5x5sigmaIEtaIEta', lambda ele : ele.f_full5x5sigmaIEtaIEta()                ),
-    Variable('hadronicOverEM'      , lambda ele : ele.f_hadronicOverEM()                      ), 
-    Variable('InvEminusInvP'       , lambda ele : ele.f_InvEminusInvP()                       ), 
-    Variable('LooseNoIso'          , lambda ele : ele.LooseNoIsoID()                          ),
-    Variable('MediumNoIso'         , lambda ele : ele.MediumNoIsoID()                         ), 
-    Variable('MediumWithIso'       , lambda ele : ele.MediumWithIsoID()                       ),
+    Variable('reliso_rho_04'       , lambda ele : ele.relIsoFromEA(0.4)       ),
+    Variable('reliso_rho_03'       , lambda ele : ele.relIsoFromEA(0.3)       ),
+    Variable('dEtaInSeed'          , lambda ele : ele.f_dEtaInSeed()          ), 
+    Variable('dPhiSCTrackatVtx'    , lambda ele : ele.f_dPhiSCTrackatVtx()    ), 
+    Variable('full5x5sigmaIEtaIEta', lambda ele : ele.f_full5x5sigmaIEtaIEta()),
+    Variable('hadronicOverEM'      , lambda ele : ele.f_hadronicOverEM()      ), 
+    Variable('InvEminusInvP'       , lambda ele : ele.f_InvEminusInvP()       ), 
+    Variable('LooseNoIso'          , lambda ele : ele.LooseNoIsoID()          ),
+    Variable('MediumNoIso'         , lambda ele : ele.MediumNoIsoID()         ), 
+    Variable('MediumWithIso'       , lambda ele : ele.MediumWithIsoID()       ),
 ]
 
 # photon

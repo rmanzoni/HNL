@@ -84,13 +84,47 @@ class HNLAnalyzer(Analyzer):
         return True
     
     def preselectPromptElectrons(self, ele, pt=30, eta=2.5, dxy=0.05, dz=0.2, isoAE03cut=0.2):
+        '''
+        Available Electrons IDs in >= 94X miniAOD:
+        
+            cutBasedElectronID-Fall17-94X-V1-loose 
+            cutBasedElectronID-Fall17-94X-V1-medium 
+            cutBasedElectronID-Fall17-94X-V1-tight 
+            cutBasedElectronID-Fall17-94X-V1-veto 
+            cutBasedElectronID-Fall17-94X-V2-loose 
+            cutBasedElectronID-Fall17-94X-V2-medium 
+            cutBasedElectronID-Fall17-94X-V2-tight 
+            cutBasedElectronID-Fall17-94X-V2-veto 
+            cutBasedElectronID-Summer16-80X-V1-loose 
+            cutBasedElectronID-Summer16-80X-V1-medium 
+            cutBasedElectronID-Summer16-80X-V1-tight 
+            cutBasedElectronID-Summer16-80X-V1-veto 
+            heepElectronID-HEEPV70 
+            mvaEleID-Fall17-iso-V1-wp80 
+            mvaEleID-Fall17-iso-V1-wp90 
+            mvaEleID-Fall17-iso-V1-wpLoose 
+            mvaEleID-Fall17-iso-V2-wp80 
+            mvaEleID-Fall17-iso-V2-wp90 
+            mvaEleID-Fall17-iso-V2-wpHZZ 
+            mvaEleID-Fall17-iso-V2-wpLoose 
+            mvaEleID-Fall17-noIso-V1-wp80 
+            mvaEleID-Fall17-noIso-V1-wp90 
+            mvaEleID-Fall17-noIso-V1-wpLoose 
+            mvaEleID-Fall17-noIso-V2-wp80 
+            mvaEleID-Fall17-noIso-V2-wp90 
+            mvaEleID-Fall17-noIso-V2-wpLoose 
+            mvaEleID-Spring16-GeneralPurpose-V1-wp80 
+            mvaEleID-Spring16-GeneralPurpose-V1-wp90 
+            mvaEleID-Spring16-HZZ-V1-wpLoose    
+        
+        accessible via:
+        pat::Electron::electronID('WORKING_POINT')     
+        '''
+        
         # kinematics
         if not self.testLepKin(ele, pt, eta): return False
         # id
-        if not ele.electronID("MVA_ID_nonIso_Fall17_Loose"): return False # ID V1... don't use https://github.com/vinzenzstampf/cmg-cmssw/blob/heppy_104X_hnl/PhysicsTools/Heppy/python/physicsobjects/Electron.py#L184
-        # FIXME! enable this once it's fixed
-#         import pdb ; pdb.set_trace()
-#         if not ele.mvaRun2('Fall17V2noIso'): return False # ID V2
+        if not ele.electronID('mvaEleID-Fall17-noIso-V2-wp90'): return False # FIXME! check if iso or no iso, it's not in the AN
         # vertex
         if not self.testLepVtx(ele, dxy, dz): return False
         # isolation

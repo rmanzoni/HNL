@@ -302,15 +302,21 @@ class HNLTreeProducerBase(TreeProducerBase):
         # HLT bits & matches
         trig_list = [trig.name for trig in event.trigger_infos if trig.fired]
         if self.cfg_ana.promptLepType == 'e':
+            self.fill(self.tree, 'hlt_Ele25_eta2p1_WPTight_Gsf' , any('HLT_Ele25_eta2p1_WPTight_Gsf'  in name for name in trig_list))
             self.fill(self.tree, 'hlt_Ele27_WPTight_Gsf'        , any('HLT_Ele27_WPTight_Gsf'         in name for name in trig_list))
             self.fill(self.tree, 'hlt_Ele32_WPTight_Gsf'        , any('HLT_Ele32_WPTight_Gsf'         in name for name in trig_list))
             self.fill(self.tree, 'hlt_Ele35_WPTight_Gsf'        , any('HLT_Ele35_WPTight_Gsf'         in name for name in trig_list))
             self.fill(self.tree, 'hlt_Ele115_CaloIdVT_GsfTrkIdT', any('HLT_Ele115_CaloIdVT_GsfTrkIdT' in name for name in trig_list))
             self.fill(self.tree, 'hlt_Ele135_CaloIdVT_GsfTrkIdT', any('HLT_Ele135_CaloIdVT_GsfTrkIdT' in name for name in trig_list))
         if self.cfg_ana.promptLepType == 'm':
-            self.fill(self.tree, 'hlt_IsoMu24', any('HLT_IsoMu24' in name for name in trig_list))
-            self.fill(self.tree, 'hlt_IsoMu27', any('HLT_IsoMu27' in name for name in trig_list))
-            self.fill(self.tree, 'hlt_Mu50'   , any('HLT_Mu50'    in name for name in trig_list))
+            self.fill(self.tree, 'hlt_IsoMu22'         , any('HLT_IsoMu22'          in name for name in trig_list))
+            self.fill(self.tree, 'hlt_IsoTkMu22'       , any('HLT_IsoTkMu22'        in name for name in trig_list))
+            self.fill(self.tree, 'hlt_IsoMu22_eta2p1'  , any('HLT_IsoMu22_eta2p1'   in name for name in trig_list))
+            self.fill(self.tree, 'hlt_IsoTkMu22_eta2p1', any('HLT_IsoTkMu22_eta2p1' in name for name in trig_list))
+            self.fill(self.tree, 'hlt_IsoMu24'         , any('HLT_IsoMu24'          in name for name in trig_list))
+            self.fill(self.tree, 'hlt_IsoMu27'         , any('HLT_IsoMu27'          in name for name in trig_list))
+            self.fill(self.tree, 'hlt_Mu50'            , any('HLT_Mu50'             in name for name in trig_list))
+            self.fill(self.tree, 'hlt_TkMu50'          , any('HLT_TkMu50'           in name for name in trig_list))
     
         # reco secondary vertex and displacement
         self.fillVertex(self.tree, 'sv' , recoSv)

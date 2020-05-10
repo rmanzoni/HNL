@@ -80,6 +80,7 @@ for sample in samples:
     sample.triggers += ['HLT_IsoTkMu24_v%d'                 %i for i in range(1, 15)] #muon trigger
 #     sample.triggers += ['HLT_IsoMu27_v%d'                   %i for i in range(1, 15)] #muon trigger
 #     sample.triggers += ['HLT_Mu50_v%d'                      %i for i in range(1, 15)] #muon trigger
+#     sample.triggers += ['HLT_TkMu50_v%d'                    %i for i in range(1, 15)] #muon trigger
 
     sample.splitFactor = splitFactor(sample, 1e6)
 
@@ -164,6 +165,7 @@ triggers_and_filters_mu['HLT_IsoTkMu22_eta2p1'] = 'hltL3fL1sMu20erL1f0Tkf22QL3tr
 triggers_and_filters_mu['HLT_IsoMu24']          = 'hltL3crIsoL1sMu22L1f0L2f10QL3f24QL3trkIsoFiltered0p09'     
 triggers_and_filters_mu['HLT_IsoMu27']          = 'hltL3crIsoL1sMu22Or25L1f0L2f10QL3f27QL3trkIsoFiltered0p09' 
 triggers_and_filters_mu['HLT_Mu50']             = 'hltL3fL1sMu22Or25L1f0L2f10QL3Filtered50Q'
+triggers_and_filters_mu['HLT_TkMu50']           = 'FIXME'
 # TODO: add (HLT_IsoTkMu24_v*) and (HLT_TkMu50_v*); but only later for 2016 dataset
 
 # Here we define the baseline selection for muons and electrons.

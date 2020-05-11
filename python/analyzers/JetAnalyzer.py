@@ -268,21 +268,17 @@ class JetAnalyzer(Analyzer):
 
         jet.pass_deepflavour = jet.deepflavour_score >= deepflavour_wp[year][wp]
 
-        # THIS PART NEEDS TO BE UPDATED TO DEEPFLAVOUR!
         # Use the following once we start applying data-MC scale factors:
-#         jet.btagFlag = self.btagSF.isBTagged(
-#             pt=jet.pt(),
-#             eta=jet.eta(),
-#             csv=jet.btag("pfCombinedInclusiveSecondaryVertexV2BJetTags"),
-#             jetflavor=abs(jet.partonFlavour()),
-#             is_data=not self.cfg_comp.isMC,
-#             csv_cut=0.8
-#         )
-
-        # import pdb ; pdb.set_trace()
+        jet.btagFlag = self.btagSF.isBTagged(
+            pt=jet.pt(),
+            eta=jet.eta(),
+            deepjet=jet.deepflavour_score,
+            jetflavor=abs(jet.partonFlavour()),
+            is_data=not self.cfg_comp.isMC,
+            deepjet_cut=deepflavour_wp[year][wp]
+        )
 
         return self.testJet(jet) and \
             abs(jet.eta()) < 2.4 and \
-            jet.pass_deepflavour and \
+            jet.btagFlag and \
             self.testJetID(jet)
-#             jet.btagFlag and \

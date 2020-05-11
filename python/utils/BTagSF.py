@@ -1,36 +1,32 @@
 import os
 import ROOT
 
+from collections import OrderedDict
 from ROOT import TRandom3, TFile
 ROOT.gSystem.Load('libCondToolsBTau')
 
 class BTagSF(object):
     '''Translate heppy run 1 BTagSF class to python, and update to 2012.
     '''
-    def __init__ (self, seed, wp='medium', measurement='central') :
+    def __init__ (self, seed, mc_eff_file, sf_file, wp='medium', measurement='central') :
         self.randm = TRandom3(seed)
 
-        self.mc_eff_file = TFile('$CMSSW_BASE/src/CMGTools/HNL/data/tagging_efficiencies_Moriond2017.root')
-
-        # MC b-tag efficiencies as measured in HTT by Adinda
-        self.btag_eff_b = self.mc_eff_file.Get('btag_eff_b')
-        self.btag_eff_c = self.mc_eff_file.Get('btag_eff_c')
-        self.btag_eff_oth = self.mc_eff_file.Get('btag_eff_oth')
+        self.mc_eff_file = TFile(mc_eff_file)
 
         # b-tag SFs from POG
-        calib = ROOT.BTagCalibration("csvv2", os.path.expandvars("$CMSSW_BASE/src/CMGTools/RootTools/data/btag/CSVv2_Moriond17_B_H.csv"))
+        calib = ROOT.BTagCalibration('deepjet', sf_file)
         
-        op_dict = {
-            'loose':0,
-            'medium':1,
-            'tight':2
-        }
+        op_dict = OrderedDict()
+        op_dict['loose' ] = 0
+        op_dict['medium'] = 1
+        op_dict['tight' ] = 2
+        
         print 'Booking b/c reader'
 
         v_sys = getattr(ROOT, 'vector<string>')()
         v_sys.push_back('up')
         v_sys.push_back('down')
-
+        
         self.reader_bc = ROOT.BTagCalibrationReader(op_dict[wp], measurement, v_sys)
         self.reader_bc.load(calib, 0, 'comb')
         self.reader_bc.load(calib, 1, 'comb')
@@ -46,16 +42,19 @@ class BTagSF(object):
             return 1
         return 2
 
-    def getMCBTagEff(self, pt, eta, flavor):
-        hist = self.btag_eff_oth
-        if flavor == 5:
-            hist = self.btag_eff_b
-        elif flavor == 4:
-            hist = self.btag_eff_c
+    def getMCBTagEff(self, pt, eta, flavor, final_state='mmm'):
+        
+        eta_bin = 'barrel' if abs(eta)<=1.5 else 'endcap'
+        if   flavor==5: flavour_bin = 'b'
+        elif flavor==4: flavour_bin = 'c'
+        else          : flavour_bin = 'udsg'
 
+        histo_name = 'eff_%s_%s_%s' %(final_state, flavour_bin, eta_bin)
+        
+        hist = self.mc_eff_file.Get(histo_name)
+        
         binx = hist.GetXaxis().FindFixBin(pt)
-        biny = hist.GetYaxis().FindFixBin(abs(eta))
-        eff = hist.GetBinContent(binx, biny)
+        eff = hist.GetBinContent(binx)
         return eff
 
     def getPOGSFB(self, pt, eta, flavor):
@@ -64,23 +63,18 @@ class BTagSF(object):
 
         return self.reader_light.eval_auto_bounds('central', self.getBTVJetFlav(flavor), eta, pt)
 
-    def isBTagged(self, pt, eta, csv, jetflavor, is_data, csv_cut=0.8484):
+    def isBTagged(self, pt, eta, deepjet, jetflavor, is_data, deepjet_cut=0.2770):
         jetflavor = abs(jetflavor)
 
         if is_data or pt < 20. or abs(eta) > 2.4:
-            if csv > csv_cut:
+            if deepjet > deepjet_cut:
                 return True
             else:
                 return False
 
 
-        SFb = self.getPOGSFB(pt, abs(eta), jetflavor)
+        SFb   = self.getPOGSFB   (pt, abs(eta), jetflavor)
         eff_b = self.getMCBTagEff(pt, abs(eta), jetflavor)
-
-        # if pt < 30.:
-        #     print 'pt, eta:', pt, eta
-        #     print 'SFb', SFb
-        #     print 'eff_b', eff_b
 
         promoteProb_btag = 0. # probability to promote to tagged
         demoteProb_btag = 0. # probability to demote from tagged
@@ -96,7 +90,7 @@ class BTagSF(object):
             else:
                 promoteProb_btag = abs(SFb - 1.)/((SFb/eff_b) - 1.)
 
-        if csv > csv_cut:
+        if deepjet > deepjet_cut:
             btagged = True
             if demoteProb_btag > 0. and self.randm.Uniform() < demoteProb_btag:
                 btagged = False
@@ -110,7 +104,12 @@ class BTagSF(object):
 
 if __name__ == '__main__':
 
-    btag = BTagSF(12345)
+    btag = BTagSF(
+        12345, 
+        mc_eff_file = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/btag/eff/btag_deepflavour_wp_medium_efficiencies_2018.root',
+        sf_file     = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/btag/sf/2018/DeepJet_102XSF_WP_V1.csv',
+    )
+    
     print 'created BTagSF instance'
     print btag.isBTagged(25., 2.3, 0.9, 5, False)
     print btag.isBTagged(104.3933, -0.885529, 0.9720, 5, False)

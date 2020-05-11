@@ -136,7 +136,7 @@ class HNLAnalyzer(Analyzer):
         # kinematics
         if not self.testLepKin(mu, pt, eta): return False
         # id
-        if not mu.looseId(): return False
+        if not mu.muonID('POG_ID_Medium'): return False
         # vertex
         if not self.testLepVtx(mu, dxy, dz): return False
         # isolation
@@ -223,20 +223,20 @@ class HNLAnalyzer(Analyzer):
         
         #  just a safety check, shouldn't be needed
         if not len(dileptonsvtx): return False
-        
-        if which_candidate == 'minmass'    : return sorted(dileptonsvtx, key = lambda x : (x.isSS(),  x.mass()                        ), reverse=False)[0]
-        if which_candidate == 'minchi2'    : return sorted(dileptonsvtx, key = lambda x : (x.isSS(),  x.chi2()                        ), reverse=False)[0]
-        if which_candidate == 'mindr'      : return sorted(dileptonsvtx, key = lambda x : (x.isSS(),  x.dr()                          ), reverse=False)[0]
-        if which_candidate == 'maxdphi'    : return sorted(dileptonsvtx, key = lambda x : (x.isSS(), -x.dphi()                        ), reverse=False)[0]
-        if which_candidate == 'mindeta'    : return sorted(dileptonsvtx, key = lambda x : (x.isSS(),  x.deta()                        ), reverse=False)[0]
-        if which_candidate == 'maxdisp2dbs': return sorted(dileptonsvtx, key = lambda x : (x.isSS(), -x.disp2DFromBS()                ), reverse=False)[0]
-        if which_candidate == 'maxdisp2dpv': return sorted(dileptonsvtx, key = lambda x : (x.isSS(), -x.disp2DFromPV()                ), reverse=False)[0]
-        if which_candidate == 'maxdisp3dpv': return sorted(dileptonsvtx, key = lambda x : (x.isSS(), -x.disp3DFromPV()                ), reverse=False)[0]
-        if which_candidate == 'maxdls2dbs' : return sorted(dileptonsvtx, key = lambda x : (x.isSS(), -x.disp2DFromBSSignificance()    ), reverse=False)[0]
-        if which_candidate == 'maxdls2dpv' : return sorted(dileptonsvtx, key = lambda x : (x.isSS(), -x.disp2DFromPVSignificance()    ), reverse=False)[0]
-        if which_candidate == 'maxdls3dpv' : return sorted(dileptonsvtx, key = lambda x : (x.isSS(), -x.disp3DFromPVSignificance()    ), reverse=False)[0]
-        if which_candidate == 'maxcos'     : return sorted(dileptonsvtx, key = lambda x : (x.isSS(), -x.cosTransversePointingAngleBS()), reverse=False)[0]
-        if which_candidate == 'maxpt'      : return sorted(dileptonsvtx, key = lambda x : (x.isSS(), -x.pt()                          ), reverse=False)[0]
+                
+        if which_candidate == 'minmass'    : return sorted(dileptonsvtx, key = lambda x : (x.isSS(), x.lep1().relIsoFromEA(0.3)>0.2, x.lep2().relIsoFromEA(0.3)>0.2,  x.mass()                        ), reverse=False)[0]
+        if which_candidate == 'minchi2'    : return sorted(dileptonsvtx, key = lambda x : (x.isSS(), x.lep1().relIsoFromEA(0.3)>0.2, x.lep2().relIsoFromEA(0.3)>0.2,  x.chi2()                        ), reverse=False)[0]
+        if which_candidate == 'mindr'      : return sorted(dileptonsvtx, key = lambda x : (x.isSS(), x.lep1().relIsoFromEA(0.3)>0.2, x.lep2().relIsoFromEA(0.3)>0.2,  x.dr()                          ), reverse=False)[0]
+        if which_candidate == 'maxdphi'    : return sorted(dileptonsvtx, key = lambda x : (x.isSS(), x.lep1().relIsoFromEA(0.3)>0.2, x.lep2().relIsoFromEA(0.3)>0.2, -x.dphi()                        ), reverse=False)[0]
+        if which_candidate == 'mindeta'    : return sorted(dileptonsvtx, key = lambda x : (x.isSS(), x.lep1().relIsoFromEA(0.3)>0.2, x.lep2().relIsoFromEA(0.3)>0.2,  x.deta()                        ), reverse=False)[0]
+        if which_candidate == 'maxdisp2dbs': return sorted(dileptonsvtx, key = lambda x : (x.isSS(), x.lep1().relIsoFromEA(0.3)>0.2, x.lep2().relIsoFromEA(0.3)>0.2, -x.disp2DFromBS()                ), reverse=False)[0]
+        if which_candidate == 'maxdisp2dpv': return sorted(dileptonsvtx, key = lambda x : (x.isSS(), x.lep1().relIsoFromEA(0.3)>0.2, x.lep2().relIsoFromEA(0.3)>0.2, -x.disp2DFromPV()                ), reverse=False)[0]
+        if which_candidate == 'maxdisp3dpv': return sorted(dileptonsvtx, key = lambda x : (x.isSS(), x.lep1().relIsoFromEA(0.3)>0.2, x.lep2().relIsoFromEA(0.3)>0.2, -x.disp3DFromPV()                ), reverse=False)[0]
+        if which_candidate == 'maxdls2dbs' : return sorted(dileptonsvtx, key = lambda x : (x.isSS(), x.lep1().relIsoFromEA(0.3)>0.2, x.lep2().relIsoFromEA(0.3)>0.2, -x.disp2DFromBSSignificance()    ), reverse=False)[0]
+        if which_candidate == 'maxdls2dpv' : return sorted(dileptonsvtx, key = lambda x : (x.isSS(), x.lep1().relIsoFromEA(0.3)>0.2, x.lep2().relIsoFromEA(0.3)>0.2, -x.disp2DFromPVSignificance()    ), reverse=False)[0]
+        if which_candidate == 'maxdls3dpv' : return sorted(dileptonsvtx, key = lambda x : (x.isSS(), x.lep1().relIsoFromEA(0.3)>0.2, x.lep2().relIsoFromEA(0.3)>0.2, -x.disp3DFromPVSignificance()    ), reverse=False)[0]
+        if which_candidate == 'maxcos'     : return sorted(dileptonsvtx, key = lambda x : (x.isSS(), x.lep1().relIsoFromEA(0.3)>0.2, x.lep2().relIsoFromEA(0.3)>0.2, -x.cosTransversePointingAngleBS()), reverse=False)[0]
+        if which_candidate == 'maxpt'      : return sorted(dileptonsvtx, key = lambda x : (x.isSS(), x.lep1().relIsoFromEA(0.3)>0.2, x.lep2().relIsoFromEA(0.3)>0.2, -x.pt()                          ), reverse=False)[0]
 
         
     def process(self, event):
@@ -395,10 +395,7 @@ class HNLAnalyzer(Analyzer):
 
         # create all the possible di-lepton pairs out of the different collections
         # AFTER having removed the prompt lepton
-#         dileptons = self.makeLeptonPairs(event,event.electrons,event.muons) # double counts the prompt lepton!
         dileptons = self.makeLeptonPairs(event, event.filtered_electrons, event.filtered_muons)
-
-#         import pdb ; pdb.set_trace()
 
         if not len(dileptons):
             return return_statement

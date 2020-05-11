@@ -528,7 +528,7 @@ jet_vars = [
     Variable('df_b'          , lambda jet : jet.deepflavour_prob_b),
     Variable('df_bb'         , lambda jet : jet.deepflavour_prob_bb),
     Variable('df_lepb'       , lambda jet : jet.deepflavour_prob_lepb),
-    Variable('df_sf_flag'    , lambda jet : jet.btagFlag),
+    Variable('df_sf_flag'    , lambda jet : getattr(jet, 'btagFlag', np.nan)),
     Variable('genjet_pt'     , lambda jet : jet.matchedGenJet.pt() if hasattr(jet, 'matchedGenJet') and jet.matchedGenJet else np.nan),
 ]
 

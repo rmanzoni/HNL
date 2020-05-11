@@ -406,6 +406,7 @@ muon_vars = [
     Variable('id_s'                       , lambda muon : muon.isSoftMuon(muon.associatedVertex)              ),
     Variable('id_l'                       , lambda muon : muon.muonID('POG_ID_Loose')                         ),
     Variable('id_m'                       , lambda muon : muon.muonID('POG_ID_Medium')                        ),
+    Variable('id_mm'                      , lambda muon : muon.Medium()                                       ),
     Variable('id_t'                       , lambda muon : muon.muonID('POG_ID_Tight')                         ),
     Variable('id_tnv'                     , lambda muon : muon.muonID('POG_ID_TightNoVtx')                    ),
     Variable('id_hpt'                     , lambda muon : muon.muonID('POG_ID_HighPt')                        ),
@@ -426,7 +427,6 @@ muon_vars = [
     Variable('simPt'                      , lambda muon : muon.simPt()                                        ),
     Variable('simEta'                     , lambda muon : muon.simEta()                                       ),
     Variable('simPhi'                     , lambda muon : muon.simPhi()                                       ),
-    Variable('Medium'                     , lambda muon : muon.Medium()                                       ),
 ]
 
 # for an extensive summary of possibly interesting muon variables, have a look at

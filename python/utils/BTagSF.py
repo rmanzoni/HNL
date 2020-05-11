@@ -63,7 +63,7 @@ class BTagSF(object):
 
         return self.reader_light.eval_auto_bounds('central', self.getBTVJetFlav(flavor), eta, pt)
 
-    def isBTagged(self, pt, eta, deepjet, jetflavor, is_data, deepjet_cut=0.2770):
+    def isBTagged(self, pt, eta, deepjet, jetflavor, is_data, deepjet_cut=0.2770, final_state='mmm'):
         jetflavor = abs(jetflavor)
 
         if is_data or pt < 20. or abs(eta) > 2.4:
@@ -72,9 +72,8 @@ class BTagSF(object):
             else:
                 return False
 
-
         SFb   = self.getPOGSFB   (pt, abs(eta), jetflavor)
-        eff_b = self.getMCBTagEff(pt, abs(eta), jetflavor)
+        eff_b = self.getMCBTagEff(pt, abs(eta), jetflavor, final_state)
 
         promoteProb_btag = 0. # probability to promote to tagged
         demoteProb_btag = 0. # probability to demote from tagged

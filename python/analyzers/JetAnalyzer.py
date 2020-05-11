@@ -7,17 +7,8 @@ from PhysicsTools.Heppy.physicsobjects.PhysicsObjects import Jet, GenJet
 
 from PhysicsTools.HeppyCore.utils.deltar import cleanObjectCollection, matchObjectCollection
 
-# from PhysicsTools.Heppy.physicsutils.BTagSF import BTagSF
 from CMGTools.HNL.utils.BTagSF import BTagSF
 from PhysicsTools.Heppy.physicsutils.JetReCalibrator import JetReCalibrator
-
-# JAN: Kept this version of the jet analyzer in the tau-tau sequence
-# for now since it has all the agreed-upon features used in the tau-tau group,
-# in particular the SF seeding for b-tagging.
-# In the long run, it might be a good idea to switch to the generic jet analyzer
-# in heppy and possibly add b-tagging in another step or add it to the generic
-# jet analyzer
-
 
 # BTAG recommendations
 # general: https://twiki.cern.ch/twiki/bin/view/CMS/BtagRecommendation
@@ -74,7 +65,11 @@ class JetAnalyzer(Analyzer):
 
     def __init__(self, cfg_ana, cfg_comp, looperName):
         super(JetAnalyzer, self).__init__(cfg_ana, cfg_comp, looperName)
-        self.btagSF = BTagSF(0, wp=getattr(self.cfg_ana, 'btag_wp', 'medium'))
+        self.btagSF = BTagSF(seed=getattr(self.cfg_ana, 'btagSFseed', 0), 
+                             mc_eff_file=getattr(self.cfg_ana, 'mc_eff_file'),
+                             sf_file=getattr(self.cfg_ana, 'sf_file'),
+                             wp=getattr(self.cfg_ana, 'btag_wp', 'medium'),
+                             )
         self.recalibrateJets = getattr(cfg_ana, 'recalibrateJets', False)
 
         mcGT = getattr(cfg_ana, 'mcGT', 'Spring16_25nsV6_MC')
@@ -92,7 +87,6 @@ class JetAnalyzer(Analyzer):
 
             # instantiate the jet re-calibrator
             self.jetReCalibrator = JetReCalibrator(GT, 'AK4PFchs', doResidual, jecPath="%s/src/CMGTools/RootTools/data/jec" % os.environ['CMSSW_BASE'])
-
 
     def declareHandles(self):
         super(JetAnalyzer, self).declareHandles()
@@ -151,8 +145,10 @@ class JetAnalyzer(Analyzer):
             if self.cfg_comp.isMC and hasattr(self.cfg_ana, 'jesCorr')                         : self.jesCorrection(jet, self.cfg_ana.jesCorr)
             
             # preselect jets
-            if self.testJet(jet) : event.jets .append(jet)
-            if self.testBJet(jet, year=self.cfg_ana.year, wp=getattr(self.cfg_ana, 'btag_wp', 'medium')): event.bJets.append(jet)
+            if self.testJet(jet) : event.jets.append(jet)
+            
+            # compute deepjet scores only once
+            self._prepareDeepJet(jet, year=self.cfg_ana.year, wp=getattr(self.cfg_ana, 'btag_wp', 'medium'))
 
         self.counters.counter('jets').inc('all events')
 
@@ -160,6 +156,14 @@ class JetAnalyzer(Analyzer):
             
             if final_state not in leptons.keys():
                 continue
+
+            # preselect jets, with the appropriate btag SF correction **final state dependent**!
+            event.bJets = []
+            if self.testBJet(jet, 
+                             year=self.cfg_ana.year, 
+                             wp=getattr(self.cfg_ana, 'btag_wp', 'medium'), 
+                             final_state=final_state): 
+                event.bJets.append(jet)
             
             # clean jets from selected leptons (per final state!)
             event.cleanJets [final_state], dummy = cleanObjectCollection(event.jets , masks=leptons[final_state], deltaRMin=0.5)
@@ -185,14 +189,6 @@ class JetAnalyzer(Analyzer):
 
             event.jets30                   = [jet for jet in event.jets                   if jet.pt() > 30]
             event.cleanJets30[final_state] = [jet for jet in event.cleanJets[final_state] if jet.pt() > 30]
-
-            # save HTs
-#             event.HT_allJets     = sum([jet.pt() for jet in allJets          ])
-#             event.HT_jets        = sum([jet.pt() for jet in event.jets       ])
-#             event.HT_jets30      = sum([jet.pt() for jet in event.jets30     ])
-#             event.HT_bJets       = sum([jet.pt() for jet in event.bJets      ])
-#             event.HT_cleanJets[final_state]   = sum([jet.pt() for jet in event.cleanJets  ])
-#             event.HT_cleanJets30 [final_state]= sum([jet.pt() for jet in event.cleanJets30])
                                     
         return True
 
@@ -246,19 +242,7 @@ class JetAnalyzer(Analyzer):
             abs( jet.eta() ) < self.cfg_ana.jetEta and \
             self.testJetID(jet)
 
-    def testBJet(self, jet, year, wp):    
-        '''
-        Test DeepFlavour
-        '''
-        
-        # RM remove me!
-        jet.btagMVA = jet.btag('pfCombinedInclusiveSecondaryVertexV2BJetTags')
-
-        # recommendations
-        # general: https://twiki.cern.ch/twiki/bin/view/CMS/BtagRecommendation
-        # 2016: https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation2016Legacy
-        # 2017: https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation94X
-        # 2018: https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation102X
+    def _prepareDeepJet(self, jet, year, wp):
         jet.deepflavour_prob_b    = jet.btag('pfDeepFlavourJetTags:probb')
         jet.deepflavour_prob_bb   = jet.btag('pfDeepFlavourJetTags:probbb')
         jet.deepflavour_prob_lepb = jet.btag('pfDeepFlavourJetTags:problepb')
@@ -268,14 +252,20 @@ class JetAnalyzer(Analyzer):
 
         jet.pass_deepflavour = jet.deepflavour_score >= deepflavour_wp[year][wp]
 
+    def testBJet(self, jet, year, wp, final_state):    
+        '''
+        Test DeepFlavour
+        including scale factors
+        '''
         # Use the following once we start applying data-MC scale factors:
         jet.btagFlag = self.btagSF.isBTagged(
-            pt=jet.pt(),
-            eta=jet.eta(),
-            deepjet=jet.deepflavour_score,
-            jetflavor=abs(jet.partonFlavour()),
-            is_data=not self.cfg_comp.isMC,
-            deepjet_cut=deepflavour_wp[year][wp]
+            pt          = jet.pt(),
+            eta         = jet.eta(),
+            deepjet     = jet.deepflavour_score,
+            jetflavor   = abs(jet.partonFlavour()),
+            is_data     = not self.cfg_comp.isMC,
+            deepjet_cut = deepflavour_wp[year][wp],
+            final_state = final_state,
         )
 
         return self.testJet(jet) and \

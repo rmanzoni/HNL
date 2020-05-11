@@ -520,32 +520,30 @@ for tau_id in tauIDs_extra:
 
 # jet
 jet_vars = [
-    Variable('mva_pu', lambda jet : jet.puMva('pileupJetId:fullDiscriminant')),
-    Variable('id_pu', lambda jet : jet.puJetId()),
-    # Variable('id_loose', lambda jet : jet.looseJetId()),
-    # Variable('id_pu', lambda jet : jet.puJetId() + jet.puJetId(wp='medium') + jet.puJetId(wp='tight')),
-    # Variable('area', lambda jet : jet.jetArea()),
+    Variable('mva_pu'        , lambda jet : jet.puMva('pileupJetId:fullDiscriminant')),
+    Variable('id_pu'         , lambda jet : jet.puJetId()),
     Variable('flavour_parton', lambda jet : jet.partonFlavour()),
-    Variable('csv', lambda jet : jet.btagMVA),
-    Variable('df', lambda jet : jet.deepflavour_score),
-    Variable('df_b', lambda jet : jet.deepflavour_prob_b),
-    Variable('df_bb', lambda jet : jet.deepflavour_prob_bb),
-    Variable('df_lepb', lambda jet : jet.deepflavour_prob_lepb),
-    Variable('genjet_pt', lambda jet : jet.matchedGenJet.pt() if hasattr(jet, 'matchedGenJet') and jet.matchedGenJet else np.nan),
+    Variable('csv'           , lambda jet : jet.btag('pfCombinedInclusiveSecondaryVertexV2BJetTags')),
+    Variable('df'            , lambda jet : jet.deepflavour_score),
+    Variable('df_b'          , lambda jet : jet.deepflavour_prob_b),
+    Variable('df_bb'         , lambda jet : jet.deepflavour_prob_bb),
+    Variable('df_lepb'       , lambda jet : jet.deepflavour_prob_lepb),
+    Variable('df_sf_flag'    , lambda jet : jet.btagFlag),
+    Variable('genjet_pt'     , lambda jet : jet.matchedGenJet.pt() if hasattr(jet, 'matchedGenJet') and jet.matchedGenJet else np.nan),
 ]
 
 # extended jet vars
 jet_vars_extra = [
-    Variable('nConstituents', lambda jet : getattr(jet, 'nConstituents', np.nan)),
-    Variable('rawFactor', lambda jet : getattr(jet, 'rawFactor', np.nan)),
-    Variable('chargedHadronEnergy', lambda jet : getattr(jet, 'chargedHadronEnergy', np.nan)),
-    Variable('neutralHadronEnergy', lambda jet : getattr(jet, 'neutralHadronEnergy', np.nan)),
-    Variable('neutralEmEnergy', lambda jet : getattr(jet, 'neutralEmEnergy', np.nan)),
-    Variable('muonEnergy', lambda jet : getattr(jet, 'muonEnergy', np.nan)),
-    Variable('chargedEmEnergy', lambda jet : getattr(jet, 'chargedEmEnergy', np.nan)),
+    Variable('nConstituents'            , lambda jet : getattr(jet, 'nConstituents', np.nan)),
+    Variable('rawFactor'                , lambda jet : getattr(jet, 'rawFactor', np.nan)),
+    Variable('chargedHadronEnergy'      , lambda jet : getattr(jet, 'chargedHadronEnergy', np.nan)),
+    Variable('neutralHadronEnergy'      , lambda jet : getattr(jet, 'neutralHadronEnergy', np.nan)),
+    Variable('neutralEmEnergy'          , lambda jet : getattr(jet, 'neutralEmEnergy', np.nan)),
+    Variable('muonEnergy'               , lambda jet : getattr(jet, 'muonEnergy', np.nan)),
+    Variable('chargedEmEnergy'          , lambda jet : getattr(jet, 'chargedEmEnergy', np.nan)),
     Variable('chargedHadronMultiplicity', lambda jet : getattr(jet, 'chargedHadronMultiplicity', np.nan)),
-    Variable('chargedMultiplicity', lambda jet : getattr(jet, 'chargedMultiplicity', np.nan)),
-    Variable('neutralMultiplicity', lambda jet : getattr(jet, 'neutralMultiplicity', np.nan)),
+    Variable('chargedMultiplicity'      , lambda jet : getattr(jet, 'chargedMultiplicity', np.nan)),
+    Variable('neutralMultiplicity'      , lambda jet : getattr(jet, 'neutralMultiplicity', np.nan)),
 ]
 
 # gen info

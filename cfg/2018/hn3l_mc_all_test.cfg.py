@@ -1,5 +1,5 @@
 # heppy_batch.py -o bkg_mc_2018_v1 hnl_mc_all_channels_cfg.py -B -b 'run_condor_simple.sh -t 2880 ./batchScript.sh'
-# heppy_batch.py -o signals_2018 hnl_mc_all_channels_cfg.py -B -b 'run_condor_simple.sh -t 2880 ./batchScript.sh'
+# heppy_batch.py -o ttbar_for_btag_eff_v4 hn3l_mc_all_test.cfg.py -B -b 'run_condor_simple.sh -t 2880 ./batchScript.sh'
 
 import os
 from copy import deepcopy as dc
@@ -36,6 +36,8 @@ from CMGTools.HNL.analyzers.EventFilter         import EventFilter
 from pdb import set_trace
 
 # import 2018 triggers
+import sys
+sys.path.append('.')
 from triggers import triggers_ele_mc, triggers_mu_mc, triggers_and_filters_ele, triggers_and_filters_mu
 
 from CMGTools.HNL.samples.samples_mc_2018 import all_samples, TTJets, TTJets_ext, WJetsToLNu, DYBB, DYJetsToLL_M5to50, DYJetsToLL_M50, DYJetsToLL_M50_ext, WW, WZ, ZZ 
@@ -74,12 +76,12 @@ MU_PROMPT_SFS['trigger'] = (SF_FILE, 'm_trg24_27_kit')
 ###################################################
 ###               HANDLE SAMPLES                ###
 ###################################################
-samples = all_samples + all_signals
-# samples = [TTJets, TTJets_ext]
+# samples = all_samples + all_signals
+samples = [TTJets, TTJets_ext]
 
 ###################################################
 # set to True if you want to run interactively on a selected portion of samples/files/whatnot
-testing = True 
+testing = False 
 if testing:
     # run on a single component
     # comp = samples[0]

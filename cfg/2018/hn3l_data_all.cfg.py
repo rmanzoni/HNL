@@ -27,6 +27,9 @@ from CMGTools.HNL.analyzers.METFilter           import METFilter
 from CMGTools.HNL.analyzers.EventFilter         import EventFilter
 from pdb import set_trace
 
+# import 2018 triggers
+from CMGTools.HNL.triggers.triggers_2018 import triggers_ele_data, triggers_mu_data, triggers_and_filters_ele, triggers_and_filters_mu
+
 from CMGTools.HNL.samples.samples_data_2018 import Single_ele_2018, Single_ele_2018A, Single_ele_2018B, Single_ele_2018C, Single_ele_2018D
 from CMGTools.HNL.samples.samples_data_2018 import Single_mu_2018, Single_mu_2018A, Single_mu_2018B, Single_mu_2018C, Single_mu_2018D
 
@@ -44,7 +47,7 @@ pick_events = getHeppyOption('pick_events', False)
 samples = Single_ele_2018 + Single_mu_2018
 ###################################################
 # set to True if you want to run interactively on a selected portion of samples/files/whatnot
-testing = True 
+testing = False 
 if testing:
     # run on a single component
     comp = samples[0]
@@ -62,15 +65,7 @@ if testing:
 # FIXME! are trigger names and filters correct regardless of the year?
 # triggers same for 2018: https://tomc.web.cern.ch/tomc/triggerPrescales/2018//?match=Ele
 for sample in samples:
-    sample.triggers = []
-#     sample.triggers += ['HLT_Ele27_WPTight_Gsf_v%d'         %i for i in range(1, 15)] #electron trigger
-    sample.triggers += ['HLT_Ele32_WPTight_Gsf_v%d'         %i for i in range(1, 15)] #electron trigger
-#     sample.triggers += ['HLT_Ele35_WPTight_Gsf_v%d'         %i for i in range(1, 15)] #electron trigger
-#     sample.triggers += ['HLT_Ele115_CaloIdVT_GsfTrkIdT_v%d' %i for i in range(1, 15)] #electron trigger
-#     sample.triggers += ['HLT_Ele135_CaloIdVT_GsfTrkIdT_v%d' %i for i in range(1, 15)] #electron trigger
-    sample.triggers += ['HLT_IsoMu24_v%d' %i for i in range(1, 15)] #muon trigger
-#     sample.triggers += ['HLT_IsoMu27_v%d' %i for i in range(1, 15)] #muon trigger
-#     sample.triggers += ['HLT_Mu50_v%d'    %i for i in range(1, 15)] #muon trigger
+    sample.triggers = triggers_ele_data + triggers_mu_data
 
     sample.splitFactor = splitFactor(sample, 1e6)
 
@@ -136,21 +131,6 @@ metFilter = cfg.Analyzer(
 # ONE HNL ANALYZER PER FINAL STATE
 ##########################################################################################
 
-# for each path specify which filters you want the electrons/muons to match to
-triggers_and_filters_ele = OrderedDict()
-triggers_and_filters_mu  = OrderedDict()
-
-# triggers_and_filters_ele['HLT_Ele27_WPTight_Gsf']         = 'hltEle27WPTightGsfTrackIsoFilter'
-triggers_and_filters_ele['HLT_Ele32_WPTight_Gsf']         = 'hltEle32WPTightGsfTrackIsoFilter'
-# triggers_and_filters_ele['HLT_Ele35_WPTight_Gsf']         = 'hltEle35noerWPTightGsfTrackIsoFilter'
-# triggers_and_filters_ele['HLT_Ele115_CaloIdVT_GsfTrkIdT'] = 'hltEle115CaloIdVTGsfTrkIdTGsfDphiFilter'
-# triggers_and_filters_ele['HLT_Ele135_CaloIdVT_GsfTrkIdT'] = 'hltEle135CaloIdVTGsfTrkIdTGsfDphiFilter'
-
-triggers_and_filters_mu['HLT_IsoMu24'] = 'hltL3crIsoL1sSingleMu22L1f0L2f10QL3f24QL3trkIsoFiltered0p07'
-# triggers_and_filters_mu['HLT_IsoMu27'] = 'hltL3crIsoL1sMu22Or25L1f0L2f10QL3f27QL3trkIsoFiltered0p07'
-# triggers_and_filters_mu['HLT_Mu50']    = 'hltL3fL1sMu22Or25L1f0L2f10QL3Filtered50Q'
-# TODO: add (HLT_IsoTkMu24_v*) and (HLT_TkMu50_v*); but only later for 2016 dataset
-
 # Here we define the baseline selection for muons and electrons.
 # These are the minimal requirements that leptons need to satisfy to be considered
 # in building HNL candidates and be saved in the ntuples 
@@ -158,9 +138,8 @@ def preselect_mu(imu):
     if imu.pt() < 5.             : return False 
     if abs(imu.eta()) > 2.4      : return False
     if imu.relIsoFromEA(0.3) > 10: return False
-    if not (imu.isSoftMuon(imu.associatedVertex) or \
-            imu.muonID('POG_ID_Loose')           or \
-            imu.Medium == 1): return False
+    if not (imu.muonID('POG_ID_Medium')>0.5 or \
+            imu.Medium() == 1): return False
     return True
 
 def preselect_ele(iele):
@@ -168,7 +147,8 @@ def preselect_ele(iele):
     if abs(iele.eta()) > 2.5      : return False
     if iele.relIsoFromEA(0.3) > 10: return False
     if not (iele.LooseNoIsoID or \
-            iele.electronID("MVA_ID_nonIso_Fall17_Loose")): return False
+            iele.electronID('mvaEleID-Fall17-noIso-V2-wp90') or \
+            iele.electronID('mvaEleID-Fall17-iso-V2-wp90')): return False
     return True
     
 HNLAnalyzer_mmm = cfg.Analyzer(
@@ -285,11 +265,12 @@ jetAna = cfg.Analyzer(
     recalibrateJets   = False,
     applyL2L3Residual = 'MC',
     year              = 2018,
-    btag_wp           = 'medium' # DeepFlavour
-    # RM: FIXME! check the GTs
+    btag_wp           = 'medium', # DeepFlavour
+    mc_eff_file       = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/btag/eff/btag_deepflavour_wp_medium_efficiencies_2018.root',
+    sf_file           = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/btag/sf/2018/DeepJet_102XSF_WP_V1.csv',
 #    mcGT              = '94X_mc2017_realistic_v14',
 #    dataGT            = '94X_dataRun2_v6',
-    #jesCorr = 1., # Shift jet energy scale in terms of uncertainties (1 = +1 sigma)
+#    jesCorr = 1., # Shift jet energy scale in terms of uncertainties (1 = +1 sigma)
 )
 ###################################################
 ###                  SEQUENCE                   ###
@@ -339,11 +320,9 @@ for ii in range(len(sequence)):
 ###            PREPROCESSOR                     ###
 ###################################################
 
-
-# temporary copy remote files using xrd
+# temporarily copy remote files using xrd
 # event_class = EOSEventsWithDownload if prefetch else Events
-
-prefetch = False
+prefetch = True
 event_class = EOSEventsWithDownload  
 if prefetch:
     EOSEventsWithDownload.aggressive = 2 # always fetch if running on Wigner

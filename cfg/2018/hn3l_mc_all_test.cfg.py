@@ -36,9 +36,7 @@ from CMGTools.HNL.analyzers.EventFilter         import EventFilter
 from pdb import set_trace
 
 # import 2018 triggers
-import sys
-sys.path.append('.')
-from triggers import triggers_ele_mc, triggers_mu_mc, triggers_and_filters_ele, triggers_and_filters_mu
+from CMGTools.HNL.triggers.triggers_2018 import triggers_ele_mc, triggers_mu_mc, triggers_and_filters_ele, triggers_and_filters_mu
 
 from CMGTools.HNL.samples.samples_mc_2018 import all_samples, TTJets, TTJets_ext, WJetsToLNu, DYBB, DYJetsToLL_M5to50, DYJetsToLL_M50, DYJetsToLL_M50_ext, WW, WZ, ZZ 
 from CMGTools.HNL.samples.signals_2018 import all_signals_m, all_signals_e, all_signals, HN3L_M_5_V_0p00178044938148_mu_Dirac_cc_massiveAndCKM_LO
@@ -456,7 +454,7 @@ for ii in range(len(sequence)):
 ###            PREPROCESSOR                     ###
 ###################################################
 
-# temporary copy remote files using xrd
+# temporarily copy remote files using xrd
 # event_class = EOSEventsWithDownload if prefetch else Events
 prefetch = True
 event_class = EOSEventsWithDownload  

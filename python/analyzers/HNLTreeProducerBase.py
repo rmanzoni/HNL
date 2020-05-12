@@ -61,7 +61,9 @@ class HNLTreeProducerBase(TreeProducerBase):
             self.var(self.tree, 'hlt_IsoMu22_eta2p1'  )
             self.var(self.tree, 'hlt_IsoTkMu22_eta2p1')
             self.var(self.tree, 'hlt_IsoMu24'         )
+            self.var(self.tree, 'hlt_IsoTkMu24'       )
             self.var(self.tree, 'hlt_IsoMu27'         )
+            self.var(self.tree, 'hlt_IsoTkMu27'       )
             self.var(self.tree, 'hlt_Mu50'            )
             self.var(self.tree, 'hlt_TkMu50'          )
         else:
@@ -320,7 +322,9 @@ class HNLTreeProducerBase(TreeProducerBase):
             self.fill(self.tree, 'hlt_IsoMu22_eta2p1'  , any('HLT_IsoMu22_eta2p1'   in name for name in trig_list))
             self.fill(self.tree, 'hlt_IsoTkMu22_eta2p1', any('HLT_IsoTkMu22_eta2p1' in name for name in trig_list))
             self.fill(self.tree, 'hlt_IsoMu24'         , any('HLT_IsoMu24'          in name for name in trig_list))
+            self.fill(self.tree, 'hlt_IsoTkMu24'       , any('HLT_IsoTkMu24'        in name for name in trig_list))
             self.fill(self.tree, 'hlt_IsoMu27'         , any('HLT_IsoMu27'          in name for name in trig_list))
+            self.fill(self.tree, 'hlt_IsoTkMu27'       , any('HLT_IsoTkMu27'        in name for name in trig_list))
             self.fill(self.tree, 'hlt_Mu50'            , any('HLT_Mu50'             in name for name in trig_list))
             self.fill(self.tree, 'hlt_TkMu50'          , any('HLT_TkMu50'           in name for name in trig_list))
     

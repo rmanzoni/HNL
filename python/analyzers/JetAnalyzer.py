@@ -159,12 +159,13 @@ class JetAnalyzer(Analyzer):
 
             # preselect jets, with the appropriate btag SF correction **final state dependent**!
             event.bJets = []
-            if self.testBJet(jet, 
-                             year=self.cfg_ana.year, 
-                             wp=getattr(self.cfg_ana, 'btag_wp', 'medium'), 
-                             final_state=final_state): 
-                event.bJets.append(jet)
-            
+            for jet in event.jets:
+                if self.testBJet(jet, 
+                                 year=self.cfg_ana.year, 
+                                 wp=getattr(self.cfg_ana, 'btag_wp', 'medium'), 
+                                 final_state=final_state): 
+                    event.bJets.append(jet)
+                        
             # clean jets from selected leptons (per final state!)
             event.cleanJets [final_state], dummy = cleanObjectCollection(event.jets , masks=leptons[final_state], deltaRMin=0.5)
             event.cleanBJets[final_state], dummy = cleanObjectCollection(event.bJets, masks=leptons[final_state], deltaRMin=0.5)

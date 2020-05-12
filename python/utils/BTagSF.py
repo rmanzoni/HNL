@@ -110,6 +110,11 @@ if __name__ == '__main__':
     )
     
     print 'created BTagSF instance'
+   
     print btag.isBTagged(25., 2.3, 0.9, 5, False)
     print btag.isBTagged(104.3933, -0.885529, 0.9720, 5, False)
+
+    print 'Jet :   0, pt= 92.8, eta=-1.30, phi= 1.71, mass=19.98 0.0398822866846 5', 'SF true or false?', btag.isBTagged(92.8, -1.30, 0.0398822866846, 5, False)
+    print 'Jet :   0, pt= 67.0, eta=-1.02, phi=-0.66, mass=12.85 0.996693458408 -5', 'SF true or false?', btag.isBTagged(67.0, -1.02, 0.996693458408 , 5, False)
+    print 'Jet :   0, pt= 88.8, eta= 1.37, phi=-3.03, mass=11.41 0.984728307463  5', 'SF true or false?', btag.isBTagged(88.8,  1.37, 0.984728307463 , 5, False)
 

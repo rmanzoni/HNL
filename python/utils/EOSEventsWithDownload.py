@@ -4,12 +4,24 @@ import os, subprocess, json, timeit, hashlib
 from re import sub
 
 class EOSEventsWithDownload(object):
-    def __init__(self, files, tree_name):
+    def __init__(self, files, tree_name, options=None):
         self.aggressive = getattr(self.__class__, 'aggressive', 0)
         self.long_cache = getattr(self.__class__, 'long_cache', False)
         print "[FileFetcher]: Aggressive prefetching level %d" % self.aggressive
         self._files = []
         self._nevents = 0
+        if options is not None :
+            if not hasattr(options,"inputFiles"):
+                options.inputFiles=files
+            if not hasattr(options,"maxEvents"):
+                options.maxEvents = 0
+            if not hasattr(options,"secondaryInputFiles"):
+                options.secondaryInputFiles = []
+            elif options.secondaryInputFiles: # only if it's a non-empty list
+                logging.info('using secondary input files:\n{}'.format(
+                        pprint.pformat(options.secondaryInputFiles)
+                        ))
+        self.options = options
         try:
             query = ["edmFileUtil", "--ls", "-j"]+[("file:"+f if f[0]=="/" else f) for f in files]
             retjson = subprocess.check_output(query)
@@ -154,7 +166,10 @@ class EOSEventsWithDownload(object):
                                     print "[FileFetcher]: Could not save file locally, will run from remote"
                                     if os.path.exists(localfile): os.remove(localfile) # delete in case of incomplete transfer
                     print "[FileFetcher]: Will run from "+fname
-                    self.events = FWLiteEvents([fname])
+                    if self.options is not None:
+                        self.events = FWLiteEvents(options=self.options)
+                    else:
+                        self.events = FWLiteEvents([fname])                    
                     break
         self.events.to(iEv - self._files[self._fileindex][1])
         return self

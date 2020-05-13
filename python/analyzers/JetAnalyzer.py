@@ -91,7 +91,9 @@ class JetAnalyzer(Analyzer):
     def declareHandles(self):
         super(JetAnalyzer, self).declareHandles()
 
-        self.handles['jets'] = AutoHandle(self.cfg_ana.jetCol, 'std::vector<pat::Jet>')
+        # self.handles['jets'] = AutoHandle(self.cfg_ana.jetCol, 'std::vector<pat::Jet>')
+        # try to use recomputed jets, but if it fails, resort to normal slimmedJets in miniAODs
+        self.handles['jets'] = AutoHandle(self.cfg_ana.jetCol, 'std::vector<pat::Jet>', mayFail=True, fallbackLabel='slimmedJets', lazy=False)
 
         if self.cfg_comp.isMC:
             self.mchandles['genParticles'] = AutoHandle('packedGenParticles', 'std::vector<pat::PackedGenParticle>')
@@ -150,6 +152,13 @@ class JetAnalyzer(Analyzer):
             # compute deepjet scores only once
             self._prepareDeepJet(jet, year=self.cfg_ana.year, wp=getattr(self.cfg_ana, 'btag_wp', 'medium'))
 
+            # create collection of bjets
+            if self.testBJet(jet, 
+                             year=self.cfg_ana.year, 
+                             wp=getattr(self.cfg_ana, 'btag_wp', 'medium'), 
+                             final_state='tot'): 
+                event.bJets.append(jet)
+
         self.counters.counter('jets').inc('all events')
 
         for final_state in ['mmm', 'mem', 'eee', 'eem']:
@@ -157,14 +166,16 @@ class JetAnalyzer(Analyzer):
             if final_state not in leptons.keys():
                 continue
 
+            # RM: found out that there's not a lot of final state dependency,
+            #     so we'll use the inclusive measurement that has better stats
             # preselect jets, with the appropriate btag SF correction **final state dependent**!
-            event.bJets = []
-            for jet in event.jets:
-                if self.testBJet(jet, 
-                                 year=self.cfg_ana.year, 
-                                 wp=getattr(self.cfg_ana, 'btag_wp', 'medium'), 
-                                 final_state=final_state): 
-                    event.bJets.append(jet)
+            # event.bJets = []
+            # for jet in event.jets:
+            #     if self.testBJet(jet, 
+            #                      year=self.cfg_ana.year, 
+            #                      wp=getattr(self.cfg_ana, 'btag_wp', 'medium'), 
+            #                      final_state=final_state): 
+            #         event.bJets.append(jet)
                         
             # clean jets from selected leptons (per final state!)
             event.cleanJets [final_state], dummy = cleanObjectCollection(event.jets , masks=leptons[final_state], deltaRMin=0.5)

@@ -4,7 +4,11 @@ from collections import OrderedDict
 from DataFormats.FWLite import Events, Handle
 from PhysicsTools.Heppy.physicsobjects.PhysicsObjects import Jet, GenJet
 
-events = Events('output.root') # make sure this corresponds to your file name!
+# events = Events('output.root')
+# events = Events('output_ttbar2017_102X_mc2017_realistic_v7.root')
+# events = Events('output_ttbar2017_94X_mc2017_realistic_v17.root')
+events = Events('../python/output.root')
+
 maxevents = -1 # max events to process
 totevents = events.size() # total number of events in the files
 
@@ -43,11 +47,11 @@ for i, ev in enumerate(events):
     
     print 'normal jets'
     for jet in jets:
-        print jet, jet.deepflavour_score
+        print jet, '\t', jet.partonFlavour(), '\t', jet.deepflavour_score
 
     print 'updated jets'
     for jet in jets_up:
-        print jet, jet.deepflavour_score
+        print jet, '\t', jet.partonFlavour(), '\t', jet.deepflavour_score
         
     import pdb ; pdb.set_trace()
     

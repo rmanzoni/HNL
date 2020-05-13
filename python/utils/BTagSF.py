@@ -42,7 +42,7 @@ class BTagSF(object):
             return 1
         return 2
 
-    def getMCBTagEff(self, pt, eta, flavor, final_state='mmm'):
+    def getMCBTagEff(self, pt, eta, flavor, final_state='tot'):
         
         eta_bin = 'barrel' if abs(eta)<=1.5 else 'endcap'
         if   flavor==5: flavour_bin = 'b'

@@ -1,9 +1,11 @@
 import ROOT
+import re
 import numpy as np
 from copy import deepcopy as dc
 from collections import OrderedDict
 
 ROOT.gROOT.SetBatch(True)
+ROOT.TH1.SetDefaultSumw2()
 
 global deepflavour_wp
 deepflavour_wp = OrderedDict()
@@ -24,11 +26,11 @@ deepflavour_wp[2016]['medium'] = 0.3093
 deepflavour_wp[2016]['tight' ] = 0.7221
 
 years = OrderedDict()
-years[2018] = '/afs/cern.ch/work/m/manzoni/HNL/cmg/CMSSW_10_4_0_patch1/src/CMGTools/HNL/cfg/2018/ttbar_for_btag_eff_v3/TTJets_ext/'
+years[2018] = '/afs/cern.ch/work/m/manzoni/HNL/cmg/CMSSW_10_4_0_patch1/src/CMGTools/HNL/cfg/2018/ttbar_for_btag_eff_v4/TTJets_ext/'
 # years[2017] = 'FIXME!'
 # years[2016] = 'FIXME!'
 
-bins = np.array([20., 30., 50., 70., 100., 150., 200., 400., 1000.])
+bins = np.array([20., 30., 50., 70., 100., 150., 200., 1000.])
 num = ROOT.TH1F('num', '', len(bins)-1, bins)
 den = ROOT.TH1F('den', '', len(bins)-1, bins)
 
@@ -71,16 +73,16 @@ for iyear, idir in years.iteritems():
                 inum.SetName(inum_name)
                 iden.SetName(iden_name)
                         
-                itree.Draw('j1_pt >> %s' %iden_name, 'abs(j1_eta)<2.4 & j1_genjet_pt>8 & %s & %s           ' %(ietacut.replace('X', '1'),  iflavcut.replace('X', '1')                                ))
-                itree.Draw('j1_pt >> %s' %inum_name, 'abs(j1_eta)<2.4 & j1_genjet_pt>8 & %s & %s & j1_df>%f' %(ietacut.replace('X', '1'),  iflavcut.replace('X', '1'), deepflavour_wp[iyear]['medium']))
+                itree.Draw('j1_pt >> %s' %iden_name, '(lhe_weight*puweight)*(abs(j1_eta)<2.4 & j1_genjet_pt>8 & %s & %s           )' %(ietacut.replace('X', '1'),  iflavcut.replace('X', '1')                                ))
+                itree.Draw('j1_pt >> %s' %inum_name, '(lhe_weight*puweight)*(abs(j1_eta)<2.4 & j1_genjet_pt>8 & %s & %s & j1_df>%f)' %(ietacut.replace('X', '1'),  iflavcut.replace('X', '1'), deepflavour_wp[iyear]['medium']))
 
                 # set the histos obtained for j1 aside
                 tmp_num = inum.Clone()
                 tmp_den = iden.Clone()
 
                 # get histos for j2
-                itree.Draw('j2_pt >> %s' %iden_name, 'abs(j2_eta)<2.4 & j2_genjet_pt>8 & %s & %s           ' %(ietacut.replace('X', '2'),  iflavcut.replace('X', '2')                                ))
-                itree.Draw('j2_pt >> %s' %inum_name, 'abs(j2_eta)<2.4 & j2_genjet_pt>8 & %s & %s & j2_df>%f' %(ietacut.replace('X', '2'),  iflavcut.replace('X', '2'), deepflavour_wp[iyear]['medium']))
+                itree.Draw('j2_pt >> %s' %iden_name, '(lhe_weight*puweight)*(abs(j2_eta)<2.4 & j2_genjet_pt>8 & %s & %s           )' %(ietacut.replace('X', '2'),  iflavcut.replace('X', '2')                                ))
+                itree.Draw('j2_pt >> %s' %inum_name, '(lhe_weight*puweight)*(abs(j2_eta)<2.4 & j2_genjet_pt>8 & %s & %s & j2_df>%f)' %(ietacut.replace('X', '2'),  iflavcut.replace('X', '2'), deepflavour_wp[iyear]['medium']))
             
                 # add all up
                 inum.Add(tmp_num)
@@ -91,16 +93,75 @@ for iyear, idir in years.iteritems():
                 iratio.Divide(iden)
                 iratio.SetMinimum(0.)
                 iratio.SetMaximum(1.)
-            
+
                 all_hists.append(inum)
                 all_hists.append(iden)
                 all_hists.append(iratio)
-
+                
     # OUTPUT
     output_file = ROOT.TFile.Open('btag_deepflavour_wp_medium_efficiencies_%d.root' %iyear, 'recreate')
     output_file.cd()
+        
+    total_b_eff_num_barrel    = num.Clone() ; total_b_eff_num_barrel   .SetName('eff_tot_b_barrel')
+    total_b_eff_den_barrel    = den.Clone() ; total_b_eff_den_barrel   .SetName('den_tot_b_barrel')
+    total_b_eff_num_endcap    = num.Clone() ; total_b_eff_num_endcap   .SetName('eff_tot_b_endcap')
+    total_b_eff_den_endcap    = den.Clone() ; total_b_eff_den_endcap   .SetName('den_tot_b_endcap')
+    total_c_eff_num_barrel    = num.Clone() ; total_c_eff_num_barrel   .SetName('eff_tot_c_barrel')
+    total_c_eff_den_barrel    = den.Clone() ; total_c_eff_den_barrel   .SetName('den_tot_c_barrel')
+    total_c_eff_num_endcap    = num.Clone() ; total_c_eff_num_endcap   .SetName('eff_tot_c_endcap')
+    total_c_eff_den_endcap    = den.Clone() ; total_c_eff_den_endcap   .SetName('den_tot_c_endcap')
+    total_udsg_eff_num_barrel = num.Clone() ; total_udsg_eff_num_barrel.SetName('eff_tot_udsg_barrel')
+    total_udsg_eff_den_barrel = den.Clone() ; total_udsg_eff_den_barrel.SetName('den_tot_udsg_barrel')
+    total_udsg_eff_num_endcap = num.Clone() ; total_udsg_eff_num_endcap.SetName('eff_tot_udsg_endcap')
+    total_udsg_eff_den_endcap = den.Clone() ; total_udsg_eff_den_endcap.SetName('den_tot_udsg_endcap')
+    
+    reg_b_num_barrel    = re.compile('num_.+_b_barrel')
+    reg_b_den_barrel    = re.compile('den_.+_b_barrel')
+    reg_b_num_endcap    = re.compile('num_.+_b_endcap')
+    reg_b_den_endcap    = re.compile('den_.+_b_endcap')
+    reg_c_num_barrel    = re.compile('num_.+_c_barrel')
+    reg_c_den_barrel    = re.compile('den_.+_c_barrel')
+    reg_c_num_endcap    = re.compile('num_.+_c_endcap')
+    reg_c_den_endcap    = re.compile('den_.+_c_endcap')
+    reg_udsg_num_barrel = re.compile('num_.+_udsg_barrel')
+    reg_udsg_den_barrel = re.compile('den_.+_udsg_barrel')
+    reg_udsg_num_endcap = re.compile('num_.+_udsg_endcap')
+    reg_udsg_den_endcap = re.compile('den_.+_udsg_endcap')
+
     for ihist in all_hists:
         ihist.Write()
+
+        if bool(re.match(reg_b_num_barrel   , ihist.GetName())): total_b_eff_num_barrel   .Add(ihist)        
+        if bool(re.match(reg_b_den_barrel   , ihist.GetName())): total_b_eff_den_barrel   .Add(ihist)        
+        if bool(re.match(reg_b_num_endcap   , ihist.GetName())): total_b_eff_num_endcap   .Add(ihist)        
+        if bool(re.match(reg_b_den_endcap   , ihist.GetName())): total_b_eff_den_endcap   .Add(ihist)        
+        if bool(re.match(reg_c_num_barrel   , ihist.GetName())): total_c_eff_num_barrel   .Add(ihist)        
+        if bool(re.match(reg_c_den_barrel   , ihist.GetName())): total_c_eff_den_barrel   .Add(ihist)        
+        if bool(re.match(reg_c_num_endcap   , ihist.GetName())): total_c_eff_num_endcap   .Add(ihist)        
+        if bool(re.match(reg_c_den_endcap   , ihist.GetName())): total_c_eff_den_endcap   .Add(ihist)        
+        if bool(re.match(reg_udsg_num_barrel, ihist.GetName())): total_udsg_eff_num_barrel.Add(ihist)        
+        if bool(re.match(reg_udsg_den_barrel, ihist.GetName())): total_udsg_eff_den_barrel.Add(ihist)        
+        if bool(re.match(reg_udsg_num_endcap, ihist.GetName())): total_udsg_eff_num_endcap.Add(ihist)        
+        if bool(re.match(reg_udsg_den_endcap, ihist.GetName())): total_udsg_eff_den_endcap.Add(ihist)        
+
+    total_b_eff_num_barrel   .Divide(total_b_eff_den_barrel) 
+    total_b_eff_num_endcap   .Divide(total_b_eff_den_endcap) 
+
+    total_c_eff_num_barrel   .Divide(total_c_eff_den_barrel) 
+    total_c_eff_num_endcap   .Divide(total_c_eff_den_endcap) 
+
+    total_udsg_eff_num_barrel.Divide(total_udsg_eff_den_barrel) 
+    total_udsg_eff_num_endcap.Divide(total_udsg_eff_den_endcap) 
+   
+    total_b_eff_num_barrel   .Write()
+    total_b_eff_num_endcap   .Write()
+
+    total_c_eff_num_barrel   .Write()
+    total_c_eff_num_endcap   .Write()
+
+    total_udsg_eff_num_barrel.Write()
+    total_udsg_eff_num_endcap.Write()
+
     output_file.Close()
 
 

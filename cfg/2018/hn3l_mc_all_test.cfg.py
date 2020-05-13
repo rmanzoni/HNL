@@ -19,6 +19,7 @@ from PhysicsTools.Heppy.analyzers.objects.VertexAnalyzer import VertexAnalyzer
 from PhysicsTools.Heppy.analyzers.gen.GeneratorAnalyzer  import GeneratorAnalyzer
 
 # import HNL analyzers:
+from CMGTools.HNL.analyzers.FileCleaner         import FileCleaner
 from CMGTools.HNL.analyzers.PileUpAnalyzer      import PileUpAnalyzer
 from CMGTools.HNL.analyzers.JSONAnalyzer        import JSONAnalyzer
 from CMGTools.HNL.analyzers.SkimAnalyzerCount   import SkimAnalyzerCount
@@ -79,7 +80,7 @@ samples = [TTJets, TTJets_ext]
 
 ###################################################
 # set to True if you want to run interactively on a selected portion of samples/files/whatnot
-testing = False 
+testing = True 
 if testing:
     # run on a single component
     # comp = samples[0]
@@ -89,10 +90,11 @@ if testing:
     # comp.fineSplitFactor = 10 # fine splitting, multicore
     
 #     comp = all_signals[0]
-#     comp = HN3L_M_5_V_0p00178044938148_mu_Dirac_cc_massiveAndCKM_LO
+    comp = HN3L_M_5_V_0p00178044938148_mu_Dirac_cc_massiveAndCKM_LO
 #     comp.files = ['heavyNeutrino_1.root']
+#     comp.files = ['heavyNeutrino_1_new_deepjet.root']
 #     comp.fineSplitFactor = 10 # fine splitting, multicore
-    comp = TTJets_ext
+#     comp = TTJets_ext
     comp.files = comp.files[:1]
     samples = [comp]
 
@@ -377,7 +379,8 @@ Weighter_eem = cfg.Analyzer(
 jetAna = cfg.Analyzer(
     JetAnalyzer,
     name              = 'JetAnalyzer',
-    jetCol            = 'slimmedJets',
+#     jetCol            = 'slimmedJets',
+    jetCol            = 'selectedUpdatedPatJetsNewDFTraining', # updated JEC and DeepJet
     jetPt             = 20.,
     jetEta            = 5.,
     relaxJetId        = False, # relax = do not apply jet ID
@@ -394,6 +397,12 @@ jetAna = cfg.Analyzer(
 #    dataGT            = '94X_dataRun2_v6',
 #    jesCorr = 1., # Shift jet energy scale in terms of uncertainties (1 = +1 sigma)
 )
+
+fileCleaner = cfg.Analyzer(
+    FileCleaner,
+    name='FileCleaner'
+)
+
 ###################################################
 ###                  SEQUENCE                   ###
 ###################################################
@@ -453,10 +462,20 @@ for ii in range(len(sequence)):
 ###################################################
 ###            PREPROCESSOR                     ###
 ###################################################
+prefetch = True
+recompute_deepjet = True
+if recompute_deepjet:
+    fname = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/prod/update_deepflavour_mc2018_cfg.py'
+    preprocessor = CmsswPreprocessor(fname, prefetch=prefetch, addOrigAsSecondary=False)
+    EOSEventsWithDownload.aggressive = 2 # always fetch if running on Wigner
+    EOSEventsWithDownload.long_cache = getHeppyOption('long_cache', False)
+    prefetch = False
+    sequence.append(fileCleaner)
+else:
+    preprocessor = None
 
 # temporarily copy remote files using xrd
 # event_class = EOSEventsWithDownload if prefetch else Events
-prefetch = True
 event_class = EOSEventsWithDownload  
 if prefetch:
     EOSEventsWithDownload.aggressive = 2 # always fetch if running on Wigner
@@ -468,7 +487,7 @@ config = cfg.Config(
     components   = selectedComponents,
     sequence     = sequence,
     services     = [],
-    preprocessor = None,
+    preprocessor = preprocessor,
     events_class = event_class
 )
 

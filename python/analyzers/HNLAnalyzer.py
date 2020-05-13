@@ -12,12 +12,8 @@ from PhysicsTools.Heppy.analyzers.core.Analyzer       import Analyzer
 from PhysicsTools.Heppy.analyzers.core.AutoHandle     import AutoHandle
 from PhysicsTools.Heppy.physicsobjects.PhysicsObjects import Lepton
 from PhysicsTools.HeppyCore.utils.deltar              import deltaR, deltaR2
-from PhysicsTools.Heppy.physicsobjects.GenParticle    import GenParticle
-from PhysicsTools.Heppy.physicsobjects.Photon         import Photon
-from PhysicsTools.Heppy.physicsobjects.Tau            import Tau
 from PhysicsTools.Heppy.physicsobjects.Muon           import Muon
 from PhysicsTools.Heppy.physicsobjects.Electron       import Electron
-from PhysicsTools.Heppy.physicsobjects.Jet            import Jet
 from PhysicsTools.Heppy.physicsobjects.PhysicsObject  import PhysicsObject
 from CMGTools.HNL.utils.utils                         import isAncestor, displacement2D, displacement3D, makeRecoVertex, fitVertex
 from CMGTools.HNL.physicsobjects.HN3L                 import HN3L
@@ -39,8 +35,6 @@ class HNLAnalyzer(Analyzer):
     
         self.handles['electrons'] = AutoHandle('slimmedElectrons'  , 'std::vector<pat::Electron>'       )
         self.handles['muons'    ] = AutoHandle('slimmedMuons'      , 'std::vector<pat::Muon>'           )
-        self.handles['photons'  ] = AutoHandle('slimmedPhotons'    , 'std::vector<pat::Photon>'         )
-        self.handles['jets'     ] = AutoHandle('slimmedJets'       , 'std::vector<pat::Jet>'            )
         self.handles['beamspot' ] = AutoHandle('offlineBeamSpot'   , 'reco::BeamSpot'                   )
         self.handles['pfmet'    ] = AutoHandle('slimmedMETs'       , 'std::vector<pat::MET>'            )
         self.handles['puppimet' ] = AutoHandle('slimmedMETsPuppi'  , 'std::vector<pat::MET>'            )
@@ -315,9 +309,6 @@ class HNLAnalyzer(Analyzer):
         # make met object
         event.pfmet    = self.handles['pfmet'   ].product().at(0)
         event.puppimet = self.handles['puppimet'].product().at(0)
-
-        # make jet object
-        jets = map(Jet, self.handles['jets'].product())        
                 
         #####################################################################################
         # Preselect the prompt leptons

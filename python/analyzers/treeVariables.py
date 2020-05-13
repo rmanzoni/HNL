@@ -3,7 +3,7 @@ import numpy as np
 
 from PhysicsTools.HeppyCore.utils.deltar import deltaR, deltaPhi
 
-from CMGTools.H2TauTau.proto.analyzers.tauIDs import tauIDs, tauIDs_extra
+from CMGTools.HNL.analyzers.tauIDs import tauIDs, tauIDs_extra
 
 class Variable():
     def __init__(self, name, function=None, type=float, storageType="default"):

@@ -60,7 +60,8 @@ scram b -rj 8
 
 ### now add the HNL code
 ```
-git clone hnl git@github.com:rmanzoni/HNL.git
+git clone git@github.com:rmanzoni/HNL.git
+cd HNL
 git checkout master
 ```
 
@@ -71,6 +72,7 @@ scram b -rj 8
 
 ### run a test job
 ```
+voms-proxy-init --voms cms --valid 198:0
 cd cfg/2018
 heppy test hn3l_mc_all_test.cfg.py
 ```

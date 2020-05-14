@@ -12,14 +12,17 @@ from PhysicsTools.Heppy.analyzers.core.Analyzer       import Analyzer
 from PhysicsTools.Heppy.analyzers.core.AutoHandle     import AutoHandle
 from PhysicsTools.Heppy.physicsobjects.PhysicsObjects import Lepton
 from PhysicsTools.HeppyCore.utils.deltar              import deltaR, deltaR2
-from PhysicsTools.Heppy.physicsobjects.Muon           import Muon
-from PhysicsTools.Heppy.physicsobjects.Electron       import Electron
+# from PhysicsTools.Heppy.physicsobjects.Muon           import Muon
+# from PhysicsTools.Heppy.physicsobjects.Electron       import Electron
 from PhysicsTools.Heppy.physicsobjects.PhysicsObject  import PhysicsObject
 from CMGTools.HNL.utils.utils                         import isAncestor, displacement2D, displacement3D, makeRecoVertex, fitVertex
+from CMGTools.HNL.physicsobjects.Electron             import Electron
+from CMGTools.HNL.physicsobjects.Muon                 import Muon
 from CMGTools.HNL.physicsobjects.HN3L                 import HN3L
 from CMGTools.HNL.physicsobjects.DiLepton             import DiLepton
 from CMGTools.HNL.physicsobjects.DisplacedMuon        import DisplacedMuon
 from pdb import set_trace
+
 
 # load custom library to ROOT. This contains the kinematic vertex fitter class
 ROOT.gSystem.Load('libCMGToolsHNL')
@@ -301,7 +304,6 @@ class HNLAnalyzer(Analyzer):
         #####################################################################################
         # finish reading collections
         #####################################################################################
-        event.photons = map(Photon  , self.handles['photons'].product())
 
         # make vertex objects 
         event.beamspot = self.handles['beamspot'].product()

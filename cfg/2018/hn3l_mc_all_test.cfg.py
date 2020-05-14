@@ -28,7 +28,7 @@ from CMGTools.HNL.analyzers.HNLTreeProducer     import HNLTreeProducer
 from CMGTools.HNL.analyzers.HNLTreeProducerBase import HNLTreeProducerBase
 from CMGTools.HNL.analyzers.HNLGenTreeAnalyzer  import HNLGenTreeAnalyzer
 from CMGTools.HNL.analyzers.HNLSignalReweighter import HNLSignalReweighter
-from CMGTools.HNL.analyzers.RecoGenAnalyzer     import RecoGenAnalyzer
+# from CMGTools.HNL.analyzers.RecoGenAnalyzer     import RecoGenAnalyzer
 from CMGTools.HNL.analyzers.TriggerAnalyzer     import TriggerAnalyzer
 from CMGTools.HNL.analyzers.JetAnalyzer         import JetAnalyzer
 from CMGTools.HNL.analyzers.METFilter           import METFilter
@@ -190,10 +190,10 @@ HNLGenTreeAnalyzer = cfg.Analyzer(
     name='HNLGenTreeAnalyzer',
 )
 
-RecoGenAnalyzer = cfg.Analyzer(
-    RecoGenAnalyzer,
-    name='RecoGenAnalyzer',
-)
+# RecoGenAnalyzer = cfg.Analyzer(
+#     RecoGenAnalyzer,
+#     name='RecoGenAnalyzer',
+# )
 
 genAna = GeneratorAnalyzer.defaultConfig
 genAna.allGenTaus = True # save in event.gentaus *ALL* taus, regardless whether hadronic / leptonic decay

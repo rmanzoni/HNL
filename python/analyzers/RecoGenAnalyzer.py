@@ -11,7 +11,7 @@ from copy import deepcopy as dc
 from PhysicsTools.Heppy.analyzers.core.Analyzer      import Analyzer
 from PhysicsTools.Heppy.analyzers.core.AutoHandle    import AutoHandle
 from PhysicsTools.Heppy.physicsobjects.Muon          import Muon
-from PhysicsTools.Heppy.physicsobjects.Electron      import Electron
+# from PhysicsTools.Heppy.physicsobjects.Electron      import Electron
 from PhysicsTools.Heppy.physicsobjects.Tau           import Tau
 from PhysicsTools.Heppy.physicsobjects.Photon        import Photon
 from PhysicsTools.Heppy.physicsobjects.Tau           import Tau
@@ -22,6 +22,7 @@ from PhysicsTools.HeppyCore.utils.deltar             import deltaR, deltaPhi, in
 from CMGTools.HNL.utils.utils                  import isAncestor, displacement2D, displacement3D, makeRecoVertex, fitVertex # utility functions
 from CMGTools.HNL.physicsobjects.HN3L          import HN3L
 from CMGTools.HNL.physicsobjects.DisplacedMuon import DisplacedMuon
+from CMGTools.HNL.physicsobjects.Electron      import Electron
 
 from pdb import set_trace
 

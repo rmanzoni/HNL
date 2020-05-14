@@ -34,7 +34,9 @@ process.MessageLogger.cerr.FwkReport.reportEvery = 100
 process.load("Configuration.StandardSequences.GeometryDB_cff")
 process.load("Configuration.StandardSequences.Services_cff")
 process.load("Configuration.StandardSequences.MagneticField_cff")
+process.load("Geometry.CaloEventSetup.CaloTowerConstituents_cfi")
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_condDBv2_cff')
+from Configuration.AlCa.GlobalTag import GlobalTag
 # https://docs.google.com/presentation/d/1YTANRT_ZeL5VubnFq7lNGHKsiD7D3sDiOPNgXUYVI0I/edit#slide=id.g7068f62c63_1_0
 # process.GlobalTag.globaltag = '102X_upgrade2018_realistic_v20'
 # Data: 102X_dataRun2_v12 (2016, 2017, 2018 A-C), 102X_dataRun2_Prompt_v15 (2018 D)
@@ -157,11 +159,11 @@ updateJetCollection(
 
 process.p = cms.Path(
     # SKIM
-    process.goodHighPtMuons     +
-    process.goodLowPtMuons      +
-    process.goodHighPtEles      +
     process.goodLowPtEles       +
+    process.goodLowPtMuons      +
     process.goodLeptons         +
+    process.goodHighPtEles      +
+    process.goodHighPtMuons     +
     process.goodHighPtLeptons   +
     # RECOMPUTE BTAG AND JEC
     process.patJetCorrFactorsNewDFTraining                        +

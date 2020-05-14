@@ -36,6 +36,7 @@ class HNLAnalyzer(Analyzer):
     def declareHandles(self): 
         super(HNLAnalyzer, self).declareHandles() 
     
+        # use updated electrons that include Fall17V2 ID. They are still called slimmedElectrons, but the process is not PAT
         self.handles['electrons'] = AutoHandle('slimmedElectrons'  , 'std::vector<pat::Electron>'       )
         self.handles['muons'    ] = AutoHandle('slimmedMuons'      , 'std::vector<pat::Muon>'           )
         self.handles['beamspot' ] = AutoHandle('offlineBeamSpot'   , 'reco::BeamSpot'                   )

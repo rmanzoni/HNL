@@ -23,7 +23,7 @@ setupEgammaPostRecoSeq(
     runVID=True,
     phoIDModules=[], # do not fiddle with photons, we don't use them
     runEnergyCorrections=False, # no point in re-running them, they are already fine
-    era='2016-Legacy'
+    era='2016-Legacy',
 )  # era is new to select between 2016 / 2017,  it defaults to 2017
 
 # find where the new IDs are needed first

@@ -22,7 +22,7 @@ setupEgammaPostRecoSeq(
     process,
     runVID=True, #saves CPU time by not needlessly re-running VID, if you want the Fall17V2 IDs, set this to True or remove (default is True)
     phoIDModules=[], # do not fiddle with photons, we don't use them
-    era='2017-Nov17ReReco'
+    era='2017-Nov17ReReco',
 )  
 
 # find where the new IDs are needed first

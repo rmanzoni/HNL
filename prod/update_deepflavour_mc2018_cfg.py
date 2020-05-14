@@ -21,7 +21,7 @@ process.output.outputCommands.append('keep patElectrons_slimmedElectrons__%s' %p
 from EgammaUser.EgammaPostRecoTools.EgammaPostRecoTools import setupEgammaPostRecoSeq
 setupEgammaPostRecoSeq(
     process,
-    era='2018-Prompt'
+    era='2018-Prompt',
     phoIDModules=[], # do not fiddle with photons, we don't use them
 )  
 

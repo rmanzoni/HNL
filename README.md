@@ -48,8 +48,8 @@ cd CMGTools
 ```
 git cms-sparse-checkout init
 touch .git/info/sparse-checkout
-echo "RootTools" >> .git/info/sparse-checkout.txt
-echo "Production" >> .git/info/sparse-checkout.txt
+echo "RootTools" >> .git/info/sparse-checkout
+echo "Production" >> .git/info/sparse-checkout
 git checkout 104X_dev
 ```
 

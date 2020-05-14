@@ -1,65 +1,74 @@
-
-# HNL FW for 2018 (CMG 104X)
-
-
-### set up CMSSW 10.4
+# create a 106 release
 
 ```
-cmsrel CMSSW_10_4_0_patch1
-cd CMSSW_10_4_0_patch1/src
+cmsrel CMSSW_10_6_12
+cd CMSSW_10_6_12/src
 cmsenv
+```
+
+# create a new CMSSW repository
+```
 git cms-init
 ```
 
-### add CMG CMSSW 104X
-
+# checkout the only packages we need
 ```
-git remote add cmg-central https://github.com/CERN-PH-CMG/cmg-cmssw.git  -f  -t heppy_104X_dev
-git remote add vstampf https://github.com/vinzenzstampf/cmg-cmssw.git -f -t heppy_104X_hnl
-git checkout -b heppy_104X_dev cmg-central/heppy_104X_dev
-git checkout -b heppy_104X_hnl vstampf/heppy_104X_hnl
+git-cms-addpkg PhysicsTools/Heppy
+git-cms-addpkg PhysicsTools/HeppyCore
 ```
 
-### add needed packages:
-
+# apply Ric's updates to Heppy
 ```
-git cms-addpkg /EgammaAnalysis/ElectronTools/
-git cms-addpkg /PhysicsTools/
-git cms-addpkg /RecoEgamma/EgammaTools/
-git cms-addpkg /RecoEgamma/ElectronIdentification/
-git cms-addpkg /RecoEgamma/PhotonIdentification/
-git cms-addpkg /RecoTauTag/RecoTau/
+git cms-merge-topic rmanzoni:heppy_106X_hnl
 ```
 
-### add CMGTools
-
+# apply EGamma EgammaPostRecoTools
+# needed to compute latest greatest electron IDs in 2016 and 2017
 ```
-git clone -o vstampf https://github.com/vinzenzstampf/cmgtools-lite.git -b 104X_HNL CMGTools
+git clone git@github.com:cms-egamma/EgammaPostRecoTools.git  EgammaUser/EgammaPostRecoTools
+cd  EgammaUser/EgammaPostRecoTools
+git checkout master
+cd -
+```
+
+# compile
+```
+scram b -rj 8
+```
+
+# checkout CMGTools
+```
+git clone -o cmg-central https://github.com/CERN-PH-CMG/cmgtools-lite.git -b 104X_dev CMGTools
 cd CMGTools
 ```
 
-### add HNL
-
+# not all subpackages are needed, so sparse  checkout
 ```
-git clone -o HNL https://github.com/vinzenzstampf/HNL.git -b HNL_18 HNL`
-cd HNL
-```
-
-### add scale-factors and custom code in Heppy
-
-```
-cp /afs/cern.ch/work/d/dwinterb/public/MSSM2016/tagging_efficiencies_Moriond2017.root data/.
-cd data/leptonsf/
-wget https://github.com/jandrejk/ProductionFromNano/tree/SM2018/utils/CorrectionWorkspaces/htt_scalefactors_2018_v1.root
-wget https://github.com/CMS-HTT/CorrectionsWorkspace/raw/2017_17NovReRecoData_Fall17MC/htt_scalefactors_v17_1.root
-cd $CMSSW_BASE/src
+git cms-sparse-checkout init
+touch .git/info/sparse-checkout
+echo "RootTools" >> .git/info/sparse-checkout.txt
+echo "Production" >> .git/info/sparse-checkout.txt
+git checkout 104X_dev
 ```
 
-### compile
-
+# compile
 ```
-cd $CMSSW_BASE; scram b -rj 8
-cd src; scram b -rj 8
+scram b -rj 8
 ```
 
+# now add the HNL code
+```
+git clone hnl git@github.com:rmanzoni/HNL.git
+git checkout master
+```
 
+# compile
+```
+scram b -rj 8
+```
+
+# run a test job
+```
+cd cfg/2018
+heppy test hn3l_mc_all_test.cfg.py
+```

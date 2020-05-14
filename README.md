@@ -1,4 +1,6 @@
-# create a 106 release
+# Spring 2020 installation recipe
+
+### create a 106 release
 
 ```
 cmsrel CMSSW_10_6_12
@@ -6,24 +8,24 @@ cd CMSSW_10_6_12/src
 cmsenv
 ```
 
-# create a new CMSSW repository
+### create a new CMSSW repository
 ```
 git cms-init
 ```
 
-# checkout the only packages we need
+### checkout the only packages we need
 ```
 git-cms-addpkg PhysicsTools/Heppy
 git-cms-addpkg PhysicsTools/HeppyCore
 ```
 
-# apply Ric's updates to Heppy
+### apply Ric's updates to Heppy
 ```
 git cms-merge-topic rmanzoni:heppy_106X_hnl
 ```
 
-# apply EGamma EgammaPostRecoTools
-# needed to compute latest greatest electron IDs in 2016 and 2017
+### apply EGamma EgammaPostRecoTools  
+needed to compute latest greatest electron IDs in 2016 and 2017
 ```
 git clone git@github.com:cms-egamma/EgammaPostRecoTools.git  EgammaUser/EgammaPostRecoTools
 cd  EgammaUser/EgammaPostRecoTools
@@ -31,18 +33,18 @@ git checkout master
 cd -
 ```
 
-# compile
+### compile
 ```
 scram b -rj 8
 ```
 
-# checkout CMGTools
+### checkout CMGTools
 ```
 git clone -o cmg-central https://github.com/CERN-PH-CMG/cmgtools-lite.git -b 104X_dev CMGTools
 cd CMGTools
 ```
 
-# not all subpackages are needed, so sparse  checkout
+### not all subpackages are needed, so sparse  checkout
 ```
 git cms-sparse-checkout init
 touch .git/info/sparse-checkout
@@ -51,23 +53,23 @@ echo "Production" >> .git/info/sparse-checkout.txt
 git checkout 104X_dev
 ```
 
-# compile
+### compile
 ```
 scram b -rj 8
 ```
 
-# now add the HNL code
+### now add the HNL code
 ```
 git clone hnl git@github.com:rmanzoni/HNL.git
 git checkout master
 ```
 
-# compile
+### compile
 ```
 scram b -rj 8
 ```
 
-# run a test job
+### run a test job
 ```
 cd cfg/2018
 heppy test hn3l_mc_all_test.cfg.py

@@ -98,9 +98,16 @@ process.goodLowPtMuons = cms.EDFilter('PATMuonSelector',
     filter = cms.bool(False)
 )
 
+# RM: super weird bug, if I run the cfg alone, EIDs have dashes as separators
+# mvaEleID-Fall17-noIso-V2-wp90
+# whereas if I dump the cfg with EdmConfigDump EIDs have underscores as separators!!!!!!1
+# mvaEleID_Fall17_noIso_V2_wp90
+# REMEMBER to swap the commented and uncommented lines when you run locally.
+# jeez...
 process.goodHighPtEles = cms.EDFilter('PATElectronSelector',
     src = cms.InputTag('slimmedElectrons'),
-    cut = cms.string('pt>25 & abs(eta)<2.5 & (electronID("mvaEleID-Fall17-noIso-V2-wp90") | electronID("mvaEleID-Fall17-iso-V2-wp90"))'),                                
+    cut = cms.string('pt>25 & abs(eta)<2.5 & (electronID("mvaEleID_Fall17_noIso_V2_wp90") | electronID("mvaEleID_Fall17_iso_V2_wp90"))'),                                
+#     cut = cms.string('pt>25 & abs(eta)<2.5 & (electronID("mvaEleID-Fall17-noIso-V2-wp90") | electronID("mvaEleID-Fall17-iso-V2-wp90"))'),                                
     filter = cms.bool(False)
 )
 

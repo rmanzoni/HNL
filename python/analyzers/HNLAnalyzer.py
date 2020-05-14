@@ -116,13 +116,18 @@ class HNLAnalyzer(Analyzer):
             mvaEleID-Spring16-HZZ-V1-wpLoose    
         
         accessible via:
-        pat::Electron::electronID('WORKING_POINT')     
+        pat::Electron::electronID('WORKING_POINT')  
+        
+        *BUT* there's a weird bug such than when the ele IDs are rerun,
+        hyphens are changed into underscores...
+        
+        Stick to underscores for the time being   
         '''
         
         # kinematics
         if not self.testLepKin(ele, pt, eta): return False
         # id
-        if not ele.electronID('mvaEleID-Fall17-noIso-V2-wp90'): return False # FIXME! check if iso or no iso, it's not in the AN
+        if not ele.electronID('mvaEleID-Fall17-noIso-V2-wp90'.replace('-', '_')): return False # FIXME! check if iso or no iso, it's not in the AN
         # vertex
         if not self.testLepVtx(ele, dxy, dz): return False
         # isolation

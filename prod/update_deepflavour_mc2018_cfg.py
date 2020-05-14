@@ -4,7 +4,8 @@ print '\nINFO: using GT', process.GlobalTag.globaltag, '\n\n'
 
 process.source.fileNames = cms.untracked.vstring(
         ## HNL signal 2018
-    'file:/afs/cern.ch/work/m/manzoni/HNL/cmg/CMSSW_10_4_0_patch1/src/CMGTools/HNL/cfg/2018/heavyNeutrino_1.root',
+#     'file:/afs/cern.ch/work/m/manzoni/HNL/cmg/CMSSW_10_4_0_patch1/src/CMGTools/HNL/cfg/2018/heavyNeutrino_1.root',
+    'file:/tmp/manzoni/heavyNeutrino_1-ade416da5bf6e9f.root'
 )
 
 process.output.fileName = cms.untracked.string('output_2018_mc.root')

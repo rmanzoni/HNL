@@ -74,5 +74,5 @@ scram b -rj 8
 ```
 voms-proxy-init --voms cms --valid 198:0
 cd cfg/2018
-heppy test hn3l_mc_all_test.cfg.py
+heppy test hn3l_mc_2018_test_cfg.py
 ```

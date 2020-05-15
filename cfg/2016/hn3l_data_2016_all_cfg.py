@@ -1,4 +1,4 @@
-# heppy_batch.py -o data_2018D_15may20_v1 hn3l_data_D.cfg.py -B -b 'run_condor_simple.sh -t 2880 ./batchScript.sh'
+# heppy_batch.py -o data_2016_15may20_v1 hn3l_data_2016_all_cfg.py -B -b 'run_condor_simple.sh -t 2880 ./batchScript.sh'
 
 import os
 from copy import deepcopy as dc
@@ -30,11 +30,11 @@ from CMGTools.HNL.analyzers.METFilter           import METFilter
 from CMGTools.HNL.analyzers.EventFilter         import EventFilter
 from pdb import set_trace
 
-# import 2018 triggers
-from CMGTools.HNL.triggers.triggers_2018 import triggers_ele_data, triggers_mu_data, triggers_and_filters_ele, triggers_and_filters_mu
+# import 2016 triggers
+from CMGTools.HNL.triggers.triggers_2016 import triggers_ele_data, triggers_mu_data, triggers_and_filters_ele, triggers_and_filters_mu
 
-from CMGTools.HNL.samples.samples_data_2018 import Single_ele_2018D
-from CMGTools.HNL.samples.samples_data_2018 import Single_mu_2018D
+from CMGTools.HNL.samples.samples_data_2016 import Single_ele_2016,  Single_ele_2016H, Single_ele_2016G, Single_ele_2016F, Single_ele_2016E, Single_ele_2016B, Single_ele_2016C, Single_ele_2016D
+from CMGTools.HNL.samples.samples_data_2016 import Single_mu_2016,   Single_mu_2016H, Single_mu_2016G, Single_mu_2016F, Single_mu_2016E, Single_mu_2016B, Single_mu_2016C, Single_mu_2016D
 
 ###################################################
 ###                   OPTIONS                   ###
@@ -47,32 +47,30 @@ pick_events = getHeppyOption('pick_events', False)
 ###################################################
 ###               HANDLE SAMPLES                ###
 ###################################################
-samples = [Single_mu_2018D, Single_ele_2018D]
-###################################################
-# set to True if you want to run interactively on a selected portion of samples/files/whatnot
-testing = False 
-if testing:
-    # run on a single component
-    comp = samples[0]
-    
-#     lxplus750 /tmp/manzoni/egamma_2018A.root, /tmp/manzoni/singlemu_2018B.root, ttbar_18.root
-    comp.files = comp.files[:1]
-    comp.files = ['egamma_2018A.root', 'singlemu_2018B.root']
-    # comp.files = ['/tmp/manzoni/001784E5-D649-734B-A5FF-E151DA54CC02.root'] # one file from TTJets_ext on lxplus700
-    # comp.fineSplitFactor = 10 # fine splitting, multicore
-    samples = [comp]
-
-    selectedComponents = samples
+samples = Single_mu_2016 + Single_ele_2016 
 ###################################################
 
-# FIXME! are trigger names and filters correct regardless of the year?
-# triggers same for 2018: https://tomc.web.cern.ch/tomc/triggerPrescales/2018//?match=Ele
+# are trigger names and filters correct regardless of the year?
+# triggers same for 2017: https://tomc.web.cern.ch/tomc/triggerPrescales/2017//?match=Ele
 for sample in samples:
     sample.triggers = triggers_ele_data + triggers_mu_data
 
     sample.splitFactor = splitFactor(sample, 1e6)
 
 selectedComponents = samples
+###################################################
+# set to True if you want to run interactively on a selected portion of samples/files/whatnot
+testing = False 
+if testing:
+    # run on a single component
+    comp = Single_mu_2016F
+       
+    comp.files = comp.files[0:1]
+    # comp.files = ['/tmp/manzoni/001784E5-D649-734B-A5FF-E151DA54CC02.root'] # one file from TTJets_ext on lxplus700
+    # comp.fineSplitFactor = 10 # fine splitting, multicore
+    samples = [comp]
+
+    selectedComponents = samples
 
 ###################################################
 ###                  ANALYZERS                  ###
@@ -124,9 +122,9 @@ metFilter = cfg.Analyzer(
         'Flag_HBHENoiseIsoFilter',
         'Flag_EcalDeadCellTriggerPrimitiveFilter',
         'Flag_BadPFMuonFilter',
-        'Flag_BadChargedCandidateFilter',
+        # 'Flag_BadChargedCandidateFilter', # NOT RECOMMENDED https://twiki.cern.ch/twiki/bin/viewauth/CMS/MissingETOptionalFiltersRun2#2016_data
         'Flag_eeBadScFilter',
-        'Flag_ecalBadCalibFilter',
+        # 'Flag_ecalBadCalibFilter',        # DEPRECATED      https://twiki.cern.ch/twiki/bin/viewauth/CMS/MissingETOptionalFiltersRun2#2016_data
     ]
 )
 
@@ -150,8 +148,8 @@ def preselect_ele(iele):
     if abs(iele.eta()) > 2.5      : return False
     if iele.relIsoFromEA(0.3) > 10: return False
     if not (iele.LooseNoIsoID or \
-            iele.electronID('mvaEleID-Fall17-noIso-V2-wp90') or \
-            iele.electronID('mvaEleID-Fall17-iso-V2-wp90')): return False
+            iele.electronID('mvaEleID-Fall17-noIso-V2-wp90'.replace('-','_')) or \
+            iele.electronID('mvaEleID-Fall17-iso-V2-wp90'.replace('-','_')) ): return False
     return True
     
 HNLAnalyzer_mmm = cfg.Analyzer(
@@ -268,7 +266,7 @@ jetAna = cfg.Analyzer(
     puJetIDDisc       = 'pileupJetId:fullDiscriminant',
     recalibrateJets   = False,
     applyL2L3Residual = 'MC',
-    year              = 2018,
+    year              = 2016,
     btag_wp           = 'medium', # DeepFlavour
     mc_eff_file       = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/btag/eff/btag_deepflavour_wp_medium_efficiencies_2018.root',
     sf_file           = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/btag/sf/2018/DeepJet_102XSF_WP_V1.csv',
@@ -301,7 +299,7 @@ sequence = cfg.Sequence([
     HNLTreeProducerBase_mem,
     HNLTreeProducerBase_eee,
     HNLTreeProducerBase_eem,
-    ])
+])
 
 saveBigTree = False
 
@@ -332,7 +330,7 @@ for ii in range(len(sequence)):
 prefetch = True
 recompute_deepjet = True
 if recompute_deepjet:
-    fname = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/prod/update_deepjet_and_ele_id_data2018D_cfg.py'
+    fname = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/prod/update_deepjet_and_ele_id_data2016_cfg.py'
     preprocessor = CmsswPreprocessor(fname, prefetch=prefetch, addOrigAsSecondary=False)
     EOSEventsWithDownload.aggressive = 2 # always fetch if running on Wigner
     EOSEventsWithDownload.long_cache = getHeppyOption('long_cache', False)

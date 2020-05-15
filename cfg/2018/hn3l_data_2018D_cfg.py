@@ -1,6 +1,4 @@
-# heppy_batch.py -o bkg_mc_2018_v1 hnl_mc_all_channels_cfg.py -B -b 'run_condor_simple.sh -t 2880 ./batchScript.sh'
-# heppy_batch.py -o ttbar_for_btag_eff_v4 hn3l_mc_all.cfg.py -B -b 'run_condor_simple.sh -t 2880 ./batchScript.sh'
-# heppy_batch.py -o mc_2018_15may20_v1 hn3l_mc_all.cfg.py -B -b 'run_condor_simple.sh -t 2880 ./batchScript.sh'
+# heppy_batch.py -o data_2018ABC_15may20_v1 hn3l_data_2018ABC_cfg.py -B -b 'run_condor_simple.sh -t 2880 ./batchScript.sh'
 
 import os
 from copy import deepcopy as dc
@@ -21,27 +19,22 @@ from PhysicsTools.Heppy.analyzers.gen.GeneratorAnalyzer  import GeneratorAnalyze
 
 # import HNL analyzers:
 from CMGTools.HNL.analyzers.FileCleaner         import FileCleaner
-from CMGTools.HNL.analyzers.PileUpAnalyzer      import PileUpAnalyzer
 from CMGTools.HNL.analyzers.JSONAnalyzer        import JSONAnalyzer
 from CMGTools.HNL.analyzers.SkimAnalyzerCount   import SkimAnalyzerCount
 from CMGTools.HNL.analyzers.HNLAnalyzer         import HNLAnalyzer
 from CMGTools.HNL.analyzers.HNLTreeProducer     import HNLTreeProducer
 from CMGTools.HNL.analyzers.HNLTreeProducerBase import HNLTreeProducerBase
-from CMGTools.HNL.analyzers.HNLGenTreeAnalyzer  import HNLGenTreeAnalyzer
-from CMGTools.HNL.analyzers.HNLSignalReweighter import HNLSignalReweighter
-# from CMGTools.HNL.analyzers.RecoGenAnalyzer     import RecoGenAnalyzer
 from CMGTools.HNL.analyzers.TriggerAnalyzer     import TriggerAnalyzer
 from CMGTools.HNL.analyzers.JetAnalyzer         import JetAnalyzer
 from CMGTools.HNL.analyzers.METFilter           import METFilter
-from CMGTools.HNL.analyzers.MultiLeptonWeighter import MultiLeptonWeighter
 from CMGTools.HNL.analyzers.EventFilter         import EventFilter
 from pdb import set_trace
 
 # import 2018 triggers
-from CMGTools.HNL.triggers.triggers_2018 import triggers_ele_mc, triggers_mu_mc, triggers_and_filters_ele, triggers_and_filters_mu
+from CMGTools.HNL.triggers.triggers_2018 import triggers_ele_data, triggers_mu_data, triggers_and_filters_ele, triggers_and_filters_mu
 
-from CMGTools.HNL.samples.samples_mc_2018 import all_samples, TTJets, TTJets_ext, WJetsToLNu, DYBB, DYJetsToLL_M5to50, DYJetsToLL_M50, DYJetsToLL_M50_ext, WW, WZ, ZZ 
-from CMGTools.HNL.samples.signals_2018 import all_signals_m, all_signals_e, all_signals 
+from CMGTools.HNL.samples.samples_data_2018 import Single_ele_2018D
+from CMGTools.HNL.samples.samples_data_2018 import Single_mu_2018D
 
 ###################################################
 ###                   OPTIONS                   ###
@@ -51,66 +44,35 @@ from CMGTools.HNL.samples.signals_2018 import all_signals_m, all_signals_e, all_
 
 pick_events = getHeppyOption('pick_events', False)
 
-# SF_FILE = '$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_2018_v1.root'
-SF_FILE = '$CMSSW_BASE/src/CMGTools/HNL/data/LegacyCorrectionsWorkspace/output/htt_scalefactors_legacy_2018.root' # KIT, the best, by far
-# https://github.com/KIT-CMS/LegacyCorrectionsWorkspace
-
-# Electron corrections, valid for l1 and l2
-ELE_SFS = OrderedDict()
-ELE_SFS['id'  ] = (SF_FILE, 'e_id90_kit'      )
-ELE_SFS['iso' ] = (SF_FILE, 'e_iso_binned_kit')
-ELE_SFS['reco'] = (SF_FILE, 'e_trk'           )
-# Add trigger corrections for the prompt lepton l0
-ELE_PROMPT_SFS = dc(ELE_SFS)
-ELE_PROMPT_SFS['trigger'] = (SF_FILE, 'e_trg27_trg32_trg35_kit')
-
-# Muon corrections, valid for l1 and l2
-MU_SFS = OrderedDict()
-MU_SFS['id'  ] = (SF_FILE, 'm_id_kit'        )
-MU_SFS['iso' ] = (SF_FILE, 'm_iso_binned_kit')
-MU_SFS['reco'] = (SF_FILE, 'm_trk'           )
-# Add trigger corrections for the prompt lepton l0
-MU_PROMPT_SFS = dc(MU_SFS)
-MU_PROMPT_SFS['trigger'] = (SF_FILE, 'm_trg24_27_kit')
-
 ###################################################
 ###               HANDLE SAMPLES                ###
 ###################################################
-samples = all_samples + all_signals
+samples = [Single_mu_2018D, Single_ele_2018D]
+###################################################
 
+# are trigger names and filters correct regardless of the year?
+# triggers same for 2018: https://tomc.web.cern.ch/tomc/triggerPrescales/2018//?match=Ele
+for sample in samples:
+    sample.triggers = triggers_ele_data + triggers_mu_data
+
+    sample.splitFactor = splitFactor(sample, 1e6)
+
+selectedComponents = samples
 ###################################################
 # set to True if you want to run interactively on a selected portion of samples/files/whatnot
 testing = False 
 if testing:
     # run on a single component
-    # comp = samples[0]
-    # comp.files = comp.files[:1]
-    # comp.files = ['ttbar_18.root']
+    comp = samples[0]
+    
+#     lxplus750 /tmp/manzoni/egamma_2018A.root, /tmp/manzoni/singlemu_2018B.root, ttbar_18.root
+    comp.files = comp.files[:1]
+    comp.files = ['egamma_2018A.root', 'singlemu_2018B.root']
     # comp.files = ['/tmp/manzoni/001784E5-D649-734B-A5FF-E151DA54CC02.root'] # one file from TTJets_ext on lxplus700
     # comp.fineSplitFactor = 10 # fine splitting, multicore
-    
-#     comp = all_signals[0]
-#     comp.files = ['heavyNeutrino_1.root']
-    comp = TTJets_ext
-    comp.files = comp.files[:1]
-#     comp.fineSplitFactor = 10 # fine splitting, multicore
     samples = [comp]
 
     selectedComponents = samples
-###################################################
-
-# FIXME! are trigger names and filters correct regardless of the year?
-# triggers same for 2018: https://tomc.web.cern.ch/tomc/triggerPrescales/2018//?match=Ele
-for sample in samples:
-    sample.triggers = triggers_ele_mc + triggers_mu_mc
-    sample.splitFactor = splitFactor(sample, 7e5)
-    if sample in all_signals:
-        sample.splitFactor = splitFactor(sample, 5e5)
-        
-    sample.puFileMC   = '$CMSSW_BASE/src/CMGTools/HNL/data/pileup/mc/2018/MC_PileUp_2018_Autumn18.root'
-    sample.puFileData = '$CMSSW_BASE/src/CMGTools/HNL/data/pileup/data/2018/Data_PileUp_2018_69p2.root'
-
-selectedComponents = samples
 
 ###################################################
 ###                  ANALYZERS                  ###
@@ -133,11 +95,6 @@ skimAna = cfg.Analyzer(
     name='SkimAnalyzerCount'
 )
 
-signalReweighAna = cfg.Analyzer(
-    HNLSignalReweighter,
-    name='HNLSignalReweighter'
-)
-
 triggerAna = cfg.Analyzer(
     TriggerAnalyzer,
     name='TriggerAnalyzer',
@@ -153,12 +110,6 @@ vertexAna = cfg.Analyzer(
     fixedWeight=1,
     keepFailingEvents=False,
     verbose=False
-)
-
-pileUpAna = cfg.Analyzer(
-    PileUpAnalyzer,
-    name='PileUpAnalyzer',
-    true=True
 )
 
 metFilter = cfg.Analyzer(
@@ -178,20 +129,6 @@ metFilter = cfg.Analyzer(
         'Flag_ecalBadCalibFilter',
     ]
 )
-
-
-HNLGenTreeAnalyzer = cfg.Analyzer(
-    HNLGenTreeAnalyzer,
-    name='HNLGenTreeAnalyzer',
-)
-
-# RecoGenAnalyzer = cfg.Analyzer(
-#     RecoGenAnalyzer,
-#     name='RecoGenAnalyzer',
-# )
-
-genAna = GeneratorAnalyzer.defaultConfig
-genAna.allGenTaus = True # save in event.gentaus *ALL* taus, regardless whether hadronic / leptonic decay
 
 ##########################################################################################
 # ONE HNL ANALYZER PER FINAL STATE
@@ -213,8 +150,8 @@ def preselect_ele(iele):
     if abs(iele.eta()) > 2.5      : return False
     if iele.relIsoFromEA(0.3) > 10: return False
     if not (iele.LooseNoIsoID or \
-            iele.electronID('mvaEleID-Fall17-noIso-V2-wp90') or \
-            iele.electronID('mvaEleID-Fall17-iso-V2-wp90')): return False
+            iele.electronID('mvaEleID-Fall17-noIso-V2-wp90'.replace('-','_')) or \
+            iele.electronID('mvaEleID-Fall17-iso-V2-wp90'.replace('-','_')) ): return False
     return True
     
 HNLAnalyzer_mmm = cfg.Analyzer(
@@ -316,59 +253,6 @@ HNLTreeProducerBase_eem = cfg.Analyzer(
 # )
 ##########################################################################################
 
-
-###################################################
-###                  LEPTON SF                  ###
-###################################################
-Weighter_mmm = cfg.Analyzer(
-    MultiLeptonWeighter,
-    name           = 'LeptonWeighter_mmm',
-    finalState     = 'mmm',
-    scaleFactor_l0 = MU_PROMPT_SFS,
-    scaleFactor_l1 = MU_SFS,
-    scaleFactor_l2 = MU_SFS,
-    skimFunction   = 'event.pass_mmm',
-    getter         = lambda event : event.the_3lep_cand_dict['mmm'],
-    disable        = False,
-)
-
-Weighter_mem = cfg.Analyzer(
-    MultiLeptonWeighter,
-    name           = 'LeptonWeighter_mem',
-    finalState     = 'mem',
-    scaleFactor_l0 = MU_PROMPT_SFS,
-    scaleFactor_l1 = ELE_SFS,
-    scaleFactor_l2 = MU_SFS,
-    skimFunction   = 'event.pass_mem',
-    getter         = lambda event : event.the_3lep_cand_dict['mem'],
-    disable        = False,
-)
-
-Weighter_eee = cfg.Analyzer(
-    MultiLeptonWeighter,
-    name           = 'LeptonWeighter_eee',
-    finalState     = 'eee',
-    scaleFactor_l0 = ELE_PROMPT_SFS,
-    scaleFactor_l1 = ELE_SFS,
-    scaleFactor_l2 = ELE_SFS,
-    skimFunction   = 'event.pass_eee',
-    getter         = lambda event : event.the_3lep_cand_dict['eee'],
-    disable        = False,
-)
-
-Weighter_eem = cfg.Analyzer(
-    MultiLeptonWeighter,
-    name           = 'LeptonWeighter_eem',
-    finalState     = 'eem',
-    scaleFactor_l0 = ELE_PROMPT_SFS,
-    scaleFactor_l1 = ELE_SFS,
-    scaleFactor_l2 = MU_SFS,
-    skimFunction   = 'event.pass_eem',
-    getter         = lambda event : event.the_3lep_cand_dict['eem'],
-    disable        = False,
-)
-
-
 # see SM HTT TWiki
 # https://twiki.cern.ch/twiki/bin/viewauth/CMS/SMTauTau2016#Jet_Energy_Corrections
 jetAna = cfg.Analyzer(
@@ -402,22 +286,15 @@ fileCleaner = cfg.Analyzer(
 ###                  SEQUENCE                   ###
 ###################################################
 sequence = cfg.Sequence([
-    skimAna,
+    jsonAna,
+    # skimAna,
     triggerAna,
     vertexAna,
-    pileUpAna,
-    genAna,
-    HNLGenTreeAnalyzer,
-    # RecoGenAnalyzer,
     HNLAnalyzer_mmm,
     HNLAnalyzer_mem,
     HNLAnalyzer_eee,
     HNLAnalyzer_eem,
     HNLEventFilter,
-    Weighter_mmm, 
-    Weighter_mem, 
-    Weighter_eee, 
-    Weighter_eem, 
     jetAna,
     metFilter,
     HNLTreeProducerBase_mmm,
@@ -430,11 +307,6 @@ saveBigTree = False
 
 if saveBigTree:
     sequence.insert(-1, HNLTreeProducer)
-
-isSignal = True
-
-if isSignal:
-    sequence.insert(1, signalReweighAna)
 
 if len(toSelect):
     print 'Cherry picking the following events to process:'
@@ -460,7 +332,7 @@ for ii in range(len(sequence)):
 prefetch = True
 recompute_deepjet = True
 if recompute_deepjet:
-    fname = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/prod/update_deepjet_and_ele_id_mc2018_cfg.py'
+    fname = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/prod/update_deepjet_and_ele_id_data2018D_cfg.py'
     preprocessor = CmsswPreprocessor(fname, prefetch=prefetch, addOrigAsSecondary=False)
     EOSEventsWithDownload.aggressive = 2 # always fetch if running on Wigner
     EOSEventsWithDownload.long_cache = getHeppyOption('long_cache', False)

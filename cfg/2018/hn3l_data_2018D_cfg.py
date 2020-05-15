@@ -1,4 +1,4 @@
-# heppy_batch.py -o data_2018ABC_15may20_v1 hn3l_data_2018ABC_cfg.py -B -b 'run_condor_simple.sh -t 2880 ./batchScript.sh'
+# heppy_batch.py -o data_2018D_15may20_v1 hn3l_data_2018D_cfg.py -B -b 'run_condor_simple.sh -t 2880 ./batchScript.sh'
 
 import os
 from copy import deepcopy as dc

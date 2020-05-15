@@ -9,7 +9,9 @@ from CMGTools.HNL.physicsobjects.Electron import Electron
 # events = Events('output_ttbar2017_102X_mc2017_realistic_v7.root')
 # events = Events('output_ttbar2017_94X_mc2017_realistic_v17.root')
 # events = Events('../python/output.root')
-events = Events('output_2016_mc.root')
+# events = Events('output_2016_mc.root')
+events = Events('output_2018_mc.root')
+# events = Events('/afs/cern.ch/work/m/manzoni/HNL/instructions/CMSSW_10_6_12/src/CMGTools/HNL/cfg/2018/test/HN3L_M_5_V_0p00178044938148_mu_Dirac_cc_massiveAndCKM_LO_3/cmsswPreProcessing.root')
 
 maxevents = -1 # max events to process
 totevents = events.size() # total number of events in the files

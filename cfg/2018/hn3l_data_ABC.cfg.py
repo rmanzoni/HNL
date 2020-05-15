@@ -1,3 +1,5 @@
+# heppy_batch.py -o data_2018ABC_15may20_v1 hn3l_data_ABC.cfg.py -B -b 'run_condor_simple.sh -t 2880 ./batchScript.sh'
+
 import os
 from copy import deepcopy as dc
 from collections import OrderedDict
@@ -16,6 +18,7 @@ from PhysicsTools.Heppy.analyzers.objects.VertexAnalyzer import VertexAnalyzer
 from PhysicsTools.Heppy.analyzers.gen.GeneratorAnalyzer  import GeneratorAnalyzer
 
 # import HNL analyzers:
+from CMGTools.HNL.analyzers.FileCleaner         import FileCleaner
 from CMGTools.HNL.analyzers.JSONAnalyzer        import JSONAnalyzer
 from CMGTools.HNL.analyzers.SkimAnalyzerCount   import SkimAnalyzerCount
 from CMGTools.HNL.analyzers.HNLAnalyzer         import HNLAnalyzer
@@ -30,8 +33,8 @@ from pdb import set_trace
 # import 2018 triggers
 from CMGTools.HNL.triggers.triggers_2018 import triggers_ele_data, triggers_mu_data, triggers_and_filters_ele, triggers_and_filters_mu
 
-from CMGTools.HNL.samples.samples_data_2018 import Single_ele_2018, Single_ele_2018A, Single_ele_2018B, Single_ele_2018C, Single_ele_2018D
-from CMGTools.HNL.samples.samples_data_2018 import Single_mu_2018, Single_mu_2018A, Single_mu_2018B, Single_mu_2018C, Single_mu_2018D
+from CMGTools.HNL.samples.samples_data_2018 import Single_ele_2018, Single_ele_2018A, Single_ele_2018B, Single_ele_2018C
+from CMGTools.HNL.samples.samples_data_2018 import Single_mu_2018, Single_mu_2018A, Single_mu_2018B, Single_mu_2018C
 
 ###################################################
 ###                   OPTIONS                   ###
@@ -44,7 +47,7 @@ pick_events = getHeppyOption('pick_events', False)
 ###################################################
 ###               HANDLE SAMPLES                ###
 ###################################################
-samples = Single_ele_2018 + Single_mu_2018
+samples = [Single_ele_2018A, Single_ele_2018B, Single_ele_2018C, Single_mu_2018A, Single_mu_2018B, Single_mu_2018C]
 ###################################################
 # set to True if you want to run interactively on a selected portion of samples/files/whatnot
 testing = False 
@@ -255,7 +258,8 @@ HNLTreeProducerBase_eem = cfg.Analyzer(
 jetAna = cfg.Analyzer(
     JetAnalyzer,
     name              = 'JetAnalyzer',
-    jetCol            = 'slimmedJets',
+#     jetCol            = 'slimmedJets',
+    jetCol            = 'selectedUpdatedPatJetsNewDFTraining', # updated JEC and DeepJet
     jetPt             = 20.,
     jetEta            = 5.,
     relaxJetId        = False, # relax = do not apply jet ID
@@ -272,6 +276,12 @@ jetAna = cfg.Analyzer(
 #    dataGT            = '94X_dataRun2_v6',
 #    jesCorr = 1., # Shift jet energy scale in terms of uncertainties (1 = +1 sigma)
 )
+
+fileCleaner = cfg.Analyzer(
+    FileCleaner,
+    name='FileCleaner'
+)
+
 ###################################################
 ###                  SEQUENCE                   ###
 ###################################################
@@ -319,10 +329,20 @@ for ii in range(len(sequence)):
 ###################################################
 ###            PREPROCESSOR                     ###
 ###################################################
+prefetch = True
+recompute_deepjet = True
+if recompute_deepjet:
+    fname = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/prod/update_deepjet_and_ele_id_data2018ABC_cfg.py'
+    preprocessor = CmsswPreprocessor(fname, prefetch=prefetch, addOrigAsSecondary=False)
+    EOSEventsWithDownload.aggressive = 2 # always fetch if running on Wigner
+    EOSEventsWithDownload.long_cache = getHeppyOption('long_cache', False)
+    prefetch = False
+    sequence.append(fileCleaner)
+else:
+    preprocessor = None
 
 # temporarily copy remote files using xrd
 # event_class = EOSEventsWithDownload if prefetch else Events
-prefetch = True
 event_class = EOSEventsWithDownload  
 if prefetch:
     EOSEventsWithDownload.aggressive = 2 # always fetch if running on Wigner
@@ -334,7 +354,7 @@ config = cfg.Config(
     components   = selectedComponents,
     sequence     = sequence,
     services     = [],
-    preprocessor = None,
+    preprocessor = preprocessor,
     events_class = event_class
 )
 

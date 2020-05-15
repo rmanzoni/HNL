@@ -1,4 +1,4 @@
-from CMGTools.HNL.update_deepflavour_base_cfg import process, cms
+from CMGTools.HNL.update_deepjet_and_ele_id_base_cfg import process, cms
 process.GlobalTag.globaltag = '102X_mc2017_realistic_v7' 
 print '\nINFO: using GT', process.GlobalTag.globaltag, '\n\n'
 
@@ -7,9 +7,6 @@ process.source.fileNames = cms.untracked.vstring(
 )
 
 process.output.fileName = cms.untracked.string('output_2017_mc.root')
-
-process.output.outputCommands.append('drop patElectrons_slimmedElectrons__PAT')
-process.output.outputCommands.append('keep patElectrons_slimmedElectrons__%s' %process.name_())
 
 ##########################################################################################
 ## RERUN EGAMMA ID Fall17V2
@@ -25,10 +22,17 @@ setupEgammaPostRecoSeq(
     era='2017-Nov17ReReco',
 )  
 
-# find where the new IDs are needed first
-high_pt_ele_index = process.p.index(process.goodHighPtEles)
-# and then insert this rerun EGamma sequence just before that
-process.p.insert(high_pt_ele_index, process.egammaPostRecoSeq)
+# SKIM TEMPORARILY DISABLED
+# # find where the new IDs are needed first
+# high_pt_ele_index = process.p.index(process.goodHighPtEles)
+# # and then insert this rerun EGamma sequence just before that
+# process.p.insert(high_pt_ele_index, process.egammaPostRecoSeq)
+# 
+# # and now replace the input collection of goodHighPtEles, must be the updated one with the new IDs
+# process.goodHighPtEles.src = cms.InputTag('slimmedElectrons', '', process.name_())
 
-# and now replace the input collection of goodHighPtEles, must be the updated one with the new IDs
-process.goodHighPtEles.src = cms.InputTag('slimmedElectrons', '', process.name_())
+process.p.insert(0, process.egammaPostRecoSeq)
+
+# save the correct electron collection
+process.output.outputCommands.append('drop patElectrons_slimmedElectrons__PAT')
+process.output.outputCommands.append('keep patElectrons_slimmedElectrons__%s' %process.name_())

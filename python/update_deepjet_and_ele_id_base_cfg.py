@@ -166,12 +166,16 @@ updateJetCollection(
 
 process.p = cms.Path(
     # SKIM
-    process.goodLowPtEles       +
-    process.goodLowPtMuons      +
-    process.goodLeptons         +
-    process.goodHighPtEles      +
-    process.goodHighPtMuons     +
-    process.goodHighPtLeptons   +
+    # remove the skim for now because I don't have a way to save 
+    # the original LHE weight info
+    # ... need all events at python level
+    # I had a solution, need to find it
+#     process.goodLowPtEles       +
+#     process.goodLowPtMuons      +
+#     process.goodLeptons         +
+#     process.goodHighPtEles      +
+#     process.goodHighPtMuons     +
+#     process.goodHighPtLeptons   +
     # RECOMPUTE BTAG AND JEC
     process.patJetCorrFactorsNewDFTraining                        +
     process.updatedPatJetsNewDFTraining                           +
@@ -191,8 +195,8 @@ process.output = cms.OutputModule('PoolOutputModule',
     fileName = cms.untracked.string('output.root'),
     outputCommands = cms.untracked.vstring(
         'keep *_*_*_*',
-        'drop *_*_*_NEWDF',
-        'keep patJets_selectedUpdatedPatJetsNewDFTraining_*_NEWDF'
+        'drop *_*_*_%s' %process.name_(),
+        'keep patJets_selectedUpdatedPatJetsNewDFTraining_*_%s' %process.name_(),
     ),
     SelectEvents = cms.untracked.PSet( 
         SelectEvents = cms.vstring('p')

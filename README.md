@@ -70,6 +70,11 @@ git checkout master
 scram b -rj 8
 ```
 
+### set your X509_USER_PROXY env variable
+since you'll be using xrootd to access files remotely, and you'll use CERN batch facility, you need to make sure your voms proxy token is put in a `afs` shared directory.
+If `echo $509_USER_PROXY` returns nothing or returns some `tmp` path, follow these instructions https://twiki.cern.ch/twiki/bin/view/CMSPublic/WorkBookXrootdService#OpenCondor 
+
+
 ### run a test job
 ```
 voms-proxy-init --voms cms --valid 198:0

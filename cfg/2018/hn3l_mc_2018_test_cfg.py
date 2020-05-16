@@ -107,9 +107,9 @@ if testing:
 #     comp.files = ['heavyNeutrino_1.root']
 #     comp.files = ['heavyNeutrino_1_new_deepjet.root']
 #     comp.fineSplitFactor = 10 # fine splitting, multicore
-#     comp = TTJets_ext
+    comp = TTJets_ext
 #     comp.files = comp.files[1:3]
-    comp = HN3L_M_5_V_0p00178044938148_mu_Dirac_cc_massiveAndCKM_LO
+#     comp = HN3L_M_5_V_0p00178044938148_mu_Dirac_cc_massiveAndCKM_LO
     comp.files = comp.files[:1]
     comp.splitFactor = 1
     samples = [comp]
@@ -218,7 +218,7 @@ def preselect_ele(iele):
     if iele.pt() < 5.             : return False 
     if abs(iele.eta()) > 2.5      : return False
     if iele.relIsoFromEA(0.3) > 10: return False
-    if not (iele.LooseNoIsoID or \
+    if not (iele.LooseNoIsoID() or \
             iele.electronID('mvaEleID-Fall17-noIso-V2-wp90'.replace('-','_')) or \
             iele.electronID('mvaEleID-Fall17-iso-V2-wp90'.replace('-','_')) ): return False
     return True

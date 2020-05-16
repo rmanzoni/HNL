@@ -1,4 +1,4 @@
-from PhysicsTools.Heppy.physicsobjects.Lepton import Lepton
+from CMGTools.HNL.physicsobjects.Lepton import Lepton
 from PhysicsTools.HeppyCore.utils.deltar import deltaR
 import ROOT
 import sys
@@ -127,61 +127,46 @@ class Electron( Lepton ):
                ## HNL IDs ##
     ###################################
 
-    def f_dEtaInSeed(self):           
-        return abs(self.dEtaInSeed())
-
-    def f_dPhiSCTrackatVtx(self):     
-        return abs(self.physObj.deltaPhiSuperClusterTrackAtVtx())
-
-    def f_full5x5sigmaIEtaIEta(self): 
-        return self.physObj.full5x5_sigmaIetaIeta()
-
     def f_hadronicOverEM(self):       
-        hOverE_CE = 1.12 if self.physObj.isEB() else 0.5
-        hOverE_Cr = 0.0368 if self.physObj.isEB() else 0.201
-        return self.physObj.hadronicOverEm() - (hOverE_CE  + hOverE_Cr * self.rho)/(self.physObj.superCluster().energy())
+        hOverE_CE = 1.12 if self.isEB() else 0.5
+        hOverE_Cr = 0.0368 if self.isEB() else 0.201
+        return self.hadronicOverEm() - (hOverE_CE  + hOverE_Cr * self.rho)/(self.superCluster().energy())
 
     def f_InvEminusInvP(self):        
-        return abs(1.0/self.physObj.ecalEnergy() - self.physObj.eSuperClusterOverP()/self.physObj.ecalEnergy()) if self.physObj.ecalEnergy()>0. else 9e9
+        return abs(1.0/self.ecalEnergy() - self.eSuperClusterOverP()/self.ecalEnergy()) if self.ecalEnergy()>0. else 9e9
 
     # LooseNoIso
     def LooseNoIsoID(self):
 
-        LooseNoIso = True
+        if not (self.isEB() or self.isEE())                                                       : return False
+        if (self.full5x5_sigmaIetaIeta()               >= ( 0.11    if self.isEB() else 0.0314 ) ): return False
+        if (abs(self.dEtaInSeed())                     >= ( 0.00477 if self.isEB() else 0.00868) ): return False
+        if (abs(self.deltaPhiSuperClusterTrackAtVtx()) >= ( 0.222   if self.isEB() else 0.213  ) ): return False
+        if (self.f_hadronicOverEM()                    >= ( 0.298   if self.isEB() else 0.101  ) ): return False
+        if (self.f_InvEminusInvP()                     >= ( 0.241   if self.isEB() else 0.14   ) ): return False
 
-        if not (self.physObj.isEB() or self.physObj.isEE()): LooseNoIso = False
-        if (self.f_full5x5sigmaIEtaIEta() >= ( 0.11    if self.physObj.isEB() else 0.0314 ) ): LooseNoIso = False
-        if (self.f_dEtaInSeed()           >= ( 0.00477 if self.physObj.isEB() else 0.00868) ): LooseNoIso = False
-        if (self.f_dPhiSCTrackatVtx()     >= ( 0.222   if self.physObj.isEB() else 0.213  ) ): LooseNoIso = False
-        if (self.f_hadronicOverEM()       >= ( 0.298   if self.physObj.isEB() else 0.101  ) ): LooseNoIso = False
-        if (self.f_InvEminusInvP()        >= ( 0.241   if self.physObj.isEB() else 0.14   ) ): LooseNoIso = False
-
-        return LooseNoIso
+        return True
 
     # MediumNoIso
     def MediumNoIsoID(self):
 
-        MediumNoIso = True
+        if not (self.isEB() or self.isEE())                                                       : return False
+        if (self.full5x5_sigmaIetaIeta()               >= ( 0.00998 if self.isEB() else 0.0298 ) ): return False
+        if (abs(self.dEtaInSeed())                     >= ( 0.00311 if self.isEB() else 0.00609) ): return False
+        if (abs(self.deltaPhiSuperClusterTrackAtVtx()) >= ( 0.103   if self.isEB() else 0.045  ) ): return False
+        if (self.f_hadronicOverEM()                    >= ( 0.253   if self.isEB() else 0.0878 ) ): return False
+        if (self.f_InvEminusInvP()                     >= ( 0.134   if self.isEB() else 0.13   ) ): return False
 
-        if not (self.physObj.isEB() or self.physObj.isEE()): MediumNoIso = False
-        if (self.f_full5x5sigmaIEtaIEta() >= ( 0.00998 if self.physObj.isEB() else 0.0298 ) ): MediumNoIso = False
-        if (self.f_dEtaInSeed()           >= ( 0.00311 if self.physObj.isEB() else 0.00609) ): MediumNoIso = False
-        if (self.f_dPhiSCTrackatVtx()     >= ( 0.103   if self.physObj.isEB() else 0.045  ) ): MediumNoIso = False
-        if (self.f_hadronicOverEM()       >= ( 0.253   if self.physObj.isEB() else 0.0878 ) ): MediumNoIso = False
-        if (self.f_InvEminusInvP()        >= ( 0.134   if self.physObj.isEB() else 0.13   ) ): MediumNoIso = False
-
-        return MediumNoIso
+        return True
 
     # MediumWithIso
     def MediumWithIsoID(self):
 
-        TightIso = True
-
-        if not (self.physObj.isEB() or self.physObj.isEE()): TightIso = False
-        if (self.f_full5x5sigmaIEtaIEta() >= ( 0.00998 if self.physObj.isEB() else 0.0292 ) ): TightIso = False
-        if (self.f_dEtaInSeed()           >= ( 0.00308 if self.physObj.isEB() else 0.00605) ): TightIso = False
-        if (self.f_dPhiSCTrackatVtx()     >= ( 0.0816   if self.physObj.isEB() else 0.0394) ): TightIso = False
-        if (self.f_hadronicOverEM()       >= ( 0.0414   if self.physObj.isEB() else 0.0641) ): TightIso = False
-        if (self.f_InvEminusInvP()        >= ( 0.0129   if self.physObj.isEB() else 0.0129) ): TightIso = False      
+        if not (self.isEB() or self.isEE())                                                       : return False
+        if (self.full5x5_sigmaIetaIeta()               >= ( 0.00998 if self.isEB() else 0.0292 ) ): return False
+        if (abs(self.dEtaInSeed())                     >= ( 0.00308 if self.isEB() else 0.00605) ): return False
+        if (abs(self.deltaPhiSuperClusterTrackAtVtx()) >= ( 0.0816  if self.isEB() else 0.0394 ) ): return False
+        if (self.f_hadronicOverEM()                    >= ( 0.0414  if self.isEB() else 0.0641 ) ): return False
+        if (self.f_InvEminusInvP()                     >= ( 0.0129  if self.isEB() else 0.0129 ) ): return False      
             
-        return TightIso
+        return True

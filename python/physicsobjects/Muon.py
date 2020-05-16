@@ -1,4 +1,4 @@
-from PhysicsTools.Heppy.physicsobjects.Lepton import Lepton
+from CMGTools.HNL.physicsobjects.Lepton import Lepton
 from PhysicsTools.HeppyCore.utils.deltar import deltaR
 
 class Muon( Lepton ):

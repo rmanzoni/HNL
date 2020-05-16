@@ -92,28 +92,38 @@ process.goodHighPtMuons = cms.EDFilter('PATMuonSelector',
     filter = cms.bool(False)
 )
 
+modified_medium_mu_id = '(segmentCompatibility>0.303 &  (isGlobalMuon & combinedQuality.chi2LocalPosition<12 & combinedQuality.trkKink<20))  |' \
+                        '(segmentCompatibility>0.451 & !(isGlobalMuon & combinedQuality.chi2LocalPosition<12 & combinedQuality.trkKink<20))   '
+
 process.goodLowPtMuons = cms.EDFilter('PATMuonSelector',
     src = cms.InputTag('slimmedMuons'),
-    cut = cms.string('pt>5 & abs(eta)<2.5'),                                
+    cut = cms.string('pt>5 & abs(eta)<2.5 & ( (isLooseMuon & (%s)) | isMediumMuon)' %modified_medium_mu_id),
     filter = cms.bool(False)
 )
 
 # RM: super weird bug, if I run the cfg alone, EIDs have dashes as separators
 # mvaEleID-Fall17-noIso-V2-wp90
-# whereas if I dump the cfg with EdmConfigDump EIDs have underscores as separators!!!!!!1
+# whereas if I dump the cfg with EdmConfigDump EIDs have underscores as separators!!!!!!
 # mvaEleID_Fall17_noIso_V2_wp90
 # REMEMBER to swap the commented and uncommented lines when you run locally.
 # jeez...
 process.goodHighPtEles = cms.EDFilter('PATElectronSelector',
     src = cms.InputTag('slimmedElectrons'),
-    cut = cms.string('pt>25 & abs(eta)<2.5 & (electronID("mvaEleID_Fall17_noIso_V2_wp90") | electronID("mvaEleID_Fall17_iso_V2_wp90"))'),                                
-#     cut = cms.string('pt>25 & abs(eta)<2.5 & (electronID("mvaEleID-Fall17-noIso-V2-wp90") | electronID("mvaEleID-Fall17-iso-V2-wp90"))'),                                
+    cut = cms.string('pt>25 & abs(eta)<2.5 & (electronID("mvaEleID_Fall17_noIso_V2_wp90") | electronID("mvaEleID_Fall17_iso_V2_wp90"))'),
+#     cut = cms.string('pt>25 & abs(eta)<2.5 & (electronID("mvaEleID-Fall17-noIso-V2-wp90") | electronID("mvaEleID-Fall17-iso-V2-wp90"))'),
     filter = cms.bool(False)
 )
+             
+# missing HoE selection because it requires rho and I didn't bother adding a module to do that.. it's just a skim
+# https://github.com/rmanzoni/cmssw/blob/heppy_106X_hnl/PhysicsTools/Heppy/python/physicsobjects/Electron.py#L433
+# https://github.com/cms-sw/cmssw/blob/master/RecoEgamma/ElectronIdentification/plugins/cuts/GsfEleDEtaInSeedCut.cc#L24-L29
+modified_loose_ele_id = '(isEB & superCluster.isNonnull & superCluster.seed.isNonnull & ecalEnergy>0. & full5x5_sigmaIetaIeta<0.11   & abs((deltaEtaSuperClusterTrackAtVtx - superCluster.eta + superCluster.seed.eta))<0.00477 & abs(deltaPhiSuperClusterTrackAtVtx)<0.222 & abs(1.0/ecalEnergy - eSuperClusterOverP/ecalEnergy)<0.241) | ' \
+                        '(isEE & superCluster.isNonnull & superCluster.seed.isNonnull & ecalEnergy>0. & full5x5_sigmaIetaIeta<0.0314 & abs((deltaEtaSuperClusterTrackAtVtx - superCluster.eta + superCluster.seed.eta))<0.00868 & abs(deltaPhiSuperClusterTrackAtVtx)<0.213 & abs(1.0/ecalEnergy - eSuperClusterOverP/ecalEnergy)<0.14 )   '
 
 process.goodLowPtEles = cms.EDFilter('PATElectronSelector',
     src = cms.InputTag('slimmedElectrons'),
-    cut = cms.string('pt>5 & abs(eta)<2.5'),                                
+    cut = cms.string('pt>5 & abs(eta)<2.5 & (%s | electronID("mvaEleID_Fall17_noIso_V2_wp90") | electronID("mvaEleID_Fall17_iso_V2_wp90"))' %modified_loose_ele_id),                                
+#     cut = cms.string('pt>5 & abs(eta)<2.5 & (%s | electronID("mvaEleID-Fall17-noIso-V2-wp90") | electronID("mvaEleID-Fall17-iso-V2-wp90"))' %modified_loose_ele_id),                                
     filter = cms.bool(False)
 )
 

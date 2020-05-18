@@ -1,4 +1,4 @@
-# heppy_batch.py -o data_2018D_15may20_v1 hn3l_data_2018D_cfg.py -B -b 'run_condor_simple.sh -t 2880 ./batchScript.sh'
+# heppy_batch.py -o data_2018D_16may20_v1 hn3l_data_2018D_cfg.py -B -b 'run_condor_simple.sh -t 2880 ./batchScript.sh'
 
 import os
 from copy import deepcopy as dc
@@ -333,7 +333,7 @@ for ii in range(len(sequence)):
 prefetch = True
 recompute_deepjet = True
 if recompute_deepjet:
-    fname = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/prod/update_deepjet_and_ele_id_data2018D_cmg_cfg.py'
+    fname = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/python/prod/cmg/update_deepjet_and_ele_id_data2018D_cmg_cfg.py'
     preprocessor = CmsswPreprocessor(fname, prefetch=prefetch, addOrigAsSecondary=False)
     EOSEventsWithDownload.aggressive = 2 # always fetch if running on Wigner
     EOSEventsWithDownload.long_cache = getHeppyOption('long_cache', False)

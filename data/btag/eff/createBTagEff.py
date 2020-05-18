@@ -26,9 +26,9 @@ deepflavour_wp[2016]['medium'] = 0.3093
 deepflavour_wp[2016]['tight' ] = 0.7221
 
 years = OrderedDict()
-years[2018] = '/afs/cern.ch/work/m/manzoni/HNL/cmg/CMSSW_10_4_0_patch1/src/CMGTools/HNL/cfg/2018/ttbar_for_btag_eff_v4/TTJets_ext/'
-# years[2017] = 'FIXME!'
-# years[2016] = 'FIXME!'
+# years[2018] = '/afs/cern.ch/work/m/manzoni/HNL/cmg/CMSSW_10_4_0_patch1/src/CMGTools/HNL/cfg/2018/ttbar_for_btag_eff_v4/TTJets_ext/'
+years[2017] = '/afs/cern.ch/work/m/mratti/public/CMS/TTJets_btagEff/2017/TTJets/'
+years[2016] = '/afs/cern.ch/work/m/mratti/public/CMS/TTJets_btagEff/2016/TTJets'
 
 bins = np.array([20., 30., 50., 70., 100., 150., 200., 1000.])
 num = ROOT.TH1F('num', '', len(bins)-1, bins)
@@ -36,6 +36,8 @@ den = ROOT.TH1F('den', '', len(bins)-1, bins)
 
 for iyear, idir in years.iteritems():
 
+    print 'ANNUS DOMINI', iyear
+    
     files = OrderedDict()
     files['mmm'] = ROOT.TFile.Open('/'.join([idir, 'HNLTreeProducer_mmm', 'tree.root']))
     files['mem'] = ROOT.TFile.Open('/'.join([idir, 'HNLTreeProducer_mem', 'tree.root']))
@@ -68,7 +70,7 @@ for iyear, idir in years.iteritems():
                 inum_name = 'num_%s_%s_%s' %(ifs, iflav, ieta)
                 iden_name = 'den_%s_%s_%s' %(ifs, iflav, ieta)
             
-                print '======> ', inum_name
+                print '\t======> ', inum_name
             
                 inum.SetName(inum_name)
                 iden.SetName(iden_name)

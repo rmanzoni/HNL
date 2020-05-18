@@ -388,8 +388,8 @@ jetAna = cfg.Analyzer(
     applyL2L3Residual = 'MC',
     year              = 2017,
     btag_wp           = 'medium', # DeepFlavour
-    mc_eff_file       = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/btag/eff/btag_deepflavour_wp_medium_efficiencies_2018.root',
-    sf_file           = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/btag/sf/2018/DeepJet_102XSF_WP_V1.csv',
+    mc_eff_file       = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/btag/eff/btag_deepflavour_wp_medium_efficiencies_2017.root',
+    sf_file           = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/btag/sf/2017/DeepFlavour_94XSF_WP_V3_B_F.csv',
 #    mcGT              = '94X_mc2017_realistic_v14',
 #    dataGT            = '94X_dataRun2_v6',
 #    jesCorr = 1., # Shift jet energy scale in terms of uncertainties (1 = +1 sigma)

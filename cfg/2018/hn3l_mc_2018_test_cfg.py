@@ -1,6 +1,35 @@
 # heppy_batch.py -o bkg_mc_2018_v1 hnl_mc_all_channels_cfg.py -B -b 'run_condor_simple.sh -t 2880 ./batchScript.sh'
 # heppy_batch.py -o ttbar_for_btag_eff_v4 hn3l_mc_all_test.cfg.py -B -b 'run_condor_simple.sh -t 2880 ./batchScript.sh'
 
+# Usage:
+#     tmp_heppy.py <name> <analysis_cfg>
+#     For each component, start a Loop.
+#     'name' is whatever you want.
+# 
+# 
+# Options:
+#   -h, --help            show this help message and exit
+#   -N NEVENTS, --nevents=NEVENTS
+#                         number of events to process
+#   -p NPRINT, --nprint=NPRINT
+#                         number of events to print at the beginning
+#   -e IEVENT, --iEvent=IEVENT
+#                         jump to a given event. ignored in multiprocessing.
+#   -f, --force           don't ask questions in case output directory already
+#                         exists.
+#   -i, --interactive     stay in the command line prompt instead of exiting
+#   -t, --timereport      Make a report of the time used by each analyzer
+#   -v, --verbose         increase the verbosity of the output (from 'warning'
+#                         to 'info' level)
+#   -q, --quiet           do not print log messages to screen.
+#   -o EXTRAOPTIONS, --option=EXTRAOPTIONS
+#                         Save one extra option (either a flag, or a key=value
+#                         pair) that can be then accessed from the job config
+#                         file
+#   -j NTASKS, --ntasks=NTASKS
+#                         number of parallel tasks to span
+#   --memcheck            Activate memory checks per event
+
 import os
 from copy import deepcopy as dc
 from collections import OrderedDict
@@ -110,7 +139,8 @@ if testing:
     comp = TTJets_ext
 #     comp.files = comp.files[1:3]
 #     comp = HN3L_M_5_V_0p00178044938148_mu_Dirac_cc_massiveAndCKM_LO
-    comp.files = comp.files[:1]
+#     comp.files = comp.files[:1]
+    comp.files = ['B5006609-9A10-1146-BD9C-3C52D247B17C.root']
     comp.splitFactor = 1
     samples = [comp]
 
@@ -466,7 +496,7 @@ for ii in range(len(sequence)):
 prefetch = True
 recompute_deepjet = True
 if recompute_deepjet:
-    fname = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/prod/update_deepjet_and_ele_id_mc2018_cfg.py'
+    fname = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/python/prod/cmg/update_deepjet_and_ele_id_mc2018_cmg_cfg.py'
     preprocessor = CmsswPreprocessor(fname, prefetch=prefetch, addOrigAsSecondary=False)
     EOSEventsWithDownload.aggressive = 2 # always fetch if running on Wigner
     EOSEventsWithDownload.long_cache = getHeppyOption('long_cache', False)

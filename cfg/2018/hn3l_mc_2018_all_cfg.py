@@ -80,9 +80,7 @@ samples = all_samples + all_signals
 # triggers same for 2018: https://tomc.web.cern.ch/tomc/triggerPrescales/2018//?match=Ele
 for sample in samples:
     sample.triggers = triggers_ele_mc + triggers_mu_mc
-    sample.splitFactor = splitFactor(sample, 5e5)
-    if sample in all_signals:
-        sample.splitFactor = splitFactor(sample, 5e5)
+    sample.splitFactor = splitFactor(sample, 3e5)
         
     sample.puFileMC   = '$CMSSW_BASE/src/CMGTools/HNL/data/pileup/mc/2018/MC_PileUp_2018_Autumn18.root'
     sample.puFileData = '$CMSSW_BASE/src/CMGTools/HNL/data/pileup/data/2018/Data_PileUp_2018_69p2.root'

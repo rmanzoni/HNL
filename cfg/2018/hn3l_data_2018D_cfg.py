@@ -63,11 +63,12 @@ selectedComponents = samples
 testing = False 
 if testing:
     # run on a single component
-    comp = samples[0]
+    comp = Single_mu_2018D
     
 #     lxplus750 /tmp/manzoni/egamma_2018A.root, /tmp/manzoni/singlemu_2018B.root, ttbar_18.root
     comp.files = comp.files[:1]
-    comp.files = ['egamma_2018A.root', 'singlemu_2018B.root']
+#     comp.files = ['egamma_2018A.root', 'singlemu_2018B.root']
+#     comp.files = ['/afs/cern.ch/work/m/manzoni/HNL/instructions/CMSSW_10_6_12/src/CMGTools/HNL/prod/output_2018D_data.root']
     # comp.files = ['/tmp/manzoni/001784E5-D649-734B-A5FF-E151DA54CC02.root'] # one file from TTJets_ext on lxplus700
     # comp.fineSplitFactor = 10 # fine splitting, multicore
     samples = [comp]
@@ -332,7 +333,7 @@ for ii in range(len(sequence)):
 prefetch = True
 recompute_deepjet = True
 if recompute_deepjet:
-    fname = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/prod/update_deepjet_and_ele_id_data2018D_cfg.py'
+    fname = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/prod/update_deepjet_and_ele_id_data2018D_cmg_cfg.py'
     preprocessor = CmsswPreprocessor(fname, prefetch=prefetch, addOrigAsSecondary=False)
     EOSEventsWithDownload.aggressive = 2 # always fetch if running on Wigner
     EOSEventsWithDownload.long_cache = getHeppyOption('long_cache', False)

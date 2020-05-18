@@ -10,14 +10,12 @@ from math import sqrt, pow
 import PhysicsTools.HeppyCore.framework.config as cfg
 from PhysicsTools.Heppy.analyzers.core.Analyzer       import Analyzer
 from PhysicsTools.Heppy.analyzers.core.AutoHandle     import AutoHandle
-from PhysicsTools.Heppy.physicsobjects.PhysicsObjects import Lepton
 from PhysicsTools.HeppyCore.utils.deltar              import deltaR, deltaR2
-# from PhysicsTools.Heppy.physicsobjects.Muon           import Muon
-# from PhysicsTools.Heppy.physicsobjects.Electron       import Electron
 from PhysicsTools.Heppy.physicsobjects.PhysicsObject  import PhysicsObject
 from CMGTools.HNL.utils.utils                         import isAncestor, displacement2D, displacement3D, makeRecoVertex, fitVertex
 from CMGTools.HNL.physicsobjects.Electron             import Electron
 from CMGTools.HNL.physicsobjects.Muon                 import Muon
+from CMGTools.HNL.physicsobjects.Lepton               import Lepton
 from CMGTools.HNL.physicsobjects.HN3L                 import HN3L
 from CMGTools.HNL.physicsobjects.DiLepton             import DiLepton
 from CMGTools.HNL.physicsobjects.DisplacedMuon        import DisplacedMuon
@@ -37,12 +35,11 @@ class HNLAnalyzer(Analyzer):
         super(HNLAnalyzer, self).declareHandles() 
     
         # use updated electrons that include Fall17V2 ID. They are still called slimmedElectrons, but the process is not PAT
-        self.handles['electrons'] = AutoHandle('slimmedElectrons'  , 'std::vector<pat::Electron>'       )
-        self.handles['muons'    ] = AutoHandle('slimmedMuons'      , 'std::vector<pat::Muon>'           )
-        self.handles['beamspot' ] = AutoHandle('offlineBeamSpot'   , 'reco::BeamSpot'                   )
-        self.handles['pfmet'    ] = AutoHandle('slimmedMETs'       , 'std::vector<pat::MET>'            )
-        self.handles['puppimet' ] = AutoHandle('slimmedMETsPuppi'  , 'std::vector<pat::MET>'            )
-        self.handles['pfcand'   ] = AutoHandle('packedPFCandidates', 'std::vector<pat::PackedCandidate>')
+        self.handles['electrons'] = AutoHandle('goodLowPtEles'   , 'std::vector<pat::Electron>', mayFail=True, fallbackLabel='slimmedElectrons', lazy=False)
+        self.handles['muons'    ] = AutoHandle('goodLowPtMuons'  , 'std::vector<pat::Muon>'    , mayFail=True, fallbackLabel='slimmedMuons'    , lazy=False)
+        self.handles['beamspot' ] = AutoHandle('offlineBeamSpot' , 'reco::BeamSpot'            )
+        self.handles['pfmet'    ] = AutoHandle('slimmedMETs'     , 'std::vector<pat::MET>'     )
+        self.handles['puppimet' ] = AutoHandle('slimmedMETsPuppi', 'std::vector<pat::MET>'     )
         
         # commented out for the time being...
 #         self.handles['dsamuons' ] = AutoHandle('displacedStandAloneMuons'     , 'std::vector<reco::Track>', mayFail=True        )
@@ -57,7 +54,6 @@ class HNLAnalyzer(Analyzer):
         self.counters.addCounter('HNL')
         count = self.counters.counter('HNL')
         count.register('all events')
-        count.register('good pf collections')
         count.register('>0 good vtx')
         count.register('>= 3L w/ correct flavours')
         count.register('>0 prompt lep')
@@ -253,12 +249,6 @@ class HNLAnalyzer(Analyzer):
 
         self.readCollections(event.input)
         self.counters.counter('HNL').inc('all events')
-        # make PF candidates
-        try:
-            pfs = map(PhysicsObject, self.handles['pfcand'].product())
-            event.pfs = pfs
-        except: print(event.eventId, event.run, event.lumi); return False#; set_trace()
-        self.counters.counter('HNL').inc('good pf collections')
       
         #####################################################################################
         # primary vertex
@@ -516,26 +506,6 @@ class HNLAnalyzer(Analyzer):
         if len(event.veto_eles): event.veto_save_ele = sorted([ele for ele in event.veto_eles], key = lambda x : x.pt, reverse = True)[0] 
         if len(event.veto_mus ): event.veto_save_mu  = sorted([mu  for mu  in event.veto_mus ], key = lambda x : x.pt, reverse = True)[0] 
 
-        ########################################################################################
-        # charged PF isolation
-        ########################################################################################        
-
-        event.the_3lep_cand.abs_tot_iso03_rhoArea   = totIso(event, 'rhoArea', 0.3) 
-        event.the_3lep_cand.abs_tot_iso04_rhoArea   = totIso(event, 'rhoArea', 0.4) 
-        event.the_3lep_cand.abs_tot_iso05_rhoArea   = totIso(event, 'rhoArea', 0.5) 
-
-        event.the_3lep_cand.rel_tot_iso03_rhoArea   = event.the_3lep_cand.abs_tot_iso03_rhoArea / event.the_3lep_cand.hnVisP4().pt()
-        event.the_3lep_cand.rel_tot_iso04_rhoArea   = event.the_3lep_cand.abs_tot_iso04_rhoArea / event.the_3lep_cand.hnVisP4().pt()
-        event.the_3lep_cand.rel_tot_iso05_rhoArea   = event.the_3lep_cand.abs_tot_iso05_rhoArea / event.the_3lep_cand.hnVisP4().pt()
-
-        event.the_3lep_cand.abs_tot_iso03_deltaBeta = totIso(event, 'dBeta', 0.3) 
-        event.the_3lep_cand.abs_tot_iso04_deltaBeta = totIso(event, 'dBeta', 0.4) 
-        event.the_3lep_cand.abs_tot_iso05_deltaBeta = totIso(event, 'dBeta', 0.5) 
-
-        event.the_3lep_cand.rel_tot_iso03_deltaBeta =  event.the_3lep_cand.abs_tot_iso03_deltaBeta /  event.the_3lep_cand.hnVisP4().pt()
-        event.the_3lep_cand.rel_tot_iso04_deltaBeta =  event.the_3lep_cand.abs_tot_iso04_deltaBeta /  event.the_3lep_cand.hnVisP4().pt()
-        event.the_3lep_cand.rel_tot_iso05_deltaBeta =  event.the_3lep_cand.abs_tot_iso05_deltaBeta /  event.the_3lep_cand.hnVisP4().pt()
-
         #####################################################################################
         # After passing all selections and we have an HNL candidate, pass a "true" boolean!
         #####################################################################################
@@ -544,64 +514,3 @@ class HNLAnalyzer(Analyzer):
         setattr(event, 'pass_%s' %(self.cfg_ana.promptLepton + self.cfg_ana.L1L2LeptonType), True)
 
         return True
-
-
-
-def totIso(event, offset_mode, dRCone):
-    ch_pu_iso = chargedHadronIso(event, dRCone, True)
-    ch_pv_iso = chargedHadronIso(event, dRCone, False)
-    neu_iso   = neutralHadronIso(event, dRCone)
-    ph_iso    = photonIso(event, dRCone)
-    if offset_mode == 'rhoArea': 
-        eta = event.the_3lep_cand.hnVisP4().eta()
-        offset = offset_rhoArea(event.rho, dRCone, eta)
-    if offset_mode == 'dBeta': 
-        offset = offset_dBeta(0.5, ch_pu_iso)
-    tot_iso = ch_pv_iso + max(0., ph_iso + neu_iso - offset)
-    # if dRCone == 0.3:
-        # print '2M dr %.1f: ch_pv_iso: %.2f, neu_iso: %.2f, ph_iso: %.2f, ch_pu_iso: %.2f, l1+l2pt: %.2f, id: %i'%(dRCone, ch_pv_iso, neu_iso, ph_iso, ch_pu_iso, event.the_3lep_cand.l1().pt()+event.the_3lep_cand.l2().pt(), event.eventId)
-    return tot_iso
-
-# This is taken from src/PhysicsTools/Heppy/python/physicsobjects/Lepton.py   AND   src/PhysicsTools/Heppy/python/physicsobjects/Electron.py
-def offset_rhoArea(rho, dRCone, eta):
-    area = 0.0
-    if abs(eta) < 0.8000: area = 0.0566
-    if abs(eta) > 0.8000 and abs(eta) < 1.3000: area = 0.0562
-    if abs(eta) > 1.3000 and abs(eta) < 2.0000: area = 0.0363
-    if abs(eta) > 2.0000 and abs(eta) < 2.2000: area = 0.0119
-    if abs(eta) > 2.2000 and abs(eta) < 2.4000: area = 0.0064
-    if dRCone != 0.3: area *= ( (dRCone ** 2) / (0.3 **2) )
-    # print 'area = {a}, offset = {o}'.format(a = area, o = area * rho) 
-    return area * rho
-    
-def offset_dBeta(dBeta, ch_pu_iso):
-    # print 'dbeta = {db}, offset = {o}'.format(db = dBeta, o = dBeta * ch_pu_iso)
-    return ch_pu_iso * dBeta
-        
-def chargedHadronIso(event, dRCone, PU = False): 
-    if PU == True:
-        charged_pfs = [ipf for ipf in event.pfs if ( ipf.charge() != 0 and ipf.pt() > 0.5 )]
-        charged_pfs = [ipf for ipf in charged_pfs if ipf.fromPV() <= 1]
-    if PU == False:
-        charged_pfs = [ipf for ipf in event.pfs if ( ipf.charge() != 0 and abs(ipf.pdgId()) != 11 and abs(ipf.pdgId()) != 13 and ipf.pt() > 0.5 )]
-        charged_pfs = [ipf for ipf in charged_pfs if (ipf.fromPV() > 1 and abs(ipf.pdgId()) == 211) ]
-    charged_pfs  = [ipf for ipf in charged_pfs  if deltaR(ipf, event.the_3lep_cand.hnVisP4()) < dRCone ]
-    ch_iso       = sum([ipf.pt() for ipf in charged_pfs]) 
-#    for i in charged_pfs: print 'charged hadron, pile up:\t', dRCone, PU, i.dz(), i.dxy(), i.pt(), i.pdgId()
-    return ch_iso
-
-def neutralHadronIso(event, dRCone): 
-    neutral_pfs = [ipf for ipf in event.pfs if ( ipf.charge() == 0 and abs(ipf.pdgId()) != 22 )]
-    neutral_pfs = [ipf for ipf in neutral_pfs if ipf.pt() > 0.5]
-    neutral_pfs = [ipf for ipf in neutral_pfs if deltaR(ipf, event.the_3lep_cand.hnVisP4()) < dRCone ]
-    neu_iso     = sum([ipf.pt() for ipf in neutral_pfs])
-#    for i in neutral_pfs: print 'neutral hadron\t', dRCone, i.dz(), i.dxy(), i.pt(), i.pdgId()
-    return neu_iso
-
-def photonIso(event, dRCone): 
-    photon_pfs = [ipf for ipf in event.pfs if abs(ipf.pdgId()) == 22]
-    photon_pfs = [ipf for ipf in photon_pfs if ipf.pt() > 0.5]
-    photon_pfs = [ipf for ipf in photon_pfs if deltaR(ipf, event.the_3lep_cand.hnVisP4()) < dRCone ] 
-    ph_iso     = sum([ipf.pt() for ipf in photon_pfs])
-#    for i in photon_pfs: print 'photon\t\t', dRCone, i.dz(), i.dxy(), i.pt(), i.pdgId()
-    return ph_iso

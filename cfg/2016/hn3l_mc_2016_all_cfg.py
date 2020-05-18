@@ -80,9 +80,7 @@ samples = all_samples + all_signals
 
 for sample in samples:
     sample.triggers = triggers_ele_mc + triggers_mu_mc
-    sample.splitFactor = splitFactor(sample, 5e5)
-    if sample in all_signals:
-        sample.splitFactor = splitFactor(sample, 5e5)
+    sample.splitFactor = splitFactor(sample, 3e5)
         
     sample.puFileMC   = '$CMSSW_BASE/src/CMGTools/HNL/data/pileup/mc/2016/MC_PileUp_2016_Moriond17.root'
     sample.puFileData = '$CMSSW_BASE/src/CMGTools/HNL/data/pileup/data/2016/Data_PileUp_2016_69p2.root'
@@ -454,7 +452,7 @@ for ii in range(len(sequence)):
 prefetch = True
 recompute_deepjet = True
 if recompute_deepjet:
-    fname = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/prod/update_deepjet_and_ele_id_mc2016_cfg.py'
+    fname = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/prod/update_deepjet_and_ele_id_mc2016_cmg_cfg.py'
     preprocessor = CmsswPreprocessor(fname, prefetch=prefetch, addOrigAsSecondary=False)
     EOSEventsWithDownload.aggressive = 2 # always fetch if running on Wigner
     EOSEventsWithDownload.long_cache = getHeppyOption('long_cache', False)

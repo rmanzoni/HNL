@@ -81,9 +81,7 @@ samples = all_samples + all_signals
 
 for sample in samples:
     sample.triggers = triggers_ele_mc + triggers_mu_mc
-    sample.splitFactor = splitFactor(sample, 5e5)
-    if sample in all_signals:
-        sample.splitFactor = splitFactor(sample, 5e5)
+    sample.splitFactor = splitFactor(sample, 3e5)
         
     # in 2017, each MC sample has got its own PU profile
     if getattr(sample, 'puFileMC', '').endswith('.root'):    
@@ -464,7 +462,7 @@ for ii in range(len(sequence)):
 prefetch = True
 recompute_deepjet = True
 if recompute_deepjet:
-    fname = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/prod/update_deepjet_and_ele_id_mc2017_cfg.py'
+    fname = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/prod/update_deepjet_and_ele_id_mc2017_cmg_cfg.py'
     preprocessor = CmsswPreprocessor(fname, prefetch=prefetch, addOrigAsSecondary=False)
     EOSEventsWithDownload.aggressive = 2 # always fetch if running on Wigner
     EOSEventsWithDownload.long_cache = getHeppyOption('long_cache', False)

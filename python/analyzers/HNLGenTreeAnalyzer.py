@@ -63,8 +63,15 @@ class HNLGenTreeAnalyzer(Analyzer):
         the_hns = [ip for ip in event.genp_pruned if abs(ip.pdgId()) in [9900012, 9990012] and ip.isLastCopy()] # 9900012 is Majorana, 9990012 is Dirac. Dirac comes in two species, particle and anti-particle!
         event.the_hn = the_hns[0] # one per event
 
+        # RM FIXME! for the tau case, we might want to save the tau daughters as well...
         # prompt lepton
-        event.the_pl = map(GenParticle, [ip for ip in event.genp_pruned if abs(ip.pdgId()) in [11,13,15] and ip.isPromptFinalState() and not isAncestor(event.the_hn, ip)])[0]      
+#         import pdb ; pdb.set_trace()
+        # treat light leptons and taus differently, as the former are stable. the latter decay
+        pl_candidates  = [ip for ip in event.genp_pruned if abs(ip.pdgId()) in [11,13] and ip.isPromptFinalState() and not isAncestor(event.the_hn, ip)]
+        pl_candidates += [ip for ip in event.genp_pruned if abs(ip.pdgId()) in [15]    and ip.isPromptDecayed()    and not isAncestor(event.the_hn, ip)]
+        event.the_pl = map(GenParticle, pl_candidates)[0]
+#         import pdb ; pdb.set_trace()
+#         event.the_pl = map(GenParticle, [ip for ip in event.genp_pruned if abs(ip.pdgId()) in [11,13,15] and ip.isPromptFinalState() and not isAncestor(event.the_hn, ip)])[0]      
 
         # get the immediate daughters of the heavy neutrino decay
         event.the_hn.initialdaus = [event.the_hn.daughter(jj) for jj in range(event.the_hn.numberOfDaughters())]

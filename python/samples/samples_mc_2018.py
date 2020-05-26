@@ -64,19 +64,19 @@ DYJetsToLL_M5to50 = creator.makeMCComponent(
 DYJetsToLL_M5to50.nGenEvents = DYJetsToLL_M5to50.dataset_entries 
 
 
-DYJetsToLL_M50 = creator.makeMCComponent(
-    name    = 'DYJetsToLL_M50',
+DYJetsToLL_M50_fxfx = creator.makeMCComponent(
+    name    = 'DYJetsToLL_M50_fxfx',
     dataset = '/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v1/MINIAODSIM', 
     user    = 'CMS', 
     pattern = '.*root', 
     xSec    = 6077.22, # 2075.14*3, # https://hypernews.cern.ch/HyperNews/CMS/get/tauid/966.html
     useAAA  = True
 )
-DYJetsToLL_M50.nGenEvents = DYJetsToLL_M50.dataset_entries
+DYJetsToLL_M50_fxfx.nGenEvents = DYJetsToLL_M50_fxfx.dataset_entries
 
 
-DYJetsToLL_M50_ext = creator.makeMCComponent(
-    name    = 'DYJetsToLL_M50_ext',
+DYJetsToLL_M50_fxfx_ext = creator.makeMCComponent(
+    name    = 'DYJetsToLL_M50_fxfx_ext',
     dataset = '/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15_ext2-v1/MINIAODSIM',
     user    = 'CMS', 
     pattern = '.*root', 
@@ -84,8 +84,18 @@ DYJetsToLL_M50_ext = creator.makeMCComponent(
     xSec    = 6077.22, # 2075.14*3, # https://hypernews.cern.ch/HyperNews/CMS/get/tauid/966.html
     useAAA  = True
 )
-DYJetsToLL_M50_ext.nGenEvents = DYJetsToLL_M50_ext.dataset_entries
+DYJetsToLL_M50_fxfx_ext.nGenEvents = DYJetsToLL_M50_fxfx_ext.dataset_entries
 
+DYJetsToLL_M50 = creator.makeMCComponent(
+    name    = 'DYJetsToLL_M50',
+    dataset = '/DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v1/MINIAODSIM',
+    user    = 'CMS', 
+    pattern = '.*root', 
+    # xSec    = 1921.8*3, #oldValue 
+    xSec    = 6077.22, # 2075.14*3, # https://hypernews.cern.ch/HyperNews/CMS/get/tauid/966.html
+    useAAA  = True
+)
+DYJetsToLL_M50.nGenEvents = DYJetsToLL_M50.dataset_entries
 
 #from fall17 samples of https://twiki.cern.ch/twiki/bin/viewauth/CMS/TauIDMeasurementsHelp#2017_measurements_MC2017_v2_samp
 WW = creator.makeMCComponent(
@@ -218,7 +228,8 @@ all_samples = [
     DYBB              ,
     DYJetsToLL_M5to50 ,
     DYJetsToLL_M50    ,
-    DYJetsToLL_M50_ext,
+    DYJetsToLL_M50_fxfx,
+    DYJetsToLL_M50_fxfx_ext,
     WW                ,
     WZ                ,
     ZZ                ,

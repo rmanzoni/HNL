@@ -186,16 +186,35 @@ DYJetsToLL_M10to50_ext = creator.makeMCComponent(
     useAAA  = True
 )
 
-DYJetsToLL_M50 = creator.makeMCComponent(
-    name    = 'DYJetsToLL_M50',
+DYJetsToLL_M50_fxfx = creator.makeMCComponent(
+    name    = 'DYJetsToLL_M50_fxfx',
     dataset = '/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISummer16MiniAODv3-PUMoriond17_94X_mcRun2_asymptotic_v3_ext2-v1/MINIAODSIM',
     user    = 'CMS', 
     pattern = '.*root', 
     xSec    = 6020.85, # from AN_v3
     useAAA  = True
 )
-DYJetsToLL_M50.nGenEvents = DYJetsToLL_M50.dataset_entries
+DYJetsToLL_M50_fxfx.nGenEvents = DYJetsToLL_M50_fxfx.dataset_entries
 
+DYJetsToLL_M50_ext2 = creator.makeMCComponent(
+    name    = 'DYJetsToLL_M50_ext2',
+    dataset = '/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16MiniAODv3-PUMoriond17_94X_mcRun2_asymptotic_v3_ext2-v2/MINIAODSIM',
+    user    = 'CMS', 
+    pattern = '.*root', 
+    xSec    = 6020.85, # from AN_v3
+    useAAA  = True
+)
+DYJetsToLL_M50_ext2.nGenEvents = DYJetsToLL_M50_ext2.dataset_entries
+
+DYJetsToLL_M50_ext1 = creator.makeMCComponent(
+    name    = 'DYJetsToLL_M50_ext1',
+    dataset = '/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16MiniAODv3-PUMoriond17_94X_mcRun2_asymptotic_v3_ext1-v2/MINIAODSIM',
+    user    = 'CMS', 
+    pattern = '.*root', 
+    xSec    = 6020.85, # from AN_v3
+    useAAA  = True
+)
+DYJetsToLL_M50_ext1.nGenEvents = DYJetsToLL_M50_ext1.dataset_entries
 
 WW = creator.makeMCComponent(
     name    = 'WW',
@@ -265,4 +284,31 @@ pileupCalc.py -i $CMSSW_BASE/src/CMGTools/HNL/data/Cert_271036-284044_13TeV_Prom
               --calcMode true --minBiasXsec 69200 #TODO CHECK THE MB XSEC --maxPileupBin 200 --numPileupBins 200  pileup_data_golden_json_2016.root
 '''
 
-all_samples = [TTJets, WJetsToLNu, WJetsToLNu_ext, ZZZ, WZZ, WWZ, WWW, WWTo2L2Nu, ST_sch_lep, STbar_tch_inc, ST_tch_inc, STbar_tW_inc, ST_tW_inc, DYBB, DYJetsToLL_M10to50, DYJetsToLL_M10to50_ext, DYJetsToLL_M50, WW, WW, WZ, WZ, ZZ, WZTo3LNu, ZZTo4L]
+all_samples = [
+    TTJets, 
+    WJetsToLNu, 
+    WJetsToLNu_ext, 
+#     ZZZ, 
+#     WZZ, 
+#     WWZ, 
+#     WWW, 
+#     WWTo2L2Nu, 
+    ST_sch_lep, 
+    STbar_tch_inc, 
+    ST_tch_inc, 
+    STbar_tW_inc, 
+    ST_tW_inc, 
+    DYBB, 
+    DYJetsToLL_M10to50, 
+    DYJetsToLL_M10to50_ext, 
+    DYJetsToLL_M50_fxfx, 
+    DYJetsToLL_M50_ext1, 
+    DYJetsToLL_M50_ext2, 
+    WW, 
+    WZ, 
+    ZZ, 
+#     WZTo3LNu, 
+#     ZZTo4L
+]
+
+

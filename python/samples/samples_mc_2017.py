@@ -233,9 +233,31 @@ DYJetsToLL_M10to50.nGenEvents = DYJetsToLL_M10to50.dataset_entries
 #     useAAA  = True
 # )
 
+DYJetsToLL_M50_fxfx = creator.makeMCComponent(
+    name    = 'DYJetsToLL_M50_fxfx',
+    dataset = '/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_new_pmx_94X_mc2017_realistic_v14-v1/MINIAODSIM',
+    user    = 'CMS', 
+    pattern = '.*root', 
+    # xSec    = 1921.8*3, #oldValue 
+    xSec    = 6077.22, # 2075.14*3, # https://hypernews.cern.ch/HyperNews/CMS/get/tauid/966.html
+    useAAA  = True
+)
+DYJetsToLL_M50_fxfx.nGenEvents = DYJetsToLL_M50_fxfx.dataset_entries
+
+DYJetsToLL_M50_fxfx_ext = creator.makeMCComponent(
+    name    = 'DYJetsToLL_M50_fxfx_ext',
+    dataset = '/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_new_pmx_94X_mc2017_realistic_v14_ext1-v1/MINIAODSIM',
+    user    = 'CMS', 
+    pattern = '.*root', 
+    # xSec    = 1921.8*3, #oldValue 
+    xSec    = 6077.22, # 2075.14*3, # https://hypernews.cern.ch/HyperNews/CMS/get/tauid/966.html
+    useAAA  = True
+)
+DYJetsToLL_M50_fxfx_ext.nGenEvents = DYJetsToLL_M50_fxfx_ext.dataset_entries
+
 DYJetsToLL_M50 = creator.makeMCComponent(
     name    = 'DYJetsToLL_M50',
-    dataset = '/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
+    dataset = '/DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17MiniAODv2-PU2017RECOSIMstep_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
     user    = 'CMS', 
     pattern = '.*root', 
     # xSec    = 1921.8*3, #oldValue 
@@ -246,7 +268,7 @@ DYJetsToLL_M50.nGenEvents = DYJetsToLL_M50.dataset_entries
 
 DYJetsToLL_M50_ext = creator.makeMCComponent(
     name    = 'DYJetsToLL_M50_ext',
-    dataset = '/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14_ext1-v1/MINIAODSIM',
+    dataset = '/DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17MiniAODv2-PU2017RECOSIMstep_12Apr2018_94X_mc2017_realistic_v14_ext1-v1/MINIAODSIM',
     user    = 'CMS', 
     pattern = '.*root', 
     # xSec    = 1921.8*3, #oldValue 
@@ -254,7 +276,6 @@ DYJetsToLL_M50_ext = creator.makeMCComponent(
     useAAA  = True
 )
 DYJetsToLL_M50_ext.nGenEvents = DYJetsToLL_M50_ext.dataset_entries
-
 
 DY1JetsToLL_M50 = creator.makeMCComponent(
     name    = 'DY1JetsToLL_M50', 
@@ -603,7 +624,8 @@ ZZTo4L.nGenEvents = ZZTo4L.dataset_entries
 # DYBB                                      .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/mc/2017/pileup_DYBB.root' 
 # DYJetsToLL_M10to50                        .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/mc/2017/pileup_DYJets_M10to50.root' 
 DYJetsToLL_M50                            .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/mc/2017/pileup_DYJetsToLL_M50.root' 
-DYJetsToLL_M50_ext                        .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/mc/2017/pileup_DYJetsToLL_M50_ext.root' 
+DYJetsToLL_M50_fxfx                       .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/mc/2017/pileup_DYJetsToLL_M50.root' 
+DYJetsToLL_M50_fxfx_ext                   .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/mc/2017/pileup_DYJetsToLL_M50_ext.root' 
 WJetsToLNu                                .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/mc/2017/pileup_WJetsToLNu.root'   # in Albert W3JetsToLNu-LO  /W3JetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM
 WJetsToLNu_ext                            .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/mc/2017/pileup_WJetsToLNu.root'
 for i in qcd+wjets:                      i.puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/mc/2017/pileup_TTJets_amcat.root' # derived manually 
@@ -640,15 +662,15 @@ hnl_bkg_noskim = [
     WW,
     WZ,
     ZZ,
-    ZZZ, 
-    WZZ, 
-    WWZ, 
-    WWW, 
-    WWTo2L2Nu, 
-    WGGJets,
-    TTWJetsToLNu, 
-    TTZToLL_M10, 
-    TTZToLL_M1to10, 
+#     ZZZ, 
+#     WZZ, 
+#     WWZ, 
+#     WWW, 
+#     WWTo2L2Nu, 
+#     WGGJets,
+#     TTWJetsToLNu, 
+#     TTZToLL_M10, 
+#     TTZToLL_M1to10, 
     ST_sch_lep, 
     STbar_tch_inc, 
     ST_tch_inc, 
@@ -659,18 +681,18 @@ hnl_bkg_noskim = [
     # DYJetsToLL_M10to50_ext,
     DYJetsToLL_M50,
     DYJetsToLL_M50_ext,
-    DY1JetsToLL_M50,     
-    DY2JetsToLL_M50,     
-    DY2JetsToLL_M50_ext, 
-    DY3JetsToLL_M50,     
-    DY3JetsToLL_M50_ext, 
+    DYJetsToLL_M50_fxfx,
+    DYJetsToLL_M50_fxfx_ext,
+#     DY1JetsToLL_M50,     
+#     DY2JetsToLL_M50,     
+#     DY2JetsToLL_M50_ext, 
+#     DY3JetsToLL_M50,     
+#     DY3JetsToLL_M50_ext, 
 ] 
 
 
 hnl_bkg_noskim += qcd + wjets 
 for sample in hnl_bkg_noskim: sample.nGenEvents = sample.dataset_entries
-
-
 
 
 ##########################################################################################

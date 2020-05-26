@@ -1,4 +1,4 @@
-# heppy_batch.py -o lo_dy_2018_15may20_v1 hn3l_mc_2018_LO_DY_cfg.py -B -b 'run_condor_simple.sh -t 2880 ./batchScript.sh'
+# heppy_batch.py -o lo_dy_2018_15may20_v1 hn3l_mc_2018_LO_DY_cfg.py -B -b 'run_condor_simple.sh -t 1440 ./batchScript.sh'
 
 import os
 from copy import deepcopy as dc
@@ -38,7 +38,7 @@ from pdb import set_trace
 # import 2018 triggers
 from CMGTools.HNL.triggers.triggers_2018 import triggers_ele_mc, triggers_mu_mc, triggers_and_filters_ele, triggers_and_filters_mu
 
-from CMGTools.HNL.samples.samples_mc_2018 import all_samples, TTJets, TTJets_ext, WJetsToLNu, DYBB, DYJetsToLL_M5to50, DYJetsToLL_M50, DYJetsToLL_M50_ext, WW, WZ, ZZ 
+from CMGTools.HNL.samples.samples_mc_2018 import all_samples, DYJetsToLL_M50_fxfx, DYJetsToLL_M50_fxfx_ext, TTJets, TTJets_ext, WJetsToLNu, DYBB, DYJetsToLL_M5to50, DYJetsToLL_M50, DYJetsToLL_M50_ext, WW, WZ, ZZ 
 from CMGTools.HNL.samples.signals_2018 import all_signals_m, all_signals_e, all_signals 
 
 ###################################################
@@ -73,7 +73,8 @@ MU_PROMPT_SFS['trigger'] = (SF_FILE, 'm_trg24_27_kit')
 ###################################################
 ###               HANDLE SAMPLES                ###
 ###################################################
-samples = all_samples + all_signals
+# samples = all_samples + all_signals
+samples = [DYJetsToLL_M50]
 ###################################################
 
 # FIXME! are trigger names and filters correct regardless of the year?

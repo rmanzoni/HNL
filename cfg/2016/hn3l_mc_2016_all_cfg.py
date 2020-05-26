@@ -38,7 +38,7 @@ from pdb import set_trace
 # import 2016 triggers
 from CMGTools.HNL.triggers.triggers_2016 import triggers_ele_mc, triggers_mu_mc, triggers_and_filters_ele, triggers_and_filters_mu
 
-from CMGTools.HNL.samples.samples_mc_2016 import all_samples, TTJets, WJetsToLNu, WJetsToLNu_ext, ZZZ, WZZ, WWZ, WWW, WWTo2L2Nu, ST_sch_lep, STbar_tch_inc, ST_tch_inc, STbar_tW_inc, ST_tW_inc, DYBB, DYJetsToLL_M10to50, DYJetsToLL_M10to50_ext, DYJetsToLL_M50, WW, WW, WZ, WZ, ZZ, WZTo3LNu, ZZTo4L 
+from CMGTools.HNL.samples.samples_mc_2016 import all_samples, DYJetsToLL_M50_fxfx, DYJetsToLL_M50_ext1, DYJetsToLL_M50_ext2, TTJets, WJetsToLNu, WJetsToLNu_ext, ZZZ, WZZ, WWZ, WWW, WWTo2L2Nu, ST_sch_lep, STbar_tch_inc, ST_tch_inc, STbar_tW_inc, ST_tW_inc, DYBB, DYJetsToLL_M10to50, DYJetsToLL_M10to50_ext, WW, WZ, ZZ, WZTo3LNu, ZZTo4L 
 from CMGTools.HNL.samples.signals_2016 import all_signals, all_signals_m, all_signals_e
 
 ###################################################
@@ -89,7 +89,7 @@ selectedComponents = samples
 
 ###################################################
 # set to True if you want to run interactively on a selected portion of samples/files/whatnot
-testing = True
+testing = False
 if testing:
     # run on a single component
 #     comp = all_signals[5] #samples[0]
@@ -99,7 +99,7 @@ if testing:
 #     comp.files = ['ttbar_2017.root']
     # comp.files = ['/tmp/manzoni/001784E5-D649-734B-A5FF-E151DA54CC02.root'] # one file from TTJets_ext on lxplus700
     # comp.fineSplitFactor = 10 # fine splitting, multicore
-    comp = TTjets
+    comp = TTJets
     samples = [comp]
 
     selectedComponents = samples

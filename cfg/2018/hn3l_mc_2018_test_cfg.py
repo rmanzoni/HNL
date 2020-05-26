@@ -69,7 +69,7 @@ from pdb import set_trace
 from CMGTools.HNL.triggers.triggers_2018 import triggers_ele_mc, triggers_mu_mc, triggers_and_filters_ele, triggers_and_filters_mu
 
 from CMGTools.HNL.samples.samples_mc_2018 import all_samples, TTJets, TTJets_ext, WJetsToLNu, DYBB, DYJetsToLL_M5to50, DYJetsToLL_M50, DYJetsToLL_M50_ext, WW, WZ, ZZ 
-from CMGTools.HNL.samples.signals_2018 import all_signals_m, all_signals_e, all_signals, HN3L_M_5_V_0p00178044938148_mu_Dirac_cc_massiveAndCKM_LO
+from CMGTools.HNL.samples.signals_2018 import all_signals_m, all_signals_e, all_signals, HN3L_M_5_V_0p00178044938148_mu_Dirac_cc_massiveAndCKM_LO, HN3L_M_3_V_0p0135_tau_Dirac_massiveAndCKM_LO
 
 ###################################################
 ###                   OPTIONS                   ###
@@ -104,8 +104,8 @@ MU_PROMPT_SFS['trigger'] = (SF_FILE, 'm_trg24_27_kit')
 ###################################################
 ###               HANDLE SAMPLES                ###
 ###################################################
-# samples = all_samples + all_signals
-samples = [TTJets, TTJets_ext]
+samples = all_samples + all_signals
+# samples = [TTJets, TTJets_ext]
 ###################################################
 
 # FIXME! are trigger names and filters correct regardless of the year?
@@ -136,11 +136,14 @@ if testing:
 #     comp.files = ['heavyNeutrino_1.root']
 #     comp.files = ['heavyNeutrino_1_new_deepjet.root']
 #     comp.fineSplitFactor = 10 # fine splitting, multicore
-    comp = TTJets_ext
+#     comp = TTJets_ext
 #     comp.files = comp.files[1:3]
 #     comp = HN3L_M_5_V_0p00178044938148_mu_Dirac_cc_massiveAndCKM_LO
 #     comp.files = comp.files[:1]
-    comp.files = ['B5006609-9A10-1146-BD9C-3C52D247B17C.root']
+#     comp.files = ['B5006609-9A10-1146-BD9C-3C52D247B17C.root']
+    comp = HN3L_M_3_V_0p0135_tau_Dirac_massiveAndCKM_LO
+#     comp.files = ['heavyNeutrino_99.root']
+    comp.files = comp.files[:20]
     comp.splitFactor = 1
     samples = [comp]
 

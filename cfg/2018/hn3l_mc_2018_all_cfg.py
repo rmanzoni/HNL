@@ -38,7 +38,7 @@ from pdb import set_trace
 # import 2018 triggers
 from CMGTools.HNL.triggers.triggers_2018 import triggers_ele_mc, triggers_mu_mc, triggers_and_filters_ele, triggers_and_filters_mu
 
-from CMGTools.HNL.samples.samples_mc_2018 import all_samples, TTJets, TTJets_ext, WJetsToLNu, DYBB, DYJetsToLL_M5to50, DYJetsToLL_M50, DYJetsToLL_M50_ext, WW, WZ, ZZ 
+from CMGTools.HNL.samples.samples_mc_2018 import all_samples, DYJetsToLL_M50_fxfx, DYJetsToLL_M50_fxfx_ext, TTJets, TTJets_ext, WJetsToLNu, DYBB, DYJetsToLL_M5to50, DYJetsToLL_M50, WW, WZ, ZZ 
 from CMGTools.HNL.samples.signals_2018 import all_signals_m, all_signals_e, all_signals 
 
 ###################################################

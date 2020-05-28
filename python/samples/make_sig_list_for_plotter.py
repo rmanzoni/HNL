@@ -1,17 +1,53 @@
-from CMGTools.HNL.samples.signals_2016 import all_signals as sigs_16
-from CMGTools.HNL.samples.signals_2017 import all_signals as sigs_17
-from CMGTools.HNL.samples.signals_2018 import all_signals_e as sigs_18
+from CMGTools.HNL.samples.signals_2016 import all_signals_e as sigs_16_e
+from CMGTools.HNL.samples.signals_2016 import all_signals_m as sigs_16_m
+from CMGTools.HNL.samples.signals_2016 import all_signals_t as sigs_16_t
+
+from CMGTools.HNL.samples.signals_2017 import all_signals_e as sigs_17_e
+from CMGTools.HNL.samples.signals_2017 import all_signals_m as sigs_17_m
+from CMGTools.HNL.samples.signals_2017 import all_signals_t as sigs_17_t
+
+from CMGTools.HNL.samples.signals_2018 import all_signals_e as sigs_18_e
+from CMGTools.HNL.samples.signals_2018 import all_signals_m as sigs_18_m
+from CMGTools.HNL.samples.signals_2018 import all_signals_t as sigs_18_t
+
 from re import sub
 from pdb import set_trace
 
-# for signals in [sigs_16, sigs_17, sigs_18]:
-for signals in [sigs_18]:#, sigs_17, sigs_18]:
+for signals in [sigs_16_e, sigs_16_m, sigs_16_t,
+                sigs_17_e, sigs_17_m, sigs_17_t,
+                sigs_18_e, sigs_18_m, sigs_18_t]:
 
-    if   signals == sigs_16: year = '16'
-    elif signals == sigs_17: year = '17'
-    elif signals == sigs_18: year = '18'
+    if signals == sigs_16_e: 
+        year = '16'
+        lepton = 'e'
+    if signals == sigs_16_m: 
+        year = '16'
+        lepton = 'm'
+    if signals == sigs_16_t: 
+        year = '16'
+        lepton = 't'
 
-    with open('plotter_signals_%s.txt' %year, 'w') as f:
+    if signals == sigs_17_e: 
+        year = '17'
+        lepton = 'e'
+    if signals == sigs_17_m: 
+        year = '17'
+        lepton = 'm'
+    if signals == sigs_17_t: 
+        year = '17'
+        lepton = 't'
+
+    if signals == sigs_18_e: 
+        year = '18'
+        lepton = 'e'
+    if signals == sigs_18_m: 
+        year = '18'
+        lepton = 'm'
+    if signals == sigs_18_t: 
+        year = '18'
+        lepton = 't'
+
+    with open('plotter_signals_%s_%s.txt' %(lepton, year), 'w') as f:
 
         for sig in signals:
 
@@ -36,15 +72,19 @@ for signals in [sigs_18]:#, sigs_17, sigs_18]:
             elif sig.mass == 4:  color = 'indigo'
             elif sig.mass == 5:  color = 'chocolate'
             elif sig.mass == 6:  color = 'olive'
+            elif sig.mass == 7:  color = 'peru'
             elif sig.mass == 8:  color = 'darkgray'
+            elif sig.mass == 9:  color = 'plum'
             elif sig.mass == 10: color = 'teal'
+            elif sig.mass == 11: color = 'seagreen'
+            elif sig.mass == 12: color = 'coral'
             elif sig.mass == 15: color = 'gold'
             elif sig.mass == 20: color = 'crimson'
             else: assert False, 'ERROR: No mass could be determined. Check signal list.'
 
-            print >> f, "Sample('{name}'\t\t, channel, 'HNL m = {mass}, V^{S} = {v2:.1E}, {mode}' , selection, '{label}',".format(name=sig.name, mass=sig.mass, \
-                                                                                                                                 S='{2}', v2=sig.v2, mode=mode, label=label) 
-            print >> f, "       '{color}' \t,10, base_dir, post_fix, False, True, True, 1.,  {xs}    , toplot=False),".format(color=color, xs=sig.xs)
+            print >> f, "Sample({name:62}, [{name:62}], channel, '{splitline}m={mass:4}, V^{S}={v2:.1E}{sep}{mode:9}{end}' , selection, {label:32},".format(name="'"+sig.name+"'", splitline='#splitline{', mass=sig.mass, \
+                                                                                                                                 S='{2}', v2=sig.v2, sep='}{', mode=mode, end='}', label="'"+label+"'"), 
+            print >> f, " {color:15}, 10, '/'.join([basedir, 'sig']), post_fix, False, True, True, 1., {xs:11}, toplot=False),".format(color="'"+color+"'", xs=sig.xs),
             print >> f, ''
 
 

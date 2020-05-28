@@ -29,9 +29,8 @@ setupEgammaPostRecoSeq(
 
 # SKIM TEMPORARILY DISABLED
 # find where the new IDs are needed first
-high_pt_ele_index = process.p.index(process.goodHighPtEles)
 # and then insert this rerun EGamma sequence just before that
-process.p.insert(high_pt_ele_index, process.egammaPostRecoSeq)
+process.p.insert(0, process.egammaPostRecoSeq)
 
 # do not filter!
 process.p.remove(process.goodLeptons)

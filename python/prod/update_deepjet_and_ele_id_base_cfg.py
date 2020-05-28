@@ -2,35 +2,6 @@ import FWCore.ParameterSet.Config as cms
 
 process = cms.Process('NEWDF')
 
-## OPTION PARSER DOES NOT WORK WITH CMG PREPROCESSOR
-# from FWCore.ParameterSet.VarParsing import VarParsing
-# 
-# options = VarParsing('analysis')
-# 
-# options.register(
-#     'runFullCfg', 
-#     False,
-#     VarParsing.multiplicity.singleton,
-#     VarParsing.varType.bool,
-#     'Set True if running a full cfg obtained from edmConfigDump (e.g. when run from CMGTools preprocessing). It changes ele IDs dash vs underscores. Default False',
-# )
-# 
-# options.setDefault('runFullCfg', False)
-# options.parseArguments()
-
-# from optparse import OptionParser
-# parser = OptionParser()
-# parser.add_option(
-#     '--runFullCfg', 
-#     dest='runFullCfg', 
-#     action='store_true', 
-#     default=False, 
-#     help='Set True if running a full cfg obtained from edmConfigDump (e.g. when run from CMGTools preprocessing). It changes ele IDs dash vs underscores. Default False'
-# )
-# (options, args) = parser.parse_args()
-
-# print('cmsswPreprocessor options: runFullCfg: %s' %(options.runFullCfg))
-
 ##########################################################################################
 ##########################################################################################
 # missing HoE selection because it requires rho and I didn't bother adding a module to do that.. it's just a skim

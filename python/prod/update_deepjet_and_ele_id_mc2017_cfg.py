@@ -23,16 +23,10 @@ setupEgammaPostRecoSeq(
 )  
 
 # SKIM TEMPORARILY DISABLED
-# # find where the new IDs are needed first
-# high_pt_ele_index = process.p.index(process.goodHighPtEles)
-# # and then insert this rerun EGamma sequence just before that
-# process.p.insert(high_pt_ele_index, process.egammaPostRecoSeq)
-# 
-# # and now replace the input collection of goodHighPtEles, must be the updated one with the new IDs
-# process.goodHighPtEles.src = cms.InputTag('slimmedElectrons', '', process.name_())
-
+# find where the new IDs are needed first
+# and then insert this rerun EGamma sequence just before that
 process.p.insert(0, process.egammaPostRecoSeq)
 
-# save the correct electron collection
-process.output.outputCommands.append('drop patElectrons_slimmedElectrons__PAT')
-process.output.outputCommands.append('keep patElectrons_slimmedElectrons__%s' %process.name_())
+# do not filter!
+process.p.remove(process.goodLeptons)
+process.p.remove(process.goodHighPtLeptons)

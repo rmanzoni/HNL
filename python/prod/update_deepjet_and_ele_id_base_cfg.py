@@ -45,9 +45,12 @@ process.source = cms.Source('PoolSource',
     ),
 )
 
+# Tom's signals have duplicated event IDs...
+process.source.duplicateCheckMode = cms.untracked.string('noDuplicateCheck')
+
 ## logger
 process.load('FWCore.MessageLogger.MessageLogger_cfi')
-process.MessageLogger.cerr.FwkReport.reportEvery = 100
+process.MessageLogger.cerr.FwkReport.reportEvery = 1000
 
 # standard and geometry sequences
 process.load("Configuration.StandardSequences.GeometryDB_cff")

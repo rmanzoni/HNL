@@ -72,7 +72,7 @@ scram b -rj 8
 
 ### set your X509_USER_PROXY env variable
 since you'll be using xrootd to access files remotely, and you'll use CERN batch facility, you need to make sure your voms proxy token is put in a `afs` shared directory.
-If `echo $509_USER_PROXY` returns nothing or returns some `tmp` path, follow these instructions https://twiki.cern.ch/twiki/bin/view/CMSPublic/WorkBookXrootdService#OpenCondor 
+If `echo $X509_USER_PROXY` returns nothing or returns some `tmp` path, follow these instructions https://twiki.cern.ch/twiki/bin/view/CMSPublic/WorkBookXrootdService#OpenCondor 
 
 
 ### run a test job
@@ -81,3 +81,29 @@ voms-proxy-init --voms cms --valid 198:0
 cd cfg/2018
 heppy test hn3l_mc_2018_test_cfg.py
 ```
+
+
+### jobs resubmission
+First, copy heppy scripts in your environment 
+```
+cp python/heppy_patch/* $CMSSW_BASE/bin/<architecture>/
+```
+
+Note: make sure that you have the rwx permissions on the files. If not: chmod 777 <file>
+
+Then, copy submission scripts in the production directory. Typically do
+
+```
+cp scripts/resbmitter_data.sh cfg/<year>/<dataRep>/
+cp scripts/resbmitter_mc.sh cfg/<year>/<mcRep>/
+```
+
+Finally run the scripts
+```
+cd cfg/<year>/<data|mcRep>/
+source resubmitter_<data|mc>.sh
+```
+
+
+
+

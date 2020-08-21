@@ -237,7 +237,7 @@ class HNLAnalyzer(Analyzer):
         if which_candidate == 'maxcos'     : return sorted(dileptonsvtx, key = lambda x : (x.isSS(), x.lep1().relIsoFromEA(0.3)>0.2, x.lep2().relIsoFromEA(0.3)>0.2, -x.cosTransversePointingAngleBS()), reverse=False)[0]
         if which_candidate == 'maxpt'      : return sorted(dileptonsvtx, key = lambda x : (x.isSS(), x.lep1().relIsoFromEA(0.3)>0.2, x.lep2().relIsoFromEA(0.3)>0.2, -x.pt()                          ), reverse=False)[0]
 
-        
+
     def process(self, event):
         
         # decide whether filter the event or pass through
@@ -401,6 +401,15 @@ class HNLAnalyzer(Analyzer):
             if not sv: continue
             dileptonsvtx.append(DiLepton(pair, sv, pv, event.beamspot))
 
+        ########################################################################################
+        # skim the dilepton candidates
+        ########################################################################################
+        dilep_selector = getattr(self.cfg_ana, 'dilepton_selector', True)        
+        dileptonsvtx = [idilep for idilep in dileptonsvtx if dilep_selector(idilep)]
+        
+        if not len(dileptonsvtx):
+            return return_statement
+                  
         event.dileptonsvtx = dileptonsvtx
         
         final_state = self.cfg_ana.promptLepton + self.cfg_ana.L1L2LeptonType
@@ -512,5 +521,16 @@ class HNLAnalyzer(Analyzer):
         
         # save a flag
         setattr(event, 'pass_%s' %(self.cfg_ana.promptLepton + self.cfg_ana.L1L2LeptonType), True)
-
+        
+#         print '\n\n' + '='*50
+#         print 'run %d \t lumi %d events %d' %(event.run, event.lumi, event.eventId)
+#         print '\tmmm candidate charge12', event.the_3lep_cand_dict['mmm'].charge12()
+#         print '\tmmm candidate mass12  ', event.the_3lep_cand_dict['mmm'].mass12()
+#         print '\tmmm candidate cos     ', event.recoSv_dict['mmm'].disp2DFromBS_cos
+#         print '\t\t',event.the_3lep_cand_dict['mmm'].l0()
+#         print '\t\t',event.the_3lep_cand_dict['mmm'].l1()
+#         print '\t\t',event.the_3lep_cand_dict['mmm'].l2()
+#         for ii in map(Muon, self.handles['muons'].product()): print ii
+#         import pdb ; pdb.set_trace()
+        
         return True

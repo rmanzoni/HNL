@@ -219,7 +219,9 @@ def preselect_ele(iele):
             iele.electronID('mvaEleID-Fall17-noIso-V2-wp90'.replace('-','_')) or \
             iele.electronID('mvaEleID-Fall17-iso-V2-wp90'.replace('-','_')) ): return False
     return True
-    
+
+dilepton_selector = lambda dilep : dilep.cosTransversePointingAngleBS()>0. and dilep.mass()<20.
+
 HNLAnalyzer_mmm = cfg.Analyzer(
     HNLAnalyzer,
     name                = 'HNLAnalyzer_mmm',
@@ -229,6 +231,7 @@ HNLAnalyzer_mmm = cfg.Analyzer(
     candidate_selection = 'maxpt',
     muon_preselection   = preselect_mu,
     ele_preselection    = preselect_ele,
+    dilepton_selector   = dilepton_selector,
 )
 
 HNLAnalyzer_eee = cfg.Analyzer(
@@ -240,6 +243,7 @@ HNLAnalyzer_eee = cfg.Analyzer(
     candidate_selection = 'maxpt',
     muon_preselection   = preselect_mu,
     ele_preselection    = preselect_ele,
+    dilepton_selector   = dilepton_selector,
 )
 
 HNLAnalyzer_eem = cfg.Analyzer(
@@ -251,6 +255,7 @@ HNLAnalyzer_eem = cfg.Analyzer(
     candidate_selection = 'maxpt',
     muon_preselection   = preselect_mu,
     ele_preselection    = preselect_ele,
+    dilepton_selector   = dilepton_selector,
 )
 
 HNLAnalyzer_mem = cfg.Analyzer(
@@ -262,6 +267,7 @@ HNLAnalyzer_mem = cfg.Analyzer(
     candidate_selection = 'maxpt',
     muon_preselection   = preselect_mu,
     ele_preselection    = preselect_ele,
+    dilepton_selector   = dilepton_selector,
 )
 
 HNLEventFilter = cfg.Analyzer(
